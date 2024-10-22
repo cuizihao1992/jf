@@ -14,13 +14,15 @@ class PostureAdjust extends LitElement {
       width: 800px;
       height: 600px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border: 1px solid #00ffff;
     }
 
     .header {
       text-align: center;
-      font-size: 20px;
+      font-size: 24px;
       font-weight: bold;
       margin-bottom: 20px;
+      color: #00ffff;
     }
 
     .controls, .status-controls, .log-section {
@@ -37,6 +39,19 @@ class PostureAdjust extends LitElement {
       cursor: pointer;
       border-radius: 5px;
       margin-left: 5px;
+    }
+
+    .controls button.active, .status-controls button.active {
+      background-color: #ff00ff;
+    }
+
+    input[type="text"] {
+      width: 50px;
+      text-align: center;
+      margin: 0 5px;
+      background-color: #273d66; /* Darker background for inputs */
+      border: 1px solid #00ffff; /* Cyan border for inputs */
+      color: white;
     }
 
     table {
@@ -74,6 +89,36 @@ class PostureAdjust extends LitElement {
       padding: 5px 10px;
       border-radius: 5px;
     }
+
+    .status-controls .adjustment {
+      display: flex;
+      align-items: center;
+    }
+
+    .status-controls .adjustment label {
+      margin-right: 5px;
+    }
+
+    .status-controls .adjustment input {
+      width: 40px;
+      margin-right: 5px;
+    }
+
+    .status-controls .adjustment button {
+      margin-right: 10px;
+    }
+
+    .status-indicator {
+      display: flex;
+      justify-content: space-around;
+      padding: 5px;
+      background-color: #1a2b4c; /* Dark background for status indicators */
+      border-radius: 5px;
+    }
+
+    .status-indicator div {
+      color: #00ffff; /* Cyan text for indicators */
+    }
   `;
 
   render() {
@@ -82,32 +127,42 @@ class PostureAdjust extends LitElement {
         <button class="close-btn" @click=${this.closeModal}>关闭</button>
         <div class="header">姿态调整</div>
         
-        <!-- 设备编号和电源控制 -->
         <div class="controls">
           <div>
             <label>设备编号：</label><input type="text" value="101" readonly />
           </div>
           <div>
             <label>电源控制：</label>
-            <button>总开关</button>
+            <button class="active">开</button>
+            <button>关</button>
             <button>云台开</button>
+            <button>云台关</button>
             <button>工控机开</button>
+            <button>工控机关</button>
           </div>
         </div>
 
-        <!-- 设备时间和姿态控制 -->
         <div class="status-controls">
           <div>
             <label>设备时间：</label><input type="text" value="2024-9-24 16:21:50" readonly />
+            <button>校时</button>
           </div>
-          <div>
-            <label>姿态控制：</label>
-            <label>方位角：</label><input type="text" value="0°" readonly />
-            <label>俯仰角：</label><input type="text" value="0°" readonly />
+          <div class="adjustment">
+            <div>
+              <label>安装姿态</label>
+              <label>方位角：</label><input type="text" value="0°" readonly />
+              <label>俯仰角：</label><input type="text" value="0°" readonly />
+            </div>
+            <div>
+              <label>调整姿态</label>
+              <label>水平角：</label><input type="text" value="-15.8°" readonly />
+              <button>下达指令</button>
+              <label>俯仰角：</label><input type="text" value="9.8°" readonly />
+              <button>下达指令</button>
+            </div>
           </div>
         </div>
 
-        <!-- 状态查询按钮组 -->
         <div class="status-controls">
           <button>云台角度</button>
           <button>GNSS</button>
@@ -117,7 +172,12 @@ class PostureAdjust extends LitElement {
           <button>设备日志</button>
         </div>
 
-        <!-- 操作信息表格 -->
+        <div class="status-indicator">
+          <div>云台角度: 297°</div>
+          <div>电源信息: 47.52V</div>
+          <div>角度检测: 87</div>
+        </div>
+
         <table>
           <thead>
             <tr>
@@ -132,7 +192,6 @@ class PostureAdjust extends LitElement {
               <td>101</td>
               <td>姿态调整成功</td>
             </tr>
-            <!-- 更多行 -->
           </tbody>
         </table>
       </div>
