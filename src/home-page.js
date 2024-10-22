@@ -19,6 +19,12 @@ class HomePage extends LitElement {
       min-height: 100vh;
     }
 
+    .content{
+      border: 0;
+      padding: 0;
+      margin: 0;
+    }
+
     /* 顶部栏 */
     .header {
       background-color: #3f81c1;
@@ -52,10 +58,6 @@ class HomePage extends LitElement {
       background-color: #a6c4e5;
     }
 
-    /* 页面内容区域 */
-    .content {
-      padding: 20px;
-    }
   `;
 
   firstUpdated() {
@@ -72,8 +74,11 @@ class HomePage extends LitElement {
     ]);
 
     // 监听路由变化，控制导航栏显示与否
-    router.addEventListener('location-changed', () => {
-      this.requestUpdate();
+    // router.addEventListener('location-changed', () => {
+    //   this.requestUpdate();
+    // });
+    window.addEventListener('popstate', () => {
+      this.requestUpdate(); // 当 URL 变化时更新
     });
   }
 
@@ -98,7 +103,6 @@ class HomePage extends LitElement {
           <a href="/log-management">日志管理</a>
         </div>
       ` : ''}
-
       <div class="content"></div>
     `;
   }

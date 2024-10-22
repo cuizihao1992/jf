@@ -3,10 +3,10 @@ import { LitElement, html, css } from 'lit';
 class PostureAdjust extends LitElement {
   static styles = css`
     .modal {
-      position: fixed;
       top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      right: 5%;
+      transform: translate(0%, -50%);
+      position: fixed;
       padding: 20px;
       background-color: #0b1527;
       color: white;

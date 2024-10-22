@@ -12,13 +12,12 @@ class LoginPage extends LitElement {
       align-items: center;
       height: 100vh;
       background-color: #f0f2f5;
-    }
-
-    .image-container {
-      width: 60%;
-      background-image: url('/path/to/your/satellite-image.jpg'); /* 替换为实际路径 */
+      background-image: url('/satellite-image.png'); /* 替换为实际路径 */
       background-size: cover;
       background-position: center;
+    }   
+    .image-container {
+      width: 60%;
     }
 
     .login-box {
@@ -99,8 +98,8 @@ class LoginPage extends LitElement {
   render() {
     return html`
       <div class="login-container">
-        <div class="image-container"></div>
-        <div class="login-box">
+      <div class="image-container"></div>
+              <div class="login-box">
           <h2>系统账号登录</h2>
           <div class="form-group">
             <label for="username">用户名</label>
