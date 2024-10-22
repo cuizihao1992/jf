@@ -1,0 +1,22 @@
+{
+  "name": "lit-deployment-example",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Lit 应用程序打包与部署示例",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@vaadin/router": "^2.0.0",
+    "axios": "^1.7.7",
+    "js-cookie": "^3.0.5",
+    "lit": "^2.7.5"
+  },
+  "devDependencies": {
+    "vite": "^5.4.9"
+  },
+  "author": "",
+  "license": "ISC"
+}
