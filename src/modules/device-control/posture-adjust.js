@@ -4,15 +4,15 @@ class PostureAdjust extends LitElement {
   static styles = css`
     .modal {
       top: 50%;
-      right: 5%;
+      left: calc(50% + 300px); /* 450px是设备查询窗口的宽度一半 */
       transform: translate(0%, -50%);
       position: fixed;
       padding: 20px;
       background-color: #0b1527;
       color: white;
       border-radius: 8px;
-      width: 800px;
-      height: 600px;
+      width: 325px;
+      height: 700px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       border: 1px solid #00ffff;
     }
@@ -35,7 +35,7 @@ class PostureAdjust extends LitElement {
       background-color: #007bff;
       color: white;
       border: none;
-      padding: 5px 10px;
+      padding: 5px 9px;
       cursor: pointer;
       border-radius: 5px;
       margin-left: 5px;
@@ -46,7 +46,7 @@ class PostureAdjust extends LitElement {
     }
 
     input[type="text"] {
-      width: 50px;
+      width: 225px;
       text-align: center;
       margin: 0 5px;
       background-color: #273d66; /* Darker background for inputs */
@@ -96,12 +96,12 @@ class PostureAdjust extends LitElement {
     }
 
     .status-controls .adjustment label {
-      margin-right: 5px;
+      margin-right: -13px;
     }
 
     .status-controls .adjustment input {
       width: 40px;
-      margin-right: 5px;
+      margin-right: 3px;
     }
 
     .status-controls .adjustment button {
@@ -131,54 +131,68 @@ class PostureAdjust extends LitElement {
           <div>
             <label>设备编号：</label><input type="text" value="101" readonly />
           </div>
-          <div>
-            <label>电源控制：</label>
-            <button class="active">开</button>
-            <button>关</button>
-            <button>云台开</button>
-            <button>云台关</button>
-            <button>工控机开</button>
-            <button>工控机关</button>
-          </div>
         </div>
 
-        <div class="status-controls">
-          <div>
-            <label>设备时间：</label><input type="text" value="2024-9-24 16:21:50" readonly />
-            <button>校时</button>
-          </div>
-          <div class="adjustment">
-            <div>
-              <label>安装姿态</label>
-              <label>方位角：</label><input type="text" value="0°" readonly />
-              <label>俯仰角：</label><input type="text" value="0°" readonly />
+        <div class="controls">
+          <div class="control-section" style="display: flex; justify-content: space-between;">
+            <div class="control-group" style="border: 1px solid #00ffff; padding: 10px; border-radius: 5px; margin-right: 10px; position: relative;">
+              <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); white-space: nowrap;">总开关</div>
+              <button class="active">开</button>
+              <button>关</button>
             </div>
-            <div>
-              <label>调整姿态</label>
-              <label>水平角：</label><input type="text" value="-15.8°" readonly />
-              <button>下达指令</button>
-              <label>俯仰角：</label><input type="text" value="9.8°" readonly />
-              <button>下达指令</button>
+            <div class="control-group" style="border: 1px solid #00ffff; padding: 10px; border-radius: 5px; margin-right: 10px; position: relative;">
+              <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); white-space: nowrap;">云台</div>
+              <button>开</button>
+              <button>关</button>
+            </div>
+            <div class="control-group" style="border: 1px solid #00ffff; padding: 10px; border-radius: 5px; position: relative;">
+              <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); white-space: nowrap;">工控机</div>
+              <button>开</button>
+              <button>关</button>
             </div>
           </div>
         </div>
 
+        <div class="controls">
+          <div class="control-group" style="border: 1px solid #00ffff; padding: 10px; border-radius: 5px; width: 91% ;position: relative;">
+            <div style="position: absolute; top: -15px; left: 18%; transform: translateX(-50%); white-space: nowrap;">设备时间</div>
+            <div style="display: flex; align-items: center;">
+              <input type="text" value="2024-9-24 16:21:50" readonly />
+              <button>校时</button>
+            </div>
+          </div>
+        </div>
+
+      <div class="status-controls" style="border: 1px solid #00ffff; padding: 10px; border-radius: 5px; margin-bottom: 10px;width: 91%; position: relative;">
+        <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); white-space: nowrap;">姿态控制</div>
+
+          <div style="display: flex; justify-content: flex-start;">
+            <div class="adjustment" style="border: 1px solid #00ffff; padding: 2px; border-radius: 5px; width: 43%; position: relative;">
+              <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); white-space: nowrap;">安装姿态</div>
+              <div>
+                <label>方位角：</label><input type="text" value="0°" readonly />
+                <label>俯仰角：</label><input type="text" value="0°" readonly />
+              </div>
+            </div>
+            <div class="adjustment" style="border: 1px solid #00ffff; padding: 3px; border-radius: 5px; width: 59%; position: relative">
+              <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); white-space: nowrap;">调整姿态</div>
+              <div>
+                <label>水平角：</label><input type="text" value="-15.8°" readonly /><button style=" margin-left: 3px;">下达</button>
+                <label>俯仰角：</label><input type="text" value="9.8°" readonly /><button style=" margin-left: 3px;">下达</button>
+              </div>
+          </div>
+        </div>
+      </div>
+
         <div class="status-controls">
-          <button>云台角度</button>
-          <button>GNSS</button>
-          <button>电源信息</button>
-          <button>实时影像</button>
-          <button>角度检测</button>
-          <button>设备日志</button>
+          <button style="width: 40px; height: 40px; font-size: 11px; margin-right: 5px;">云台角度</button>
+          <button style="width: 40px; height: 40px; font-size: 11px; margin-right: 5px;">GNSS</button>
+          <button style="width: 40px; height: 40px; font-size: 11px; margin-right: 5px;">电源信息</button>
+          <button style="width: 40px; height: 40px; font-size: 11px; margin-right: 5px;">实时影像</button>
+          <button style="width: 40px; height: 40px; font-size: 11px; margin-right: 5px;">角度检测</button>
+          <button style="width: 40px; height: 40px; font-size: 11px; margin-right: 5px;">设备日志</button>
         </div>
-
-        <div class="status-indicator">
-          <div>云台角度: 297°</div>
-          <div>电源信息: 47.52V</div>
-          <div>角度检测: 87</div>
-        </div>
-
-        <table>
+        <table style="font-size: 11px;">
           <thead>
             <tr>
               <th>时间</th>

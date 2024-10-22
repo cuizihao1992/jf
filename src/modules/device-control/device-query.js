@@ -12,7 +12,7 @@ class DeviceQuery extends LitElement {
       color: white;
       border-radius: 10px;
       width: 900px;
-      height: 600px; /* 设置高度为600px */
+      height: 700px; /* 设置高度为600px */
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 0.9;
       border: 1px solid rgba(42, 130, 228, 1);
@@ -136,15 +136,15 @@ class DeviceQuery extends LitElement {
         <button class="close-btn" @click=${this.closeModal} style="position: absolute; top: 10px; right: 10px; background-color: red; color: white; border: none; cursor: pointer; padding: 5px 10px; border-radius: 5px;">关闭</button>
         <div class="header">设备查询</div>
         <div class="header-divider"></div> <!-- 添加横线 -->
-
+  
         <div class="controls">
           <div class="control-group">
-            <div class="query-control">
-              <label for="queryType">选择查询类型：</label>
+            <div class="control-item">
+              <label for="queryType">设备编号：</label>
               <select id="queryType">
                 <option>设备编号</option>
               </select>
-              <input type="text" placeholder="输入设备编号" />
+              <input type="text" placeholder="输入设备编号" style="margin-left: 5px;" />
               <button>查询</button>
             </div>
           </div>
@@ -169,7 +169,7 @@ class DeviceQuery extends LitElement {
             </div>
           </div>
         </div>
-
+  
         <table>
           <thead>
             <tr>
@@ -215,6 +215,11 @@ class DeviceQuery extends LitElement {
 
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
+    // 确保姿态调整窗口存在并触发关闭事件
+    const postureAdjustElement = document.querySelector('posture-adjust');
+    if (postureAdjustElement) {
+      postureAdjustElement.dispatchEvent(new CustomEvent('close-modal'));
+    }
   }
 
   adjustPosture() {
