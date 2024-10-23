@@ -3,7 +3,7 @@ import { Router } from '@vaadin/router';
 
 // 导入子组件
 import '@/modules/system-home/index.js';
-import '@/modules/device-control/device-control.js';
+import '@/modules/device-control/index.js';
 import '@/modules/task-management/index.js';
 import '@/modules/device-management/index.js';
 import '@/modules/user-management/index.js';
