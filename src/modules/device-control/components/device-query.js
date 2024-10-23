@@ -17,7 +17,6 @@ class DeviceQuery extends LitElement {
       opacity: 1;
       border: 1px solid rgba(42, 130, 228, 1);
       overflow-y: auto;
-      background-image: url('src/modules/device-control/img/鑳屾櫙-3.png');
       background-size: cover;
       background-position: center;
     }
@@ -29,61 +28,39 @@ class DeviceQuery extends LitElement {
       text-align: left;
     }
 
-    .header-divider {
-      border-bottom: 1px solid #444;
-      margin-bottom: 10px;
-    }
-
-    .controls {
+    .form-container {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
+      align-items: center;
       margin-bottom: 20px;
     }
-
-    .control-group {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #444;
-    }
-
-    .control-item {
+    .form-group {
       display: flex;
       align-items: center;
-      flex: 1;
+      margin-right: 20px;
+    }
+    .form-group label {
       margin-right: 10px;
+      white-space: nowrap;
     }
-
-    .control-item:last-child {
-      margin-right: 0;
-    }
-
-    .control-item label {
-      margin-right: 5px;
-    }
-
-    .control-item input,
-    .control-item select {
-      margin-left: 5px;
+    .form-group select,
+    .form-group input {
       padding: 5px;
-      flex-grow: 1;
-      max-width: 200px;
+      background-color: #1b2a41;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    .query-button {
+      padding: 8px 15px;
+      background-color: #58a6ff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 10px;
     }
 
-    .query-control {
-      display: flex;
-      align-items: center;
-      flex: 0 1 auto;
-    }
-
-    .query-control select,
-    .query-control input {
-      margin-right: 10px;
-      flex: 1;
-      min-width: 150px;
-      max-width: 250px;
-    }
 
     table {
       width: 100%;
@@ -111,7 +88,15 @@ class DeviceQuery extends LitElement {
       padding: 8px;
       text-align: center;
     }
-
+    .close-button {
+      cursor: pointer;
+      color: white;
+      background: none;
+      border: none;
+      font-size: 25px;
+      font-weight: bold;
+      float: right;
+    }
     .status-icon {
       display: inline-flex;
       justify-content: center;
@@ -136,42 +121,41 @@ class DeviceQuery extends LitElement {
   render() {
     return html`
       <div class="modal">
-        <button class="close-btn" @click=${this.closeModal} style="position: absolute; top: 10px; right: 10px; background-color: red; color: white; border: none; cursor: pointer; padding: 5px 10px; border-radius: 5px;">关闭</button>
-        <div class="header">设备查询</div>
-        <div class="header-divider"></div>
-  
-        <div class="controls">
-          <div class="control-group">
-            <div class="control-item">
-              <label for="queryType">设备编号：</label>
-              <select id="queryType">
-                <option>设备编号</option>
-              </select>
-              <input type="text" placeholder="输入设备编号" style="margin-left: 5px;" />
-              <button>查询</button>
-            </div>
+        <div class="header">设备查询<button class="close-button" @click="${this.closeModal}">×</button></div><hr />
+      <div class="form-container">
+          <div class="form-group">
+            <label for="search-type">任务查询方式:</label>
+            <select id="search-type" style="background-color: gray;">
+              <option>任务编号</option>
+            </select>
           </div>
-          <div class="control-group">
-            <div class="control-item">
-              <label for="region">所属地区：</label>
-              <select id="region">
-                <option>中卫</option>
-              </select>
-            </div>
-            <div class="control-item">
-              <label for="deviceType">请选择类型：</label>
-              <select id="deviceType">
-                <option>自动角反射器</option>
-              </select>
-            </div>
-            <div class="control-item">
-              <label for="status">连接状态：</label>
-              <select id="status">
-                <option>在线</option>
-              </select>
-            </div>
+          <div class="form-group">
+            <label for="search-condition">查询条件:</label>
+            <input type="text" id="search-condition" style="background-color: white; " />
+          </div>
+          <button class="query-button">查询</button>
+        </div><hr />
+        <div class="form-container">
+          <div class="form-group">
+            <label for="location">所属地区:</label>
+            <select id="location" style="background-color: gray;">
+              <option>中卫</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="device-type">设备类型:</label>
+            <select id="device-type" style="background-color: gray;">
+              <option>自动角反射器</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="review-status">审核状态:</label>
+            <select id="review-status" style="background-color: gray;">
+              <option>已提交</option>
+            </select>
           </div>
         </div>
+
   
         <table>
           <thead>

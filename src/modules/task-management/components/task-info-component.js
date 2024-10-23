@@ -2,45 +2,70 @@ import { LitElement, html, css } from "lit";
 
 class TaskInfoComponent extends LitElement {
   static styles = css`
-    .container {
+   .container {
+      position: absolute;
+      left: 50px;
+      top: 50px;
+      width: 950px;
+      padding: 20px;
       background-color: #0d1f33;
       color: white;
-      padding: 20px;
       font-family: Arial, sans-serif;
+      border: 1px solid rgba(42, 130, 228, 1);
       border-radius: 10px;
-      position: absolute;
-      left: 100px;
-      top: 0;
-      width: max-content;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
     }
     h2 {
       margin: 0;
       padding-bottom: 10px;
+      text-align: left;
+    }
+       .close-button {
+      cursor: pointer;
+      color: white;
+      background: none;
+      border: none;
+      font-size: 25px;
+      font-weight: bold;
     }
     .form-container {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       margin-bottom: 20px;
     }
-    .form-container label {
-      margin-right: 10px;
+    .form-group {
+      display: flex;
+      align-items: center;
+      margin-right: 20px;
     }
-    .form-container select,
-    input,
-    button {
+    .form-group label {
       margin-right: 10px;
+      white-space: nowrap;
+    }
+    .form-group select,
+    .form-group input {
       padding: 5px;
       background-color: #1b2a41;
       color: white;
       border: none;
       border-radius: 5px;
     }
+    .query-button {
+      padding: 8px 15px;
+      background-color: #58a6ff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
+      margin-top: 20px;
     }
-    th,
-    td {
+    th, td {
       padding: 10px;
       text-align: center;
       border: 1px solid #2c3b55;
@@ -54,53 +79,53 @@ class TaskInfoComponent extends LitElement {
     a {
       color: #58a6ff;
       text-decoration: none;
-      margin-right: 5px;
     }
-    .close-button {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background-color: red;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      cursor: pointer;
-      font-size: 14px;
-      border-radius: 5px;
+    .review-button {
+      color: yellow;
     }
   `;
-
+  closeWindow() {
+    this.shadowRoot.querySelector('.container').style.display = 'none';
+  }
   render() {
     return html`
       <div class="container">
-        <button class="close-button" @click=${this._closeComponent}>
-          关闭
-        </button>
-        <h2>任务信息</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h2>审核列表</h2>
+          <button class="close-button" @click="${this.closeWindow}">×</button>
+        </div><hr />
         <div class="form-container">
-          <label for="search-type">任务查询方式:</label>
-          <select id="search-type">
-            <option>任务编号</option>
-          </select>
-          <input type="text" placeholder="查询条件" />
-          <button>查询</button>
-        </div>
-
+          <div class="form-group">
+            <label for="search-type">任务查询方式:</label>
+            <select id="search-type" style="background-color: gray;">
+              <option>任务编号</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="search-condition">查询条件:</label>
+            <input type="text" id="search-condition" style="background-color: white; " />
+          </div>
+          <button class="query-button">查询</button>
+        </div><hr />
         <div class="form-container">
-          <label for="location">所属地区:</label>
-          <select id="location">
-            <option>中卫</option>
-          </select>
-
-          <label for="device-type">设备类型:</label>
-          <select id="device-type">
-            <option>自动角反射器</option>
-          </select>
-
-          <label for="status">审核状态:</label>
-          <select id="status">
-            <option>已提交</option>
-          </select>
+          <div class="form-group">
+            <label for="location">所属地区:</label>
+            <select id="location" style="background-color: gray;">
+              <option>中卫</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="device-type">设备类型:</label>
+            <select id="device-type" style="background-color: gray;">
+              <option>自动角反射器</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="review-status">审核状态:</label>
+            <select id="review-status" style="background-color: gray;">
+              <option>已提交</option>
+            </select>
+          </div><hr />
         </div>
 
         <table>

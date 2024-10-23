@@ -4,13 +4,14 @@ class TaskQueryComponent extends LitElement {
   static styles = css`
     .container {
       position: absolute;
-      left: 50px; /* 控制与左边的距离 */
-      top: 50px;  /* 控制与顶部的距离 */
-      width: 900px; /* 设置合适的宽度 */
+      left: 50px;
+      top: 50px;
+      width: 950px;
       padding: 20px;
       background-color: #0d1f33;
       color: white;
       font-family: Arial, sans-serif;
+      border: 1px solid rgba(42, 130, 228, 1);
       border-radius: 10px;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
     }
@@ -19,22 +20,45 @@ class TaskQueryComponent extends LitElement {
       padding-bottom: 10px;
       text-align: left;
     }
+       .close-button {
+      cursor: pointer;
+      color: white;
+      background: none;
+      border: none;
+      font-size: 25px;
+      font-weight: bold;
+    }
     .form-container {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       margin-bottom: 20px;
-      justify-content: space-between;
     }
-    .form-container label {
-      margin-right: 10px;
+    .form-group {
+      display: flex;
+      align-items: center;
+      margin-right: 20px;
     }
-    .form-container select, input, button {
+    .form-group label {
       margin-right: 10px;
+      white-space: nowrap;
+    }
+    .form-group select,
+    .form-group input {
       padding: 5px;
       background-color: #1b2a41;
       color: white;
       border: none;
       border-radius: 5px;
+    }
+    .query-button {
+      padding: 8px 15px;
+      background-color: #58a6ff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 10px;
     }
     table {
       width: 100%;
@@ -56,48 +80,55 @@ class TaskQueryComponent extends LitElement {
       color: #58a6ff;
       text-decoration: none;
     }
-    .query-button {
-      padding: 8px 15px;
-      background-color: #58a6ff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+    .review-button {
+      color: yellow;
     }
   `;
-
+  closeWindow() {
+    this.shadowRoot.querySelector('.container').style.display = 'none';
+  }
   render() {
     return html`
-      <div class="container">
-        <h2>任务查询</h2>
+        <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h2>任务查询</h2>
+          <button class="close-button" @click="${this.closeWindow}">×</button>
+        </div><hr />
         <div class="form-container">
-          <label for="search-type">任务查询方式:</label>
-          <select id="search-type">
-            <option>任务编号</option>
-          </select>
-
-          <label for="search-condition">查询条件:</label>
-          <input type="text" id="search-condition" placeholder="请输入查询条件" />
-
-          <label for="location">所属地区:</label>
-          <select id="location">
-            <option>中卫</option>
-          </select>
-
-          <label for="device-type">设备类型:</label>
-          <select id="device-type">
-            <option>自动角反射器</option>
-          </select>
-
-          <label for="task-status">任务状态:</label>
-          <select id="task-status">
-            <option>执行完成</option>
-          </select>
-
+          <div class="form-group">
+            <label for="search-type">任务查询方式:</label>
+            <select id="search-type" style="background-color: gray;">
+              <option>任务编号</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="search-condition">查询条件:</label>
+            <input type="text" id="search-condition" style="background-color: white; " />
+          </div>
           <button class="query-button">查询</button>
+        </div><hr />
+        <div class="form-container">
+          <div class="form-group">
+            <label for="location">所属地区:</label>
+            <select id="location" style="background-color: gray;">
+              <option>中卫</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="device-type">设备类型:</label>
+            <select id="device-type" style="background-color: gray;">
+              <option>自动角反射器</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="review-status">任务状态:</label>
+            <select id="review-status" style="background-color: gray;">
+              <option>执行完成</option>
+            </select>
+          </div><hr />
         </div>
 
-        <table>
+        <table> 
           <thead>
             <tr>
               <th>任务名</th>
@@ -121,11 +152,18 @@ class TaskQueryComponent extends LitElement {
               <td>中卫</td>
               <td>执行完成</td>
               <td>adminzw</td>
-              <td><a href="#">查看</a></td>
-              <td><a href="#">查看</a></td>
-              <td><a href="#">查看</a></td>
+              <td>
+               <a href="#" class="review-button">查看</a>
+              </td>
+              <td>
+              <a href="#" class="review-button">查看</a>
+              </td>
+              <td>
+                <a href="#" class="review-button">查看</a>
+              </td>
             </tr>
-            <!-- 其他数据行可以在此添加 -->
+             
+            
           </tbody>
         </table>
       </div>
