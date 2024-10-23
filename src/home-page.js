@@ -2,13 +2,13 @@ import { LitElement, html, css } from 'lit';
 import { Router } from '@vaadin/router';
 
 // 导入子组件
-import './modules/system-home.js';
-import './modules/device-control/device-control.js';
-import './modules/task-management.js';
-import './modules/device-management.js';
-import './modules/user-management.js';
-import './modules/log-management.js';
-import './components/login-page.js';  // 引入登录页面组件
+import '@/modules/system-home/index.js';
+import '@/modules/device-control/index.js';
+import '@/modules/task-management/index.js';
+import '@/modules/device-management/index.js';
+import '@/modules/user-management/index.js';
+import '@/modules/log-management/index.js';
+import '@/components/login-page.js';  // 引入登录页面组件
 
 class HomePage extends LitElement {
   static styles = css`

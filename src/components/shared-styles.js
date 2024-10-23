@@ -1,7 +1,9 @@
-import { css } from 'lit';
+import { css } from "lit";
 
 export const sharedStyles = css`
   :host {
+  }
+  .left-buttons {
     position: absolute;
     left: 0px;
     display: flex;

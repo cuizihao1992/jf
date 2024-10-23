@@ -1,8 +1,8 @@
 import { LitElement, html, css } from 'lit';
 import '../../components/custom-button.js'; // Import the button component
 import { sharedStyles } from '../../components/shared-styles.js'; // 引入共享样式
-import './device-query.js'; // 引入设备查询弹窗组件
-import './posture-adjust.js'; // 引入姿态调整组件
+import './components/device-query.js'; // 引入设备查询弹窗组件
+import './components/posture-adjust.js'; // 引入姿态调整组件
 
 class DeviceControl extends LitElement {
   static styles = [sharedStyles];
@@ -22,17 +22,18 @@ class DeviceControl extends LitElement {
 
   render() {
     return html`
-      <custom-button
-        label="设备查询"
-        ?selected=${this.selectedButton === 'query'}
-        @button-click=${() => this.toggleModal('query')}
-      ></custom-button>
-      <custom-button
-        label="设备列表"
-        ?selected=${this.selectedButton === 'list'}
-        @button-click=${() => this.selectButton('list')}
-      ></custom-button>
-
+      <div class="left-buttons">
+        <custom-button
+          label="设备查询"
+          ?selected=${this.selectedButton === "query"}
+          @button-click=${() => this.toggleModal("query")}
+        ></custom-button>
+        <custom-button
+          label="设备列表"
+          ?selected=${this.selectedButton === "list"}
+          @button-click=${() => this.selectButton("list")}
+        ></custom-button>
+      </div>
       <!-- 设备查询弹窗，根据 isModalOpen 条件渲染 -->
       ${this.isModalOpen
         ? html`<device-query 
@@ -78,4 +79,4 @@ class DeviceControl extends LitElement {
   }
 }
 
-customElements.define('device-control', DeviceControl);
+customElements.define("device-control", DeviceControl);
