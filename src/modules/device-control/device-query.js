@@ -12,48 +12,51 @@ class DeviceQuery extends LitElement {
       color: white;
       border-radius: 10px;
       width: 900px;
-      height: 700px; /* 设置高度为600px */
+      height: 700px; 
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      opacity: 0.9;
+      opacity: 1;
       border: 1px solid rgba(42, 130, 228, 1);
-      overflow-y: auto; /* 添加垂直滚动条以防止内容溢出 */
+      overflow-y: auto;
+      background-image: url('src/modules/device-control/img/鑳屾櫙-3.png');
+      background-size: cover;
+      background-position: center;
     }
 
     .header {
       font-size: 20px;
       font-weight: bold;
-      margin-bottom: 10px; /* 减少下边距以避免重叠 */
-      text-align: left; /* 标题居中对齐 */
+      margin-bottom: 10px;
+      text-align: left;
     }
 
     .header-divider {
-      border-bottom: 1px solid #444; /* 添加横线 */
-      margin-bottom: 10px; /* 横线与控件之间的间距 */
+      border-bottom: 1px solid #444;
+      margin-bottom: 10px;
     }
 
     .controls {
       display: flex;
-      flex-direction: column; /* 改为垂直布局 */
+      flex-direction: column;
       margin-bottom: 20px;
     }
 
     .control-group {
       display: flex;
-      justify-content: space-between; /* 控件之间的间距 */
-      margin-bottom: 10px; /* 控件组之间的间距 */
-      padding-bottom: 10px; /* 为每个控件组增加底部内边距 */
-      border-bottom: 1px solid #444; /* 控件组的底部横线 */
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #444;
     }
 
     .control-item {
       display: flex;
       align-items: center;
-      flex: 1; /* 使控件等宽 */
-      margin-right: 10px; /* 控件之间的右侧间距 */
+      flex: 1;
+      margin-right: 10px;
     }
 
     .control-item:last-child {
-      margin-right: 0; /* 最后一个控件不需要右侧间距 */
+      margin-right: 0;
     }
 
     .control-item label {
@@ -64,22 +67,22 @@ class DeviceQuery extends LitElement {
     .control-item select {
       margin-left: 5px;
       padding: 5px;
-      flex-grow: 1; /* 控件可以扩展以填满可用空间 */
-      max-width: 200px; /* 限制输入框和选择框的最大宽度 */
+      flex-grow: 1;
+      max-width: 200px;
     }
 
     .query-control {
       display: flex;
       align-items: center;
-      flex: 0 1 auto; /* 控件的宽度可以自适应 */
+      flex: 0 1 auto;
     }
 
     .query-control select,
     .query-control input {
-      margin-right: 10px; /* 控件之间的间距 */
-      flex: 1; /* 使它们平分空间 */
-      min-width: 150px; /* 设置最小宽度以保持可读性 */
-      max-width: 250px; /* 设置最大宽度以避免铺满 */
+      margin-right: 10px;
+      flex: 1;
+      min-width: 150px;
+      max-width: 250px;
     }
 
     table {
@@ -93,15 +96,15 @@ class DeviceQuery extends LitElement {
       background-color: #1a2b4c;
       padding: 8px;
       text-align: center;
-      border-bottom: 2px solid #444; /* 添加表头的底部边框 */
+      border-bottom: 2px solid #444;
     }
 
     .table-row {
-      border-bottom: 1px solid #444; /* 每一行底部的横线 */
+      border-bottom: 1px solid #444;
     }
 
     .table-row:last-child {
-      border-bottom: none; /* 最后一行不需要底部边框 */
+      border-bottom: none;
     }
 
     td {
@@ -135,7 +138,7 @@ class DeviceQuery extends LitElement {
       <div class="modal">
         <button class="close-btn" @click=${this.closeModal} style="position: absolute; top: 10px; right: 10px; background-color: red; color: white; border: none; cursor: pointer; padding: 5px 10px; border-radius: 5px;">关闭</button>
         <div class="header">设备查询</div>
-        <div class="header-divider"></div> <!-- 添加横线 -->
+        <div class="header-divider"></div>
   
         <div class="controls">
           <div class="control-group">
@@ -215,7 +218,6 @@ class DeviceQuery extends LitElement {
 
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
-    // 确保姿态调整窗口存在并触发关闭事件
     const postureAdjustElement = document.querySelector('posture-adjust');
     if (postureAdjustElement) {
       postureAdjustElement.dispatchEvent(new CustomEvent('close-modal'));

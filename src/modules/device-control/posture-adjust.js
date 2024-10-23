@@ -4,7 +4,7 @@ class PostureAdjust extends LitElement {
   static styles = css`
     .modal {
       top: 50%;
-      left: calc(50% + 300px); /* 450px是设备查询窗口的宽度一半 */
+      left: calc(50% + 300px);
       transform: translate(0%, -50%);
       position: fixed;
       padding: 20px;
@@ -15,6 +15,9 @@ class PostureAdjust extends LitElement {
       height: 700px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       border: 1px solid #00ffff;
+      background-image: url('src/modules/device-control/img/鑳屾櫙-3.png');
+      background-size: cover;
+      background-position: center;
     }
 
     .header {
@@ -49,8 +52,8 @@ class PostureAdjust extends LitElement {
       width: 225px;
       text-align: center;
       margin: 0 5px;
-      background-color: #273d66; /* Darker background for inputs */
-      border: 1px solid #00ffff; /* Cyan border for inputs */
+      background-color: #273d66;
+      border: 1px solid #00ffff;
       color: white;
     }
 
@@ -112,12 +115,12 @@ class PostureAdjust extends LitElement {
       display: flex;
       justify-content: space-around;
       padding: 5px;
-      background-color: #1a2b4c; /* Dark background for status indicators */
+      background-color: #1a2b4c;
       border-radius: 5px;
     }
 
     .status-indicator div {
-      color: #00ffff; /* Cyan text for indicators */
+      color: #00ffff;
     }
   `;
 
@@ -154,7 +157,7 @@ class PostureAdjust extends LitElement {
         </div>
 
         <div class="controls">
-          <div class="control-group" style="border: 1px solid #00ffff; padding: 10px; border-radius: 5px; width: 91% ;position: relative;">
+          <div class="control-group" style="border: 1px solid #00ffff; padding: 10px; border-radius: 5px; width: 91%; position: relative;">
             <div style="position: absolute; top: -15px; left: 18%; transform: translateX(-50%); white-space: nowrap;">设备时间</div>
             <div style="display: flex; align-items: center;">
               <input type="text" value="2024-9-24 16:21:50" readonly />
@@ -163,7 +166,7 @@ class PostureAdjust extends LitElement {
           </div>
         </div>
 
-      <div class="status-controls" style="border: 1px solid #00ffff; padding: 10px; border-radius: 5px; margin-bottom: 10px;width: 91%; position: relative;">
+      <div class="status-controls" style="border: 1px solid #00ffff; padding: 10px; border-radius: 5px; margin-bottom: 10px; width: 91%; position: relative;">
         <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); white-space: nowrap;">姿态控制</div>
 
           <div style="display: flex; justify-content: flex-start;">
@@ -213,7 +216,7 @@ class PostureAdjust extends LitElement {
   }
 
   closeModal() {
-    this.dispatchEvent(new CustomEvent('close-modal')); // 触发关闭事件
+    this.dispatchEvent(new CustomEvent('close-modal'));
   }
 }
 
