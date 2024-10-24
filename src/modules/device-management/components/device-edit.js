@@ -1,8 +1,8 @@
 import { LitElement, html, css } from 'lit';
 
-class UserPermissionsComponent extends LitElement {
+class DeviceEdit extends LitElement { 
   static styles = css`
-   .modal {
+    .modal {
       position: fixed;
       top: 50%;
       left: 40%;
@@ -121,10 +121,16 @@ class UserPermissionsComponent extends LitElement {
   render() {
     return html`
       <div class="modal">
-        <div class="header">用户权限<button class="close-button" @click="${this.closeModal}">×</button></div><hr />
+        <div class="header">设备查询<button class="close-button" @click="${this.closeModal}">×</button></div><hr />
       <div class="form-container">
           <div class="form-group">
-            <label for="search-condition">用户名:</label>
+            <label for="search-type">任务查询类型:</label>
+            <select id="search-type" style="background-color: gray;">
+              <option>设备编号</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="search-condition">查询条件:</label>
             <input type="text" id="search-condition" style="background-color: white; " />
           </div>
           <button class="query-button">查询</button>
@@ -137,15 +143,15 @@ class UserPermissionsComponent extends LitElement {
             </select>
           </div>
           <div class="form-group">
-            <label for="user-type">用户类型:</label>
-            <select id="user-type" style="background-color: gray;">
-              <option>管理员</option>
+            <label for="device-type">设备类型:</label>
+            <select id="device-type" style="background-color: gray;">
+              <option>自动角反射器</option>
             </select>
           </div>
           <div class="form-group">
-            <label for="user-status">用户状态:</label>
-            <select id="user-status" style="background-color: gray;">
-              <option>开放</option>
+            <label for="device-status">设备状态:</label>
+            <select id="device-status" style="background-color: gray;">
+              <option>关机</option>
             </select>
           </div>
         </div>
@@ -154,11 +160,13 @@ class UserPermissionsComponent extends LitElement {
         <table>
           <thead>
             <tr>
-              <th>用户名</th>
-              <th>用户类型</th>
-              <th>注册时间</th>
+              <th>设备编号</th>
+              <th>设备时间</th>
+              <th>设备类型</th>
               <th>所属地区</th>
-              <th>用户状态</th>
+              <th>连接状态</th>
+              <th>电源状态</th>
+              <th>设备状态</th>
               <th>操作</th>
             </tr>
           </thead>
@@ -171,17 +179,22 @@ class UserPermissionsComponent extends LitElement {
   }
 
   renderRows() {
-    const powerUsers = [
-      {userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: '开放' },
+    const devices = [
+      { id: 101, time: '2024-9-24 16:21:45', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
+      { id: 102, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
+      { id: 103, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
+      { id: 104, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
     ];
 
-    return powerUsers.map(powerUser => html`
+    return devices.map(device => html`
       <tr class="table-row">
-        <td>${powerUser.userName}</a></td>
-        <td>${powerUser.userType}</td>
-        <td>${powerUser.registerTime}</td>
-        <td>${powerUser.region}</td>
-        <td>${powerUser.userStatus}</td>
+        <td>${device.id}</a></td>
+        <td>${device.time}</td>
+        <td>${device.type}</td>
+        <td>${device.region}</td>
+        <td>${device.status}</td>
+        <td><span class="status-icon status-online">${device.power}</span></td>
+        <td>${device.deviceStatus}</td>
         <td><a>查看</a>/<a>编辑</a>/<a>删除</a></td>
       </tr>
     `);
@@ -192,4 +205,4 @@ class UserPermissionsComponent extends LitElement {
   }
 }
 
-customElements.define('user-permissions-component', UserPermissionsComponent);
+customElements.define('device-edit', DeviceEdit);

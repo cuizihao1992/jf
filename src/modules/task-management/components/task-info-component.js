@@ -2,32 +2,32 @@ import { LitElement, html, css } from "lit";
 
 class TaskInfoComponent extends LitElement {
   static styles = css`
-   .container {
-      position: absolute;
-      left: 50px;
-      top: 50px;
-      width: 950px;
+    .modal {
+      position: fixed;
+      top: 50%;
+      left: 40%;
+      transform: translate(-50%, -50%);
       padding: 20px;
-      background-color: #0d1f33;
+      background: rgba(0, 9, 36, 0.8);
       color: white;
-      font-family: Arial, sans-serif;
-      border: 1px solid rgba(42, 130, 228, 1);
       border-radius: 10px;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+      width: 900px;
+      height: 700px; 
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      opacity: 1;
+      border: 1px solid rgba(42, 130, 228, 1);
+      overflow-y: auto;
+      background-size: cover;
+      background-position: center;
     }
-    h2 {
-      margin: 0;
-      padding-bottom: 10px;
+
+    .header {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
       text-align: left;
     }
-       .close-button {
-      cursor: pointer;
-      color: white;
-      background: none;
-      border: none;
-      font-size: 25px;
-      font-weight: bold;
-    }
+
     .form-container {
       display: flex;
       flex-wrap: wrap;
@@ -60,43 +60,71 @@ class TaskInfoComponent extends LitElement {
       cursor: pointer;
       margin-left: 10px;
     }
+
+
     table {
       width: 100%;
       border-collapse: collapse;
+      color: white;
       margin-top: 20px;
     }
-    th, td {
-      padding: 10px;
-      text-align: center;
-      border: 1px solid #2c3b55;
-    }
+
     th {
-      background-color: #1b2a41;
+      background-color: #1a2b4c;
+      padding: 8px;
+      text-align: center;
+      border-bottom: 2px solid #444;
     }
-    tr:nth-child(even) {
-      background-color: #13243a;
+
+    .table-row {
+      border-bottom: 1px solid #444;
     }
+
+    .table-row:last-child {
+      border-bottom: none;
+    }
+
+    td {
+      padding: 8px;
+      text-align: center;
+    }
+    .close-button {
+      cursor: pointer;
+      color: white;
+      background: none;
+      border: none;
+      font-size: 25px;
+      font-weight: bold;
+      float: right;
+    }
+    .status-icon {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 81px;
+      height: 20px;
+      border-radius: 5px;
+      margin-right: 5px;
+    }
+
+    .status-online { background-color: green; }
+    .status-warning { background-color: orange; }
+    .status-offline { background-color: red; }
+
     a {
-      color: #58a6ff;
+      color: #1e90ff;
+      cursor: pointer;
       text-decoration: none;
     }
-    .review-button {
-      color: yellow;
-    }
   `;
-  closeWindow() {
-    this.shadowRoot.querySelector('.container').style.display = 'none';
-  }
+
   render() {
     return html`
-      <div class="container">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h2>审核列表</h2>
-          <button class="close-button" @click="${this.closeWindow}">×</button>
-        </div><hr />
-        <div class="form-container">
+      <div class="modal">
+        <div class="header">任务信息<button class="close-button" @click="${this.closeModal}">×</button></div><hr />
+      <div class="form-container">
           <div class="form-group">
-            <label for="search-type">任务查询方式:</label>
+            <label for="search-type">任务查询类型:</label>
             <select id="search-type" style="background-color: gray;">
               <option>任务编号</option>
             </select>
@@ -109,25 +137,26 @@ class TaskInfoComponent extends LitElement {
         </div><hr />
         <div class="form-container">
           <div class="form-group">
-            <label for="location">所属地区:</label>
-            <select id="location" style="background-color: gray;">
-              <option>中卫</option>
-            </select>
-          </div>
-          <div class="form-group">
             <label for="device-type">设备类型:</label>
             <select id="device-type" style="background-color: gray;">
               <option>自动角反射器</option>
             </select>
           </div>
           <div class="form-group">
-            <label for="review-status">审核状态:</label>
+            <label for="location">所属地区:</label>
+            <select id="location" style="background-color: gray;">
+              <option>中卫</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="review-status">审批状态:</label>
             <select id="review-status" style="background-color: gray;">
               <option>已提交</option>
             </select>
-          </div><hr />
+          </div>
         </div>
 
+  
         <table>
           <thead>
             <tr>
@@ -136,64 +165,39 @@ class TaskInfoComponent extends LitElement {
               <th>提交用户名</th>
               <th>设备类型</th>
               <th>所属地区</th>
-              <th>审核状态</th>
+              <th>审批状态</th>
               <th>操作</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>中卫101</td>
-              <td>w101</td>
-              <td>Y101</td>
-              <td>自动角反射器</td>
-              <td>中卫</td>
-              <td>已提交</td>
-              <td>
-                <a href="#">查看</a>
-                <a href="#">编辑</a>
-                <a href="#">撤回</a>
-              </td>
-            </tr>
-            <tr>
-              <td>中卫102</td>
-              <td>w102</td>
-              <td>Y101</td>
-              <td>自动角反射器</td>
-              <td>中卫</td>
-              <td>已提交</td>
-              <td>
-                <a href="#">查看</a>
-                <a href="#">编辑</a>
-                <a href="#">撤回</a>
-              </td>
-            </tr>
-            <tr>
-              <td>中卫103</td>
-              <td>w103</td>
-              <td>Y101</td>
-              <td>自动角反射器</td>
-              <td>中卫</td>
-              <td>已提交</td>
-              <td>
-                <a href="#">查看</a>
-                <a href="#">编辑</a>
-                <a href="#">撤回</a>
-              </td>
-            </tr>
+            ${this.renderRows()}
           </tbody>
         </table>
       </div>
     `;
   }
 
-  _closeComponent() {
-    // 触发自定义事件 'close-task-info'，让父组件知道要关闭该组件
-    this.dispatchEvent(
-      new CustomEvent("close-task-info", {
-        bubbles: true,
-        composed: true,
-      })
-    );
+  renderRows() {
+    const taskInfo = [
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+    ];
+
+    return taskInfo.map(taskInfo => html`
+      <tr class="table-row">
+        <td>${taskInfo.taskName}</a></td>
+        <td>${taskInfo.taskId}</td>
+        <td>${taskInfo.submitName}</td>
+        <td>${taskInfo.deviceType}</td>
+        <td>${taskInfo.region}</td>
+        <td>${taskInfo.approveStatus}</td>
+        <td><a>查看</a>/<a>编辑</a>/<a>撤回</a></td>
+      </tr>
+    `);
+  }
+  closeModal() {
+    this.dispatchEvent(new CustomEvent('close-modal'));
   }
 }
 
