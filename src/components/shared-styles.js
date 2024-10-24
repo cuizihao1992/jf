@@ -6,6 +6,7 @@ export const sharedStyles = css`
   .left-buttons {
     position: absolute;
     left: 0px;
+    top: 147px;
     display: flex;
     flex-direction: column;
     align-items: center; /* Optional: to center the buttons horizontally */

@@ -21,6 +21,9 @@ class CustomButton extends LitElement {
       width: 100%;
       cursor: pointer;
       transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+      background-image: url("/images/left-btn-bg.png");
+      background-size: cover;
+      background-position: center;
     }
     button.selected {
       color: #FFEB3B; /* White text on hover */
