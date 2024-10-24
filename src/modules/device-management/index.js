@@ -1,7 +1,12 @@
-import { LitElement, html } from "lit";
-import "@/components/custom-button.js"; // Import the reusable button component
-import { sharedStyles } from "@/components/shared-styles.js"; // 引入共享样式
+import { LitElement, html, css } from "lit";
+import "../../components/custom-button.js"; // Import the reusable button component
+import { sharedStyles } from "../../components/shared-styles.js"; // 引入共享样式
+import "./components/device-add.js";
+import "./components/device-approve.js"; // 假设有创建任务组件
+import "./components/device-edit.js"; // 假设有任务查询组件
+import "./components/device-search.js"; // 假设有任务审核组件
 import "@/modules/device-control/components/device-query.js";
+
 class DeviceManagement extends LitElement {
   static styles = [sharedStyles];
 
@@ -46,12 +51,7 @@ class DeviceManagement extends LitElement {
 
       ${this.renderActiveComponent()}
       <div class="panel">
-        <device-query
-          ?showactions=${false}
-          @close-modal=${this.closeModal}
-          @open-posture-adjust=${this.openPostureAdjustModal}
-        >
-        </device-query>
+
       </div>
     `;
   }
@@ -70,16 +70,28 @@ class DeviceManagement extends LitElement {
   renderActiveComponent() {
     switch (this.activeComponent) {
       case "addDevice":
-        return html`<div>新增设备组件内容</div>`; // 替换为实际的新增设备组件
+        return html`<device-add
+          @close-modal=${this.closeTasks}
+        ></device-add>`;  
       case "queryDevice":
-        return html`<div>设备查询组件内容</div>`; // 替换为实际的设备查询组件
+        return html`<device-search
+          @close-modal=${this.closeTasks}
+        ></device-search>`;  
       case "editDevice":
-        return html`<div>设备编辑组件内容</div>`; // 替换为实际的设备编辑组件
+        return html`<device-edit
+          @close-modal=${this.closeTasks}
+        ></device-edit>`;  
       case "approveDevice":
-        return html`<div>设备审批组件内容</div>`; // 替换为实际的设备审批组件
+        return html`<device-approve
+          @close-modal=${this.closeTasks}
+        ></device-approve>`;  
       default:
         return ""; // 不显示任何组件
     }
+  }
+  closeTasks() {
+    this.activeComponent = ""; // 隐藏当前组件
+    this.selectedButton = ""; // 清除选中状态
   }
 }
 

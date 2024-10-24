@@ -1,6 +1,8 @@
-import { LitElement, html } from "lit";
-import "@/components/custom-button.js"; // Import the reusable button component
-import { sharedStyles } from "@/components/shared-styles.js"; // 引入共享样式
+import { LitElement, html, css } from "lit";
+import "../../components/custom-button.js"; // Import the reusable button component
+import { sharedStyles } from "../../components/shared-styles.js"; // 引入共享样式
+import "./components/device-log.js";
+import "./components/task-log.js";
 
 class LogManagement extends LitElement {
   static styles = [sharedStyles];
@@ -50,12 +52,20 @@ class LogManagement extends LitElement {
   renderActiveComponent() {
     switch (this.activeComponent) {
       case "taskLog":
-        return html`<div>任务日志内容</div>`;  // 替换为实际的任务日志组件
+        return html`<task-log
+          @close-modal=${this.closeTasks}
+        ></task-log>`;  // 替换为实际的任务日志组件
       case "deviceLog":
-        return html`<div>设备日志内容</div>`;  // 替换为实际的设备日志组件
+        return html`<device-log
+          @close-modal=${this.closeTasks}
+        ></device-log>`;  // 替换为实际的设备日志组件
       default:
         return ""; // 不显示任何组件
     }
+  }
+  closeTasks() {
+    this.activeComponent = ""; // 隐藏当前组件
+    this.selectedButton = ""; // 清除选中状态
   }
 }
 
