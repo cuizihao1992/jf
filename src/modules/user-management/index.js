@@ -33,8 +33,9 @@ class UserManagement extends LitElement {
           @button-click=${() => this.setActiveComponent('userPermissions')}
         ></custom-button>
       </div>
-
+      <div class="panel">
       ${this.renderActiveComponent()}
+      </div>
     `;
   }
 

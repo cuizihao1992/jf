@@ -3,9 +3,6 @@ import { LitElement, html, css } from 'lit';
 class TaskCreateComponent extends LitElement {
   static styles = css`
     .container {
-      position: absolute;
-      left: 50px; /* 控制与左边的距离 */
-      top: 50px;  /* 控制与顶部的距离 */
       width: 800px; /* 设置合适的宽度 */
       padding: 20px;
       background-color: #0d1f33;

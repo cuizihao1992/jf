@@ -49,9 +49,8 @@ class DeviceManagement extends LitElement {
         ></custom-button>
       </div>
 
-      ${this.renderActiveComponent()}
       <div class="panel">
-
+      ${this.renderActiveComponent()}
       </div>
     `;
   }
@@ -76,15 +75,15 @@ class DeviceManagement extends LitElement {
       case "queryDevice":
         return html`<device-search
           @close-modal=${this.closeTasks}
-        ></device-search>`;  
+        ></device-search>`;
       case "editDevice":
         return html`<device-edit
           @close-modal=${this.closeTasks}
-        ></device-edit>`;  
+        ></device-edit>`;
       case "approveDevice":
         return html`<device-approve
           @close-modal=${this.closeTasks}
-        ></device-approve>`;  
+        ></device-approve>`;
       default:
         return ""; // 不显示任何组件
     }

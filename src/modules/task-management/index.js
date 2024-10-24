@@ -47,7 +47,9 @@ class TaskManagement extends LitElement {
           @button-click=${() => this.setActiveComponent("reviewTasks")}
         ></custom-button>
       </div>
+      <div class="panel">
       ${this.renderActiveComponent()}
+      </div>
     `;
   }
 

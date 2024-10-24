@@ -33,8 +33,9 @@ class LogManagement extends LitElement {
           @button-click=${() => this.setActiveComponent('deviceLog')}
         ></custom-button>
       </div>
-
-      ${this.renderActiveComponent()}
+      <div class="panel">
+        ${this.renderActiveComponent()}
+      </div>
     `;
   }
 
