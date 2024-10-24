@@ -111,7 +111,8 @@ class HomePage extends LitElement {
     return html`
       ${!this.isLoginPage()
         ? html`
-            <div class="header">自动角反射器可视化与控制系统</div>
+            <!-- <div class="header">自动角反射器可视化与控制系统</div> -->
+            <div class="header">测试</div>
 
             <div class="nav">
               <!-- 左侧按钮 -->
