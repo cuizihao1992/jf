@@ -1,5 +1,6 @@
-import { LitElement, html, css } from 'lit';
-
+import { LitElement, html, css } from "lit";
+import "./components/system-introduction";
+import "./components/equipment-status";
 class SystemHome extends LitElement {
   static styles = css`
     .content {
@@ -12,11 +13,11 @@ class SystemHome extends LitElement {
   render() {
     return html`
       <div class="content">
-        <h2>系统首页</h2>
-        <p>欢迎来到系统首页。这是系统的主要仪表盘。</p>
+        <system-introduction></system-introduction>
+        <equipment-status></equipment-status>
       </div>
     `;
   }
 }
 
-customElements.define('system-home', SystemHome);
+customElements.define("system-home", SystemHome);
