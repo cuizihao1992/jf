@@ -149,9 +149,9 @@ class DeviceQuery extends LitElement {
             </select>
           </div>
           <div class="form-group">
-            <label for="review-status">审核状态:</label>
+            <label for="review-status">设备状态:</label>
             <select id="review-status" style="background-color: gray;">
-              <option>已提交</option>
+              <option>关机</option>
             </select>
           </div>
         </div>
@@ -188,7 +188,7 @@ class DeviceQuery extends LitElement {
 
     return devices.map(device => html`
       <tr class="table-row">
-        <td><a href="#">${device.id}</a></td>
+        <td>${device.id}</a></td>
         <td>${device.time}</td>
         <td>${device.type}</td>
         <td>${device.region}</td>

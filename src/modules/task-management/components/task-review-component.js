@@ -2,32 +2,32 @@ import { LitElement, html, css } from 'lit';
 
 class TaskReviewComponent extends LitElement {
   static styles = css`
-    .container {
-      position: absolute;
-      left: 50px;
-      top: 50px;
-      width: 950px;
+      .modal {
+      position: fixed;
+      top: 50%;
+      left: 40%;
+      transform: translate(-50%, -50%);
       padding: 20px;
-      background-color: #0d1f33;
+      background: rgba(0, 9, 36, 0.8);
       color: white;
-      font-family: Arial, sans-serif;
-      border: 1px solid rgba(42, 130, 228, 1);
       border-radius: 10px;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+      width: 900px;
+      height: 700px; 
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      opacity: 1;
+      border: 1px solid rgba(42, 130, 228, 1);
+      overflow-y: auto;
+      background-size: cover;
+      background-position: center;
     }
-    h2 {
-      margin: 0;
-      padding-bottom: 10px;
+
+    .header {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
       text-align: left;
     }
-       .close-button {
-      cursor: pointer;
-      color: white;
-      background: none;
-      border: none;
-      font-size: 25px;
-      font-weight: bold;
-    }
+
     .form-container {
       display: flex;
       flex-wrap: wrap;
@@ -60,43 +60,71 @@ class TaskReviewComponent extends LitElement {
       cursor: pointer;
       margin-left: 10px;
     }
+
+
     table {
       width: 100%;
       border-collapse: collapse;
+      color: white;
       margin-top: 20px;
     }
-    th, td {
-      padding: 10px;
-      text-align: center;
-      border: 1px solid #2c3b55;
-    }
+
     th {
-      background-color: #1b2a41;
+      background-color: #1a2b4c;
+      padding: 8px;
+      text-align: center;
+      border-bottom: 2px solid #444;
     }
-    tr:nth-child(even) {
-      background-color: #13243a;
+
+    .table-row {
+      border-bottom: 1px solid #444;
     }
+
+    .table-row:last-child {
+      border-bottom: none;
+    }
+
+    td {
+      padding: 8px;
+      text-align: center;
+    }
+    .close-button {
+      cursor: pointer;
+      color: white;
+      background: none;
+      border: none;
+      font-size: 25px;
+      font-weight: bold;
+      float: right;
+    }
+    .status-icon {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 81px;
+      height: 20px;
+      border-radius: 5px;
+      margin-right: 5px;
+    }
+
+    .status-online { background-color: green; }
+    .status-warning { background-color: orange; }
+    .status-offline { background-color: red; }
+
     a {
-      color: #58a6ff;
+      color: #1e90ff;
+      cursor: pointer;
       text-decoration: none;
     }
-    .review-button {
-      color: yellow;
-    }
   `;
-  closeWindow() {
-    this.shadowRoot.querySelector('.container').style.display = 'none';
-  }
+
   render() {
     return html`
-        <div class="container">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h2>审核列表</h2>
-          <button class="close-button" @click="${this.closeWindow}">×</button>
-        </div><hr />
-        <div class="form-container">
+      <div class="modal">
+        <div class="header">审核列表<button class="close-button" @click="${this.closeModal}">×</button></div><hr />
+      <div class="form-container">
           <div class="form-group">
-            <label for="search-type">任务查询方式:</label>
+            <label for="search-type">任务查询类型:</label>
             <select id="search-type" style="background-color: gray;">
               <option>任务编号</option>
             </select>
@@ -121,14 +149,15 @@ class TaskReviewComponent extends LitElement {
             </select>
           </div>
           <div class="form-group">
-            <label for="review-status">审核状态:</label>
+            <label for="review-status">审批状态:</label>
             <select id="review-status" style="background-color: gray;">
               <option>已提交</option>
             </select>
-          </div><hr />
+          </div>
         </div>
 
-        <table> 
+  
+        <table>
           <thead>
             <tr>
               <th>任务名</th>
@@ -137,29 +166,41 @@ class TaskReviewComponent extends LitElement {
               <th>设备类型</th>
               <th>所属地区</th>
               <th>任务提交时间</th>
-              <th>审核状态</th>
+              <th>审批状态</th>
               <th>任务审核</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>中卫101</td>
-              <td>w101</td>
-              <td>Y101</td>
-              <td>自动角反射器</td>
-              <td>中卫</td>
-              <td>2024-11-05 23:00</td>
-              <td>已提交</td>
-              <td>
-                <a href="#" class="review-button">查看/审核</a>
-              </td>
-            </tr>
-             
-            
+            ${this.renderRows()}
           </tbody>
         </table>
       </div>
     `;
+  }
+
+  renderRows() {
+    const taskReview = [
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态'},
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态'},
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态'},
+    ];
+
+    return taskReview.map(taskReview => html`
+      <tr class="table-row">
+        <td>${taskReview.taskName}</a></td>
+        <td>${taskReview.taskId}</td>
+        <td>${taskReview.submitName}</td>
+        <td>${taskReview.deviceType}</td>
+        <td>${taskReview.region}</td>
+        <td>${taskReview.taskTime}</td>
+        <td>${taskReview.approveStatus}</td>
+        <td><a>查看</a>/<a>审核</a></td>
+      </tr>
+    `);
+  }
+
+  closeModal() {
+    this.dispatchEvent(new CustomEvent('close-modal'));
   }
 }
 

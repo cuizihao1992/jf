@@ -68,12 +68,16 @@ class TaskManagement extends LitElement {
         return html`<task-create-component></task-create-component>`;
       case "myTasks":
         return html`<task-info-component
-          @close-task-info=${this.closeTasks}
+          @close-modal=${this.closeTasks}
         ></task-info-component>`;
       case "queryTasks":
-        return html`<task-query-component></task-query-component>`;
+        return html`<task-query-component
+          @close-modal=${this.closeTasks}
+        ></task-query-component>`;
       case "reviewTasks":
-        return html`<task-review-component></task-review-component>`;
+        return html`<task-review-component
+          @close-modal=${this.closeTasks}
+        ></task-review-component>`;
       default:
         return ""; // 不显示任何组件
     }
