@@ -1,18 +1,25 @@
-import { LitElement, html, css } from 'lit';
-
+import { LitElement, html, css } from "lit";
+import "./device-details";
 class DeviceQuery extends LitElement {
+  static properties = {
+    showActions: { type: Boolean }, // 控制是否显示操作列
+    showDeviceDetails: { type: Boolean }, // 控制设备详情的显示
+  };
+
+  constructor() {
+    super();
+    this.showActions = false; // 默认显示操作列
+    this.showDeviceDetails = false; // 初始不显示设备详情
+  }
+
   static styles = css`
     .modal {
-      position: fixed;
-      top: 50%;
-      left: 40%;
-      transform: translate(-50%, -50%);
       padding: 20px;
       background: rgba(0, 9, 36, 0.8);
       color: white;
       border-radius: 10px;
       width: 900px;
-      height: 700px; 
+      height: 700px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
       border: 1px solid rgba(42, 130, 228, 1);
@@ -61,7 +68,6 @@ class DeviceQuery extends LitElement {
       margin-left: 10px;
     }
 
-
     table {
       width: 100%;
       border-collapse: collapse;
@@ -107,9 +113,20 @@ class DeviceQuery extends LitElement {
       margin-right: 5px;
     }
 
-    .status-online { background-color: green; }
-    .status-warning { background-color: orange; }
-    .status-offline { background-color: red; }
+    .status-online {
+      background-color: green;
+    }
+    .status-warning {
+      background-color: orange;
+    }
+    .status-offline {
+      background-color: red;
+    }
+    .action-button {
+      cursor: pointer;
+      color: #1e90ff;
+      text-decoration: underline;
+    }
 
     a {
       color: #1e90ff;
@@ -121,8 +138,13 @@ class DeviceQuery extends LitElement {
   render() {
     return html`
       <div class="modal">
-        <div class="header">设备查询<button class="close-button" @click="${this.closeModal}">×</button></div><hr />
-      <div class="form-container">
+        <div class="header">
+          设备查询<button class="close-button" @click="${this.closeModal}">
+            ×
+          </button>
+        </div>
+        <hr />
+        <div class="form-container">
           <div class="form-group">
             <label for="search-type">任务查询方式:</label>
             <select id="search-type" style="background-color: gray;">
@@ -131,10 +153,15 @@ class DeviceQuery extends LitElement {
           </div>
           <div class="form-group">
             <label for="search-condition">查询条件:</label>
-            <input type="text" id="search-condition" style="background-color: white; " />
+            <input
+              type="text"
+              id="search-condition"
+              style="background-color: white; "
+            />
           </div>
           <button class="query-button">查询</button>
-        </div><hr />
+        </div>
+        <hr />
         <div class="form-container">
           <div class="form-group">
             <label for="location">所属地区:</label>
@@ -156,7 +183,6 @@ class DeviceQuery extends LitElement {
           </div>
         </div>
 
-  
         <table>
           <thead>
             <tr>
@@ -167,50 +193,108 @@ class DeviceQuery extends LitElement {
               <th>连接状态</th>
               <th>电源状态</th>
               <th>设备状态</th>
-              <th>操作</th>
+              ${this.showActions
+                ? html`<th>操作</th>`
+                : html`<th>设备详情</th>`}
             </tr>
           </thead>
           <tbody>
             ${this.renderRows()}
           </tbody>
         </table>
+
+        ${this.showDeviceDetails ? html`<device-details></device-details>` : ""}
       </div>
     `;
   }
 
   renderRows() {
     const devices = [
-      { id: 101, time: '2024-9-24 16:21:45', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 102, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 103, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 104, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
+      {
+        id: 101,
+        time: "2024-9-24 16:21:45",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
+      {
+        id: 102,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
+      {
+        id: 103,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
+      {
+        id: 104,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
     ];
 
-    return devices.map(device => html`
-      <tr class="table-row">
-        <td>${device.id}</a></td>
-        <td>${device.time}</td>
-        <td>${device.type}</td>
-        <td>${device.region}</td>
-        <td>${device.status}</td>
-        <td><span class="status-icon status-online">${device.power}</span></td>
-        <td>${device.deviceStatus}</td>
-        <td><a @click=${this.adjustPosture}>姿态调整</a></td>
-      </tr>
-    `);
+    return devices.map(
+      (device) => html`
+        <tr class="table-row">
+          <td><a href="#">${device.id}</a></td>
+          <td>${device.time}</td>
+          <td>${device.type}</td>
+          <td>${device.region}</td>
+          <td>${device.status}</td>
+          <td>
+            <span class="status-icon status-online">${device.power}</span>
+          </td>
+          <td>${device.deviceStatus}</td>
+          ${this.showActions
+            ? html`
+                <td>
+                  <a class="action-button" @click="${this.adjustPosture}"
+                    >姿态调整</a
+                  >
+                </td>
+              `
+            : html`
+                <td>
+                  <a class="action-button" @click="${this.toggleDeviceDetails}">
+                    ${this.showDeviceDetails ? "关闭详情" : "查看详情"}
+                  </a>
+                </td>
+              `}
+        </tr>
+      `
+    );
+  }
+
+  toggleDeviceDetails() {
+    this.showDeviceDetails = !this.showDeviceDetails;
   }
 
   closeModal() {
-    this.dispatchEvent(new CustomEvent('close-modal'));
-    const postureAdjustElement = document.querySelector('posture-adjust');
+    this.dispatchEvent(new CustomEvent("close-modal"));
+    const postureAdjustElement = document.querySelector("posture-adjust");
     if (postureAdjustElement) {
-      postureAdjustElement.dispatchEvent(new CustomEvent('close-modal'));
+      postureAdjustElement.dispatchEvent(new CustomEvent("close-modal"));
     }
   }
 
   adjustPosture() {
-    this.dispatchEvent(new CustomEvent('open-posture-adjust'));
+    this.dispatchEvent(new CustomEvent("open-posture-adjust"));
   }
 }
 
-customElements.define('device-query', DeviceQuery);
+customElements.define("device-query", DeviceQuery);

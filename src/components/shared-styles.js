@@ -3,6 +3,10 @@ import { css } from "lit";
 export const sharedStyles = css`
   :host {
   }
+  .panel {
+    position: absolute;
+    left: 10%;
+  }
   .left-buttons {
     position: absolute;
     left: 0px;
