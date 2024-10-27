@@ -180,9 +180,9 @@ class TaskReviewComponent extends LitElement {
 
   renderRows() {
     const taskReview = [
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态'},
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态'},
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态'},
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态' },
     ];
 
     return taskReview.map(taskReview => html`
@@ -194,13 +194,17 @@ class TaskReviewComponent extends LitElement {
         <td>${taskReview.region}</td>
         <td>${taskReview.taskTime}</td>
         <td>${taskReview.approveStatus}</td>
-        <td><a>查看</a>/<a>审核</a></td>
+        <td><a @click="${this.openTaskReviewDetail}">查看</a>
+        /<a>审核</a></td>
       </tr>
     `);
   }
 
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
+  }
+  openTaskReviewDetail() {
+    this.dispatchEvent(new CustomEvent('open-task-review-detail'));
   }
 }
 

@@ -4,7 +4,7 @@ import { sharedStyles } from "../../components/shared-styles.js"; // 引入共�
 import "./components/device-add.js";
 import "./components/device-approve.js"; // 假设有创建任务组件
 import "./components/device-edit.js"; // 假设有任务查询组件
-import "./components/device-search.js"; // 假设有任务审核组件
+
 import "@/modules/device-control/components/device-query.js";
 
 class DeviceManagement extends LitElement {
@@ -72,19 +72,19 @@ class DeviceManagement extends LitElement {
       case "addDevice":
         return html`<device-add
           @close-modal=${this.closeTasks}
-        ></device-add>`;  
+        ></device-add>`;
       case "queryDevice":
-        return html`<device-search
+        return html`<device-query
           @close-modal=${this.closeTasks}
-        ></device-search>`;  
+        ></device-query>`;
       case "editDevice":
         return html`<device-edit
           @close-modal=${this.closeTasks}
-        ></device-edit>`;  
+        ></device-edit>`;
       case "approveDevice":
         return html`<device-approve
           @close-modal=${this.closeTasks}
-        ></device-approve>`;  
+        ></device-approve>`;
       default:
         return ""; // 不显示任何组件
     }

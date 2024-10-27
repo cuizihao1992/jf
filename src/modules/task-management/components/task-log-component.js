@@ -1,8 +1,8 @@
 import { LitElement, html, css } from 'lit';
 
-class TaskQueryComponent extends LitElement {
+class TaskLog extends LitElement {
   static styles = css`
-      .modal {
+    .modal {
       position: fixed;
       top: 50%;
       left: 40%;
@@ -46,7 +46,7 @@ class TaskQueryComponent extends LitElement {
     .form-group select,
     .form-group input {
       padding: 5px;
-      background-color: #1b2a41;
+      background-color: gray;
       color: white;
       border: none;
       border-radius: 5px;
@@ -60,7 +60,6 @@ class TaskQueryComponent extends LitElement {
       cursor: pointer;
       margin-left: 10px;
     }
-
 
     table {
       width: 100%;
@@ -97,19 +96,6 @@ class TaskQueryComponent extends LitElement {
       font-weight: bold;
       float: right;
     }
-    .status-icon {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      width: 81px;
-      height: 20px;
-      border-radius: 5px;
-      margin-right: 5px;
-    }
-
-    .status-online { background-color: green; }
-    .status-warning { background-color: orange; }
-    .status-offline { background-color: red; }
 
     a {
       color: #1e90ff;
@@ -121,101 +107,62 @@ class TaskQueryComponent extends LitElement {
   render() {
     return html`
       <div class="modal">
-        <div class="header">任务查询<button class="close-button" @click="${this.closeModal}">×</button></div><hr />
-      <div class="form-container">
+        <div class="header">设备日志<button class="close-button" @click="${this.closeModal}">×</button></div><hr />
+        <div class="form-container">
           <div class="form-group">
-            <label for="search-type">任务查询方式:</label>
-            <select id="search-type" style="background-color: gray;">
-              <option>任务编号</option>
+            <label for="log-type">日志查询方式:</label>
+            <select id="log-type">
+              <option>设备编号</option>
             </select>
           </div>
           <div class="form-group">
             <label for="search-condition">查询条件:</label>
-            <input type="text" id="search-condition" style="background-color: white; " />
+            <input type="text" id="search-condition" style="background-color: white;" />
           </div>
           <button class="query-button">查询</button>
         </div><hr />
         <div class="form-container">
           <div class="form-group">
-            <label for="location">所属地区:</label>
-            <select id="location" style="background-color: gray;">
+            <label for="region">所属地区:</label>
+            <select id="region">
               <option>中卫</option>
             </select>
           </div>
           <div class="form-group">
             <label for="device-type">设备类型:</label>
-            <select id="device-type" style="background-color: gray;">
+            <select id="device-type">
               <option>自动角反射器</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="task-status">任务状态:</label>
-            <select id="task-status" style="background-color: gray;">
-              <option>未完成</option>
             </select>
           </div>
         </div>
 
-  
         <table>
           <thead>
             <tr>
-              <th>任务名</th>
-              <th>任务编号</th>
-              <th>提交用户名</th>
-              <th>设备类型</th>
+              <th>日志编号</th>
+              <th>设备编号</th>
               <th>所属地区</th>
-              <th>任务状态</th>
-              <th>审核人员</th>
-              <th>任务详情</th>
-              <th>故障详情</th>
-              <th>日志详情</th>
+              <th>设备类型</th>
+              <th>操作内容</th>
             </tr>
           </thead>
           <tbody>
-            ${this.renderRows()}
+            <tr class="table-row">
+              <td>1</td>
+              <td>101</td>
+              <td>中卫</td>
+              <td>自动角反射器</td>
+              <td>打开所有电源</td>
+            </tr>
           </tbody>
         </table>
       </div>
     `;
   }
 
-  renderRows() {
-    const taskQuery = [
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
-    ];
-
-    return taskQuery.map(taskQuery => html`
-      <tr class="table-row">
-        <td>${taskQuery.taskName}</a></td>
-        <td>${taskQuery.taskId}</td>
-        <td>${taskQuery.submitName}</td>
-        <td>${taskQuery.deviceType}</td>
-        <td>${taskQuery.region}</td>
-        <td>${taskQuery.taskStatus}</td>
-        <td>${taskQuery.auditUser}</td>
-        <td><a @click="${() => this.openTaskDetails()}">查看</a></td>
-        <td><a @click="${() => this.openFaultDetails()}">查看</a></td>
-        <td><a @click="${() => this.openTaskLog()}">查看</a></td>
-      </tr>
-    `);
-  }
-
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
-  openTaskDetails() {
-    this.dispatchEvent(new CustomEvent('open-task-details'));
-  }
-
-  openFaultDetails() {
-    this.dispatchEvent(new CustomEvent('open-fault-details'));
-  }
-  openTaskLog() {
-    this.dispatchEvent(new CustomEvent('open-task-log-component'));
-  }
-
-
 }
 
-customElements.define('task-query-component', TaskQueryComponent);
+customElements.define('task-log-component', TaskLog);
