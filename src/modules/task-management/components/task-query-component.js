@@ -4,7 +4,7 @@ class TaskQueryComponent extends LitElement {
   static styles = css`
       .modal {
       position: fixed;
-      top: 50%;
+      top: 49%;
       left: 40%;
       transform: translate(-50%, -50%);
       padding: 20px;
@@ -182,7 +182,7 @@ class TaskQueryComponent extends LitElement {
 
   renderRows() {
     const taskQuery = [
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员'},
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
     ];
 
     return taskQuery.map(taskQuery => html`
@@ -194,9 +194,9 @@ class TaskQueryComponent extends LitElement {
         <td>${taskQuery.region}</td>
         <td>${taskQuery.taskStatus}</td>
         <td>${taskQuery.auditUser}</td>
-        <td><a>查看</a></td>
-        <td><a>查看</a></td>
-        <td><a>查看</a></td>
+        <td><a @click="${() => this.openTaskDetails()}">查看</a></td>
+        <td><a @click="${() => this.openFaultDetails()}">查看</a></td>
+        <td><a @click="${() => this.openTaskLog()}">查看</a></td>
       </tr>
     `);
   }
@@ -204,6 +204,19 @@ class TaskQueryComponent extends LitElement {
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
+  openTaskDetails() {
+    console.log('open task details');
+    
+    this.dispatchEvent(new CustomEvent('open-task-details'));
+  }
+
+  openFaultDetails() {
+    this.dispatchEvent(new CustomEvent('open-fault-details'));
+  }
+  openTaskLog() {
+    this.dispatchEvent(new CustomEvent('open-task-log-component'));
+  }
+
 
 }
 

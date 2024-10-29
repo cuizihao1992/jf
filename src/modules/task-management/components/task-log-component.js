@@ -1,17 +1,17 @@
 import { LitElement, html, css } from 'lit';
 
-class DeviceSearch extends LitElement { 
+class TaskLog extends LitElement {
   static styles = css`
     .modal {
-      position: absolute;
-      top: 50%;
-      left: 100%;
+      position: fixed;
+      top: 49%;
+      left: 1440px;
       transform: translate(-50%, -50%);
       padding: 20px;
       background: rgba(0, 9, 36, 0.8);
       color: white;
       border-radius: 10px;
-      width: 900px;
+      width: 400px;
       height: 700px; 
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
@@ -46,7 +46,7 @@ class DeviceSearch extends LitElement {
     .form-group select,
     .form-group input {
       padding: 5px;
-      background-color: #1b2a41;
+      background-color: gray;
       color: white;
       border: none;
       border-radius: 5px;
@@ -60,7 +60,6 @@ class DeviceSearch extends LitElement {
       cursor: pointer;
       margin-left: 10px;
     }
-
 
     table {
       width: 100%;
@@ -97,19 +96,6 @@ class DeviceSearch extends LitElement {
       font-weight: bold;
       float: right;
     }
-    .status-icon {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      width: 81px;
-      height: 20px;
-      border-radius: 5px;
-      margin-right: 5px;
-    }
-
-    .status-online { background-color: green; }
-    .status-warning { background-color: orange; }
-    .status-offline { background-color: red; }
 
     a {
       color: #1e90ff;
@@ -121,83 +107,57 @@ class DeviceSearch extends LitElement {
   render() {
     return html`
       <div class="modal">
-        <div class="header">设备查询<button class="close-button" @click="${this.closeModal}">×</button></div><hr />
-      <div class="form-container">
+        <div class="header">设备日志<button class="close-button" @click="${this.closeModal}">×</button></div><hr />
+        <div class="form-container">
           <div class="form-group">
-            <label for="search-type">任务查询类型:</label>
-            <select id="search-type" style="background-color: gray;">
+            <label for="log-type">日志查询方式:</label>
+            <select id="log-type">
               <option>设备编号</option>
             </select>
           </div>
           <div class="form-group">
             <label for="search-condition">查询条件:</label>
-            <input type="text" id="search-condition" style="background-color: white; " />
+            <input type="text" id="search-condition" style="background-color: white;" />
           </div>
           <button class="query-button">查询</button>
         </div><hr />
         <div class="form-container">
           <div class="form-group">
-            <label for="location">所属地区:</label>
-            <select id="location" style="background-color: gray;">
+            <label for="region">所属地区:</label>
+            <select id="region">
               <option>中卫</option>
             </select>
           </div>
           <div class="form-group">
             <label for="device-type">设备类型:</label>
-            <select id="device-type" style="background-color: gray;">
+            <select id="device-type">
               <option>自动角反射器</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="device-status">设备状态:</label>
-            <select id="device-status" style="background-color: gray;">
-              <option>关机</option>
             </select>
           </div>
         </div>
 
-  
         <table>
           <thead>
             <tr>
+              <th>日志编号</th>
               <th>设备编号</th>
-              <th>设备时间</th>
-              <th>设备类型</th>
               <th>所属地区</th>
-              <th>连接状态</th>
-              <th>电源状态</th>
-              <th>设备状态</th>
-              <th>设备详情</th>
+              <th>设备类型</th>
+              <th>操作内容</th>
             </tr>
           </thead>
           <tbody>
-            ${this.renderRows()}
+            <tr class="table-row">
+              <td>1</td>
+              <td>101</td>
+              <td>中卫</td>
+              <td>自动角反射器</td>
+              <td>打开所有电源</td>
+            </tr>
           </tbody>
         </table>
       </div>
     `;
-  }
-
-  renderRows() {
-    const devices = [
-      { id: 101, time: '2024-9-24 16:21:45', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 102, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 103, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 104, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-    ];
-
-    return devices.map(device => html`
-      <tr class="table-row">
-        <td>${device.id}</a></td>
-        <td>${device.time}</td>
-        <td>${device.type}</td>
-        <td>${device.region}</td>
-        <td>${device.status}</td>
-        <td><span class="status-icon status-online">${device.power}</span></td>
-        <td>${device.deviceStatus}</td>
-        <td><a>查看</a></td>
-      </tr>
-    `);
   }
 
   closeModal() {
@@ -205,4 +165,4 @@ class DeviceSearch extends LitElement {
   }
 }
 
-customElements.define('device-search', DeviceSearch);
+customElements.define('task-log-component', TaskLog);
