@@ -98,4 +98,4 @@ class FaultDetails extends LitElement {
   }
 }
 
-customElements.define("fault-details-component", FaultDetails);
+customElements.define("fault-details", FaultDetails);
