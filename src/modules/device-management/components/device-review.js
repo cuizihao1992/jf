@@ -1,14 +1,15 @@
 import { LitElement, html, css } from 'lit';
 
-class TaskReviewDetail extends LitElement {
+class deviceReview extends LitElement {
 
   static styles = css`
       .container {
         position: absolute;
-        left: 1220px;
+        left: 1000px;
+        top: -50px;
         bottom: 1px;
         width: 455px; /* 增加整体宽度 */
-        height: 770px; /* 设置高度为窗口高度 */
+        height: 600px; /* 设置高度为窗口高度 */
         padding: 15px; /* 内边距 */
         background-color: rgba(13, 31, 51, 0.9); /* 深色背景 */
         color: white;
@@ -49,7 +50,7 @@ class TaskReviewDetail extends LitElement {
         border-radius: 5px;
         background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
         width: 430px;
-        height: 200px; /* 高度缩小至原来的三分之二 */
+        height: 270px; /* 高度缩小至原来的三分之二 */
       }
       .task-info h2 {
         margin: 0;
@@ -282,57 +283,53 @@ class TaskReviewDetail extends LitElement {
     return html`
         <div class="container">
           <div class="header">
-            <h1>任务详情</h1>
+            <h1>设备审核</h1>
             <span class="close-button" @click="${this.handleClose}">×</span>
           </div>
           <div>
           <div class="task-info">
-            <h2>任务信息</h2>
+            <h2>设备信息</h2>
             <div class="row-task">
-              <label for="task-name">任务名:</label>
+              <label for="task-name">设备编号:</label>
               <input type="text" id="task-name"  placeholder="中卫101" style="margin-left:5px;width:100px;height:15px;border-radius: 4px; /* 圆角 */"/>
-              <label for="task-number" style="margin-left:75px">任务编号:</label>
-              <input type="text" id="task-number"  placeholder="w101" style="margin-left:5px;width:100px;height:15px;border-radius: 4px; /* 圆角 */"/>
             </div>
-            <div class="row-location">
-              <label for="location">审核状态:</label>
-              <select id="location" style="border-radius: 4px;">
-                <option>已提交</option>
-              </select>
-              <label for="device-type" style="margin-left:75px">设备类型:</label>
-              <select id="device-type" style="margin-left:8px;border-radius: 4px; /* 圆角 */">
-                <option>自动角反射器</option>
-              </select>
+            <div class="form-container">
+          <div class="form-group">
+            <label for="location">所属地区:</label>
+            <select id="location" style="background-color: gray;">
+              <option>中卫</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="location">设备类型:</label>
+            <select id="location" style="background-color: gray;">
+              <option>中卫</option>
+            </select>
+          </div>
+              
             </div>
             <div class="row-start-time">
-              <label for="start-time">设备开启时间/(年-月-日时-分-秒):</label>
-              <input type="text" id="start-time" placeholder="2024-09-24 16:21:45" style="margin-left:20px;width:180px;height:15px;border-radius: 4px; /* 圆角 */"/>
+              <label for="start-time">偏磁角度</label>
+              <input type="text" id="start-time" style="margin-left:20px;width:180px;height:15px;border-radius: 4px; /* 圆角 */"/>
             </div>
             <div class="row-end-time">
-              <label for="end-time">设备关闭时间/(年-月-日时-分-秒):</label>
-              <input type="text" id="end-time" placeholder="2024-09-24 16:21:45" style="margin-left:20px;width:180px;height:15px;border-radius: 4px; /* 圆角 */"/>
+              <label for="end-time">安装方位角度</label>
+              <input type="text" id="end-time"  style="margin-left:20px;width:180px;height:15px;border-radius: 4px; /* 圆角 */"/>
             </div>
             <div class="row-execution-time">
-              <label for="execution-time">任务执行时间/分钟(整数):</label>
-              <input type="number" id="execution-time"  placeholder="40" style="margin-left:65px;width:180px;height:15px;border-radius: 4px; /* 圆角 */"/>
+              <label for="execution-time">安装俯仰角度</label>
+              <input type="number" id="execution-time"   style="margin-left:65px;width:180px;height:15px;border-radius: 4px; /* 圆角 */"/>
             </div>
-          </div>
-          <div class="device-list">
-            <h3>执行设备列表</h3>
-            <div class="tbody-wrapper">
-            <table class="device-list-table">
-              <thead>
-                <tr>
-                  <th>设备安装角度</th>
-                  <th>设备调整角度</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${deviceListTableRows}
-              </tbody>
-            </table>
+            <div class="row-execution-time">
+              <label for="execution-time">设备所在纬度</label>
+              <input type="number" id="execution-time"   style="margin-left:65px;width:180px;height:15px;border-radius: 4px; /* 圆角 */"/>
+            </div>
+            <div class="row-execution-time">
+              <label for="execution-time">设备所在经度</label>
+              <input type="number" id="execution-time"   style="margin-left:65px;width:180px;height:15px;border-radius: 4px; /* 圆角 */"/>
+            </div>
+          
            </div>
-          </div>
           <div class="review-info">
             <div class="row">
               <label for="reviewer">审核人:</label>
@@ -365,4 +362,4 @@ class TaskReviewDetail extends LitElement {
 }
 
 
-customElements.define('task-review-detail', TaskReviewDetail);
+customElements.define('device-review', deviceReview);

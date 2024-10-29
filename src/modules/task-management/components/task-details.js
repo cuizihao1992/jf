@@ -4,7 +4,7 @@ class TaskDetails extends LitElement {
   static styles = css`
     .container {
       position: absolute;
-      left: 50px;
+      left: 1220px;
       width: 450px; /* 增加整体宽度 */
       height: 600px; /* 设置高度为窗口高度 */
       padding: 15px; /* 内边距 */
@@ -206,6 +206,15 @@ class TaskDetails extends LitElement {
       cursor: pointer;
       margin-right: 15px;
     }
+      .close-button {
+      cursor: pointer;
+      color: white;
+      background: none;
+      border: none;
+      font-size: 25px;
+      font-weight: bold;
+      float: right;
+    }
   
   `;
 
@@ -259,6 +268,7 @@ class TaskDetails extends LitElement {
       <div class="container">
         <div class="header">
           <h1>任务详情</h1>
+          <button class="close-button" @click="${this.closeModal}">×</button>
           
         </div>
         <div>
@@ -315,11 +325,16 @@ class TaskDetails extends LitElement {
         
     `;
   }
+  closeModal() {
+    this.dispatchEvent(new CustomEvent('close-modal'));
+  }
 
   handleClose() {
     // 这里可以添加关闭窗口的逻辑
     // 例如，隐藏组件或销毁组件
     this.remove();
+    this.dispatchEvent(new CustomEvent('close-modal'));
+
   }
 }
 

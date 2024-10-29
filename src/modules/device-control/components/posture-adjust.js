@@ -165,7 +165,7 @@ class PostureAdjust extends LitElement {
 
       <div class="status-controls" style="border: 1px solid #00ffff; padding: 10px; border-radius: 5px; margin-bottom: 10px; width: 409px; position: relative;flex-direction: column;">
         <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%);">姿态控制</div>
-          <button style="margin-top: 5px; width: 75px; height: 32px; margin-left: auto; margin-bottom: 10px;">姿态计算</button>
+          <button @click="${() => this.openParameterConfig()}" style="margin-top: 5px; width: 75px; height: 32px; margin-left: auto; margin-bottom: 10px;">姿态计算</button>
           <div style="display: flex; justify-content: space-between;">
             <div class="adjustment" style="border: 1px solid #00ffff; padding: 10px; border-radius: 5px; width: 120px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 5px;">
               <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%);">安装姿态</div>
@@ -196,9 +196,9 @@ class PostureAdjust extends LitElement {
           <button style="width: 65px; height: 32px; font-size: 11px; margin-right: 5px;margin-left: 0px;">云台角度</button>
           <button style="width: 65px; height: 32px; font-size: 11px; margin-right: 5px;">GNSS</button>
           <button style="width: 65px; height: 32px; font-size: 11px; margin-right: 5px;">电源信息</button>
-          <button style="width: 65px; height: 32px; font-size: 11px; margin-right: 5px;">实时影像</button>
-          <button style="width: 65px; height: 32px; font-size: 11px; margin-right: 5px;">角度检测</button>
-          <button style="width: 65px; height: 32px; font-size: 11px; margin-right: 5px;">设备日志</button>
+          <button @click="${() => this.openRealtimeImagery()}" style="width: 65px; height: 32px; font-size: 11px; margin-right: 5px;">实时影像</button>
+          <button @click="${() => this.openAngleDetection()}" style="width: 65px; height: 32px; font-size: 11px; margin-right: 5px;">角度检测</button>
+          <button @click="${() => this.openSingleDeviceLog()}" style="width: 65px; height: 32px; font-size: 11px; margin-right: 5px;">设备日志</button>
         </div>
         <table style="font-size: 14px;">
           <thead>
@@ -222,6 +222,18 @@ class PostureAdjust extends LitElement {
 
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
+  }
+  openRealtimeImagery() {
+    this.dispatchEvent(new CustomEvent('open-realtime-imagery'));
+  }
+  openAngleDetection() {
+    this.dispatchEvent(new CustomEvent('open-angle-detection'));
+  }
+  openSingleDeviceLog() {
+    this.dispatchEvent(new CustomEvent('open-single-device-log'));
+  }
+  openParameterConfig() {
+    this.dispatchEvent(new CustomEvent('open-parameter-config'));
   }
 }
 

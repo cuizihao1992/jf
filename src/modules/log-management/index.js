@@ -3,6 +3,9 @@ import "../../components/custom-button.js"; // Import the reusable button compon
 import { sharedStyles } from "../../components/shared-styles.js"; // 引入共享样式
 import "./components/device-log.js";
 import "./components/task-log.js";
+import "@/modules/task-management/components/task-details.js";// 引入任务详情组件
+import "@/modules/task-management/components/fault-details.js";// 引入故障详情组件
+import "@/modules/task-management/components/task-log-component.js";// 引入日志详情组件
 
 class LogManagement extends LitElement {
   static styles = [sharedStyles];
@@ -10,6 +13,9 @@ class LogManagement extends LitElement {
   static properties = {
     selectedButton: { type: String },  // 记录选中的按钮
     activeComponent: { type: String }, // 记录当前显示的组件
+    isTaskDetailsOpen: { type: Boolean },
+    isFaultDetailsOpen: { type: Boolean },
+    isTaskLogOpen: { type: Boolean },
   };
 
   constructor() {
@@ -35,6 +41,20 @@ class LogManagement extends LitElement {
       </div>
 
       ${this.renderActiveComponent()}
+      <!-- 任务详情弹窗 -->
+      ${this.isTaskDetailsOpen
+        ? html`<task-details @close-modal=${this.closeTaskDetails}></task-details>`
+        : ""}
+
+      <!-- 故障详情弹窗 -->
+      ${this.isFaultDetailsOpen
+        ? html`<fault-details-component @close-modal=${this.closeFaultDetails}></fault-details-component>`
+        : ""}
+
+      <!-- 设备日志弹窗 -->
+      ${this.isTaskLogOpen
+        ? html`<task-log-component @close-modal=${this.closeTaskLog}></task-log-component>`
+        : ""}
     `;
   }
 
@@ -54,6 +74,9 @@ class LogManagement extends LitElement {
       case "taskLog":
         return html`<task-log
           @close-modal=${this.closeTasks}
+          @open-task-details=${this.openTaskDetails}
+          @open-fault-details=${this.openFaultDetails}
+          @open-task-log-component=${this.openTaskLog}
         ></task-log>`;  // 替换为实际的任务日志组件
       case "deviceLog":
         return html`<device-log
@@ -67,6 +90,29 @@ class LogManagement extends LitElement {
     this.activeComponent = ""; // 隐藏当前组件
     this.selectedButton = ""; // 清除选中状态
   }
+  openTaskDetails() {
+    this.isTaskDetailsOpen = true;
+  }
+
+  openFaultDetails() {
+    this.isFaultDetailsOpen = true;
+  }
+
+  openTaskLog() {
+    this.isTaskLogOpen = true; // 打开设备日志弹窗
+  }
+  closeTaskDetails() {
+    this.isTaskDetailsOpen = false;
+  }
+
+  closeFaultDetails() {
+    this.isFaultDetailsOpen = false;
+  }
+
+  closeTaskLog() {
+    this.isTaskLogOpen = false;
+  }
+
 }
 
 customElements.define("log-management", LogManagement);

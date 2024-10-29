@@ -3,9 +3,9 @@ import { LitElement, html, css } from 'lit';
 class DeviceSearch extends LitElement { 
   static styles = css`
     .modal {
-      position: fixed;
+      position: absolute;
       top: 50%;
-      left: 40%;
+      left: 100%;
       transform: translate(-50%, -50%);
       padding: 20px;
       background: rgba(0, 9, 36, 0.8);

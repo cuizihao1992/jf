@@ -194,8 +194,8 @@ class TaskReviewComponent extends LitElement {
         <td>${taskReview.region}</td>
         <td>${taskReview.taskTime}</td>
         <td>${taskReview.approveStatus}</td>
-        <td><a @click="${this.openTaskReviewDetail}">查看</a>
-        /<a>审核</a></td>
+        <td><a @click="${() => this.openTaskReviewDetails()}">查看</a>
+        /<a @click="${() => this.openTaskReviewReview()}"}">审核</a></td>
       </tr>
     `);
   }
@@ -203,9 +203,17 @@ class TaskReviewComponent extends LitElement {
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
-  openTaskReviewDetail() {
+  openTaskReviewDetails() {
+    this.showTaskDetails = true;
+    this.showTaskReviewReview = false;
     this.dispatchEvent(new CustomEvent('open-task-review-detail'));
   }
+  openTaskReviewReview() {
+    this.showTaskDetail = false;
+    this.showTaskReviewReview = true;
+    this.dispatchEvent(new CustomEvent('open-task-review-review'));
+  }
 }
+
 
 customElements.define('task-review-component', TaskReviewComponent);
