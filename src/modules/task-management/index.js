@@ -10,6 +10,9 @@ import "./components/task-details.js"; // 引入任务详情组件
 import "./components/task-log-component.js"; 
 import "./components/task-review-detail.js"; 
 import "./components/task-review-review.js"; 
+import "./components/Status-Mission.js"; // 引入任务状态组件
+import "./components/Scope-selection.js"; // 引入范围选择组件
+import "./components/parameter-config.js"; // 引入范围选择组件
 class TaskManagement extends LitElement {
   static styles = [sharedStyles];
 
@@ -21,6 +24,9 @@ class TaskManagement extends LitElement {
     isTaskLogOpen: { type: Boolean },
     isTaskReviewDetailOpen: { type: Boolean },
     isTaskReviewReviewOpen: { type: Boolean },
+    isStatusMissionOpen: { type: Boolean },
+    isScopeSelectionOpen: { type: Boolean },
+    isParameterConfigOpen: { type: Boolean },
   };
 
   constructor() {
@@ -33,6 +39,9 @@ class TaskManagement extends LitElement {
     this.isTaskReviewDetailOpen = false;
     this.isTaskReviewReviewOpen = false;
     this.isTaskReviewReviewOpen = false;
+    this.isStatusMissionOpen = false;
+    this.isScopeSelectionOpen = false;
+    this.isParameterConfigOpen = false;
   }
 
   render() {
@@ -84,6 +93,17 @@ class TaskManagement extends LitElement {
         ${this.isTaskReviewReviewOpen
           ? html`<task-review-review @close-modal=${this.closeTaskReviewReview}></task-review-review>`
           : ""}
+    <!-- 任务状态弹窗 -->
+      ${this.isStatusMissionOpen
+        ? html`<status-mission @close-modal=${this.closeStatusMission}></status-mission>`
+        : ""}
+      <!-- 范围选择弹窗 -->
+      ${this.isScopeSelectionOpen
+        ? html`<scope-selection @close-modal=${this.closeScopeSelection}></scope-selection>`
+        : ""}
+      ${this.isParameterConfigOpen
+        ? html`<parameter-config @close-modal=${this.closeParameterConfig}></parameter-config>`
+        : ""}
     `;
 
   }
@@ -107,7 +127,10 @@ class TaskManagement extends LitElement {
   renderActiveComponent() {
     switch (this.activeComponent) {
       case "createTask":
-        return html`<task-create-component></task-create-component>`;
+        return html`<task-create-component
+         @open-status-mission=${this.openStatusMission}
+         @open-scope-selection=${this.openScopeSelection}
+         @open-parameter-config=${this.openParameterConfig}></task-create-component>`;
       case "myTasks":
         return html`<task-info-component
           @close-modal=${this.closeTasks}
@@ -172,6 +195,15 @@ class TaskManagement extends LitElement {
     this.isRevokeConfirmationOpen = true;
     this.isTaskDetailsOpen = false;
   }
+  openStatusMission() {
+    this.isStatusMissionOpen = true; // 打开设备日志弹窗
+  }
+  openScopeSelection() {
+    this.isScopeSelectionOpen = true; // 打开设备日志弹窗
+  }
+  openParameterConfig() {
+    this.isParameterConfigOpen = true; // 打开设备日志弹窗
+  }
   closeRevokeConfirmation() {
     this.isRevokeConfirmationOpen = false;}
     
@@ -192,6 +224,15 @@ class TaskManagement extends LitElement {
   closeTaskReviewReview() {
     this.isTaskReviewReviewOpen = false; 
     //this.activeComponent = "taskReviewDetail"; // 设置为设备日志组件
+  }
+  closeStatusMission() {
+    this.isStatusMissionOpen = false;
+  }
+  closeScopeSelection() {
+    this.isScopeSelectionOpen = false;
+  }
+  closeParameterConfig() {
+    this.isParameterConfigOpen = false;
   }
 }
 

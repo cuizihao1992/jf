@@ -6,7 +6,7 @@ class TaskCreateComponent extends LitElement {
     .container {
       position: absolute;
       left: 50px;
-      width: 1150px; /* 增加整体宽度 */
+      width: 1180px; /* 增加整体宽度 */
       height: 590px; /* 设置高度为窗口高度 */
       padding: 15px; /* 内边距 */
       background-color: rgba(13, 31, 51, 0.9); /* 深色背景 */
@@ -47,7 +47,7 @@ class TaskCreateComponent extends LitElement {
       padding: 10px; /* 内边距 */
       border-radius: 5px;
       background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
-      width: 487px;
+      width: 520px;
       height: 200px; /* 高度缩小至原来的三分之二 */
     }
     .task-info h2 {
@@ -144,7 +144,7 @@ class TaskCreateComponent extends LitElement {
       padding: 10px; /* 内边距 */
       background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
       height:260px;
-      width: 487px;
+      width: 520px;
     }
     .device-list h3 {
       margin: 0;
@@ -156,7 +156,7 @@ class TaskCreateComponent extends LitElement {
       border-radius: 5px; /* 圆角 */
       padding: 1px; /* 内边距 */
       background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
-      width: 490px;
+      width: 515px;
       height: 400px;
       overflow-y: auto;
     }
@@ -265,7 +265,7 @@ class TaskCreateComponent extends LitElement {
             <td><button class="power-status">⚡</button></td>
             <td>${device.status}</td>
             <td>${device.time}</td>
-            <td>查看</td>
+            <td><button class="view-button" @click="${() => this.openStatusMission()}">查看</button></td>
         </tr>
     `);
     const deviceListRows = [
@@ -283,6 +283,8 @@ class TaskCreateComponent extends LitElement {
         <td>
           <input type="checkbox" id="device-${device.id}" />
           ${device.id}
+        </td>
+        <td>
           方位角: ${device.angle.horizontal}°
           仰俯角: ${device.angle.elevation}°
         </td>
@@ -340,7 +342,8 @@ class TaskCreateComponent extends LitElement {
             <thead>
             
               <tr>
-                <th>设备安装角度</th>
+                <th>设备编号</th>
+                <th>地理角度</th>
                 <th>设备调整角度</th>
               </tr>
             </thead>
@@ -378,8 +381,8 @@ class TaskCreateComponent extends LitElement {
         </div>
         </div>
         <div class="footer-buttons">
-          <button class="config-button" style="background-color: #58a6ff;border-radius:4px; width: 90px; height: 30px; margin-right: 10px;font-size: 14px;margin-top: 50px;color: white;">配置参数</button>
-          <button class="select-button" style="background-color: #58a6ff;border-radius:4px;width: 90px; height: 30px;  font-size: 14px;margin-top: 50px;color: white;">范围选择</button>
+          <button class="config-button" @click="${() => this.openParameterConfig()}" style="background-color: #58a6ff;border-radius:4px; width: 90px; height: 30px; margin-right: 10px;font-size: 14px;margin-top: 50px;color: white;">配置参数</button>
+          <button class="select-button" @click="${() => this.openScopeSelection()}" style="background-color: #58a6ff;border-radius:4px;width: 90px; height: 30px;  font-size: 14px;margin-top: 50px;color: white;">范围选择</button>
           <button class="submit-button" style="border-radius:4px;width: 60px; height: 30px;font-size: 14px;margin-top: 50px;">提交</button>
         </div>
       </div>
@@ -390,6 +393,15 @@ class TaskCreateComponent extends LitElement {
     // 这里可以添加关闭窗口的逻辑
     // 例如，隐藏组件或销毁组件
     this.remove();
+  }
+  openStatusMission() {
+    this.dispatchEvent(new CustomEvent('open-status-mission'));
+  }
+  openParameterConfig() {
+    this.dispatchEvent(new CustomEvent('open-parameter-config'));
+  }
+  openScopeSelection() {
+    this.dispatchEvent(new CustomEvent('open-scope-selection'));
   }
 }
 
