@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 
-class DeviceAdd extends LitElement {
+class Devicexiangqing extends LitElement {
   static styles = css`
     .modal {
       position: fixed;
@@ -114,7 +114,7 @@ class DeviceAdd extends LitElement {
   render() {
     return html`
       <div class="modal">
-        <div class="header">新增设备
+        <div class="header">设备详情
         <button class="close-button" @click="${this.closeModal}">×</button>
         </div>
         
@@ -202,8 +202,14 @@ class DeviceAdd extends LitElement {
     // 例如，隐藏组件或销毁组件
     this.remove();
     this.dispatchEvent(new CustomEvent('close-modal'));
+  }
+   handleClose() {
+    // 这里可以添加关闭窗口的逻辑
+    // 例如，隐藏组件或销毁组件
+    this.remove();
+    this.dispatchEvent(new CustomEvent('close-modal'));
 
   }
 }
 
-customElements.define('device-add', DeviceAdd);
+customElements.define('device-xiangqing', Devicexiangqing);

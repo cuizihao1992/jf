@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 
-class TaskReviewDetail extends LitElement {
+class TaskReviewReview extends LitElement {
 
   static styles = css`
       .container {
@@ -8,7 +8,7 @@ class TaskReviewDetail extends LitElement {
         left: 1220px;
         bottom: 1px;
         width: 455px; /* 增加整体宽度 */
-        height: 770px; /* 设置高度为窗口高度 */
+        height: 800px; /* 设置高度为窗口高度 */
         padding: 15px; /* 内边距 */
         background-color: rgba(13, 31, 51, 0.9); /* 深色背景 */
         color: white;
@@ -205,7 +205,7 @@ class TaskReviewDetail extends LitElement {
         background-color: rgba(20, 30, 50, 0.8);
         border: 1px solid #58a6ff;
         border-radius: 5px;
-        height: 235px;
+        height: 263px;
       }
       .review-info .row {
         display: flex;
@@ -231,6 +231,24 @@ class TaskReviewDetail extends LitElement {
         height: 15px;
         resize: none;
       }
+        .footer-buttons {
+      grid-column: span 3;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 20px;
+    }
+      .confirm-button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 8px 17px;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-right: 182px;
+      margin-top: -22px;
+    }
     `;
 
   render() {
@@ -350,6 +368,9 @@ class TaskReviewDetail extends LitElement {
               <label for="notes" >备注:</label>
               <input type="text" id="review-opinion" style="width: 300px;height: 100px;"/>
             </div>
+            <div class="footer-buttons">
+          <button class="confirm-button" @click="${this.handleClose}">确定</button>
+        </div>
           </div>
           </div>
           
@@ -365,4 +386,4 @@ class TaskReviewDetail extends LitElement {
 }
 
 
-customElements.define('task-review-detail', TaskReviewDetail);
+customElements.define('task-review-review', TaskReviewReview);

@@ -26,6 +26,8 @@ class DeviceQuery extends LitElement {
       overflow-y: auto;
       background-size: cover;
       background-position: center;
+      position: absolute;
+      left: 20%;
     }
 
     .header {

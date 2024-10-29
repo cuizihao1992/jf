@@ -121,7 +121,7 @@ class DeviceApprove extends LitElement {
   render() {
     return html`
       <div class="modal">
-        <div class="header">设备查询<button class="close-button" @click="${this.closeModal}">×</button></div><hr />
+        <div class="header">设备审批<button class="close-button" @click="${this.closeModal}">×</button></div><hr />
       <div class="form-container">
           <div class="form-group">
             <label for="search-type">任务查询类型:</label>
@@ -194,13 +194,31 @@ class DeviceApprove extends LitElement {
         <td>${device.type}</td>
         <td>${device.approveStatus}</td>
         <td>${device.time}</td>
-        <td><a>查看</a>/<a>审核</a></td>
+        <td><a @click="${() => this.openDeviceReview()}">查看</a>
+        /<a @click="${() => this.openDeviceshenpi()}">审核</a></td>
       </tr>
     `);
   }
 
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
+  }
+  openDeviceReview() {
+
+    this.dispatchEvent(new CustomEvent('open-device-review'));    /*this.showConfirmation=false;
+    this.dispatchEvent(new CustomEvent('open-task-details'));*/
+  }
+  openDeviceshenpi() {
+
+    this.dispatchEvent(new CustomEvent('open-device-shenpi'));    /*this.showConfirmation=false;
+    this.dispatchEvent(new CustomEvent('open-task-details'));*/
+  }
+  handleClose() {
+    // 这里可以添加关闭窗口的逻辑
+    // 例如，隐藏组件或销毁组件
+    this.remove();
+    this.dispatchEvent(new CustomEvent('close-modal'));
+
   }
 }
 

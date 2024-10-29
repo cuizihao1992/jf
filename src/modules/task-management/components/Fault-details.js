@@ -4,14 +4,14 @@ class FaultDetails extends LitElement {
   static styles = css`
     .modal {
       position: fixed;
-      top: 50%;
-      left: 50%;
+      top: 49%;
+      left: 1440px;
       transform: translate(-50%, -50%);
       padding: 20px;
       background: rgba(0, 9, 36, 0.8);
       color: white;
       border-radius: 10px;
-      width: 900px;
+      width: 400px;
       height: 700px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       border: 1px solid rgba(42, 130, 228, 1);

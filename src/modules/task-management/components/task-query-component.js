@@ -4,7 +4,7 @@ class TaskQueryComponent extends LitElement {
   static styles = css`
       .modal {
       position: fixed;
-      top: 50%;
+      top: 49%;
       left: 40%;
       transform: translate(-50%, -50%);
       padding: 20px;
@@ -205,6 +205,8 @@ class TaskQueryComponent extends LitElement {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
   openTaskDetails() {
+    console.log('open task details');
+    
     this.dispatchEvent(new CustomEvent('open-task-details'));
   }
 
