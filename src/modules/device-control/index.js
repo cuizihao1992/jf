@@ -3,6 +3,7 @@ import "../../components/custom-button.js"; // Import the button component
 import { sharedStyles } from "../../components/shared-styles.js"; // 引入共享样式
 import "./components/device-query.js"; // 引入设备查询弹窗组件
 import "./components/posture-adjust.js"; // 引入姿态调整组件
+import "./components/device-list.js"; // 引入姿态调整组件
 
 class DeviceControl extends LitElement {
   static styles = [sharedStyles];
@@ -51,6 +52,7 @@ class DeviceControl extends LitElement {
               @close-modal=${this.closePostureAdjustModal}
             ></posture-adjust>`
           : ""}
+        ${this.selectedButton === "list" ? html`<device-list></device-list>` : ""}
       </div>
     `;
   }
