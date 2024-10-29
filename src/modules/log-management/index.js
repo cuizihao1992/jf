@@ -4,7 +4,7 @@ import { sharedStyles } from "../../components/shared-styles.js"; // 引入共�
 import "./components/device-log.js";
 import "./components/task-log.js";
 import "@/modules/task-management/components/task-details.js";// 引入任务详情组件
-import "@/modules/task-management/components/fault-details.js";// 引入故障详情组件
+import "@/modules/task-management/components/Fault-details.js";// 引入故障详情组件
 import "@/modules/task-management/components/task-log-component.js";// 引入日志详情组件
 
 class LogManagement extends LitElement {
