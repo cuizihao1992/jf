@@ -23,11 +23,9 @@ class DeviceQuery extends LitElement {
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
       border: 1px solid rgba(42, 130, 228, 1);
-      overflow-y: auto;
       background-size: cover;
       background-position: center;
       position: absolute;
-      left: 20%;
     }
 
     .header {
@@ -41,7 +39,7 @@ class DeviceQuery extends LitElement {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     .form-group {
       display: flex;
@@ -129,7 +127,10 @@ class DeviceQuery extends LitElement {
       color: #1e90ff;
       text-decoration: underline;
     }
-
+    .table-container {
+      max-height: 565px; /* 限制表格的最大高度 */
+      overflow-y: auto; /* 仅表格内容滚动 */
+    }
     a {
       color: #1e90ff;
       cursor: pointer;
@@ -184,26 +185,27 @@ class DeviceQuery extends LitElement {
             </select>
           </div>
         </div>
-
-        <table>
-          <thead>
-            <tr>
-              <th>设备编号</th>
-              <th>设备时间</th>
-              <th>设备类型</th>
-              <th>所属地区</th>
-              <th>连接状态</th>
-              <th>电源状态</th>
-              <th>设备状态</th>
-              ${this.showActions
-                ? html`<th>操作</th>`
-                : html`<th>设备详情</th>`}
-            </tr>
-          </thead>
-          <tbody>
-            ${this.renderRows()}
-          </tbody>
+      <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>设备编号</th>
+                <th>设备时间</th>
+                <th>设备类型</th>
+                <th>所属地区</th>
+                <th>连接状态</th>
+                <th>电源状态</th>
+                <th>设备状态</th>
+                ${this.showActions
+                  ? html`<th>操作</th>`
+                  : html`<th>设备详情</th>`}
+              </tr>
+            </thead>
+            <tbody>
+              ${this.renderRows()}
+            </tbody>
         </table>
+      </div>
 
         ${this.showDeviceDetails ? html`<device-details></device-details>` : ""}
       </div>
@@ -248,12 +250,183 @@ class DeviceQuery extends LitElement {
         power: "⚡",
         deviceStatus: "关机",
       },
+      {
+        id: 104,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
+      {
+        id: 104,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
+      {
+        id: 104,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
+      {
+        id: 104,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
+      {
+        id: 104,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
+      {
+        id: 104,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
+      {
+        id: 104,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
+      {
+        id: 104,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
+      {
+        id: 104,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
+      {
+        id: 104,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
+      {
+        id: 104,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
+      {
+        id: 104,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
+      {
+        id: 104,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
+      {
+        id: 104,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
+      {
+        id: 104,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
+      {
+        id: 104,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
+      {
+        id: 104,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
+      {
+        id: 104,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
+      {
+        id: 104,
+        time: "2024-9-24 16:21:50",
+        type: "自动角反射器",
+        region: "中卫",
+        status: "在线",
+        power: "⚡",
+        deviceStatus: "关机",
+      },
     ];
 
     return devices.map(
       (device) => html`
         <tr class="table-row">
-          <td><a href="#">${device.id}</a></td>
+          <td>${device.id}</a></td>
           <td>${device.time}</td>
           <td>${device.type}</td>
           <td>${device.region}</td>
