@@ -16,7 +16,6 @@ class TaskLog extends LitElement {
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
       border: 1px solid rgba(42, 130, 228, 1);
-      overflow-y: auto;
       background-size: cover;
       background-position: center;
     }
