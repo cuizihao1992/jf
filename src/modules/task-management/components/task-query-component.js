@@ -16,7 +16,6 @@ class TaskQueryComponent extends LitElement {
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
       border: 1px solid rgba(42, 130, 228, 1);
-      overflow-y: auto;
       background-size: cover;
       background-position: center;
     }
@@ -32,7 +31,7 @@ class TaskQueryComponent extends LitElement {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     .form-group {
       display: flex;
@@ -116,6 +115,10 @@ class TaskQueryComponent extends LitElement {
       cursor: pointer;
       text-decoration: none;
     }
+    .table-container {
+      max-height: 565px; /* 限制表格的最大高度 */
+      overflow-y: auto; /* 仅表格内容滚动 */
+    }      
   `;
 
   render() {
@@ -156,7 +159,7 @@ class TaskQueryComponent extends LitElement {
           </div>
         </div>
 
-  
+        <div class="table-container">  
         <table>
           <thead>
             <tr>
@@ -177,11 +180,32 @@ class TaskQueryComponent extends LitElement {
           </tbody>
         </table>
       </div>
+      </div>
     `;
   }
 
   renderRows() {
     const taskQuery = [
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
       { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
     ];
 

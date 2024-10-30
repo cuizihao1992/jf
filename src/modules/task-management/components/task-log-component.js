@@ -16,7 +16,6 @@ class TaskLog extends LitElement {
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
       border: 1px solid rgba(42, 130, 228, 1);
-      overflow-y: auto;
       background-size: cover;
       background-position: center;
     }
@@ -32,7 +31,7 @@ class TaskLog extends LitElement {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     .form-group {
       display: flex;
@@ -102,6 +101,10 @@ class TaskLog extends LitElement {
       cursor: pointer;
       text-decoration: none;
     }
+    .table-container {
+      max-height: 530px; /* 限制表格的最大高度 */
+      overflow-y: auto; /* 仅表格内容滚动 */
+    }           
   `;
 
   render() {
@@ -135,7 +138,7 @@ class TaskLog extends LitElement {
             </select>
           </div>
         </div>
-
+        <div class="table-container">
         <table>
           <thead>
             <tr>
@@ -154,8 +157,93 @@ class TaskLog extends LitElement {
               <td>自动角反射器</td>
               <td>打开所有电源</td>
             </tr>
+            <tr class="table-row">
+              <td>1</td>
+              <td>101</td>
+              <td>中卫</td>
+              <td>自动角反射器</td>
+              <td>打开所有电源</td>
+            </tr>
+            <tr class="table-row">
+              <td>1</td>
+              <td>101</td>
+              <td>中卫</td>
+              <td>自动角反射器</td>
+              <td>打开所有电源</td>
+            </tr>
+            <tr class="table-row">
+              <td>1</td>
+              <td>101</td>
+              <td>中卫</td>
+              <td>自动角反射器</td>
+              <td>打开所有电源</td>
+            </tr>
+            <tr class="table-row">
+              <td>1</td>
+              <td>101</td>
+              <td>中卫</td>
+              <td>自动角反射器</td>
+              <td>打开所有电源</td>
+            </tr>
+            <tr class="table-row">
+              <td>1</td>
+              <td>101</td>
+              <td>中卫</td>
+              <td>自动角反射器</td>
+              <td>打开所有电源</td>
+            </tr>
+            <tr class="table-row">
+              <td>1</td>
+              <td>101</td>
+              <td>中卫</td>
+              <td>自动角反射器</td>
+              <td>打开所有电源</td>
+            </tr>
+            <tr class="table-row">
+              <td>1</td>
+              <td>101</td>
+              <td>中卫</td>
+              <td>自动角反射器</td>
+              <td>打开所有电源</td>
+            </tr>
+            <tr class="table-row">
+              <td>1</td>
+              <td>101</td>
+              <td>中卫</td>
+              <td>自动角反射器</td>
+              <td>打开所有电源</td>
+            </tr>
+            <tr class="table-row">
+              <td>1</td>
+              <td>101</td>
+              <td>中卫</td>
+              <td>自动角反射器</td>
+              <td>打开所有电源</td>
+            </tr>
+            <tr class="table-row">
+              <td>1</td>
+              <td>101</td>
+              <td>中卫</td>
+              <td>自动角反射器</td>
+              <td>打开所有电源</td>
+            </tr>
+            <tr class="table-row">
+              <td>1</td>
+              <td>101</td>
+              <td>中卫</td>
+              <td>自动角反射器</td>
+              <td>打开所有电源</td>
+            </tr>
+            <tr class="table-row">
+              <td>1</td>
+              <td>101</td>
+              <td>中卫</td>
+              <td>自动角反射器</td>
+              <td>打开所有电源</td>
+            </tr>
           </tbody>
         </table>
+      </div>
       </div>
     `;
   }

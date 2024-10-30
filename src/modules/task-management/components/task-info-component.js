@@ -16,7 +16,6 @@ class TaskInfoComponent extends LitElement {
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
       border: 1px solid rgba(42, 130, 228, 1);
-      overflow-y: auto;
       background-size: cover;
       background-position: center;
     }
@@ -32,7 +31,7 @@ class TaskInfoComponent extends LitElement {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     .form-group {
       display: flex;
@@ -60,8 +59,10 @@ class TaskInfoComponent extends LitElement {
       cursor: pointer;
       margin-left: 10px;
     }
-
-
+    .table-container {
+      max-height: 565px; /* 限制表格的最大高度 */
+      overflow-y: auto; /* 仅表格内容滚动 */
+    }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -211,7 +212,7 @@ class TaskInfoComponent extends LitElement {
           </div>
         </div>
 
-  
+        <div class="table-container">
         <table>
           <thead>
             <tr>
@@ -229,6 +230,7 @@ class TaskInfoComponent extends LitElement {
           </tbody>
         </table>
       </div>
+      </div>
 
        ${this.showConfirmation ? html`
         <div class="confirmation-modal">
@@ -245,6 +247,28 @@ class TaskInfoComponent extends LitElement {
 
   renderRows() {
     const taskInfo = [
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
       { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
       { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
       { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
