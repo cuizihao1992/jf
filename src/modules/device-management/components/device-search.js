@@ -4,8 +4,8 @@ class DeviceSearch extends LitElement {
   static styles = css`
     .modal {
       position: absolute;
-      top: 50%;
-      left: 100%;
+      top: 53%;
+      left: 520px;
       transform: translate(-50%, -50%);
       padding: 20px;
       background: rgba(0, 9, 36, 0.8);
@@ -195,14 +195,20 @@ class DeviceSearch extends LitElement {
         <td>${device.status}</td>
         <td><span class="status-icon status-online">${device.power}</span></td>
         <td>${device.deviceStatus}</td>
-        <td><a>查看</a></td>
+        <td><a @click="${() => this.openDeviceParticulars()}">查看</a></td>
       </tr>
     `);
   }
-
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
+  openDeviceParticulars() {
+
+    this.dispatchEvent(new CustomEvent('open-device-particulars'));    /*this.showConfirmation=false;
+    this.dispatchEvent(new CustomEvent('open-task-details'));*/
+  }
+
+  
 }
 
 customElements.define('device-search', DeviceSearch);
