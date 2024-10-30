@@ -3,16 +3,15 @@ import { LitElement, html, css } from 'lit';
 class AuditUserComponent extends LitElement {
   static styles = css`
     .modal {
-      position: fixed;
-      top: 50%;
-      left: 40%;
-      transform: translate(-50%, -50%);
+      position: relative;
+      margin-top: -3%;
+      margin-left: 3%;
       padding: 20px;
       background: rgba(0, 9, 36, 0.8);
       color: white;
       border-radius: 10px;
-      width: 900px;
-      height: 700px; 
+      width: 770px;
+      height: 610px; 
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
       border: 1px solid rgba(42, 130, 228, 1);
@@ -173,7 +172,7 @@ class AuditUserComponent extends LitElement {
 
   renderRows() {
     const applications = [
-      { id: 101, userName: '张三', applicationType: '添加', region: '中卫', phone: '13800138000', userType: '管理员', applicationTime: '2024-9-24 16:21:45', approveStatus: '已提交'},
+      { id: 101, userName: '张三', applicationType: '添加', region: '中卫', phone: '13800138000', userType: '管理员', applicationTime: '2024-9-24 16:21:45', approveStatus: '已提交' },
     ];
 
     return applications.map(application => html`
@@ -185,13 +184,17 @@ class AuditUserComponent extends LitElement {
         <td>${application.userType}</td>
         <td>${application.applicationTime}</td>
         <td>${application.approveStatus}</td>
-        <td><a>查看</a>/<a>审核</a></td>
+        <td><a @click="${() => this.openUserReview()}">查看</a>/<a 
+       @click="${() => this.openUserReview()}">审核</a></td>
       </tr>
     `);
   }
 
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
+  }
+  openUserReview() {
+    this.dispatchEvent(new CustomEvent('open-user-review'));
   }
 }
 
