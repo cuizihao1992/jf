@@ -275,8 +275,8 @@ class DeviceEdit extends LitElement {
         <td>${device.status}</td>
         <td><span class="status-icon status-online">${device.power}</span></td>
         <td>${device.deviceStatus}</td>
-        <td><a @click="${() => this.openDevicexiangqing()}">查看</a>
-        /<a @click="${() => this.openDevicexiangqing1()}">编辑</a>
+        <td><a @click="${() => this.openDevicexiangqing1()}">查看</a>
+        /<a @click="${() => this.openDevicexiangqing()}">编辑</a>
         /<a @click="${() => this.openRevokeConfirmation()}">删除</a></td>
       </tr>
     `);
