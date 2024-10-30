@@ -1,5 +1,5 @@
 import { LitElement, html, css } from "lit";
-import "./device-details";
+
 class DeviceQuery extends LitElement {
   static properties = {
     showActions: { type: Boolean }, // 控制是否显示操作列
