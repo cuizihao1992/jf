@@ -32,7 +32,7 @@ class TaskLog extends LitElement {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     .form-group {
       display: flex;
@@ -97,6 +97,10 @@ class TaskLog extends LitElement {
       font-weight: bold;
       float: right;
     }
+    .table-container {
+      max-height: 565px; /* 限制表格的最大高度 */
+      overflow-y: auto; /* 仅表格内容滚动 */
+    }
     .status-icon {
       display: inline-flex;
       justify-content: center;
@@ -150,7 +154,7 @@ class TaskLog extends LitElement {
           </div>
         </div>
 
-  
+        <div class="table-container">
         <table>
           <thead>
             <tr>
@@ -169,12 +173,37 @@ class TaskLog extends LitElement {
             ${this.renderRows()}
           </tbody>
         </table>
+        </div>
       </div>
     `;
   }
 
   renderRows() {
     const taskLog = [
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
       { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
     ];
 
