@@ -16,7 +16,6 @@ class DeviceApprove extends LitElement {
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
       border: 1px solid rgba(42, 130, 228, 1);
-      overflow-y: auto;
       background-size: cover;
       background-position: center;
     }
@@ -32,7 +31,7 @@ class DeviceApprove extends LitElement {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     .form-group {
       display: flex;
@@ -66,7 +65,6 @@ class DeviceApprove extends LitElement {
       width: 100%;
       border-collapse: collapse;
       color: white;
-      margin-top: 20px;
     }
 
     th {
@@ -116,6 +114,10 @@ class DeviceApprove extends LitElement {
       cursor: pointer;
       text-decoration: none;
     }
+    .table-container {
+      max-height: 565px; /* 限制表格的最大高度 */
+      overflow-y: auto; /* 仅表格内容滚动 */
+    }        
   `;
 
   render() {
@@ -156,7 +158,7 @@ class DeviceApprove extends LitElement {
           </div>
         </div>
 
-  
+            <div class="table-container">
         <table>
           <thead>
             <tr>
@@ -175,12 +177,28 @@ class DeviceApprove extends LitElement {
           </tbody>
         </table>
       </div>
+      </div>
     `;
   }
 
   renderRows() {
     const devices = [
       { id: 101, type: '自动角反射器', region: '中卫', userName: '张三', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
+      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
+      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
+      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
+      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
+      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
+      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
+      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
+      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
+      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
+      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
+      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
+      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
+      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
+      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
+      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
       { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
       { id: 101, type: '自动角反射器', region: '中卫', userName: '王五', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
     ];

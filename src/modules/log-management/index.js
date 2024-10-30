@@ -48,7 +48,7 @@ class LogManagement extends LitElement {
 
       <!-- 故障详情弹窗 -->
       ${this.isFaultDetailsOpen
-        ? html`<fault-details-component @close-modal=${this.closeFaultDetails}></fault-details-component>`
+        ? html`<fault-details @close-modal=${this.closeFaultDetails}></fault-details>`
         : ""}
 
       <!-- 设备日志弹窗 -->

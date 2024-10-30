@@ -67,7 +67,7 @@ class TaskInfoComponent extends LitElement {
       width: 100%;
       border-collapse: collapse;
       color: white;
-      margin-top: 20px;
+
     }
 
     th {

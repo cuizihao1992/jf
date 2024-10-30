@@ -16,7 +16,6 @@ class UserPermissionsComponent extends LitElement {
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
       border: 1px solid rgba(42, 130, 228, 1);
-      overflow-y: auto;
       background-size: cover;
       background-position: center;
     }
@@ -30,7 +29,7 @@ class UserPermissionsComponent extends LitElement {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     .form-group {
       display: flex;
@@ -62,7 +61,6 @@ class UserPermissionsComponent extends LitElement {
       width: 100%;
       border-collapse: collapse;
       color: white;
-      margin-top: 20px;
     }
     th {
       background-color: #1a2b4c;
@@ -126,6 +124,10 @@ class UserPermissionsComponent extends LitElement {
       cursor: pointer;
       text-decoration: none;
     }
+    .table-container {
+      max-height: 475px; /* 限制表格的最大高度 */
+      overflow-y: auto; /* 仅表格内容滚动 */
+    }      
   `;
 
   static properties = {
@@ -170,7 +172,7 @@ class UserPermissionsComponent extends LitElement {
             </select>
           </div>
         </div>
-  
+            <div class="table-container">
         <table>
           <thead>
             <tr>
@@ -187,13 +189,29 @@ class UserPermissionsComponent extends LitElement {
           </tbody>
         </table>
       </div>
+      </div>
       ${this.showDialog ? this.renderConfirmDialog() : ''}
     `;
   }
 
   renderRows() {
     const powerUsers = [
-      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus }
+      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
+      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
+      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
+      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
+      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
+      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
+      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
+      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
+      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
+      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
+      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
+      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
+      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
+      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
+      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
+      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
     ];
 
     return powerUsers.map(powerUser => html`
