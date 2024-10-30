@@ -8,6 +8,8 @@ import "./components/device-xiangqing.js"; // 假设有任务查询组件
 import "./components/device-xiangqing1.js"; // 假设有任务查询组件
 import "./components/device-review.js"; // 假设有任务查询组件
 import "./components/device-shenpi.js"; // 假设有任务查询组件
+import "./components/device-search.js"; // 假设有任务查询组件
+import "./components/device- particulars.js"; // 假设有任务查询组件
 
 
 class DeviceManagement extends LitElement {
@@ -20,13 +22,21 @@ class DeviceManagement extends LitElement {
     isDevicexiangqingOpen1: { type: Boolean },
     isDeviceReviewOpen: { type: Boolean },
     isDeviceShenpiOpen: { type: Boolean }, // 记录当前显示的组件
+    isDeviceSearchOpen: { type: Boolean },
+    isDeviceParticularsOpen: { type: Boolean },
   };
 
   constructor() {
     super();
     this.selectedButton = ""; // 初始状态没有选中按钮
     this.activeComponent = "";
-    this.isTaskDetailsOpen = false; // 初始状态不显示任何组件
+    this.isTaskDetailsOpen = false;
+    this.isDevicexiangqingOpen = false
+    this.isDevicexiangqingOpen1 = false
+    this.isDeviceReviewOpen = false
+    this.isDeviceShenpiOpen = false
+    this.isDeviceSearchOpen = false 
+    this.isDeviceParticularsOpen = false // 初始状态不显示任何组件
   }
 
   render() {
@@ -40,8 +50,8 @@ class DeviceManagement extends LitElement {
 
         <custom-button
           label="设备查询"
-          ?selected=${this.selectedButton === "queryDevice"}
-          @button-click=${() => this.setActiveComponent("queryDevice")}
+          ?selected=${this.selectedButton === "searchDevice"}
+          @button-click=${() => this.setActiveComponent("searchDevice")}
         ></custom-button>
 
         <custom-button
@@ -70,6 +80,9 @@ class DeviceManagement extends LitElement {
             ${this.isDeviceShenpiOpen
               ? html`<device-shenpi @close-modal=${this.closeDeviceShenpi}></device-shenpi>`
               : ""}
+              ${this.isDeviceParticularsOpen
+                ? html`<device-particulars @close-modal=${this.closeDeviceParticulars}></device-particulars>`
+                : ""}
     `;
   }
 
@@ -80,7 +93,12 @@ class DeviceManagement extends LitElement {
       this.selectedButton = ""; // 清除选中状态
     } else {
       this.activeComponent = componentName; // 切换到新组件
-      this.selectedButton = componentName; // 设置当前选中的按钮
+      this.selectedButton = componentName;
+      this.isDevicexiangqingOpen = false;
+      this.isDevicexiangqingOpen1 = false;
+      this.isDeviceReviewOpen = false;
+      this.isDeviceShenpiOpen = false;
+      this.isDeviceParticularsOpen = false;  // 设置当前选中的按钮
     }
   }
 
@@ -90,10 +108,11 @@ class DeviceManagement extends LitElement {
         return html`<device-add
           @close-modal=${this.closeTasks}
         ></device-add>`;
-      case "queryDevice":
-        return html`<device-query
+      case "searchDevice":
+        return html`<device-search
           @close-modal=${this.closeTasks}
-        ></device-query>`;
+          @open-device-particulars=${this.openDeviceParticulars}
+        ></device-search>`;
       case "editDevice":
         return html`<device-edit
           @close-modal=${this.closeTasks}
@@ -123,6 +142,17 @@ class DeviceManagement extends LitElement {
   }
   closeDevicexiangqing() {
     this.isDevicexiangqingOpen = false;}
+    openDeviceParticulars() {
+      this.isDeviceParticularsOpen = true;
+      //this.isFaultDetailsOpen = false;
+      //this.isTaskLogOpen = false// 打开故障详情弹窗
+       // 打开任务详情弹窗
+      //this.activeComponent = "taskDetails"; // 设置为任务详情组件
+    }
+    closeDeviceParticulars() {
+      this.isDeviceParticularsOpen = false;
+    }
+
     openDevicexiangqing1() {
       this.isDevicexiangqingOpen1 = true;
       //this.isFaultDetailsOpen = false;
