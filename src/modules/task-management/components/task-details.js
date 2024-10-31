@@ -4,7 +4,7 @@ class TaskDetails extends LitElement {
   static styles = css`
     .container {
       position: absolute;
-      left: 1220px;
+      left: 950px;
       width: 450px; /* 增加整体宽度 */
       height: 600px; /* 设置高度为窗口高度 */
       padding: 15px; /* 内边距 */
@@ -204,7 +204,8 @@ class TaskDetails extends LitElement {
       border-radius: 5px;
       font-size: 14px;
       cursor: pointer;
-      margin-right: 15px;
+      margin-right: 35px;
+      margin-top: -13px;
     }
       .close-button {
       cursor: pointer;
@@ -252,6 +253,8 @@ class TaskDetails extends LitElement {
         <td>
           <input type="checkbox" id="device-${device.id}" />
           ${device.id}
+        </td>
+        <td>
           方位角: ${device.angle.horizontal}°
           仰俯角: ${device.angle.elevation}°
         </td>
@@ -260,7 +263,7 @@ class TaskDetails extends LitElement {
           <input type="text" placeholder="输入角度" style="width: 50px;" />
           俯仰角:
           <input type="text" placeholder="输入角度" style="width: 50px;" />
-          
+          <button class="nav-button">姿态计算</button>
         </td>
       </tr>
     `);
@@ -303,13 +306,15 @@ class TaskDetails extends LitElement {
             <input type="number" id="execution-time"  placeholder="40" style="margin-left:65px;width:180px;height:15px;border-radius: 4px; /* 圆角 */"/>
           </div>
         </div>
-        <div class="device-list">
+         <div class="device-list">
           <h3>执行设备列表</h3>
           <div class="tbody-wrapper">
           <table class="device-list-table">
             <thead>
+            
               <tr>
-                <th>设备安装角度</th>
+                <th>设备编号</th>
+                <th>设备地理角度</th>
                 <th>设备调整角度</th>
               </tr>
             </thead>
@@ -318,6 +323,7 @@ class TaskDetails extends LitElement {
             </tbody>
           </table>
          </div>
+        </div>
         </div>
         <div class="footer-buttons">
           <button class="confirm-button" @click="${this.handleClose}">确定</button>

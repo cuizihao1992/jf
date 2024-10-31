@@ -252,21 +252,23 @@ class TaskReviewDetail extends LitElement {
     const deviceStatusRows = deviceRows.map(device => html`
           
       `);
-    const deviceListRows = [
-      { id: 201, angle: { horizontal: 0, elevation: 0 } },
-      { id: 202, angle: { horizontal: 10, elevation: 5 } },
-      { id: 203, angle: { horizontal: -5, elevation: 10 } },
-      { id: 203, angle: { horizontal: -5, elevation: 10 } },
-      { id: 203, angle: { horizontal: -5, elevation: 10 } },
-      { id: 203, angle: { horizontal: -5, elevation: 10 } },
-      { id: 203, angle: { horizontal: -5, elevation: 10 } },
-      // 添加更多的设备行
-    ];
-    const deviceListTableRows = deviceListRows.map(device => html`
+      const deviceListRows = [
+        { id: 201, angle: { horizontal: 0, elevation: 0 } },
+        { id: 202, angle: { horizontal: 10, elevation: 5 } },
+        { id: 203, angle: { horizontal: -5, elevation: 10 } },
+        { id: 203, angle: { horizontal: -5, elevation: 10 } },
+        { id: 203, angle: { horizontal: -5, elevation: 10 } },
+        { id: 203, angle: { horizontal: -5, elevation: 10 } },
+        { id: 203, angle: { horizontal: -5, elevation: 10 } },
+        // 添加更多的设备行
+      ];
+      const deviceListTableRows = deviceListRows.map(device => html`
         <tr>
           <td>
             <input type="checkbox" id="device-${device.id}" />
             ${device.id}
+          </td>
+          <td>
             方位角: ${device.angle.horizontal}°
             仰俯角: ${device.angle.elevation}°
           </td>
@@ -275,7 +277,7 @@ class TaskReviewDetail extends LitElement {
             <input type="text" placeholder="输入角度" style="width: 50px;" />
             俯仰角:
             <input type="text" placeholder="输入角度" style="width: 50px;" />
-            
+            <button class="nav-button">姿态计算</button>
           </td>
         </tr>
       `);
@@ -317,22 +319,24 @@ class TaskReviewDetail extends LitElement {
               <input type="number" id="execution-time"  placeholder="40" style="margin-left:65px;width:180px;height:15px;border-radius: 4px; /* 圆角 */"/>
             </div>
           </div>
-          <div class="device-list">
-            <h3>执行设备列表</h3>
-            <div class="tbody-wrapper">
-            <table class="device-list-table">
-              <thead>
-                <tr>
-                  <th>设备安装角度</th>
-                  <th>设备调整角度</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${deviceListTableRows}
-              </tbody>
-            </table>
-           </div>
-          </div>
+           <div class="device-list">
+          <h3>执行设备列表</h3>
+          <div class="tbody-wrapper">
+          <table class="device-list-table">
+            <thead>
+            
+              <tr>
+                <th>设备编号</th>
+                <th>设备地理角度</th>
+                <th>设备调整角度</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${deviceListTableRows}
+            </tbody>
+          </table>
+         </div>
+        </div>
           <div class="review-info">
             <div class="row">
               <label for="reviewer">审核人:</label>

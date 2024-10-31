@@ -343,7 +343,7 @@ class TaskCreateComponent extends LitElement {
             
               <tr>
                 <th>设备编号</th>
-                <th>地理角度</th>
+                <th>设备地理角度</th>
                 <th>设备调整角度</th>
               </tr>
             </thead>

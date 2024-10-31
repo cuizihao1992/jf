@@ -169,7 +169,8 @@ class TaskQueryComponent extends LitElement {
               <th>设备类型</th>
               <th>所属地区</th>
               <th>任务状态</th>
-              <th>审核人员</th>
+              <th>设备开启时间</th>
+              <th>设备关闭时间</th>
               <th>任务详情</th>
               <th>故障详情</th>
               <th>日志详情</th>
@@ -186,27 +187,27 @@ class TaskQueryComponent extends LitElement {
 
   renderRows() {
     const taskQuery = [
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', auditUser: '审核人员' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', openTime: '设备开启时间', closeTime: '设备关闭时间' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', openTime: '设备开启时间', closeTime: '设备关闭时间' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', openTime: '设备开启时间', closeTime: '设备关闭时间' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', openTime: '设备开启时间', closeTime: '设备关闭时间' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', openTime: '设备开启时间', closeTime: '设备关闭时间' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态' , openTime: '设备开启时间', closeTime: '设备关闭时间'},
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态' , openTime: '设备开启时间', closeTime: '设备关闭时间'},
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', openTime: '设备开启时间', closeTime: '设备关闭时间' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态' , openTime: '设备开启时间', closeTime: '设备关闭时间'},
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态' , openTime: '设备开启时间', closeTime: '设备关闭时间'},
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态' , openTime: '设备开启时间', closeTime: '设备关闭时间'},
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', openTime: '设备开启时间', closeTime: '设备关闭时间' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', openTime: '设备开启时间', closeTime: '设备关闭时间' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态' , openTime: '设备开启时间', closeTime: '设备关闭时间'},
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', openTime: '设备开启时间', closeTime: '设备关闭时间' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态', openTime: '设备开启时间', closeTime: '设备关闭时间' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态' , openTime: '设备开启时间', closeTime: '设备关闭时间'},
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态' , openTime: '设备开启时间', closeTime: '设备关闭时间'},
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态' , openTime: '设备开启时间', closeTime: '设备关闭时间'},
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态' , openTime: '设备开启时间', closeTime: '设备关闭时间'},
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskStatus: '任务状态' , openTime: '设备开启时间', closeTime: '设备关闭时间'},
     ];
 
     return taskQuery.map(taskQuery => html`
@@ -217,10 +218,12 @@ class TaskQueryComponent extends LitElement {
         <td>${taskQuery.deviceType}</td>
         <td>${taskQuery.region}</td>
         <td>${taskQuery.taskStatus}</td>
-        <td>${taskQuery.auditUser}</td>
+        <td>${taskQuery.openTime}</td>
+        <td>${taskQuery.closeTime}</td>
         <td><a @click="${() => this.openTaskDetails()}">查看</a></td>
         <td><a @click="${() => this.openFaultDetails()}">查看</a></td>
         <td><a @click="${() => this.openTaskLog()}">查看</a></td>
+
       </tr>
     `);
   }
