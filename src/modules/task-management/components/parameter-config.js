@@ -144,7 +144,7 @@ class ParameterConfig extends LitElement {
     return html`
       <div class="parameter-config">
       <span class="close-button" @click="${this.handleClose}">×</span>
-        <div class="header">配置姿态计算参数</div>
+        <div class="header">配置参数</div>
         <div class="tabs">
           <div
             class="tab"

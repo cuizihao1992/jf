@@ -9,7 +9,7 @@ class deviceReview extends LitElement {
         top: -50px;
         bottom: 1px;
         width: 455px; /* 增加整体宽度 */
-        height: 600px; /* 设置高度为窗口高度 */
+        height: 610px; /* 设置高度为窗口高度 */
         padding: 15px; /* 内边距 */
         background-color: rgba(13, 31, 51, 0.9); /* 深色背景 */
         color: white;
@@ -17,9 +17,6 @@ class deviceReview extends LitElement {
         border-radius: 10px; /* 圆角 */
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
         display: grid;
-        grid-template-columns: 0fr 5px 0fr; /* 三列布局，中间列用于加减号 */
-        grid-template-rows: auto 1fr; /* 行布局 */
-        gap: 10px; /* 缩短间距 */
         position: relative; /* 使子元素的绝对定位相对于此容器 */
       }
    
@@ -28,7 +25,7 @@ class deviceReview extends LitElement {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        
+        margin-bottom: 10px; /* 下边距 */
       }
   
       .header h1 {
@@ -38,7 +35,6 @@ class deviceReview extends LitElement {
       .close-button {
         cursor: pointer;
         font-size: 30px; /* 字体大小 */
-        margin-right: 30px; /* 将叉号推到右侧 */
       }
   
       .task-info {
@@ -51,6 +47,7 @@ class deviceReview extends LitElement {
         background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
         width: 430px;
         height: 270px; /* 高度缩小至原来的三分之二 */
+        margin-bottom: 10px; 
       }
       .task-info h2 {
         margin: 0;

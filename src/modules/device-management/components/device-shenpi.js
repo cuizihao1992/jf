@@ -16,10 +16,6 @@ class deviceShenpi extends LitElement {
         font-family: Arial, sans-serif;
         border-radius: 10px; /* 圆角 */
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-        display: grid;
-        grid-template-columns: 0fr 5px 0fr; /* 三列布局，中间列用于加减号 */
-        grid-template-rows: auto 1fr; /* 行布局 */
-        gap: 10px; /* 缩短间距 */
         position: relative; /* 使子元素的绝对定位相对于此容器 */
       }
    
@@ -28,7 +24,7 @@ class deviceShenpi extends LitElement {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        
+        margin-bottom: 10px; /* 下边距 */
       }
   
       .header h1 {
@@ -37,8 +33,7 @@ class deviceShenpi extends LitElement {
       }
       .close-button {
         cursor: pointer;
-        font-size: 30px; /* 字体大小 */
-        margin-right: 30px; /* 将叉号推到右侧 */
+        font-size: 30px; /* 字体大小 */ 
       }
   
       .task-info {
@@ -51,6 +46,7 @@ class deviceShenpi extends LitElement {
         background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
         width: 430px;
         height: 270px; /* 高度缩小至原来的三分之二 */
+        margin-bottom: 10px; /* 下边距 */
       }
       .task-info h2 {
         margin: 0;

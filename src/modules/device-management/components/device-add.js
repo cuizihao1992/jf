@@ -117,8 +117,6 @@ class DeviceAdd extends LitElement {
         <div class="header">新增设备
         <button class="close-button" @click="${this.closeModal}">×</button>
         </div>
-        
-        <hr/>
         <div class="task-info">
           <h2>设备信息</h2>
         <div class="row-task">

@@ -17,7 +17,6 @@ class StatusMission extends LitElement {
       border: 1px solid rgba(42, 130, 228, 1);
       background-size: cover;
       background-position: center;
-      overflow-y: auto;
       z-index: 2;
     }
 
@@ -76,6 +75,10 @@ class StatusMission extends LitElement {
     .sort-arrow.active {
       color: #fff; /* 当前排序方向为白色 */
     }
+    .table-container {
+      max-height: 470px; /* 限制表格的最大高度 */
+      overflow-y: auto; /* 仅表格内容滚动 */
+    }      
   `;
 
   static properties = {
@@ -88,6 +91,25 @@ class StatusMission extends LitElement {
     this.sortDirection = 'asc'; // 初始排序方向
     this.tasks = [
       { name: '中卫101', code: 'w101', status: '执行中', startTime: '2024-10-10 16:00:00', endTime: '2024-10-10 16:40:00' },
+      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
+      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
+      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
+      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
+      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
+      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
+      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
+      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
+      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
+      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
+      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
+      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
+      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
+      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
+      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
+      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
+      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
+      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
+      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
       { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
       // 添加更多任务
     ];
@@ -111,6 +133,7 @@ class StatusMission extends LitElement {
           任务状态
           <button class="close-button" @click="${this.closeModal}">×</button>
         </div>
+        <div class="table-container">
         <table>
           <thead>
             <tr>
@@ -141,6 +164,7 @@ class StatusMission extends LitElement {
             `)}
           </tbody>
         </table>
+      </div>
       </div>
     `;
   }

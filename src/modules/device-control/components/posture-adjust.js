@@ -160,6 +160,7 @@ class PostureAdjust extends LitElement {
             <div style="position: absolute; top: -15px; left: 15.8%; transform: translateX(-50%); white-space: nowrap;background-color: rgb(49, 56, 79);">设备时间</div>
             <div style="display: flex; justify-content: center;align-items: center;">
               <input type="text" value="2024-9-24 16:21:50" readonly />
+              <button>获取</button>
               <button>校时</button>
             </div>
           </div>
