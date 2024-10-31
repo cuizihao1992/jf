@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 
-class UserReview extends LitElement {
+class UserView extends LitElement {
 
   static styles = css`
       .container {
@@ -8,7 +8,7 @@ class UserReview extends LitElement {
         margin-left: 56%;
         top: 12%;
         width: 395px; /* 增加整体宽度 */
-        height: 580px; /* 设置高度为窗口高度 */
+        height: 570px; /* 设置高度为窗口高度 */
         padding: 15px; /* 内边距 */
         background-color: rgba(13, 31, 51, 0.9); /* 深色背景 */
         color: white;
@@ -91,7 +91,7 @@ class UserReview extends LitElement {
         padding: 10px;
         border: 1px solid #58a6ff;
         border-radius: 5px;
-        height: 258px;
+        height: 245px;
       }
       .review-info .row {
         display: flex;
@@ -214,7 +214,6 @@ class UserReview extends LitElement {
              <label for="notes" >备注:</label>
              <input type="text" id="review-opinion" style="width: 300px;height: 100px;"/>
            </div>
-          <button class="submit-button">确定</button>
         </div>
        </div>
           
@@ -230,4 +229,4 @@ class UserReview extends LitElement {
 }
 
 
-customElements.define('user-review', UserReview);
+customElements.define('user-view', UserView);

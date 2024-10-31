@@ -222,7 +222,7 @@ class UserPermissionsComponent extends LitElement {
         <td>${powerUser.region}</td>
         <td>${powerUser.userStatus}</td>
         <td>
-          <a @click="${() => this.openUserInformation()}">查看</a> /
+          <a @click="${() => this.openViewInformation()}">查看</a> /
           <a @click="${() => this.openUserInformation()}">编辑</a> /
           <a @click="${() => this.toggleUserStatus()}">${powerUser.userStatus === '开放' ? '禁用' : '开放'}</a>
         </td>
@@ -261,6 +261,9 @@ class UserPermissionsComponent extends LitElement {
 
   openUserInformation() {
     this.dispatchEvent(new CustomEvent('open-user-information'));
+  }
+  openViewInformation() {
+    this.dispatchEvent(new CustomEvent('open-view-information'));
   }
 }
 

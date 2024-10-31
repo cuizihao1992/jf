@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 
-class UserInformation extends LitElement {
+class ViewInformation extends LitElement {
   static styles = css`
     .container {
       position: absolute;
@@ -16,7 +16,7 @@ class UserInformation extends LitElement {
       display: flex;
       flex-direction: column;
       border: 1px solid #1a2b4c; /* 添加整体边框 */
-      height: 660px;
+      height: 630px;
     }
     .header {
       display: flex;
@@ -197,11 +197,6 @@ class UserInformation extends LitElement {
               </tr>
             </tbody>
           </table>
-
-          
-
-        <!-- Submit button -->
-        <button class="submit-button">确定</button>
       </div>
     `;
   }
@@ -214,4 +209,4 @@ class UserInformation extends LitElement {
 }
 
 // Register the custom element
-customElements.define('user-information', UserInformation);
+customElements.define('view-information', ViewInformation);

@@ -206,7 +206,7 @@ class AuditUserComponent extends LitElement {
         <td>${application.userType}</td>
         <td>${application.applicationTime}</td>
         <td>${application.approveStatus}</td>
-        <td><a @click="${() => this.openUserReview()}">查看</a>/<a 
+        <td><a @click="${() => this.openUserView()}">查看</a>/<a 
        @click="${() => this.openUserReview()}">审核</a></td>
       </tr>
     `);
@@ -214,6 +214,9 @@ class AuditUserComponent extends LitElement {
 
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
+  }
+  openUserView() {
+    this.dispatchEvent(new CustomEvent('open-user-view'));
   }
   openUserReview() {
     this.dispatchEvent(new CustomEvent('open-user-review'));
