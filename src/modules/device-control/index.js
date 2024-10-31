@@ -49,48 +49,54 @@ class DeviceControl extends LitElement {
       </div>
       <!-- 设备查询弹窗，根据 isModalOpen 条件渲染 -->
       <div class="panel">
-        ${this.isModalOpen
-        ? html` <device-query
-              ?showactions=${true}
-              @close-modal=${this.closeModal}
-              @open-posture-adjust=${this.openPostureAdjustModal}
-            >
-            </device-query>`
-        : ""}
+        ${this.isModalOpen && this.selectedButton === "query"
+          ? html` <device-query
+                ?showactions=${true}
+                @close-modal=${this.closeModal}
+                @open-posture-adjust=${this.openPostureAdjustModal}
+              >
+              </device-query>`
+          : ""}
 
         <!-- 姿态调整弹窗，根据 isPostureModalOpen 条件渲染 -->
         ${this.isPostureAdjustModalOpen
-        ? html`<posture-adjust
-              @close-modal=${this.closePostureAdjustModal}
-              @open-realtime-imagery=${this.openRealtimeImagery}
-              @open-angle-detection=${this.openAngleDetection}
-              @open-single-device-log=${this.openSingleDeviceLog}
-              @open-parameter-config=${this.openParameterConfig}
-            ></posture-adjust>`
-        : ""}
+          ? html`<posture-adjust
+                @close-modal=${this.closePostureAdjustModal}
+                @open-realtime-imagery=${this.openRealtimeImagery}
+                @open-angle-detection=${this.openAngleDetection}
+                @open-single-device-log=${this.openSingleDeviceLog}
+                @open-parameter-config=${this.openParameterConfig}
+              ></posture-adjust>`
+          : ""}
+
         <!-- 实时图像弹窗，根据 isRealtimeImageryOpen 条件渲染 -->
         ${this.isRealtimeImageryOpen
-        ? html`<realtime-imagery
-              @close-modal=${this.closeRealtimeImagery}
-            ></ realtime-imagery>`
-        : ""}
+          ? html`<realtime-imagery
+                @close-modal=${this.closeRealtimeImagery}
+              ></realtime-imagery>`
+          : ""}
+
         <!-- 角度检测弹窗，根据 isAngleDetectionOpen 条件渲染 -->
         ${this.isAngleDetectionOpen
-        ? html`<angle-detection
-              @close-modal=${this.closeAngleDetection}
-            ></ angle-detection>`
-        : ""}
+          ? html`<angle-detection
+                @close-modal=${this.closeAngleDetection}
+              ></angle-detection>`
+          : ""}
+
         <!-- 设备日志弹窗，根据 isSingleDeviceLogOpen 条件渲染 -->
         ${this.isSingleDeviceLogOpen
-        ? html`<single-device-log
-              @close-modal=${this.closeSingleDeviceLog}
-            ></ single-device-log>`
-        : ""}
+          ? html`<single-device-log
+                @close-modal=${this.closeSingleDeviceLog}
+              ></single-device-log>`
+          : ""}
+
+        <!-- 参数配置弹窗，根据 isParameterConfigOpen 条件渲染 -->
         ${this.isParameterConfigOpen
-        ? html`<parameter-config
-              @close-modal=${this.closeParameterConfig}
-            ></ parameter-config>`
-        : ""}
+          ? html`<parameter-config
+                @close-modal=${this.closeParameterConfig}
+              ></parameter-config>`
+          : ""}
+
         ${this.selectedButton === "list" ? html`<device-list></device-list>` : ""}
       </div>
     `;
@@ -99,13 +105,19 @@ class DeviceControl extends LitElement {
   // 切换设备查询弹窗的显示/隐藏状态
   toggleModal(buttonName) {
     if (this.selectedButton === buttonName) {
-      this.selectedButton = "";
       this.isModalOpen = !this.isModalOpen;
     } else {
       this.selectedButton = buttonName;
-      this.isModalOpen = true;
+      this.isModalOpen = buttonName === "query";
     }
   }
+
+  // 选择设备列表按钮的逻辑
+  selectButton(buttonName) {
+    this.selectedButton = buttonName;
+    this.isModalOpen = false;
+  }
+
 
   // 打开姿态调整弹窗
   openPostureAdjustModal() {
