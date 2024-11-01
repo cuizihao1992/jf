@@ -5,13 +5,13 @@ class TaskLog extends LitElement {
     .modal {
       position: fixed;
       top: 49%;
-      left: 1440px;
+      left: 1200px;
       transform: translate(-50%, -50%);
       padding: 20px;
       background: rgba(0, 9, 36, 0.8);
       color: white;
       border-radius: 10px;
-      width: 485px;
+      width: 590px;
       height: 700px; 
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;

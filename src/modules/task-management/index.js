@@ -13,9 +13,9 @@ import "./components/task-review-review.js";
 import "./components/Status-Mission.js"; // 引入任务状态组件
 import "./components/Scope-selection.js"; // 引入范围选择组件
 import "./components/parameter-config.js"; // 引入范围选择组件
+import "./components/task-edit.js"; 
 class TaskManagement extends LitElement {
   static styles = [sharedStyles];
-
   static properties = {
     activeComponent: { type: String }, // 通过字符串控制当前显示的组件
     selectedButton: { type: String }, // 添加状态属性用于记录选中的按钮
@@ -27,6 +27,7 @@ class TaskManagement extends LitElement {
     isStatusMissionOpen: { type: Boolean },
     isScopeSelectionOpen: { type: Boolean },
     isParameterConfigOpen: { type: Boolean },
+    isTaskEditOpen: { type: Boolean },
   };
 
   constructor() {
@@ -42,6 +43,7 @@ class TaskManagement extends LitElement {
     this.isStatusMissionOpen = false;
     this.isScopeSelectionOpen = false;
     this.isParameterConfigOpen = false;
+    this.isTaskEditOpen = false;
   }
 
   render() {
@@ -104,6 +106,9 @@ class TaskManagement extends LitElement {
       ${this.isParameterConfigOpen
         ? html`<parameter-config @close-modal=${this.closeParameterConfig}></parameter-config>`
         : ""}
+      ${this.isTaskEditOpen
+        ? html`<task-edit @close-modal=${this.closeTaskEdit}></task-edit>`
+        : ""}
     `;
 
   }
@@ -120,7 +125,8 @@ class TaskManagement extends LitElement {
         this.isFaultDetailsOpen = false;
         this.isTaskLogOpen = false;
          this.isTaskReviewDetailOpen = false;
-         this.isTaskReviewReviewOpen = false;  // 设置当前选中的按钮
+         this.isTaskReviewReviewOpen = false;
+         this.isTaskEditOpen = false;  // 设置当前选中的按钮
     }
   }
 
@@ -135,7 +141,7 @@ class TaskManagement extends LitElement {
         return html`<task-info-component
           @close-modal=${this.closeTasks}
            @open-task-details=${this.openTaskDetails}
-           @open-task-details=${this.openTaskDetails}
+           @open-task-edit=${this.openTaskEdit}
         ></task-info-component>`;
       case "queryTasks":
         return html`<task-query-component
@@ -163,7 +169,7 @@ class TaskManagement extends LitElement {
   openTaskDetails() {
     this.isTaskDetailsOpen = true;
     this.isFaultDetailsOpen = false;
-    this.isTaskLogOpen = false// 打开故障详情弹窗
+    this.isTaskLogOpen = false;// 打开故障详情弹窗
      // 打开任务详情弹窗
     //this.activeComponent = "taskDetails"; // 设置为任务详情组件
   }
@@ -194,6 +200,12 @@ class TaskManagement extends LitElement {
   openRevokeConfirmation() {
     this.isRevokeConfirmationOpen = true;
     this.isTaskDetailsOpen = false;
+  }
+  openTaskEdit() {
+    this.isTaskEditOpen = true; // 打开设备日志弹窗
+  }
+  closeTaskEdit() {
+    this.isTaskEditOpen = false; // 打开设备日志弹窗
   }
   openStatusMission() {
     this.isStatusMissionOpen = true; // 打开设备日志弹窗

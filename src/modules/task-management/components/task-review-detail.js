@@ -48,7 +48,7 @@ class TaskReviewDetail extends LitElement {
         padding-bottom: 1px; /* 内边距 */
         text-align: left;
         border-bottom: 1px solid #58a6ff;
-        font-size: 16px; /* 字体大小 */
+        font-size: 20px; /* 字体大小 */
   
       }
       .task-info .row {
@@ -98,7 +98,7 @@ class TaskReviewDetail extends LitElement {
       .device-list h3 {
         margin: 0;
         padding-bottom: 10px; /* 内边距 */
-        font-size:16px;
+        font-size:20px;
       }
       .tbody-wrapper {
         border: 1px solid #58a6ff; /* 边框 */
@@ -222,6 +222,25 @@ class TaskReviewDetail extends LitElement {
         height: 15px;
         resize: none;
       }
+      .form-group input {
+      padding: 1px;
+      border: 1px solid #333;
+      width: 150px;
+      height:24px;
+      color: #000;
+      text-align: center;
+      margin-left:20px;
+      }
+      .row input {
+      padding: 1px;
+      border: 1px solid #333;
+      width: 150px;
+      height:24px;
+      color: #000;
+      text-align: center;
+      margin-left:20px;
+    }
+      
     `;
 
   render() {
@@ -280,34 +299,34 @@ class TaskReviewDetail extends LitElement {
           <div>
           <div class="task-info">
             <h2>任务信息</h2>
-            <div class="row-task">
-              <label for="task-name">任务名:</label>
-              <input type="text" id="task-name"  placeholder="中卫101" style="margin-left:5px;width:100px;height:15px;border-radius: 4px; /* 圆角 */"/>
-              <label for="task-number" style="margin-left:75px">任务编号:</label>
-              <input type="text" id="task-number"  placeholder="w101" style="margin-left:5px;width:100px;height:15px;border-radius: 4px; /* 圆角 */"/>
-            </div>
-            <div class="row-location">
-              <label for="location">审核状态:</label>
-              <select id="location" style="border-radius: 4px;">
-                <option>已提交</option>
-              </select>
-              <label for="device-type" style="margin-left:75px">设备类型:</label>
-              <select id="device-type" style="margin-left:8px;border-radius: 4px; /* 圆角 */">
-                <option>自动角反射器</option>
-              </select>
-            </div>
-            <div class="row-start-time">
-              <label for="start-time">设备开启时间/(年-月-日时-分-秒):</label>
-              <input type="text" id="start-time" placeholder="2024-09-24 16:21:45" style="margin-left:20px;width:180px;height:15px;border-radius: 4px; /* 圆角 */"/>
-            </div>
-            <div class="row-end-time">
-              <label for="end-time">设备关闭时间/(年-月-日时-分-秒):</label>
-              <input type="text" id="end-time" placeholder="2024-09-24 16:21:45" style="margin-left:20px;width:180px;height:15px;border-radius: 4px; /* 圆角 */"/>
-            </div>
-            <div class="row-execution-time">
-              <label for="execution-time">任务执行时间/分钟(整数):</label>
-              <input type="number" id="execution-time"  placeholder="40" style="margin-left:65px;width:180px;height:15px;border-radius: 4px; /* 圆角 */"/>
-            </div>
+          <div class="row-task">
+            <label for="task-name">任务名:</label>
+            <input type="text" id="task-name"  placeholder="中卫101" style="margin-left:19px;width:100px;padding:1px; height:22px;/* 圆角 */"/>
+            <label for="task-number" style="margin-left:69px">任务编号:</label>
+            <input type="text" id="task-number"  placeholder="w101" style="margin-left:3px;width:108px;height:23px;/* 圆角 */"/>
+          </div>
+          <div class="row-location">
+            <label for="location">审核状态:</label>
+            <select id="location" style="margin-left:5px;width:106px;padding:1px; height:22px;">
+              <option>已提交</option>
+            </select>
+            <label for="device-type" style="margin-left:68px">设备类型:</label>
+            <select id="device-type" style="margin-left:5px;width:115px;padding:1px; height:25px;/* 圆角 */">
+              <option>自动角反射器</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="start-time">设备开启时间/(年-月-日时-分-秒):</label>
+            <input type="text" id="start-time" placeholder="2024-09-24 16:21:45"/>
+          </div>
+          <div class="form-group">
+            <label for="end-time">设备关闭时间/(年-月-日时-分-秒):</label>
+            <input type="text" id="end-time" placeholder="2024-09-24 16:21:45"/>
+          </div>
+          <div class="form-group">
+            <label for="execution-time">任务执行时间/分钟(整数):</label>
+            <input type="text" id="execution-time"  placeholder="40" style="margin-left:67px"/>
+          </div>
           </div>
            <div class="device-list">
           <h3>执行设备列表</h3>
