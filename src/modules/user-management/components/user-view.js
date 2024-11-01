@@ -15,7 +15,6 @@ class UserView extends LitElement {
         font-family: Arial, sans-serif;
         border-radius: 10px; /* 圆角 */
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-        gap: 10px; /* 缩短间距 */
       }
    
       .header {
@@ -64,12 +63,7 @@ class UserView extends LitElement {
         align-items: center;
         margin-top: 15px; /* 上边距 */
       }
-     
-      .submit-button {
-        width: 50px;
-        height: 30px;
-        align-self: center;
-      }
+    
       .footer-buttons {
         display: flex;
         justify-content: space-between; /* 左右对齐 */
@@ -161,7 +155,7 @@ class UserView extends LitElement {
     return html`
         <div class="container">
           <div class="header">
-            <h1>用户申请</h1>
+            <h1>用户审核</h1>
             <span class="close-button" @click="${this.handleClose}">×</span>
           </div>
           <div>

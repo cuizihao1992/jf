@@ -5,9 +5,9 @@ class TaskReviewDetail extends LitElement {
   static styles = css`
       .container {
         position: absolute;
-        left: 1220px;
+        left: 40%;
         bottom: 1px;
-        width: 455px; /* 增加整体宽度 */
+        width: 467px; /* 增加整体宽度 */
         height: 770px; /* 设置高度为窗口高度 */
         padding: 15px; /* 内边距 */
         background-color: rgba(13, 31, 51, 0.9); /* 深色背景 */
@@ -15,19 +15,12 @@ class TaskReviewDetail extends LitElement {
         font-family: Arial, sans-serif;
         border-radius: 10px; /* 圆角 */
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-        display: grid;
-        grid-template-columns: 0fr 5px 0fr; /* 三列布局，中间列用于加减号 */
-        grid-template-rows: auto 1fr; /* 行布局 */
-        gap: 10px; /* 缩短间距 */
-        position: relative; /* 使子元素的绝对定位相对于此容器 */
       }
    
       .header {
-        grid-column: span 3; /* 占三列 */
         display: flex;
         justify-content: space-between;
         align-items: center;
-        
       }
   
       .header h1 {
@@ -37,7 +30,6 @@ class TaskReviewDetail extends LitElement {
       .close-button {
         cursor: pointer;
         font-size: 30px; /* 字体大小 */
-        margin-right: 30px; /* 将叉号推到右侧 */
       }
   
       .task-info {
@@ -48,7 +40,7 @@ class TaskReviewDetail extends LitElement {
         padding: 10px; /* 内边距 */
         border-radius: 5px;
         background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
-        width: 430px;
+        width: 445px;
         height: 200px; /* 高度缩小至原来的三分之二 */
       }
       .task-info h2 {
@@ -92,8 +84,6 @@ class TaskReviewDetail extends LitElement {
         margin-left: 5px;
       
       }
-  
-      
       .device-list {
         grid-column: 1; 
         display: flex;
@@ -103,7 +93,7 @@ class TaskReviewDetail extends LitElement {
         padding: 10px; /* 内边距 */
         background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
         height:220px;
-        width: 430px;
+        width: 445px;
       }
       .device-list h3 {
         margin: 0;
@@ -115,7 +105,7 @@ class TaskReviewDetail extends LitElement {
         border-radius: 5px; /* 圆角 */
         padding: 1px; /* 内边距 */
         background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
-        width: 430px;
+        width: 442px;
         height: 400px;
         overflow-y: auto;
       }
@@ -206,6 +196,7 @@ class TaskReviewDetail extends LitElement {
         border: 1px solid #58a6ff;
         border-radius: 5px;
         height: 235px;
+        width: 445px;
       }
       .review-info .row {
         display: flex;
@@ -277,7 +268,6 @@ class TaskReviewDetail extends LitElement {
             <input type="text" placeholder="输入角度" style="width: 50px;" />
             俯仰角:
             <input type="text" placeholder="输入角度" style="width: 50px;" />
-            <button class="nav-button">姿态计算</button>
           </td>
         </tr>
       `);

@@ -11,7 +11,7 @@ class TaskLog extends LitElement {
       background: rgba(0, 9, 36, 0.8);
       color: white;
       border-radius: 10px;
-      width: 400px;
+      width: 485px;
       height: 700px; 
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
@@ -57,7 +57,6 @@ class TaskLog extends LitElement {
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      margin-left: 10px;
     }
 
     table {

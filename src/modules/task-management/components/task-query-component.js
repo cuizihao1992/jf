@@ -11,7 +11,7 @@ class TaskQueryComponent extends LitElement {
       background: rgba(0, 9, 36, 0.8);
       color: white;
       border-radius: 10px;
-      width: 900px;
+      width: 970px;
       height: 700px; 
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;

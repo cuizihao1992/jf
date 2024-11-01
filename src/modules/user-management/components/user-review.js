@@ -66,9 +66,16 @@ class UserReview extends LitElement {
       }
      
       .submit-button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
         width: 50px;
         height: 30px;
         align-self: center;
+        margin-right: -160px;
       }
       .footer-buttons {
         display: flex;

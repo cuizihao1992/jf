@@ -11,8 +11,8 @@ class Devicexiangqing1 extends LitElement {
       background: rgba(0, 9, 36, 0.8);
       color: white;
       border-radius: 10px;
-      width: 600px;
-      height: 530px;
+      width: 455px;
+      height: 485px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
       border: 1px solid rgba(42, 130, 228, 1);
@@ -59,17 +59,6 @@ class Devicexiangqing1 extends LitElement {
       justify-content: space-around;
       width: 100%;
     }
-
-    .action-button {
-      padding: 10px 20px;
-      background-color: #58a6ff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      width: 150px;
-      text-align: center;
-    }
      .task-info {
       grid-column: 1; /* 占第一列 */
       display: grid;
@@ -78,7 +67,7 @@ class Devicexiangqing1 extends LitElement {
       padding: 10px; /* 内边距 */
       border-radius: 5px;
       background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
-      width: 580px;
+      width: 430px;
       height: 420px; /* 高度缩小至原来的三分之二 */
     }
     .task-info h2 {

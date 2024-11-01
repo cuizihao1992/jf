@@ -4,24 +4,18 @@ class TaskDetails extends LitElement {
   static styles = css`
     .container {
       position: absolute;
-      left: 950px;
-      width: 450px; /* 增加整体宽度 */
-      height: 600px; /* 设置高度为窗口高度 */
+      left: 950px;                                                                                                                                                          
+      width: 467px; /* 增加整体宽度 */
+      height: 545px; /* 设置高度为窗口高度 */
       padding: 15px; /* 内边距 */
       background-color: rgba(13, 31, 51, 0.9); /* 深色背景 */
       color: white;
       font-family: Arial, sans-serif;
       border-radius: 10px; /* 圆角 */
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-      display: grid;
-      grid-template-columns: 0fr 5px 0fr; /* 三列布局，中间列用于加减号 */
-      grid-template-rows: auto 1fr; /* 行布局 */
-      gap: 10px; /* 缩短间距 */
-      position: relative; /* 使子元素的绝对定位相对于此容器 */
     }
  
     .header {
-      grid-column: span 3; /* 占三列 */
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -35,7 +29,6 @@ class TaskDetails extends LitElement {
     .close-button {
       cursor: pointer;
       font-size: 30px; /* 字体大小 */
-      margin-right: 30px; /* 将叉号推到右侧 */
     }
 
     .task-info {
@@ -46,7 +39,7 @@ class TaskDetails extends LitElement {
       padding: 10px; /* 内边距 */
       border-radius: 5px;
       background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
-      width: 430px;
+      width: 445px;
       height: 200px; /* 高度缩小至原来的三分之二 */
     }
     .task-info h2 {
@@ -99,7 +92,7 @@ class TaskDetails extends LitElement {
       padding: 10px; /* 内边距 */
       background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
       height:260px;
-      width: 430px;
+      width: 445px;
     }
     .device-list h3 {
       margin: 0;
@@ -111,7 +104,7 @@ class TaskDetails extends LitElement {
       border-radius: 5px; /* 圆角 */
       padding: 1px; /* 内边距 */
       background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
-      width: 430px;
+      width: 442px;
       height: 400px;
       overflow-y: auto;
     }
@@ -188,14 +181,6 @@ class TaskDetails extends LitElement {
     height: 480px;
     overflow-y: auto;
     }
-    .footer-buttons {
-      grid-column: span 3;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      margin-top: 20px;
-      
-    }
     .confirm-button {
       background-color: #4CAF50;
       color: white;
@@ -204,7 +189,6 @@ class TaskDetails extends LitElement {
       border-radius: 5px;
       font-size: 14px;
       cursor: pointer;
-      margin-right: 35px;
       margin-top: -13px;
     }
       .close-button {
@@ -263,7 +247,6 @@ class TaskDetails extends LitElement {
           <input type="text" placeholder="输入角度" style="width: 50px;" />
           俯仰角:
           <input type="text" placeholder="输入角度" style="width: 50px;" />
-          <button class="nav-button">姿态计算</button>
         </td>
       </tr>
     `);
@@ -325,10 +308,6 @@ class TaskDetails extends LitElement {
          </div>
         </div>
         </div>
-        <div class="footer-buttons">
-          <button class="confirm-button" @click="${this.handleClose}">确定</button>
-        </div>
-        
     `;
   }
   closeModal() {

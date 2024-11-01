@@ -243,7 +243,7 @@ class deviceShenpi extends LitElement {
       border-radius: 5px;
       font-size: 14px;
       cursor: pointer;
-      margin-right: 182px;
+      margin-right: 142px;
       margin-top: -22px;
     }
     `;
