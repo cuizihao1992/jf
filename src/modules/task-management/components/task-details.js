@@ -47,7 +47,7 @@ class TaskDetails extends LitElement {
       padding-bottom: 1px; /* 内边距 */
       text-align: left;
       border-bottom: 1px solid #58a6ff;
-      font-size: 16px; /* 字体大小 */
+      font-size: 20px; /* 字体大小 */
 
     }
     .task-info .row {
@@ -97,7 +97,7 @@ class TaskDetails extends LitElement {
     .device-list h3 {
       margin: 0;
       padding-bottom: 10px; /* 内边距 */
-      font-size:16px;
+      font-size:20px;
     }
     .tbody-wrapper {
       border: 1px solid #58a6ff; /* 边框 */
@@ -162,14 +162,17 @@ class TaskDetails extends LitElement {
     .submit-button {
       background-color: #4CAF50; /* 提交按钮颜色 */
     }
+    element-select {
+      width: 100px;
+      font-size: 13px;}
 
     select{
     width:100px;
-    font-size:12px;
+    font-size:13px;
     text-align: center; 
     }
     input{
-    font-size:12px;
+    font-size:13px;
     text-align: center;
     }
     .tbody-new-wrapper{
@@ -199,6 +202,15 @@ class TaskDetails extends LitElement {
       font-size: 25px;
       font-weight: bold;
       float: right;
+    }
+      .form-group input {
+      padding: 1px;
+      border: 1px solid #333;
+      width: 150px;
+      height:24px;
+      color: #000;
+      text-align: center;
+      margin-left:20px;
     }
   
   `;
@@ -262,31 +274,31 @@ class TaskDetails extends LitElement {
           <h2>任务信息</h2>
           <div class="row-task">
             <label for="task-name">任务名:</label>
-            <input type="text" id="task-name"  placeholder="中卫101" style="margin-left:5px;width:100px;height:15px;border-radius: 4px; /* 圆角 */"/>
-            <label for="task-number" style="margin-left:75px">任务编号:</label>
-            <input type="text" id="task-number"  placeholder="w101" style="margin-left:5px;width:100px;height:15px;border-radius: 4px; /* 圆角 */"/>
+            <input type="text" id="task-name"  placeholder="中卫101" style="margin-left:19px;width:100px;padding:1px; height:22px;/* 圆角 */"/>
+            <label for="task-number" style="margin-left:69px">任务编号:</label>
+            <input type="text" id="task-number"  placeholder="w101" style="margin-left:4px;width:108px;height:22px;/* 圆角 */"/>
           </div>
           <div class="row-location">
             <label for="location">审核状态:</label>
-            <select id="location" style="border-radius: 4px;">
+            <select id="location" style="margin-left:5px;width:106px;padding:1px; height:22px;">
               <option>已提交</option>
             </select>
-            <label for="device-type" style="margin-left:75px">设备类型:</label>
-            <select id="device-type" style="margin-left:8px;border-radius: 4px; /* 圆角 */">
+            <label for="device-type" style="margin-left:68px">设备类型:</label>
+            <select id="device-type" style="margin-left:5px;width:116px;padding:1px; height:25px;/* 圆角 */">
               <option>自动角反射器</option>
             </select>
           </div>
-          <div class="row-start-time">
+          <div class="form-group">
             <label for="start-time">设备开启时间/(年-月-日时-分-秒):</label>
-            <input type="text" id="start-time" placeholder="2024-09-24 16:21:45" style="margin-left:20px;width:180px;height:15px;border-radius: 4px; /* 圆角 */"/>
+            <input type="text" id="start-time" placeholder="2024-09-24 16:21:45"/>
           </div>
-          <div class="row-end-time">
+          <div class="form-group">
             <label for="end-time">设备关闭时间/(年-月-日时-分-秒):</label>
-            <input type="text" id="end-time" placeholder="2024-09-24 16:21:45" style="margin-left:20px;width:180px;height:15px;border-radius: 4px; /* 圆角 */"/>
+            <input type="text" id="end-time" placeholder="2024-09-24 16:21:45"/>
           </div>
-          <div class="row-execution-time">
+          <div class="form-group">
             <label for="execution-time">任务执行时间/分钟(整数):</label>
-            <input type="number" id="execution-time"  placeholder="40" style="margin-left:65px;width:180px;height:15px;border-radius: 4px; /* 圆角 */"/>
+            <input type="text" id="execution-time"  placeholder="40" style="margin-left:66px"/>
           </div>
         </div>
          <div class="device-list">

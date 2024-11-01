@@ -285,7 +285,7 @@ class TaskInfoComponent extends LitElement {
         <td>${taskInfo.region}</td>
         <td>${taskInfo.approveStatus}</td>
         <td><a @click="${() => this.openTaskDetails()}">查看</a>
-        /<a @click="${() => this.openTaskDetails()}">编辑</a>
+        /<a @click="${() => this.openTaskEdit()}">编辑</a>
         /<a @click="${() => this.openRevokeConfirmation()}">撤回</a></td>
       </tr>
     `);
@@ -297,6 +297,10 @@ class TaskInfoComponent extends LitElement {
     this.showTaskDetails =true;
     this.showConfirmation=false;
     this.dispatchEvent(new CustomEvent('open-task-details'));
+  }
+  openTaskEdit() {
+    this.showTaskEdit =true;
+    this.dispatchEvent(new CustomEvent('open-task-edit'));
   }
   openRevokeConfirmation() {
     this.showConfirmation = true;
@@ -313,6 +317,12 @@ class TaskInfoComponent extends LitElement {
   // Handle cancel action
   cancelRevoke() {
     this.showConfirmation = false;
+  }
+  handleClose() {
+    // 这里可以添加关闭窗口的逻辑
+    // 例如，隐藏组件或销毁组件
+    this.remove();
+    this.dispatchEvent(new CustomEvent('close-modal'));
   }
 
 }

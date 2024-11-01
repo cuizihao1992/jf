@@ -139,7 +139,6 @@ class StatusMission extends LitElement {
             <tr>
               <th>任务名</th>
               <th>任务编号</th>
-              <th>任务状态</th>
               <th>
                 设备开启时间
                 <div class="sort-container">
@@ -150,6 +149,7 @@ class StatusMission extends LitElement {
                 </div>
               </th>
               <th>设备关闭时间</th>
+              <th>任务状态</th>
             </tr>
           </thead>
           <tbody>
@@ -157,9 +157,9 @@ class StatusMission extends LitElement {
               <tr>
                 <td>${task.name}</td>
                 <td>${task.code}</td>
-                <td>${task.status}</td>
                 <td>${task.startTime}</td>
                 <td>${task.endTime}</td>
+                <td>${task.status}</td>
               </tr>
             `)}
           </tbody>
