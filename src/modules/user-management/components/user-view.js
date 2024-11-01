@@ -7,8 +7,8 @@ class UserView extends LitElement {
         position: absolute;
         margin-left: 56%;
         top: 12%;
-        width: 395px; /* 增加整体宽度 */
-        height: 570px; /* 设置高度为窗口高度 */
+        width: 340px; /* 增加整体宽度 */
+        height: 615px; /* 设置高度为窗口高度 */
         padding: 15px; /* 内边距 */
         background-color: rgba(13, 31, 51, 0.9); /* 深色背景 */
         color: white;
@@ -63,7 +63,7 @@ class UserView extends LitElement {
         align-items: center;
         margin-top: 15px; /* 上边距 */
       }
-    
+     
       .footer-buttons {
         display: flex;
         justify-content: space-between; /* 左右对齐 */
@@ -98,18 +98,21 @@ class UserView extends LitElement {
         width: 80px;
         font-size: 14px;
       }
-      .review-info input,
-      .review-info textarea {
-        flex: 1;
-        padding: 5px;
-        font-size: 14px;
-        border-radius: 4px;
-        border: 1px solid #58a6ff;
-        background-color: rgba(255, 255, 255, 0.9);
+      .review-info input{
+        border: 1px solid #333;
+        width: 150px;
+        color: #000;
+        text-align: center;
+        margin-left:-35px;
+        height: 24px;
+        margin-left: 10px;
+        border-radius: 5px;
       }
       .review-info textarea {
-        height: 15px;
-        resize: none;
+        width:150px;
+        height: 100px;
+        margin-left: 10px;
+        border-radius: 5px;
       }
       .user-info {
         padding: 10px;
@@ -136,13 +139,17 @@ class UserView extends LitElement {
         text-align: left;
       }
       .userInput{
-        width:173px;
-        height:16px;
-        border-radius: 4px; /* 圆角 */
-        margin-right: 114px; /* 右边距 */
+        border: 1px solid #333;
+        width: 150px;
+        color: #000;
+        text-align: center;
+        margin-left:-35px;
+        height: 24px;
+        margin-right: 73px;
+        border-radius: 5px;
       }
       h3{
-        font-size: 16px;
+        font-size: 20px;
         margin-bottom: 10px;
         border-bottom: 1px solid #58a6ff;
         text-align: left;
@@ -155,7 +162,7 @@ class UserView extends LitElement {
     return html`
         <div class="container">
           <div class="header">
-            <h1>用户审核</h1>
+            <h1>用户申请</h1>
             <span class="close-button" @click="${this.handleClose}">×</span>
           </div>
           <div>
@@ -206,7 +213,7 @@ class UserView extends LitElement {
            </div>
           <div class="row" >
              <label for="notes" >备注:</label>
-             <input type="text" id="review-opinion" style="width: 300px;height: 100px;"/>
+             <textarea id="notes" placeholder=""></textarea>
            </div>
         </div>
        </div>

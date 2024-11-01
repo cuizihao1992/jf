@@ -2,27 +2,25 @@ import { LitElement, html, css } from 'lit';
 
 class UserInformation extends LitElement {
   static styles = css`
-    .container {
+     .container {
       position: absolute;
       top: 10%;
       left: 56%;
-      width: 400px;
+      width: 340px;
       padding: 15px;
       background-color: rgba(0, 9, 36, 0.8);
       color: white;
-      font-family: Arial, sans-serif;
       border-radius: 10px;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
       display: flex;
       flex-direction: column;
-      border: 1px solid #1a2b4c; /* 添加整体边框 */
-      height: 690px;
+      height: 615px;
     }
     .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 5px;
+      margin-bottom: 3px;
     }
     .header h1 {
       margin: 0;
@@ -33,11 +31,11 @@ class UserInformation extends LitElement {
       font-size: 30px;
     }
     .section-title {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: bold;
       margin-bottom: 10px;
       border-bottom: 1px solid #58a6ff;
-      padding-bottom: 10px;
+      padding-bottom: 5px;
     }
     .form-group {
       display: flex;
@@ -47,33 +45,45 @@ class UserInformation extends LitElement {
     .form-group label {
       width: 100px;
       margin-right: 10px;
+      font-size: 14px;
     }
-    .form-group input,
-    .form-group select {
-      padding: 4px;
+    .form-group input {
       border: 1px solid #333;
-      border-radius: 5px;
       width: 150px;
       color: #000;
       text-align: center;
+      margin-left:-35px;
+      height: 24px;
+      border-radius: 5px;
+    }
+    .form-group select{
+      border: 1px solid #333;
+      width: 155px;
+      color: #000;
+      text-align: center;
+      margin-left:-35px;
+      height: 27px;
+      border-radius: 5px;
     }
     .section {
       border: 1px solid #58a6ff;
-      padding: 10px;
-      margin-bottom: 15px;
+      padding: 5px;
+      margin-bottom: 9px;
       border-radius: 5px;
+     
     }
     h3 {
       margin: 10px 0;
-      font-size: 18px;
+      font-size: 20px;
       border-bottom: 1px solid #58a6ff;
-      padding-bottom: 10px;
+      padding-bottom: 5px;
       margin-top: 0px;
     }
     h4 {
       margin: 1px 0;
       font-size: 16px;
     }
+
     .device-table {
       width: 100%;
       border-collapse: collapse;
@@ -84,9 +94,11 @@ class UserInformation extends LitElement {
       padding: 8px;
       border: 1px solid #444;
       text-align: center;
+      font-size: 14px;
     }
     .device-table th {
       background-color: #1a2b4c;
+      font-size: 14px;
     }
     .device-checkbox {
       margin-right: 5px;
@@ -98,20 +110,19 @@ class UserInformation extends LitElement {
       font-size: 14px;
       color: #aaa;
     }
-    .submit-button {
-      background-color: #4CAF50;
+     .submit-button {
+      width: 62px;
+      height: 35px;
+      align-self: end;
+      border-radius: 4px;
       color: white;
-      border-radius: 5px;
-      border: none;
-      padding: 6px 14px;
-      border-radius: 5px;
-      cursor: pointer;
-      align-self: flex-end;
-      margin-top: 10px;
-      margin-left: 320px;
+      font-size: 14px;
+      margin-top: -8px;
+      background-color: #4CAF50;
     }
+
     .table-container {
-      max-height: 220px; /* 限制表格的最大高度 */
+      max-height: 180px; /* 限制表格的最大高度 */
       overflow-y: auto; /* 仅表格内容滚动 */
     }
   `;
@@ -312,11 +323,9 @@ class UserInformation extends LitElement {
             </tbody>
           </table>
       </div>
-          
-
+      </div>
         <!-- Submit button -->
         <button class="submit-button">确定</button>
-      </div>
     `;
   }
 
