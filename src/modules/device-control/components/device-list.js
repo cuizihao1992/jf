@@ -6,12 +6,13 @@ class DeviceList extends LitElement {
       display: block;
       font-family: "Arial", sans-serif;
       color: white;
-      background: #0a0f29;
+      background: rgba(0, 9, 36, 0.8);
       padding: 10px;
       border-radius: 5px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
       width: 250px;
       left: 50%;
+      border: 1px solid rgba(42, 130, 228, 1);
     }
 
     .header {
