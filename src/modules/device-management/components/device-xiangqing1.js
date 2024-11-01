@@ -11,7 +11,7 @@ class Devicexiangqing1 extends LitElement {
       background: rgba(0, 9, 36, 0.8);
       color: white;
       border-radius: 10px;
-      width: 455px;
+      width: 425px;
       height: 485px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
@@ -19,7 +19,7 @@ class Devicexiangqing1 extends LitElement {
     }
 
     .header {
-      font-size: 20px;
+      font-size: 24px;
       font-weight: bold;
       margin-bottom: 10px;
       text-align: left;
@@ -67,14 +67,14 @@ class Devicexiangqing1 extends LitElement {
       padding: 10px; /* 内边距 */
       border-radius: 5px;
       background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
-      width: 430px;
+      width: 400px;
       height: 420px; /* 高度缩小至原来的三分之二 */
     }
     .task-info h2 {
       margin: 0;
       padding-bottom: 1px; /* 内边距 */
       text-align: left;
-      font-size: 25px; /* 字体大小 */
+      font-size: 20px; /* 字体大小 */
 
     }
     .task-info .row {
