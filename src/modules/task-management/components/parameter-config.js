@@ -7,7 +7,7 @@ class ParameterConfig extends LitElement {
       top: 20%;
       left: 50%;
       display: block;
-      width: 530px;
+      width: 540px;
       font-family: "Arial", sans-serif;
       background: rgba(13, 31, 51, 0.9);
       color: white;
@@ -35,7 +35,6 @@ class ParameterConfig extends LitElement {
       width: 450px;
       border: white solid 0.5px;
       overflow: hidden;
-      margin: 0 auto;
     }
     .tabs {
       display: flex;
