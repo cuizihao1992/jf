@@ -4,9 +4,6 @@ class deviceReview extends LitElement {
 
   static styles = css`
       .container {
-        position: absolute;
-        left: 800px;
-        top: -50px;
         bottom: 1px;
         width: 455px; /* 增加整体宽度 */
         height: 610px; /* 设置高度为窗口高度 */
@@ -17,7 +14,6 @@ class deviceReview extends LitElement {
         border-radius: 10px; /* 圆角 */
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
         display: grid;
-        position: relative; /* 使子元素的绝对定位相对于此容器 */
       }
    
       .header {
