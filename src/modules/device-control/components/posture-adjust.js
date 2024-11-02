@@ -3,8 +3,8 @@ import { LitElement, html, css } from 'lit';
 class PostureAdjust extends LitElement {
   static styles = css`
     .modal {
-      top: 45.7%;
-      left: calc(50% + 100px);
+      top: 50.7%;
+      left: calc(50% + 180px);
       transform: translate(0%, -50%);
       position: fixed;
       padding: 20px;

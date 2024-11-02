@@ -4,7 +4,7 @@ class Devicexiangqing1 extends LitElement {
   static styles = css`
     .modal {
       position: absolute;
-    left: calc(50% + 180px);
+    left: calc(50% + 280px);
     top: 57%;
       transform: translate(-50%, -50%);
       padding: 20px;

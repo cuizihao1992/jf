@@ -4,8 +4,8 @@ class deviceReview extends LitElement {
   static styles = css`
   .container {
     position: absolute;
-    left: calc(40% + 160px);
-    top: 14.4%;
+    left: calc(40% + 245px);
+    top: 16%;
     width: 340px; /* 增加整体宽度 */
     height: 635px; /* 设置高度为窗口高度 */
     padding: 15px; /* 内边距 */

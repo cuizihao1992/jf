@@ -3,8 +3,8 @@ import { LitElement, html, css } from 'lit';
 class ScopeSelection extends LitElement {
   static styles = css`
     :host {
-      top: 22%;
-      left: calc(50% + 200px);
+      top: 23.7%;
+      left: calc(50% + 315px);
       position: fixed;
       display: block;
       width: 530px;

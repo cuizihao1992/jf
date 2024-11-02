@@ -5,7 +5,7 @@ class TaskInfoComponent extends LitElement {
     .modal {
       position: fixed;
       top: 50%;
-      left: 40%;
+      left: 27%;
       transform: translate(-50%, -50%);
       padding: 20px;
       background: rgba(0, 9, 36, 0.8);

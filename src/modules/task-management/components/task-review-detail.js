@@ -4,12 +4,12 @@ class TaskReviewDetail extends LitElement {
 
   static styles = css`
       .container {
-        top: 16.3%;
-        left: calc(50% + 270px);
+        top: 12.7%;
+        left: calc(50% + 40px);
         position: fixed; 
         bottom: 1px;
         width: 467px; /* 增加整体宽度 */
-        height: 770px; /* 设置高度为窗口高度 */
+        height: 770px; /* 设置高度为窗口高度 */ 
         padding: 15px; /* 内边距 */
         background-color: rgba(13, 31, 51, 0.9); /* 深色背景 */
         color: white;

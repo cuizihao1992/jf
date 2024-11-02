@@ -3,8 +3,8 @@ import { LitElement, html, css } from 'lit';
 class TaskDetails extends LitElement {
   static styles = css`
     .container {
-      top: 31.5%;
-      left: calc(50% + 270px);
+      top: 27%;
+      left: calc(50% + 40px);
       position: fixed;                                                                                                                                                         
       width: 467px; /* 增加整体宽度 */
       height: 545px; /* 设置高度为窗口高度 */
