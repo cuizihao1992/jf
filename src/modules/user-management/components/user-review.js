@@ -4,9 +4,6 @@ class UserReview extends LitElement {
 
   static styles = css`
       .container {
-        position: absolute;
-        margin-left: 56%;
-        top: 12%;
         width: 395px; /* 增加整体宽度 */
         height: 580px; /* 设置高度为窗口高度 */
         padding: 15px; /* 内边距 */

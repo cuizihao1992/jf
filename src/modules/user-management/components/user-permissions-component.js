@@ -4,9 +4,6 @@ class UserPermissionsComponent extends LitElement {
   static styles = css`
     /* 样式代码保持不变 */
     .modal {
-      position: relative;
-      margin-top: -3%;
-      margin-left: 3%;
       padding: 20px;
       background: rgba(0, 9, 36, 0.8);
       color: white;
