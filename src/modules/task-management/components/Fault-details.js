@@ -3,9 +3,6 @@ import { LitElement, html, css } from "lit";
 class FaultDetails extends LitElement {
   static styles = css`
     .modal {
-      top: 12.6%;
-      left: calc(50% + 110px);
-      position: fixed; 
       padding: 20px;
       background: rgba(0, 9, 36, 0.8);
       color: white;

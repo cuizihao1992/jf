@@ -3,10 +3,6 @@ import { LitElement, html, css } from "lit";
 class TaskInfoComponent extends LitElement {
   static styles = css`
     .modal {
-      position: fixed;
-      top: 50%;
-      left: 27%;
-      transform: translate(-50%, -50%);
       padding: 20px;
       background: rgba(0, 9, 36, 0.8);
       color: white;

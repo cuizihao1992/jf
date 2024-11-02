@@ -6,8 +6,8 @@ import "./components/posture-adjust.js"; // 引入姿态调整组件
 import "./components/realtime-imagery.js"; // 引入姿态调整组件
 import "./components/angle-detection.js"; // 引入角度检测组件
 import "./components/single-device-log.js"; // 引入设备日志组件
-import "./components/device-list.js"; 
-import "@/modules/task-management/components/parameter-config.js";// 引入姿态计算组件
+import "./components/device-list.js";
+import "@/modules/task-management/components/parameter-config.js"; // 引入姿态计算组件
 
 class DeviceControl extends LitElement {
   static styles = [sharedStyles];
@@ -51,54 +51,56 @@ class DeviceControl extends LitElement {
       <div class="panel">
         ${this.isModalOpen && this.selectedButton === "query"
           ? html` <device-query
-                ?showactions=${true}
-                @close-modal=${this.closeModal}
-                @open-posture-adjust=${this.openPostureAdjustModal}
-              >
-              </device-query>`
-          : ""}
-
-        <!-- 姿态调整弹窗，根据 isPostureModalOpen 条件渲染 -->
-        ${this.isPostureAdjustModalOpen
-          ? html`<posture-adjust
-                @close-modal=${this.closePostureAdjustModal}
-                @open-realtime-imagery=${this.openRealtimeImagery}
-                @open-angle-detection=${this.openAngleDetection}
-                @open-single-device-log=${this.openSingleDeviceLog}
-                @open-parameter-config=${this.openParameterConfig}
-              ></posture-adjust>`
+              ?showactions=${true}
+              @close-modal=${this.closeModal}
+              @open-posture-adjust=${this.openPostureAdjustModal}
+            >
+            </device-query>`
           : ""}
 
         <!-- 实时图像弹窗，根据 isRealtimeImageryOpen 条件渲染 -->
         ${this.isRealtimeImageryOpen
           ? html`<realtime-imagery
-                @close-modal=${this.closeRealtimeImagery}
-              ></realtime-imagery>`
+              @close-modal=${this.closeRealtimeImagery}
+            ></realtime-imagery>`
           : ""}
 
         <!-- 角度检测弹窗，根据 isAngleDetectionOpen 条件渲染 -->
         ${this.isAngleDetectionOpen
           ? html`<angle-detection
-                @close-modal=${this.closeAngleDetection}
-              ></angle-detection>`
+              @close-modal=${this.closeAngleDetection}
+            ></angle-detection>`
           : ""}
 
         <!-- 设备日志弹窗，根据 isSingleDeviceLogOpen 条件渲染 -->
         ${this.isSingleDeviceLogOpen
           ? html`<single-device-log
-                @close-modal=${this.closeSingleDeviceLog}
-              ></single-device-log>`
+              @close-modal=${this.closeSingleDeviceLog}
+            ></single-device-log>`
           : ""}
 
         <!-- 参数配置弹窗，根据 isParameterConfigOpen 条件渲染 -->
         ${this.isParameterConfigOpen
           ? html`<parameter-config
-                @close-modal=${this.closeParameterConfig}
-              ></parameter-config>`
+              @close-modal=${this.closeParameterConfig}
+            ></parameter-config>`
           : ""}
-
-        ${this.selectedButton === "list" ? html`<device-list></device-list>` : ""}
+        ${this.selectedButton === "list"
+          ? html`<device-list></device-list>`
+          : ""}
       </div>
+      <!-- 姿态调整弹窗，根据 isPostureModalOpen 条件渲染 -->
+      ${this.isPostureAdjustModalOpen
+        ? html`<div class="panel-right">
+            <posture-adjust
+              @close-modal=${this.closePostureAdjustModal}
+              @open-realtime-imagery=${this.openRealtimeImagery}
+              @open-angle-detection=${this.openAngleDetection}
+              @open-single-device-log=${this.openSingleDeviceLog}
+              @open-parameter-config=${this.openParameterConfig}
+            ></posture-adjust>
+          </div>`
+        : ""}
     `;
   }
 
@@ -117,7 +119,6 @@ class DeviceControl extends LitElement {
     this.selectedButton = buttonName;
     this.isModalOpen = false;
   }
-
 
   // 打开姿态调整弹窗
   openPostureAdjustModal() {
@@ -161,7 +162,6 @@ class DeviceControl extends LitElement {
   // 关闭实时图像弹窗
   closeRealtimeImagery() {
     this.isRealtimeImageryOpen = false;
-
   }
 
   closeModal() {

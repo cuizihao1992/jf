@@ -4,18 +4,18 @@ class TaskReviewDetail extends LitElement {
 
   static styles = css`
       .container {
-        top: 12.7%;
-        left: calc(50% + 40px);
-        position: fixed; 
-        bottom: 1px;
-        width: 467px; /* 增加整体宽度 */
-        height: 770px; /* 设置高度为窗口高度 */ 
+        width: 455px; /* 增加整体宽度 */
+        height: 770px; /* 设置高度为窗口高度 */
         padding: 15px; /* 内边距 */
         background-color: rgba(13, 31, 51, 0.9); /* 深色背景 */
         color: white;
         font-family: Arial, sans-serif;
         border-radius: 10px; /* 圆角 */
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+        display: grid;
+        grid-template-columns: 0fr 5px 0fr; /* 三列布局，中间列用于加减号 */
+        grid-template-rows: auto 1fr; /* 行布局 */
+        gap: 10px; /* 缩短间距 */
       }
    
       .header {

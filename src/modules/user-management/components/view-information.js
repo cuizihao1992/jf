@@ -3,10 +3,7 @@ import { LitElement, html, css } from 'lit';
 class ViewInformation extends LitElement {
   static styles = css`
     .container {
-      position: absolute;
-        left: calc(40% + 130px);
-      top: 14%;
-      width: 340px;
+      width: 400px;
       padding: 15px;
       background-color: rgba(0, 9, 36, 0.8);
       color: white;

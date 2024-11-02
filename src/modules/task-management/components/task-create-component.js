@@ -4,8 +4,6 @@ class TaskCreateComponent extends LitElement {
 
   static styles = css`
     .container {
-      position: absolute;
-      left: 50px;
       width: 1180px; /* 增加整体宽度 */
       height: 590px; /* 设置高度为窗口高度 */
       padding: 15px; /* 内边距 */

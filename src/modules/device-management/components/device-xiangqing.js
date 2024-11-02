@@ -3,10 +3,6 @@ import { LitElement, html, css } from 'lit';
 class Devicexiangqing extends LitElement {
   static styles = css`
     .modal {
-      position: absolute;
-    left: calc(50% + 280px);
-    top: 56%;
-      transform: translate(-50%, -50%);
       padding: 20px;
       background: rgba(0, 9, 36, 0.8);
       color: white;

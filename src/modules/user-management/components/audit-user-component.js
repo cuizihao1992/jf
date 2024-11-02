@@ -3,9 +3,6 @@ import { LitElement, html, css } from 'lit';
 class AuditUserComponent extends LitElement {
   static styles = css`
     .modal {
-      top: 14%;
-      left: 4%;
-      position: fixed; 
       padding: 20px;
       background: rgba(0, 9, 36, 0.8);
       color: white;
