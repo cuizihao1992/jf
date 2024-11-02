@@ -3,9 +3,9 @@ import { LitElement, html, css } from 'lit';
 class Deviceparticulars extends LitElement {
   static styles = css`
     .modal {
-      position: fixed;
-      top: 47%;
-      left: 1000px;
+      position: absolute;
+      left: calc(50% + 180px);
+      top: 57%;
       transform: translate(-50%, -50%);
       padding: 20px;
       background: rgba(0, 9, 36, 0.8);

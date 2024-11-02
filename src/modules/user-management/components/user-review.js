@@ -5,16 +5,16 @@ class UserReview extends LitElement {
   static styles = css`
   .container {
     position: absolute;
-    margin-left: 56%;
-    top: 12%;
-    width: 340px; /* 增加整体宽度 */
-    height: 625px; /* 设置高度为窗口高度 */
-    padding: 15px; /* 内边距 */
-    background-color: rgba(13, 31, 51, 0.9); /* 深色背景 */
+    left: calc(40% + 60px);
+    top: 14%;
+    width: 340px;
+    height: 625px;
+    padding: 15px;
+    background-color: rgba(13, 31, 51, 0.9);
     color: white;
     font-family: Arial, sans-serif;
-    border-radius: 10px; /* 圆角 */
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 10px;
   }
 
   .header {

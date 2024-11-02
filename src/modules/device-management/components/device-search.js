@@ -4,8 +4,8 @@ class DeviceSearch extends LitElement {
   static styles = css`
     .modal {
       position: absolute;
-      top: 53%;
-      left: 520px;
+      top: 48%;
+      left: 25%;
       transform: translate(-50%, -50%);
       padding: 20px;
       background: rgba(0, 9, 36, 0.8);

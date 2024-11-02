@@ -4,8 +4,8 @@ class ViewInformation extends LitElement {
   static styles = css`
     .container {
       position: absolute;
-      top: 10%;
-      left: 56%;
+      left: calc(40% + 60px);
+      top: 14%;
       width: 340px;
       padding: 15px;
       background-color: rgba(0, 9, 36, 0.8);

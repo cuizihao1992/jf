@@ -4,8 +4,8 @@ class DeviceAdd extends LitElement {
   static styles = css`
     .modal {
       position: fixed;
-      top: 47%;
-      left: 365px;
+      top: 40%;
+      left: 14%;
       transform: translate(-50%, -50%);
       padding: 20px;
       background: rgba(0, 9, 36, 0.8);
