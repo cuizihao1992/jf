@@ -4,9 +4,6 @@ class TaskReviewDetail extends LitElement {
 
   static styles = css`
       .container {
-        position: absolute;
-        left: 1220px;
-        bottom: 1px;
         width: 455px; /* 增加整体宽度 */
         height: 770px; /* 设置高度为窗口高度 */
         padding: 15px; /* 内边距 */
@@ -19,7 +16,6 @@ class TaskReviewDetail extends LitElement {
         grid-template-columns: 0fr 5px 0fr; /* 三列布局，中间列用于加减号 */
         grid-template-rows: auto 1fr; /* 行布局 */
         gap: 10px; /* 缩短间距 */
-        position: relative; /* 使子元素的绝对定位相对于此容器 */
       }
    
       .header {
