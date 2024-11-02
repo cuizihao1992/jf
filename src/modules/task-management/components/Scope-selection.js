@@ -3,9 +3,9 @@ import { LitElement, html, css } from 'lit';
 class ScopeSelection extends LitElement {
   static styles = css`
     :host {
-      position: absolute;
-      top: 20%;
-      left: 50%;
+      top: 22%;
+      left: calc(50% + 200px);
+      position: fixed;
       display: block;
       width: 530px;
       font-family: "Arial", sans-serif;

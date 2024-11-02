@@ -3,10 +3,9 @@ import { LitElement, html, css } from 'lit';
 class StatusMission extends LitElement {
   static styles = css`
     .modal {
+      top: 19%;
+      left: calc(50% + 200px);
       position: fixed;
-      top: 50%;
-      left: 75%;
-      transform: translate(-50%, -50%);
       padding: 20px;
       background: rgba(0, 9, 36, 0.8);
       color: white;

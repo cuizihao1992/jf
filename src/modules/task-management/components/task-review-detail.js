@@ -4,8 +4,9 @@ class TaskReviewDetail extends LitElement {
 
   static styles = css`
       .container {
-        position: absolute;
-        left: 40%;
+        top: 16.3%;
+        left: calc(50% + 270px);
+        position: fixed; 
         bottom: 1px;
         width: 467px; /* 增加整体宽度 */
         height: 770px; /* 设置高度为窗口高度 */

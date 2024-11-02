@@ -3,10 +3,9 @@ import { LitElement, html, css } from 'lit';
 class TaskLog extends LitElement {
   static styles = css`
     .modal {
-      position: fixed;
-      top: 49%;
-      left: 1200px;
-      transform: translate(-50%, -50%);
+      top: 15.3%;
+      left: calc(50% + 300px);
+      position: fixed; 
       padding: 20px;
       background: rgba(0, 9, 36, 0.8);
       color: white;

@@ -3,9 +3,9 @@ import { LitElement, html, css } from "lit";
 class ParameterConfig extends LitElement {
   static styles = css`
     :host {
-      position: absolute;
-      top: 20%;
-      left: 50%;
+      top: 39%;
+      left: calc(50% + 550px);
+      position: fixed;
       display: block;
       width: 540px;
       font-family: "Arial", sans-serif;

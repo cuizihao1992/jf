@@ -3,9 +3,9 @@ import { LitElement, html, css } from "lit";
 class AngleDetection extends LitElement {
   static styles = css`
     :host {
-      position: absolute;
-      top: 0px;
-      left: 10%;
+      top: 41%;
+      left: calc(50% + 550px);
+      position: fixed;
       display: block;
       width: 680px;
       font-family: "Arial", sans-serif;

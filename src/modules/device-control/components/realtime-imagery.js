@@ -3,9 +3,9 @@ import { LitElement, html, css } from "lit";
 class RealtimeImagery extends LitElement {
   static styles = css`
     :host {
-      position: absolute;
-      top: 20%;
-      left: 40%;
+      top: 44.1%;
+      left: calc(50% + 550px);
+      position: fixed;
       display: block;
       width: 490px;
       font-family: "Arial", sans-serif;

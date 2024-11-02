@@ -4,7 +4,7 @@ class PostureAdjust extends LitElement {
   static styles = css`
     .modal {
       top: 45.7%;
-      left: calc(50% + 300px);
+      left: calc(50% + 100px);
       transform: translate(0%, -50%);
       position: fixed;
       padding: 20px;
