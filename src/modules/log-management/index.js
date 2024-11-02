@@ -22,6 +22,9 @@ class LogManagement extends LitElement {
     super();
     this.selectedButton = ""; // 初始状态没有选中按钮
     this.activeComponent = ""; // 初始状态不显示任何组件
+    this.isTaskDetailsOpen = false;
+    this.isFaultDetailsOpen = false;
+    this.isTaskLogOpen = false;
   }
 
   render() {
@@ -43,24 +46,24 @@ class LogManagement extends LitElement {
       <div class="panel-right">
         <!-- 任务详情弹窗 -->
         ${this.isTaskDetailsOpen
-          ? html`<task-details
+        ? html`<task-details
               @close-modal=${this.closeTaskDetails}
             ></task-details>`
-          : ""}
+        : ""}
 
         <!-- 故障详情弹窗 -->
         ${this.isFaultDetailsOpen
-          ? html`<fault-details
+        ? html`<fault-details
               @close-modal=${this.closeFaultDetails}
             ></fault-details>`
-          : ""}
+        : ""}
 
         <!-- 设备日志弹窗 -->
         ${this.isTaskLogOpen
-          ? html`<task-log-component
+        ? html`<task-log-component
               @close-modal=${this.closeTaskLog}
             ></task-log-component>`
-          : ""}
+        : ""}
       </div>
     `;
   }
@@ -73,6 +76,9 @@ class LogManagement extends LitElement {
     } else {
       this.activeComponent = componentName; // 切换到新组件
       this.selectedButton = componentName; // 设置当前选中的按钮
+      this.isTaskDetailsOpen = false;
+      this.isFaultDetailsOpen = false;
+      this.isTaskLogOpen = false;
     }
   }
 
@@ -97,14 +103,20 @@ class LogManagement extends LitElement {
   }
   openTaskDetails() {
     this.isTaskDetailsOpen = true;
+    this.isFaultDetailsOpen = false;
+    this.isTaskLogOpen = false;
   }
 
   openFaultDetails() {
     this.isFaultDetailsOpen = true;
+    this.isTaskDetailsOpen = false;
+    this.isTaskLogOpen = false;
   }
 
   openTaskLog() {
     this.isTaskLogOpen = true; // 打开设备日志弹窗
+    this.isTaskDetailsOpen = false;
+    this.isFaultDetailsOpen = false;
   }
   closeTaskDetails() {
     this.isTaskDetailsOpen = false;

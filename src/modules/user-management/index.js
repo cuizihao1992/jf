@@ -24,7 +24,7 @@ class UserManagement extends LitElement {
     super();
     this.selectedButton = ""; // 初始状态没有选中按钮
     this.activeComponent = ""; // 初始状态不显示任何组件
-    this.isUserReviewOpen = false; // 初始状态用户信息组件不显示
+    this.isUserReviewOpen = false;
     this.isUserViewOpen = false;
     this.isUserInformationOpen = false;
     this.isViewInformationOpen = false;
@@ -49,23 +49,23 @@ class UserManagement extends LitElement {
       <!-- 用户信息弹窗 -->
       <div class="panel-right">
         ${this.isUserReviewOpen
-          ? html`<user-review
+        ? html`<user-review
               @close-modal=${this.closeUserReview}
             ></user-review>`
-          : ""}
+        : ""}
         ${this.isUserViewOpen
-          ? html`<user-view @close-modal=${this.closeUserView}></user-view>`
-          : ""}
+        ? html`<user-view @close-modal=${this.closeUserView}></user-view>`
+        : ""}
         ${this.isUserInformationOpen
-          ? html`<user-information
+        ? html`<user-information
               @close-modal=${this.closeUserInformation}
             ></user-information>`
-          : ""}
+        : ""}
         ${this.isViewInformationOpen
-          ? html`<view-information
+        ? html`<view-information
               @close-modal=${this.closeViewInformation}
             ></view-information>`
-          : ""}
+        : ""}
       </div>
     `;
   }
@@ -78,6 +78,10 @@ class UserManagement extends LitElement {
     } else {
       this.activeComponent = componentName; // 切换到新组件
       this.selectedButton = componentName; // 设置当前选中的按钮
+      this.isUserReviewOpen = false;
+      this.isUserViewOpen = false;
+      this.isUserInformationOpen = false;
+      this.isViewInformationOpen = false;
     }
   }
 
@@ -105,9 +109,15 @@ class UserManagement extends LitElement {
   }
   openUserReview() {
     this.isUserReviewOpen = true;
+    this.isUserViewOpen = false;
+    this.isUserInformationOpen = false;
+    this.isViewInformationOpen = false;
   }
   openUserView() {
     this.isUserViewOpen = true;
+    this.isUserReviewOpen = false;
+    this.isUserInformationOpen = false;
+    this.isViewInformationOpen = false;
   }
   closeUserReview() {
     this.isUserReviewOpen = false;
@@ -117,9 +127,15 @@ class UserManagement extends LitElement {
   }
   openUserInformation() {
     this.isUserInformationOpen = true;
+    this.isUserReviewOpen = false;
+    this.isUserViewOpen = false;
+    this.isViewInformationOpen = false;
   }
   openViewInformation() {
     this.isViewInformationOpen = true;
+    this.isUserReviewOpen = false;
+    this.isUserViewOpen = false;
+    this.isUserInformationOpen = false;
   }
   closeUserInformation() {
     this.isUserInformationOpen = false;
