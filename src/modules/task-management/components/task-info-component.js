@@ -12,7 +12,6 @@ class TaskInfoComponent extends LitElement {
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
       border: 1px solid rgba(42, 130, 228, 1);
-      overflow-y: auto;
       background-size: cover;
       background-position: center;
     }
@@ -28,7 +27,7 @@ class TaskInfoComponent extends LitElement {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     .form-group {
       display: flex;
@@ -56,13 +55,15 @@ class TaskInfoComponent extends LitElement {
       cursor: pointer;
       margin-left: 10px;
     }
-
-
+    .table-container {
+      max-height: 565px; /* 限制表格的最大高度 */
+      overflow-y: auto; /* 仅表格内容滚动 */
+    }
     table {
       width: 100%;
       border-collapse: collapse;
       color: white;
-      margin-top: 20px;
+
     }
 
     th {
@@ -102,6 +103,22 @@ class TaskInfoComponent extends LitElement {
       border-radius: 5px;
       margin-right: 5px;
     }
+    .confirmation-modal{
+      position: fixed;
+      top: 50%;
+      left: 80%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      padding: 20px;
+      width: 300px; /* Adjust width as needed */
+      max-width: 90%;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      z-index: 1000;
+      
+    }
 
     .status-online { background-color: green; }
     .status-warning { background-color: orange; }
@@ -112,7 +129,46 @@ class TaskInfoComponent extends LitElement {
       cursor: pointer;
       text-decoration: none;
     }
+      .confirm-button,
+      .cancel-button {
+    background-color: #337ab7;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 25px;
+    margin-right: 20px;
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 添加阴影效果 */
+  }
+
+  .confirm-button:hover,
+  .cancel-button:hover {
+    background-color: #285e8e;
+  }
+
+  .cancel-button {
+    background-color: #337ab7;
+    margin-left: 20px;
+  }
+
+  .cancel-button:hover {
+    background-color: #555;
+  }
   `;
+  static get properties() {
+    return {
+      showConfirmation: { type: Boolean },
+    };
+  }
+
+  constructor() {
+    super();
+    this.showConfirmation = false; // Initialize state
+  }
+
 
   render() {
     return html`
@@ -152,7 +208,7 @@ class TaskInfoComponent extends LitElement {
           </div>
         </div>
 
-  
+        <div class="table-container">
         <table>
           <thead>
             <tr>
@@ -170,11 +226,45 @@ class TaskInfoComponent extends LitElement {
           </tbody>
         </table>
       </div>
+      </div>
+
+       ${this.showConfirmation ? html`
+        <div class="confirmation-modal">
+          <div>提示:</div>
+          <div>是否撤回此任务!!</div>
+          <div class="confirmation-buttons">
+            <button class="confirm-button" @click="${this.confirmRevoke}">确定</button>
+            <button class="cancel-button" @click="${this.cancelRevoke}">取消</button>
+          </div>
+        </div>
+      ` : ''}
     `;
   }
 
   renderRows() {
     const taskInfo = [
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
+      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
       { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
       { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
       { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', approveStatus: '审批状态', operation: '操作' },
@@ -188,13 +278,37 @@ class TaskInfoComponent extends LitElement {
         <td>${taskInfo.deviceType}</td>
         <td>${taskInfo.region}</td>
         <td>${taskInfo.approveStatus}</td>
-        <td><a>查看</a>/<a>编辑</a>/<a>撤回</a></td>
+        <td><a @click="${() => this.openTaskDetails()}">查看</a>
+        /<a @click="${() => this.openTaskDetails()}">编辑</a>
+        /<a @click="${() => this.openRevokeConfirmation()}">撤回</a></td>
       </tr>
     `);
   }
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
+  openTaskDetails() {
+    this.showTaskDetails =true;
+    this.showConfirmation=false;
+    this.dispatchEvent(new CustomEvent('open-task-details'));
+  }
+  openRevokeConfirmation() {
+    this.showConfirmation = true;
+    this.showTaskDetails=false;
+  }
+
+  // Handle confirm action
+  confirmRevoke() {
+    this.showConfirmation = false;
+    this.showTaskDetails=false;
+    console.log('任务撤回 confirmed');
+    // Add your revoke logic here
+  }
+  // Handle cancel action
+  cancelRevoke() {
+    this.showConfirmation = false;
+  }
+
 }
 
 customElements.define("task-info-component", TaskInfoComponent);

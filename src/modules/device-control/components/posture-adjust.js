@@ -3,15 +3,11 @@ import { LitElement, html, css } from 'lit';
 class PostureAdjust extends LitElement {
   static styles = css`
     .modal {
-      top: 50%;
-      left: calc(50% + 300px);
-      transform: translate(0%, -50%);
-      position: fixed;
       padding: 20px;
       background: rgba(0, 9, 36, 0.8);
       color: white;
       border-radius: 8px;
-      width: 435px;
+      width: 400px;
       height: 700px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       border: 1px solid #00ffff;
@@ -30,7 +26,7 @@ class PostureAdjust extends LitElement {
     .controls, .status-controls, .log-section {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
 
     .controls button, .status-controls button {
@@ -60,7 +56,6 @@ class PostureAdjust extends LitElement {
       width: 100%;
       border-collapse: collapse;
       color: white;
-      margin-top: 20px;
     }
 
     table, th, td {
@@ -101,9 +96,12 @@ class PostureAdjust extends LitElement {
 
     .status-controls .adjustment input {
       width: 40px;
-      margin-right: 5px;
+      margin-right: 10px;
     }
-
+    .table-container {
+      max-height: 250px; /* 限制表格的最大高度 */
+      overflow-y: auto; /* 仅表格内容滚动 */
+    }
     .status-controls .adjustment button {
       margin-right: 10px;
     }
@@ -135,40 +133,41 @@ class PostureAdjust extends LitElement {
 
         <div class="controls">
           <div class="control-section" style="display: flex; justify-content: space-between;">
-            <div class="control-group" style="border: 1px solid #00ffff; padding: 10px; border-radius: 5px; margin-right: 10px; position: relative;">
-              <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); white-space: nowrap;">总开关</div>
-              <button class="active" style="width: 50px ">开</button>
-              <button style="width: 50px">关</button>
+            <div class="control-group" style="border: 1px solid #00ffff; padding: 10px; border-radius: 5px; margin-right: 25px; position: relative;">
+              <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); white-space: nowrap;background-color: rgb(49, 56, 79);">总开关</div>
+              <button class="active" style="width: 40px ">开</button>
+              <button style="width: 40px">关</button>
             </div>
-            <div class="control-group" style="border: 1px solid #00ffff; padding: 10px; border-radius: 5px; margin-right: 10px; position: relative;">
-              <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); white-space: nowrap;">云台</div>
-              <button style="width: 50px">开</button>
-              <button style="width: 50px">关</button>
+            <div class="control-group" style="border: 1px solid #00ffff; padding: 10px; border-radius: 5px; margin-right: 25px; position: relative;">
+              <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); white-space: nowrap;background-color: rgb(49, 56, 79);">云台</div>
+              <button style="width: 40px">开</button>
+              <button style="width: 40px">关</button>
             </div>
             <div class="control-group" style="border: 1px solid #00ffff; padding: 10px; border-radius: 5px; position: relative;">
-              <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); white-space: nowrap;">工控机</div>
-              <button style="width: 50px">开</button>
-              <button style="width: 50px">关</button>
+              <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%); white-space: nowrap;background-color: rgb(49, 56, 79);">工控机</div>
+              <button style="width: 40px">开</button>
+              <button style="width: 40px">关</button>
             </div>
           </div>
         </div>
 
         <div class="controls">
           <div class="control-group" style="border: 1px solid #00ffff; padding: 10px; border-radius: 5px; width: 409px; position: relative;">
-            <div style="position: absolute; top: -15px; left: 18%; transform: translateX(-50%); white-space: nowrap;">设备时间</div>
+            <div style="position: absolute; top: -15px; left: 15.8%; transform: translateX(-50%); white-space: nowrap;background-color: rgb(49, 56, 79);">设备时间</div>
             <div style="display: flex; justify-content: center;align-items: center;">
               <input type="text" value="2024-9-24 16:21:50" readonly />
+              <button>获取</button>
               <button>校时</button>
             </div>
           </div>
         </div>
 
-      <div class="status-controls" style="border: 1px solid #00ffff; padding: 10px; border-radius: 5px; margin-bottom: 10px; width: 409px; position: relative;flex-direction: column;">
-        <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%);">姿态控制</div>
-          <button style="margin-top: 5px; width: 75px; height: 32px; margin-left: auto; margin-bottom: 10px;">姿态计算</button>
+      <div class="status-controls" style="border: 1px solid #00ffff; padding: 10px; border-radius: 5px; margin-bottom: 10px; width: 378px; position: relative;flex-direction: column;">
+        <div style="position: absolute; top: -15px; left: 16%; transform: translateX(-50%);background-color: rgb(49, 56, 79);">姿态控制</div>
+          <button @click="${() => this.openParameterConfig()}" style="margin-top: 5px; width: 75px; height: 32px; margin-left: auto; margin-bottom: 10px;">姿态计算</button>
           <div style="display: flex; justify-content: space-between;">
             <div class="adjustment" style="border: 1px solid #00ffff; padding: 10px; border-radius: 5px; width: 120px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-right: 5px;">
-              <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%);">安装姿态</div>
+              <div style="position: absolute; top: -15px; left: 40%; transform: translateX(-50%);background-color: rgb(49, 56, 79);">安装姿态</div>
               <div style="display: flex; flex-direction: column; align-items: center;">
                 <div style="display: flex; align-items: center;">
                   <label>方位角：</label><input type="text" value="0°" readonly />
@@ -179,7 +178,7 @@ class PostureAdjust extends LitElement {
               </div>
             </div>
             <div class="adjustment" style="border: 1px solid #00ffff; padding: 10px; border-radius: 5px; width: 220px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-              <div style="position: absolute; top: -15px; left: 50%; transform: translateX(-50%);">调整姿态</div>
+              <div style="position: absolute; top: -15px; left: 26%; transform: translateX(-50%);background-color: rgb(49, 56, 79);">调整姿态</div>
               <div style="display: flex; flex-direction: column; align-items: center;">
                 <div style="display: flex; align-items: center;margin-bottom: 5px;">
                   <label>水平角：</label><input type="text" value="-15.8°" readonly /><button style="margin-left: 3px;">下达指令</button>
@@ -193,13 +192,14 @@ class PostureAdjust extends LitElement {
       </div>
 
         <div class="status-controls">
-          <button style="width: 65px; height: 32px; font-size: 11px; margin-right: 5px;margin-left: 0px;">云台角度</button>
-          <button style="width: 65px; height: 32px; font-size: 11px; margin-right: 5px;">GNSS</button>
-          <button style="width: 65px; height: 32px; font-size: 11px; margin-right: 5px;">电源信息</button>
-          <button style="width: 65px; height: 32px; font-size: 11px; margin-right: 5px;">实时影像</button>
-          <button style="width: 65px; height: 32px; font-size: 11px; margin-right: 5px;">角度检测</button>
-          <button style="width: 65px; height: 32px; font-size: 11px; margin-right: 5px;">设备日志</button>
+          <button style="width: 65px; height: 32px; font-size: 11px; margin-left: 0px;">云台角度</button>
+          <button style="width: 65px; height: 32px; font-size: 11px; ">GNSS</button>
+          <button style="width: 65px; height: 32px; font-size: 11px; ">电源信息</button>
+          <button @click="${() => this.openRealtimeImagery()}" style="width: 65px; height: 32px; font-size: 11px; ">实时影像</button>
+          <button @click="${() => this.openAngleDetection()}" style="width: 65px; height: 32px; font-size: 11px; ">角度检测</button>
+          <button @click="${() => this.openSingleDeviceLog()}" style="width: 65px; height: 32px; font-size: 11px; ">设备日志</button>
         </div>
+        <div class="table-container">
         <table style="font-size: 14px;">
           <thead>
             <tr>
@@ -214,14 +214,62 @@ class PostureAdjust extends LitElement {
               <td>101</td>
               <td>姿态调整成功</td>
             </tr>
+            <tr>
+              <td>2024-9-24 16:22:10</td>
+              <td>101</td>
+              <td>姿态调整成功</td>
+            </tr>
+            <tr>
+              <td>2024-9-24 16:22:10</td>
+              <td>101</td>
+              <td>姿态调整成功</td>
+            </tr>
+            <tr>
+              <td>2024-9-24 16:22:10</td>
+              <td>101</td>
+              <td>姿态调整成功</td>
+            </tr>
+            <tr>
+              <td>2024-9-24 16:22:10</td>
+              <td>101</td>
+              <td>姿态调整成功</td>
+            </tr>
+            <tr>
+              <td>2024-9-24 16:22:10</td>
+              <td>101</td>
+              <td>姿态调整成功</td>
+            </tr>
+            <tr>
+              <td>2024-9-24 16:22:10</td>
+              <td>101</td>
+              <td>姿态调整成功</td>
+            </tr>
+              <tr>
+                <td>2024-9-24 16:22:10</td>
+                <td>101</td>
+                <td>姿态调整成功</td>
+              </tr>
           </tbody>
         </table>
+        </div>
       </div>
     `;
   }
 
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
+  }
+  openRealtimeImagery() {
+    this.dispatchEvent(new CustomEvent('open-realtime-imagery'));
+  }
+  openAngleDetection() {
+    this.dispatchEvent(new CustomEvent('open-angle-detection'));
+  }
+  openSingleDeviceLog() {
+    this.dispatchEvent(new CustomEvent('open-single-device-log'));
+  }
+  openParameterConfig() {
+    this.dispatchEvent(new CustomEvent('open-parameter-config'));
   }
 }
 

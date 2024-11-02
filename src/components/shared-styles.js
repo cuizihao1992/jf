@@ -7,6 +7,10 @@ export const sharedStyles = css`
     position: absolute;
     left: 10%;
   }
+  .panel-right {
+    position: absolute;
+    right: 5%;
+  }
   .left-buttons {
     position: absolute;
     left: 0px;

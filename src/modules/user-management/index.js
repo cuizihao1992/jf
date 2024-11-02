@@ -3,6 +3,10 @@ import "../../components/custom-button.js"; // Import the reusable button compon
 import { sharedStyles } from "../../components/shared-styles.js"; // 引入共享样式
 import "./components/audit-user-component.js";
 import "./components/user-permissions-component.js"; // 假设有创建任务组件
+import "./components/user-review.js"; // 用户信息组件
+import "./components/user-view.js"; // 用户信息组件
+import "./components/user-information.js"; // 用户信息组件
+import "./components/view-information.js"; // 用户信息组件
 
 class UserManagement extends LitElement {
   static styles = [sharedStyles];
@@ -10,12 +14,20 @@ class UserManagement extends LitElement {
   static properties = {
     selectedButton: { type: String },  // 记录选中的按钮
     activeComponent: { type: String }, // 记录当前显示的组件
+    isUserReviewOpen: { type: Boolean },
+    isUserViewOpen: { type: Boolean },
+    isUserInformationOpen: { type: Boolean },
+    isViewInformationOpen: { type: Boolean },
   };
 
   constructor() {
     super();
     this.selectedButton = "";   // 初始状态没有选中按钮
     this.activeComponent = "";  // 初始状态不显示任何组件
+    this.isUserReviewOpen = false; // 初始状态用户信息组件不显示
+    this.isUserViewOpen = false;
+    this.isUserInformationOpen = false;
+    this.isViewInformationOpen = false;
   }
 
   render() {
@@ -35,7 +47,19 @@ class UserManagement extends LitElement {
       </div>
       <div class="panel">
       ${this.renderActiveComponent()}
-      </div>
+      <!-- 用户信息弹窗 -->
+      ${this.isUserReviewOpen
+        ? html`<user-review @close-modal=${this.closeUserReview}></user-review>`
+        : ""}
+      ${this.isUserViewOpen
+        ? html`<user-view @close-modal=${this.closeUserView}></user-view>`
+        : ""}
+      ${this.isUserInformationOpen
+        ? html`<user-information @close-modal=${this.closeUserInformation}></user-information>`
+        : ""}
+      ${this.isViewInformationOpen
+        ? html`<view-information @close-modal=${this.closeViewInformation}></view-information>`
+        : ""}
     `;
   }
 
@@ -55,10 +79,14 @@ class UserManagement extends LitElement {
       case "auditUser":
         return html`<audit-user-component
           @close-modal=${this.closeTasks}
+          @open-user-review=${this.openUserReview}
+          @open-user-view=${this.openUserView}
         ></audit-user-component>`;  // 替换为实际的用户审核组件
       case "userPermissions":
         return html`<user-permissions-component
           @close-modal=${this.closeTasks}
+          @open-user-information=${this.openUserInformation}
+          @open-view-information=${this.openViewInformation}
         ></user-permissions-component>`;  // 替换为实际的用户权限组件
       default:
         return ""; // 不显示任何组件
@@ -67,6 +95,30 @@ class UserManagement extends LitElement {
   closeTasks() {
     this.activeComponent = ""; // 隐藏当前组件
     this.selectedButton = ""; // 清除选中状态
+  }
+  openUserReview() {
+    this.isUserReviewOpen = true;
+  }
+  openUserView() {
+    this.isUserViewOpen = true;
+  }
+  closeUserReview() {
+    this.isUserReviewOpen = false;
+  }
+  closeUserView() {
+    this.isUserViewOpen = false;
+  }
+  openUserInformation() {
+    this.isUserInformationOpen = true;
+  }
+  openViewInformation() {
+    this.isViewInformationOpen = true;
+  }
+  closeUserInformation() {
+    this.isUserInformationOpen = false;
+  }
+  closeViewInformation() {
+    this.isViewInformationOpen = false;
   }
 }
 

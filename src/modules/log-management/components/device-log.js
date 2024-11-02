@@ -12,7 +12,6 @@ class DeviceLog extends LitElement {
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
       border: 1px solid rgba(42, 130, 228, 1);
-      overflow-y: auto;
       background-size: cover;
       background-position: center;
     }
@@ -28,7 +27,7 @@ class DeviceLog extends LitElement {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     .form-group {
       display: flex;
@@ -79,7 +78,10 @@ class DeviceLog extends LitElement {
     .table-row:last-child {
       border-bottom: none;
     }
-
+    .table-container {
+      max-height: 565px; /* 限制表格的最大高度 */
+      overflow-y: auto; /* 仅表格内容滚动 */
+    }
     td {
       padding: 8px;
       text-align: center;
@@ -146,7 +148,7 @@ class DeviceLog extends LitElement {
           </div>
         </div>
 
-  
+        <div class="table-container">
         <table>
           <thead>
             <tr>
@@ -163,12 +165,33 @@ class DeviceLog extends LitElement {
             ${this.renderRows()}
           </tbody>
         </table>
+        </div>
       </div>
     `;
   }
 
   renderRows() {
     const deviceLog = [
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源'},
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源'},
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源'},
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源'},
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源'},
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源'},
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源'},
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源'},
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源'},
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源'},
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源'},
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源'},
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源'},
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源'},
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源'},
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源'},
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源'},
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源'},
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源'},
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源'},
       { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源'},
     ];
 

@@ -12,7 +12,6 @@ class TaskLog extends LitElement {
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
       border: 1px solid rgba(42, 130, 228, 1);
-      overflow-y: auto;
       background-size: cover;
       background-position: center;
     }
@@ -28,7 +27,7 @@ class TaskLog extends LitElement {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     .form-group {
       display: flex;
@@ -93,6 +92,10 @@ class TaskLog extends LitElement {
       font-weight: bold;
       float: right;
     }
+    .table-container {
+      max-height: 565px; /* 限制表格的最大高度 */
+      overflow-y: auto; /* 仅表格内容滚动 */
+    }
     .status-icon {
       display: inline-flex;
       justify-content: center;
@@ -146,7 +149,7 @@ class TaskLog extends LitElement {
           </div>
         </div>
 
-  
+        <div class="table-container">
         <table>
           <thead>
             <tr>
@@ -165,13 +168,38 @@ class TaskLog extends LitElement {
             ${this.renderRows()}
           </tbody>
         </table>
+        </div>
       </div>
     `;
   }
 
   renderRows() {
     const taskLog = [
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器'},
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
+      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', logType: '自动角反射器', region: '中卫', deviceType: '自动角反射器' },
     ];
 
     return taskLog.map(taskLog => html`
@@ -182,9 +210,9 @@ class TaskLog extends LitElement {
         <td>${taskLog.logType}</td>
         <td>${taskLog.region}</td>
         <td>${taskLog.deviceType}</td>
-        <td><a>查看</a></td>
-        <td><a>查看</a></td>
-        <td><a>查看</a></td>
+        <td><a @click="${() => this.openTaskDetails()}">查看</a></td>
+        <td><a @click="${() => this.openFaultDetails()}">查看</a></td>
+        <td><a @click="${() => this.openTaskLog()}">查看</a></td>
       </tr>
     `);
   }
@@ -192,7 +220,16 @@ class TaskLog extends LitElement {
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
+  openTaskDetails() {
+    this.dispatchEvent(new CustomEvent('open-task-details'));
+  }
 
+  openFaultDetails() {
+    this.dispatchEvent(new CustomEvent('open-fault-details'));
+  }
+  openTaskLog() {
+    this.dispatchEvent(new CustomEvent('open-task-log-component'));
+  }
 }
 
 customElements.define('task-log', TaskLog);

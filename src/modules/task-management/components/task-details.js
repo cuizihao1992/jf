@@ -1,11 +1,10 @@
 import { LitElement, html, css } from 'lit';
 
-class TaskCreateComponent extends LitElement {
-
+class TaskDetails extends LitElement {
   static styles = css`
     .container {
-      width: 1180px; /* 增加整体宽度 */
-      height: 590px; /* 设置高度为窗口高度 */
+      width: 450px; /* 增加整体宽度 */
+      height: 600px; /* 设置高度为窗口高度 */
       padding: 15px; /* 内边距 */
       background-color: rgba(13, 31, 51, 0.9); /* 深色背景 */
       color: white;
@@ -16,7 +15,6 @@ class TaskCreateComponent extends LitElement {
       grid-template-columns: 0fr 5px 0fr; /* 三列布局，中间列用于加减号 */
       grid-template-rows: auto 1fr; /* 行布局 */
       gap: 10px; /* 缩短间距 */
-      position: relative; /* 使子元素的绝对定位相对于此容器 */
     }
  
     .header {
@@ -34,7 +32,7 @@ class TaskCreateComponent extends LitElement {
     .close-button {
       cursor: pointer;
       font-size: 30px; /* 字体大小 */
-      margin-right: -15px; /* 将叉号推到右侧 */
+      margin-right: 30px; /* 将叉号推到右侧 */
     }
 
     .task-info {
@@ -45,7 +43,7 @@ class TaskCreateComponent extends LitElement {
       padding: 10px; /* 内边距 */
       border-radius: 5px;
       background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
-      width: 520px;
+      width: 430px;
       height: 200px; /* 高度缩小至原来的三分之二 */
     }
     .task-info h2 {
@@ -60,7 +58,7 @@ class TaskCreateComponent extends LitElement {
       display: flex;
       justify-content: space-between; /* 标签和输入框分布均匀 */
       align-items: center; /* 垂直居中 */
-      gap: 5px; /* 间距 */
+      gap: 0px; /* 间距 */
     }
     .task-info label {
       color: white;
@@ -89,50 +87,6 @@ class TaskCreateComponent extends LitElement {
       margin-left: 5px;
     
     }
-
-    .device-status {
-      grid-column: 3; /* 占第三列 */
-      display: flex;
-      flex-direction: column;
-      border: 1px solid #58a6ff; /* 边框 */
-      border-radius: 5px; /* 圆角 */
-      padding: 10px; /* 内边距 */
-      background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
-      height:480px;
-      width: 580px;
-    }
-    .device-status h3 {
-      margin: 0;
-      padding-bottom: 10px; /* 内边距 */
-      font-size:16px;
-    }
-    .device-status-table {
-      width: 300px;
-      height:500px;
-      border-collapse: collapse;
-      font-size:12px;
-      white-space: nowrap; 
-
-    }
-    .device-status-table th, .device-status-table td {
-      width: 30px;
-      height:10px;
-      padding: 0 8px 0 8px; /* 内边距 */
-      text-align: center;
-      border: 1px solid #e6edf7; /* 添加网格线 */
-    }
-    .device-status-table th {
-      width: 30px;
-      height:10px;
-      position: sticky; /* 使标题行固定 */
-      top: 0; /* 固定在顶部 */
-      background-color: #0d1f33; /* 背景颜色 */
-      color: white; /* 字体颜色 */
-      z-index: 1; /* 确保在其他内容之上 */
-    }
-    .device-status-table tr:nth-child(even) {
-      background-color: #13243a;
-    }
     .device-list {
       grid-column: 1; 
       display: flex;
@@ -142,7 +96,7 @@ class TaskCreateComponent extends LitElement {
       padding: 10px; /* 内边距 */
       background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
       height:260px;
-      width: 520px;
+      width: 430px;
     }
     .device-list h3 {
       margin: 0;
@@ -154,7 +108,7 @@ class TaskCreateComponent extends LitElement {
       border-radius: 5px; /* 圆角 */
       padding: 1px; /* 内边距 */
       background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
-      width: 515px;
+      width: 430px;
       height: 400px;
       overflow-y: auto;
     }
@@ -212,13 +166,7 @@ class TaskCreateComponent extends LitElement {
     .submit-button {
       background-color: #4CAF50; /* 提交按钮颜色 */
     }
-    .footer-buttons {
-      grid-column: span 3; /* 占三列 */
-      display: flex;
-      justify-content: space-between; /* 左右对齐 */
-      align-items: center;
-      margin-top: -90px; 
-    }
+
     select{
     width:100px;
     font-size:12px;
@@ -237,6 +185,34 @@ class TaskCreateComponent extends LitElement {
     height: 480px;
     overflow-y: auto;
     }
+    .footer-buttons {
+      grid-column: span 3;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 20px;
+      
+    }
+    .confirm-button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 8px 17px;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-right: 15px;
+    }
+      .close-button {
+      cursor: pointer;
+      color: white;
+      background: none;
+      border: none;
+      font-size: 25px;
+      font-weight: bold;
+      float: right;
+    }
+  
   `;
 
   render() {
@@ -256,15 +232,7 @@ class TaskCreateComponent extends LitElement {
 
 
     const deviceStatusRows = deviceRows.map(device => html`
-        <tr>
-            <td><input type="checkbox" id="device-${device.id}" /> ${device.id}</td>
-            <td>${device.region}</td>
-            <td>${device.type}</td>
-            <td><button class="power-status">⚡</button></td>
-            <td>${device.status}</td>
-            <td>${device.time}</td>
-            <td><button class="view-button" @click="${() => this.openStatusMission()}">查看</button></td>
-        </tr>
+        
     `);
     const deviceListRows = [
       { id: 201, angle: { horizontal: 0, elevation: 0 } },
@@ -281,8 +249,6 @@ class TaskCreateComponent extends LitElement {
         <td>
           <input type="checkbox" id="device-${device.id}" />
           ${device.id}
-        </td>
-        <td>
           方位角: ${device.angle.horizontal}°
           仰俯角: ${device.angle.elevation}°
         </td>
@@ -291,31 +257,32 @@ class TaskCreateComponent extends LitElement {
           <input type="text" placeholder="输入角度" style="width: 50px;" />
           俯仰角:
           <input type="text" placeholder="输入角度" style="width: 50px;" />
-          <button class="nav-button">姿态计算</button>
+          
         </td>
       </tr>
     `);
     return html`
       <div class="container">
         <div class="header">
-          <h1>新建任务</h1>
-          <span class="close-button" @click="${this.handleClose}">×</span>
+          <h1>任务详情</h1>
+          <button class="close-button" @click="${this.closeModal}">×</button>
+          
         </div>
         <div>
         <div class="task-info">
           <h2>任务信息</h2>
           <div class="row-task">
             <label for="task-name">任务名:</label>
-            <input type="text" id="task-name" style="margin-left:5px;width:100px;height:15px;border-radius: 4px; /* 圆角 */"/>
-            <label for="task-number" style="margin-left:120px">任务编号:</label>
-            <input type="text" id="task-number" style="margin-left:5px;width:100px;height:15px;border-radius: 4px; /* 圆角 */"/>
+            <input type="text" id="task-name"  placeholder="中卫101" style="margin-left:5px;width:100px;height:15px;border-radius: 4px; /* 圆角 */"/>
+            <label for="task-number" style="margin-left:75px">任务编号:</label>
+            <input type="text" id="task-number"  placeholder="w101" style="margin-left:5px;width:100px;height:15px;border-radius: 4px; /* 圆角 */"/>
           </div>
           <div class="row-location">
-            <label for="location">所属地区:</label>
+            <label for="location">审核状态:</label>
             <select id="location" style="border-radius: 4px;">
-              <option>中卫</option>
+              <option>已提交</option>
             </select>
-            <label for="device-type" style="margin-left:120px">设备类型:</label>
+            <label for="device-type" style="margin-left:75px">设备类型:</label>
             <select id="device-type" style="margin-left:8px;border-radius: 4px; /* 圆角 */">
               <option>自动角反射器</option>
             </select>
@@ -330,7 +297,7 @@ class TaskCreateComponent extends LitElement {
           </div>
           <div class="row-execution-time">
             <label for="execution-time">任务执行时间/分钟(整数):</label>
-            <input type="number" id="execution-time" style="margin-left:65px;width:180px;height:15px;border-radius: 4px; /* 圆角 */"/>
+            <input type="number" id="execution-time"  placeholder="40" style="margin-left:65px;width:180px;height:15px;border-radius: 4px; /* 圆角 */"/>
           </div>
         </div>
         <div class="device-list">
@@ -338,10 +305,8 @@ class TaskCreateComponent extends LitElement {
           <div class="tbody-wrapper">
           <table class="device-list-table">
             <thead>
-            
               <tr>
-                <th>设备编号</th>
-                <th>地理角度</th>
+                <th>设备安装角度</th>
                 <th>设备调整角度</th>
               </tr>
             </thead>
@@ -351,56 +316,23 @@ class TaskCreateComponent extends LitElement {
           </table>
          </div>
         </div>
-        </div>
-        <div class="plus-minus">
-          <button>+</button>
-          <button>-</button>
-        </div>
-
-        <div class="device-status">
-          <h3>设备状态列表</h3>
-          <div class="tbody-new-wrapper">
-          <table class="device-status-table">
-            <thead>
-              <tr>
-                <th>设备编号</th>
-                <th>所属地区</th>
-                <th>设备类型</th>
-                <th>电源状态</th>
-                <th>设备状态</th>
-                <th>设备时间</th>
-                <th>任务状态</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${deviceStatusRows}
-            </tbody>
-          </table>
-        </div>
-        </div>
         <div class="footer-buttons">
-          <button class="config-button" @click="${() => this.openParameterConfig()}" style="background-color: #58a6ff;border-radius:4px; width: 90px; height: 30px; margin-right: 10px;font-size: 14px;margin-top: 50px;color: white;">配置参数</button>
-          <button class="select-button" @click="${() => this.openScopeSelection()}" style="background-color: #58a6ff;border-radius:4px;width: 90px; height: 30px;  font-size: 14px;margin-top: 50px;color: white;">范围选择</button>
-          <button class="submit-button" style="border-radius:4px;width: 60px; height: 30px;font-size: 14px;margin-top: 50px;">提交</button>
+          <button class="confirm-button" @click="${this.handleClose}">确定</button>
         </div>
-      </div>
+        
     `;
+  }
+  closeModal() {
+    this.dispatchEvent(new CustomEvent('close-modal'));
   }
 
   handleClose() {
     // 这里可以添加关闭窗口的逻辑
     // 例如，隐藏组件或销毁组件
     this.remove();
-  }
-  openStatusMission() {
-    this.dispatchEvent(new CustomEvent('open-status-mission'));
-  }
-  openParameterConfig() {
-    this.dispatchEvent(new CustomEvent('open-parameter-config'));
-  }
-  openScopeSelection() {
-    this.dispatchEvent(new CustomEvent('open-scope-selection'));
+    this.dispatchEvent(new CustomEvent('close-modal'));
+
   }
 }
 
-customElements.define('task-create-component', TaskCreateComponent);
+customElements.define('task-details', TaskDetails);
