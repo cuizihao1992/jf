@@ -7,13 +7,13 @@ import "./components/task-query-component.js"; // 假设有任务查询组件
 import "./components/task-review-component.js"; // 假设有任务审核组件
 import "./components/Fault-details.js"; // 引入故障详情组件
 import "./components/task-details.js"; // 引入任务详情组件
-import "./components/task-log-component.js";
-import "./components/task-review-detail.js";
-import "./components/task-review-review.js";
+import "./components/task-log-component.js"; 
+import "./components/task-review-detail.js"; 
+import "./components/task-review-review.js"; 
 import "./components/Status-Mission.js"; // 引入任务状态组件
 import "./components/Scope-selection.js"; // 引入范围选择组件
 import "./components/parameter-config.js"; // 引入范围选择组件
-import "./components/task-edit.js";
+import "./components/task-edit.js"; 
 class TaskManagement extends LitElement {
   static styles = [sharedStyles];
   static properties = {
@@ -73,61 +73,44 @@ class TaskManagement extends LitElement {
           @button-click=${() => this.setActiveComponent("reviewTasks")}
         ></custom-button>
       </div>
-      <div class="panel">${this.renderActiveComponent()}</div>
-      <div class="panel-right">
-        <!-- 任务详情弹窗 -->
-        ${this.isTaskDetailsOpen
-        ? html`<task-details
-              @close-modal=${this.closeTaskDetails}
-            ></task-details>`
-        : ""}
-        <!-- 故障详情弹窗 -->
-        ${this.isFaultDetailsOpen
-        ? html`<fault-details
-              @close-modal=${this.closeFaultDetails}
-            ></fault-details>`
+      ${this.renderActiveComponent()}
+      <!-- 任务详情弹窗 -->
+      ${this.isTaskDetailsOpen
+        ? html`<task-details @close-modal=${this.closeTaskDetails}></task-details>`
         : ""}
 
-        <!-- 设备日志弹窗 -->
-        ${this.isTaskLogOpen
-        ? html`<task-log-component
-              @close-modal=${this.closeTaskLog}
-            ></task-log-component>`
+      <!-- 故障详情弹窗 -->
+      ${this.isFaultDetailsOpen
+        ? html`<fault-details @close-modal=${this.closeFaultDetails}></fault-details>`
         : ""}
-        <!-- 任务审核详情弹窗 -->
-        ${this.isTaskReviewDetailOpen
-        ? html`<task-review-detail
-              @close-modal=${this.closeTaskReviewDetail}
-            ></task-review-detail>`
+
+      <!-- 设备日志弹窗 -->
+      ${this.isTaskLogOpen
+        ? html`<task-log-component @close-modal=${this.closeTaskLog}></task-log-component>`
+        : ""}
+      <!-- 任务审核详情弹窗 -->
+      ${this.isTaskReviewDetailOpen
+        ? html`<task-review-detail @close-modal=${this.closeTaskReviewDetail}></task-review-detail>`
         : ""}
         ${this.isTaskReviewReviewOpen
-        ? html`<task-review-review
-              @close-modal=${this.closeTaskReviewReview}
-            ></task-review-review>`
-        : ""}
-      </div>
-
-      <!-- 任务状态弹窗 -->
+          ? html`<task-review-review @close-modal=${this.closeTaskReviewReview}></task-review-review>`
+          : ""}
+    <!-- 任务状态弹窗 -->
       ${this.isStatusMissionOpen
-        ? html`<status-mission
-            @close-modal=${this.closeStatusMission}
-          ></status-mission>`
+        ? html`<status-mission @close-modal=${this.closeStatusMission}></status-mission>`
         : ""}
       <!-- 范围选择弹窗 -->
       ${this.isScopeSelectionOpen
-        ? html`<scope-selection
-            @close-modal=${this.closeScopeSelection}
-          ></scope-selection>`
+        ? html`<scope-selection @close-modal=${this.closeScopeSelection}></scope-selection>`
         : ""}
       ${this.isParameterConfigOpen
-        ? html`<parameter-config
-            @close-modal=${this.closeParameterConfig}
-          ></parameter-config>`
+        ? html`<parameter-config @close-modal=${this.closeParameterConfig}></parameter-config>`
         : ""}
       ${this.isTaskEditOpen
         ? html`<task-edit @close-modal=${this.closeTaskEdit}></task-edit>`
         : ""}
     `;
+
   }
 
   setActiveComponent(componentName) {
@@ -137,12 +120,15 @@ class TaskManagement extends LitElement {
       this.selectedButton = ""; // 清除选中状态
     } else {
       this.activeComponent = componentName; // 切换到新组件
-      this.selectedButton = componentName;
-      this.isTaskDetailsOpen = false;
-      this.isFaultDetailsOpen = false;
-      this.isTaskLogOpen = false;
-      this.isTaskReviewDetailOpen = false;
-      this.isTaskReviewReviewOpen = false; // 设置当前选中的按钮
+      this.selectedButton = componentName; 
+        this.isTaskDetailsOpen = false;
+        this.isFaultDetailsOpen = false;
+        this.isTaskLogOpen = false;
+         this.isTaskReviewDetailOpen = false;
+         this.isTaskReviewReviewOpen = false;
+         this.isTaskEditOpen = false; 
+         this.isStatusMissionOpen = false;
+         this.isScopeSelectionOpen = false; // 设置当前选中的按钮
     }
   }
 
@@ -150,15 +136,14 @@ class TaskManagement extends LitElement {
     switch (this.activeComponent) {
       case "createTask":
         return html`<task-create-component
-          @open-status-mission=${this.openStatusMission}
-          @open-scope-selection=${this.openScopeSelection}
-          @open-parameter-config=${this.openParameterConfig}
-        ></task-create-component>`;
+         @open-status-mission=${this.openStatusMission}
+         @open-scope-selection=${this.openScopeSelection}
+         @open-parameter-config=${this.openParameterConfig}></task-create-component>`;
       case "myTasks":
         return html`<task-info-component
           @close-modal=${this.closeTasks}
-          @open-task-details=${this.openTaskDetails}
-          @open-task-edit=${this.openTaskEdit}
+           @open-task-details=${this.openTaskDetails}
+           @open-task-edit=${this.openTaskEdit}
         ></task-info-component>`;
       case "queryTasks":
         return html`<task-query-component
@@ -186,15 +171,14 @@ class TaskManagement extends LitElement {
   openTaskDetails() {
     this.isTaskDetailsOpen = true;
     this.isFaultDetailsOpen = false;
-    this.isTaskLogOpen = false; // 打开故障详情弹窗
-    // 打开任务详情弹窗
-    //this.activeComponent = "taskDetails"; // 设置为任务详情组件
+    this.isTaskLogOpen = false;
+    this.isTaskEditOpen = false;
   }
 
   openFaultDetails() {
     this.isFaultDetailsOpen = true;
     this.isTaskDetailsOpen = false;
-    this.isTaskLogOpen = false; // 打开故障详情弹窗
+    this.isTaskLogOpen = false// 打开故障详情弹窗
     //this.activeComponent = "faultDetails"; // 设置为故障详情组件
   }
 
@@ -219,24 +203,30 @@ class TaskManagement extends LitElement {
     this.isTaskDetailsOpen = false;
   }
   openTaskEdit() {
-    this.isTaskEditOpen = true; // 打开设备日志弹窗
+    this.isTaskEditOpen = true;
+    this.isTaskDetailsOpen = false; // 打开设备日志弹窗
   }
   closeTaskEdit() {
     this.isTaskEditOpen = false; // 打开设备日志弹窗
   }
   openStatusMission() {
-    this.isStatusMissionOpen = true; // 打开设备日志弹窗
+    this.isStatusMissionOpen = true;
+    this.isScopeSelectionOpen = false;
+    this.isParameterConfigOpen = false;
   }
   openScopeSelection() {
-    this.isScopeSelectionOpen = true; // 打开设备日志弹窗
+    this.isScopeSelectionOpen = true;
+    this.isParameterConfigOpen = false;
+    this.isStatusMissionOpen = false;
   }
   openParameterConfig() {
-    this.isParameterConfigOpen = true; // 打开设备日志弹窗
+    this.isParameterConfigOpen = true;
+    this.isScopeSelectionOpen = false;
+    this.isStatusMissionOpen = false; // 打开设备日志弹窗
   }
   closeRevokeConfirmation() {
-    this.isRevokeConfirmationOpen = false;
-  }
-
+    this.isRevokeConfirmationOpen = false;}
+    
   closeTaskDetails() {
     this.isTaskDetailsOpen = false;
   }
@@ -252,7 +242,7 @@ class TaskManagement extends LitElement {
     this.isTaskReviewDetailOpen = false;
   }
   closeTaskReviewReview() {
-    this.isTaskReviewReviewOpen = false;
+    this.isTaskReviewReviewOpen = false; 
     //this.activeComponent = "taskReviewDetail"; // 设置为设备日志组件
   }
   closeStatusMission() {
