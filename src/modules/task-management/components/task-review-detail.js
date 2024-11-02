@@ -12,10 +12,7 @@ class TaskReviewDetail extends LitElement {
         font-family: Arial, sans-serif;
         border-radius: 10px; /* 圆角 */
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-        display: grid;
-        grid-template-columns: 0fr 5px 0fr; /* 三列布局，中间列用于加减号 */
-        grid-template-rows: auto 1fr; /* 行布局 */
-        gap: 10px; /* 缩短间距 */
+        
       }
    
       .header {
@@ -263,17 +260,17 @@ class TaskReviewDetail extends LitElement {
     const deviceStatusRows = deviceRows.map(device => html`
           
       `);
-      const deviceListRows = [
-        { id: 201, angle: { horizontal: 0, elevation: 0 } },
-        { id: 202, angle: { horizontal: 10, elevation: 5 } },
-        { id: 203, angle: { horizontal: -5, elevation: 10 } },
-        { id: 203, angle: { horizontal: -5, elevation: 10 } },
-        { id: 203, angle: { horizontal: -5, elevation: 10 } },
-        { id: 203, angle: { horizontal: -5, elevation: 10 } },
-        { id: 203, angle: { horizontal: -5, elevation: 10 } },
-        // 添加更多的设备行
-      ];
-      const deviceListTableRows = deviceListRows.map(device => html`
+    const deviceListRows = [
+      { id: 201, angle: { horizontal: 0, elevation: 0 } },
+      { id: 202, angle: { horizontal: 10, elevation: 5 } },
+      { id: 203, angle: { horizontal: -5, elevation: 10 } },
+      { id: 203, angle: { horizontal: -5, elevation: 10 } },
+      { id: 203, angle: { horizontal: -5, elevation: 10 } },
+      { id: 203, angle: { horizontal: -5, elevation: 10 } },
+      { id: 203, angle: { horizontal: -5, elevation: 10 } },
+      // 添加更多的设备行
+    ];
+    const deviceListTableRows = deviceListRows.map(device => html`
         <tr>
           <td>
             <input type="checkbox" id="device-${device.id}" />

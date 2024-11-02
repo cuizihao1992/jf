@@ -73,12 +73,7 @@ class UserReview extends LitElement {
     background-color:#4CAF50;
     margin-left: 185px;
   }
-  .footer-buttons {
-    display: flex;
-    justify-content: space-between; /* 左右对齐 */
-    align-items: center;
-    margin-top: -90px; 
-  }
+
   select{
     width:100px;
     font-size:12px;

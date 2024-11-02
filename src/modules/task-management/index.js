@@ -13,7 +13,7 @@ import "./components/task-review-review.js";
 import "./components/Status-Mission.js"; // 引入任务状态组件
 import "./components/Scope-selection.js"; // 引入范围选择组件
 import "./components/parameter-config.js"; // 引入范围选择组件
-import "./components/task-edit.js"; 
+import "./components/task-edit.js";
 class TaskManagement extends LitElement {
   static styles = [sharedStyles];
   static properties = {
@@ -77,34 +77,34 @@ class TaskManagement extends LitElement {
       <div class="panel-right">
         <!-- 任务详情弹窗 -->
         ${this.isTaskDetailsOpen
-          ? html`<task-details
+        ? html`<task-details
               @close-modal=${this.closeTaskDetails}
             ></task-details>`
-          : ""}
+        : ""}
         <!-- 故障详情弹窗 -->
         ${this.isFaultDetailsOpen
-          ? html`<fault-details
+        ? html`<fault-details
               @close-modal=${this.closeFaultDetails}
             ></fault-details>`
-          : ""}
+        : ""}
 
         <!-- 设备日志弹窗 -->
         ${this.isTaskLogOpen
-          ? html`<task-log-component
+        ? html`<task-log-component
               @close-modal=${this.closeTaskLog}
             ></task-log-component>`
-          : ""}
+        : ""}
         <!-- 任务审核详情弹窗 -->
         ${this.isTaskReviewDetailOpen
-          ? html`<task-review-detail
+        ? html`<task-review-detail
               @close-modal=${this.closeTaskReviewDetail}
             ></task-review-detail>`
-          : ""}
+        : ""}
         ${this.isTaskReviewReviewOpen
-          ? html`<task-review-review
+        ? html`<task-review-review
               @close-modal=${this.closeTaskReviewReview}
             ></task-review-review>`
-          : ""}
+        : ""}
       </div>
 
       <!-- 任务状态弹窗 -->
@@ -158,7 +158,7 @@ class TaskManagement extends LitElement {
         return html`<task-info-component
           @close-modal=${this.closeTasks}
           @open-task-details=${this.openTaskDetails}
-          @open-task-details=${this.openTaskDetails}
+          @open-task-edit=${this.openTaskEdit}
         ></task-info-component>`;
       case "queryTasks":
         return html`<task-query-component
