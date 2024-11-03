@@ -67,22 +67,31 @@ class DeviceManagement extends LitElement {
         ></custom-button>
       </div>
 
-      ${this.renderActiveComponent()}
-       ${this.isDevicexiangqingOpen
-        ? html`<device-xiangqing @close-modal=${this.closeDevicexiangqing}></device-xiangqing>`
-        : ""}
+      <div class="panel">
+        ${this.renderActiveComponent()}
+      </div>
+
+      <div class="panel-right">
+        ${this.isDevicexiangqingOpen
+          ? html`<device-xiangqing @close-modal=${this.closeDevicexiangqing}></device-xiangqing>`
+          : ""}
+
         ${this.isDevicexiangqingOpen1
           ? html`<device-xiangqing1 @close-modal=${this.closeDevicexiangqing1}></device-xiangqing1>`
           : ""}
-          ${this.isDeviceReviewOpen
-            ? html`<device-review @close-modal=${this.closeDeviceReview}></device-review>`
-            : ""}
-            ${this.isDeviceShenpiOpen
-              ? html`<device-shenpi @close-modal=${this.closeDeviceShenpi}></device-shenpi>`
-              : ""}
-              ${this.isDeviceParticularsOpen
-                ? html`<device-particulars @close-modal=${this.closeDeviceParticulars}></device-particulars>`
-                : ""}
+
+        ${this.isDeviceReviewOpen
+          ? html`<device-review @close-modal=${this.closeDeviceReview}></device-review>`
+          : ""}
+
+        ${this.isDeviceShenpiOpen
+          ? html`<device-shenpi @close-modal=${this.closeDeviceShenpi}></device-shenpi>`
+          : ""}
+
+        ${this.isDeviceParticularsOpen
+          ? html`<device-particulars @close-modal=${this.closeDeviceParticulars}></device-particulars>`
+          : ""}
+      </div>
     `;
   }
 

@@ -73,44 +73,49 @@ class TaskManagement extends LitElement {
           @button-click=${() => this.setActiveComponent("reviewTasks")}
         ></custom-button>
       </div>
-      ${this.renderActiveComponent()}
-      <!-- 任务详情弹窗 -->
-      ${this.isTaskDetailsOpen
-        ? html`<task-details @close-modal=${this.closeTaskDetails}></task-details>`
-        : ""}
+      
+      <div class="panel">
+        ${this.renderActiveComponent()}
+      </div>
+      
+      <div class="panel-right">
+        ${this.isTaskDetailsOpen
+          ? html`<task-details @close-modal=${this.closeTaskDetails}></task-details>`
+          : ""}
 
-      <!-- 故障详情弹窗 -->
-      ${this.isFaultDetailsOpen
-        ? html`<fault-details @close-modal=${this.closeFaultDetails}></fault-details>`
-        : ""}
+        ${this.isFaultDetailsOpen
+          ? html`<fault-details @close-modal=${this.closeFaultDetails}></fault-details>`
+          : ""}
 
-      <!-- 设备日志弹窗 -->
-      ${this.isTaskLogOpen
-        ? html`<task-log-component @close-modal=${this.closeTaskLog}></task-log-component>`
-        : ""}
-      <!-- 任务审核详情弹窗 -->
-      ${this.isTaskReviewDetailOpen
-        ? html`<task-review-detail @close-modal=${this.closeTaskReviewDetail}></task-review-detail>`
-        : ""}
+        ${this.isTaskLogOpen
+          ? html`<task-log-component @close-modal=${this.closeTaskLog}></task-log-component>`
+          : ""}
+
+        ${this.isTaskReviewDetailOpen
+          ? html`<task-review-detail @close-modal=${this.closeTaskReviewDetail}></task-review-detail>`
+          : ""}
+
         ${this.isTaskReviewReviewOpen
           ? html`<task-review-review @close-modal=${this.closeTaskReviewReview}></task-review-review>`
           : ""}
-    <!-- 任务状态弹窗 -->
-      ${this.isStatusMissionOpen
-        ? html`<status-mission @close-modal=${this.closeStatusMission}></status-mission>`
-        : ""}
-      <!-- 范围选择弹窗 -->
-      ${this.isScopeSelectionOpen
-        ? html`<scope-selection @close-modal=${this.closeScopeSelection}></scope-selection>`
-        : ""}
-      ${this.isParameterConfigOpen
-        ? html`<parameter-config @close-modal=${this.closeParameterConfig}></parameter-config>`
-        : ""}
-      ${this.isTaskEditOpen
-        ? html`<task-edit @close-modal=${this.closeTaskEdit}></task-edit>`
-        : ""}
-    `;
 
+        ${this.isStatusMissionOpen
+          ? html`<status-mission @close-modal=${this.closeStatusMission}></status-mission>`
+          : ""}
+
+        ${this.isScopeSelectionOpen
+          ? html`<scope-selection @close-modal=${this.closeScopeSelection}></scope-selection>`
+          : ""}
+
+        ${this.isParameterConfigOpen
+          ? html`<parameter-config @close-modal=${this.closeParameterConfig}></parameter-config>`
+          : ""}
+
+        ${this.isTaskEditOpen
+          ? html`<task-edit @close-modal=${this.closeTaskEdit}></task-edit>`
+          : ""}
+      </div>
+    `;
   }
 
   setActiveComponent(componentName) {
