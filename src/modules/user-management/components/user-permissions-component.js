@@ -9,7 +9,7 @@ class UserPermissionsComponent extends LitElement {
       color: white;
       border-radius: 10px;
       width: 770px;
-      height: 610px; 
+      height: 610px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
       border: 1px solid rgba(42, 130, 228, 1);
@@ -124,12 +124,12 @@ class UserPermissionsComponent extends LitElement {
     .table-container {
       max-height: 475px; /* 限制表格的最大高度 */
       overflow-y: auto; /* 仅表格内容滚动 */
-    }      
+    }
   `;
 
   static properties = {
     showDialog: { type: Boolean },
-    selectedUserStatus: { type: String }
+    selectedUserStatus: { type: String },
   };
 
   constructor() {
@@ -141,14 +141,24 @@ class UserPermissionsComponent extends LitElement {
   render() {
     return html`
       <div class="modal">
-        <div class="header">用户权限<button class="close-button" @click="${this.closeModal}">×</button></div><hr />
+        <div class="header">
+          用户权限<button class="close-button" @click="${this.closeModal}">
+            ×
+          </button>
+        </div>
+        <hr />
         <div class="form-container">
           <div class="form-group">
             <label for="search-condition">用户名:</label>
-            <input type="text" id="search-condition" style="background-color: white;" />
+            <input
+              type="text"
+              id="search-condition"
+              style="background-color: white;"
+            />
           </div>
           <button class="query-button">查询</button>
-        </div><hr />
+        </div>
+        <hr />
         <div class="form-container">
           <div class="form-group">
             <label for="location">所属地区:</label>
@@ -169,23 +179,23 @@ class UserPermissionsComponent extends LitElement {
             </select>
           </div>
         </div>
-            <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>用户名</th>
-              <th>用户类型</th>
-              <th>注册时间</th>
-              <th>所属地区</th>
-              <th>用户状态</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${this.renderRows()}
-          </tbody>
-        </table>
-      </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>用户名</th>
+                <th>用户类型</th>
+                <th>注册时间</th>
+                <th>所属地区</th>
+                <th>用户状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${this.renderRows()}
+            </tbody>
+          </table>
+        </div>
       </div>
       ${this.showDialog ? this.renderConfirmDialog() : ''}
     `;
@@ -193,38 +203,138 @@ class UserPermissionsComponent extends LitElement {
 
   renderRows() {
     const powerUsers = [
-      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
-      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
-      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
-      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
-      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
-      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
-      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
-      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
-      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
-      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
-      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
-      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
-      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
-      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
-      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
-      { userName: '张三', userType: '管理员', registerTime: '2024-9-24 16:21:45', region: '中卫', userStatus: this.selectedUserStatus },
+      {
+        userName: '张三',
+        userType: '管理员',
+        registerTime: '2024-9-24 16:21:45',
+        region: '中卫',
+        userStatus: this.selectedUserStatus,
+      },
+      {
+        userName: '张三',
+        userType: '管理员',
+        registerTime: '2024-9-24 16:21:45',
+        region: '中卫',
+        userStatus: this.selectedUserStatus,
+      },
+      {
+        userName: '张三',
+        userType: '管理员',
+        registerTime: '2024-9-24 16:21:45',
+        region: '中卫',
+        userStatus: this.selectedUserStatus,
+      },
+      {
+        userName: '张三',
+        userType: '管理员',
+        registerTime: '2024-9-24 16:21:45',
+        region: '中卫',
+        userStatus: this.selectedUserStatus,
+      },
+      {
+        userName: '张三',
+        userType: '管理员',
+        registerTime: '2024-9-24 16:21:45',
+        region: '中卫',
+        userStatus: this.selectedUserStatus,
+      },
+      {
+        userName: '张三',
+        userType: '管理员',
+        registerTime: '2024-9-24 16:21:45',
+        region: '中卫',
+        userStatus: this.selectedUserStatus,
+      },
+      {
+        userName: '张三',
+        userType: '管理员',
+        registerTime: '2024-9-24 16:21:45',
+        region: '中卫',
+        userStatus: this.selectedUserStatus,
+      },
+      {
+        userName: '张三',
+        userType: '管理员',
+        registerTime: '2024-9-24 16:21:45',
+        region: '中卫',
+        userStatus: this.selectedUserStatus,
+      },
+      {
+        userName: '张三',
+        userType: '管理员',
+        registerTime: '2024-9-24 16:21:45',
+        region: '中卫',
+        userStatus: this.selectedUserStatus,
+      },
+      {
+        userName: '张三',
+        userType: '管理员',
+        registerTime: '2024-9-24 16:21:45',
+        region: '中卫',
+        userStatus: this.selectedUserStatus,
+      },
+      {
+        userName: '张三',
+        userType: '管理员',
+        registerTime: '2024-9-24 16:21:45',
+        region: '中卫',
+        userStatus: this.selectedUserStatus,
+      },
+      {
+        userName: '张三',
+        userType: '管理员',
+        registerTime: '2024-9-24 16:21:45',
+        region: '中卫',
+        userStatus: this.selectedUserStatus,
+      },
+      {
+        userName: '张三',
+        userType: '管理员',
+        registerTime: '2024-9-24 16:21:45',
+        region: '中卫',
+        userStatus: this.selectedUserStatus,
+      },
+      {
+        userName: '张三',
+        userType: '管理员',
+        registerTime: '2024-9-24 16:21:45',
+        region: '中卫',
+        userStatus: this.selectedUserStatus,
+      },
+      {
+        userName: '张三',
+        userType: '管理员',
+        registerTime: '2024-9-24 16:21:45',
+        region: '中卫',
+        userStatus: this.selectedUserStatus,
+      },
+      {
+        userName: '张三',
+        userType: '管理员',
+        registerTime: '2024-9-24 16:21:45',
+        region: '中卫',
+        userStatus: this.selectedUserStatus,
+      },
     ];
 
-    return powerUsers.map(powerUser => html`
-      <tr class="table-row">
-        <td>${powerUser.userName}</td>
-        <td>${powerUser.userType}</td>
-        <td>${powerUser.registerTime}</td>
-        <td>${powerUser.region}</td>
-        <td>${powerUser.userStatus}</td>
-        <td>
-          <a @click="${() => this.openViewInformation()}">查看</a> /
-          <a @click="${() => this.openUserInformation()}">编辑</a> /
-          <a @click="${() => this.toggleUserStatus()}">${powerUser.userStatus === '开放' ? '禁用' : '开放'}</a>
-        </td>
-      </tr>
-    `);
+    return powerUsers.map(
+      (powerUser) => html`
+        <tr class="table-row">
+          <td>${powerUser.userName}</td>
+          <td>${powerUser.userType}</td>
+          <td>${powerUser.registerTime}</td>
+          <td>${powerUser.region}</td>
+          <td>${powerUser.userStatus}</td>
+          <td>
+            <a @click="${() => this.openViewInformation()}">查看</a> /
+            <a @click="${() => this.openUserInformation()}">编辑</a> /
+            <a @click="${() => this.toggleUserStatus()}"
+              >${powerUser.userStatus === '开放' ? '禁用' : '开放'}</a
+            >
+          </td>
+        </tr>
+      `
+    );
   }
 
   toggleUserStatus() {
@@ -234,16 +344,31 @@ class UserPermissionsComponent extends LitElement {
   renderConfirmDialog() {
     return html`
       <div class="confirm-dialog">
-        <p>提示：是否${this.selectedUserStatus === '开放' ? '禁用' : '开放'}此用户？</p>
-        <button class="dialog-button confirm-button" @click="${this.confirmToggleStatus}">确定</button>
-        <button class="dialog-button cancel-button" @click="${this.cancelToggleStatus}">取消</button>
+        <p>
+          提示：是否${this.selectedUserStatus === '开放'
+            ? '禁用'
+            : '开放'}此用户？
+        </p>
+        <button
+          class="dialog-button confirm-button"
+          @click="${this.confirmToggleStatus}"
+        >
+          确定
+        </button>
+        <button
+          class="dialog-button cancel-button"
+          @click="${this.cancelToggleStatus}"
+        >
+          取消
+        </button>
       </div>
     `;
   }
 
   confirmToggleStatus() {
     // 切换用户状态
-    this.selectedUserStatus = this.selectedUserStatus === '开放' ? '禁用' : '开放';
+    this.selectedUserStatus =
+      this.selectedUserStatus === '开放' ? '禁用' : '开放';
     this.showDialog = false;
     this.requestUpdate();
   }

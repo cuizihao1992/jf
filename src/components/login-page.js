@@ -5,7 +5,7 @@ class LoginPage extends LitElement {
     * {
       box-sizing: border-box;
     }
-    
+
     .login-container {
       display: flex;
       justify-content: space-between;
@@ -15,7 +15,7 @@ class LoginPage extends LitElement {
       background-image: url('/satellite-image.png'); /* 替换为实际路径 */
       background-size: cover;
       background-position: center;
-    }   
+    }
     .image-container {
       width: 60%;
     }
@@ -98,21 +98,36 @@ class LoginPage extends LitElement {
   render() {
     return html`
       <div class="login-container">
-      <div class="image-container"></div>
-              <div class="login-box">
+        <div class="image-container"></div>
+        <div class="login-box">
           <h2>系统账号登录</h2>
           <div class="form-group">
             <label for="username">用户名</label>
-            <input type="text" id="username" name="username" placeholder="请输入用户名">
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="请输入用户名"
+            />
           </div>
           <div class="form-group">
             <label for="password">密码</label>
-            <input type="password" id="password" name="password" placeholder="请输入密码">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="请输入密码"
+            />
           </div>
           <div class="role-group">
-            <label><input type="radio" name="role" value="user"> 用户</label>
-            <label><input type="radio" name="role" value="admin"> 管理员</label>
-            <label><input type="radio" name="role" value="superadmin"> 超级管理员</label>
+            <label><input type="radio" name="role" value="user" /> 用户</label>
+            <label
+              ><input type="radio" name="role" value="admin" /> 管理员</label
+            >
+            <label
+              ><input type="radio" name="role" value="superadmin" />
+              超级管理员</label
+            >
           </div>
           <button class="login-btn" @click=${this.login}>登录</button>
           <div class="link-group">
@@ -126,7 +141,9 @@ class LoginPage extends LitElement {
   login() {
     const username = this.shadowRoot.querySelector('#username').value;
     const password = this.shadowRoot.querySelector('#password').value;
-    const role = this.shadowRoot.querySelector('input[name="role"]:checked').value;
+    const role = this.shadowRoot.querySelector(
+      'input[name="role"]:checked'
+    ).value;
 
     console.log('登录信息:', { username, password, role });
 

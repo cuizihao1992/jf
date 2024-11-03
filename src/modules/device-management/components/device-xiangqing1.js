@@ -55,7 +55,7 @@ class Devicexiangqing1 extends LitElement {
       justify-content: space-around;
       width: 100%;
     }
-     .task-info {
+    .task-info {
       grid-column: 1; /* 占第一列 */
       display: grid;
       gap: 5px; /* 间距 */
@@ -71,7 +71,6 @@ class Devicexiangqing1 extends LitElement {
       padding-bottom: 1px; /* 内边距 */
       text-align: left;
       font-size: 20px; /* 字体大小 */
-
     }
     .task-info .row {
       display: flex;
@@ -84,7 +83,7 @@ class Devicexiangqing1 extends LitElement {
       width: 100px; /* 标签宽度 */
       font-size: 14px; /* 字体大小 */
     }
-      .close-button {
+    .close-button {
       cursor: pointer;
       color: white;
       background: none;
@@ -93,7 +92,6 @@ class Devicexiangqing1 extends LitElement {
       font-weight: bold;
       float: right;
     }
-
   `;
 
   render() {
@@ -157,12 +155,11 @@ class Devicexiangqing1 extends LitElement {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
 
-   handleClose() {
+  handleClose() {
     // 这里可以添加关闭窗口的逻辑
     // 例如，隐藏组件或销毁组件
     this.remove();
     this.dispatchEvent(new CustomEvent('close-modal'));
-
   }
 }
 

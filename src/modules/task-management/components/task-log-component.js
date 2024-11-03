@@ -8,7 +8,7 @@ class TaskLog extends LitElement {
       color: white;
       border-radius: 10px;
       width: 590px;
-      height: 700px; 
+      height: 700px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
       border: 1px solid rgba(42, 130, 228, 1);
@@ -98,13 +98,18 @@ class TaskLog extends LitElement {
     .table-container {
       max-height: 530px; /* 限制表格的最大高度 */
       overflow-y: auto; /* 仅表格内容滚动 */
-    }           
+    }
   `;
 
   render() {
     return html`
       <div class="modal">
-        <div class="header">设备日志<button class="close-button" @click="${this.closeModal}">×</button></div><hr />
+        <div class="header">
+          设备日志<button class="close-button" @click="${this.closeModal}">
+            ×
+          </button>
+        </div>
+        <hr />
         <div class="form-container">
           <div class="form-group">
             <label for="log-type">日志查询方式:</label>
@@ -114,10 +119,15 @@ class TaskLog extends LitElement {
           </div>
           <div class="form-group">
             <label for="search-condition">查询条件:</label>
-            <input type="text" id="search-condition" style="background-color: white;" />
+            <input
+              type="text"
+              id="search-condition"
+              style="background-color: white;"
+            />
           </div>
           <button class="query-button">查询</button>
-        </div><hr />
+        </div>
+        <hr />
         <div class="form-container">
           <div class="form-group">
             <label for="region">所属地区:</label>
@@ -133,111 +143,111 @@ class TaskLog extends LitElement {
           </div>
         </div>
         <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>日志编号</th>
-              <th>设备编号</th>
-              <th>所属地区</th>
-              <th>设备类型</th>
-              <th>操作内容</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="table-row">
-              <td>1</td>
-              <td>101</td>
-              <td>中卫</td>
-              <td>自动角反射器</td>
-              <td>打开所有电源</td>
-            </tr>
-            <tr class="table-row">
-              <td>1</td>
-              <td>101</td>
-              <td>中卫</td>
-              <td>自动角反射器</td>
-              <td>打开所有电源</td>
-            </tr>
-            <tr class="table-row">
-              <td>1</td>
-              <td>101</td>
-              <td>中卫</td>
-              <td>自动角反射器</td>
-              <td>打开所有电源</td>
-            </tr>
-            <tr class="table-row">
-              <td>1</td>
-              <td>101</td>
-              <td>中卫</td>
-              <td>自动角反射器</td>
-              <td>打开所有电源</td>
-            </tr>
-            <tr class="table-row">
-              <td>1</td>
-              <td>101</td>
-              <td>中卫</td>
-              <td>自动角反射器</td>
-              <td>打开所有电源</td>
-            </tr>
-            <tr class="table-row">
-              <td>1</td>
-              <td>101</td>
-              <td>中卫</td>
-              <td>自动角反射器</td>
-              <td>打开所有电源</td>
-            </tr>
-            <tr class="table-row">
-              <td>1</td>
-              <td>101</td>
-              <td>中卫</td>
-              <td>自动角反射器</td>
-              <td>打开所有电源</td>
-            </tr>
-            <tr class="table-row">
-              <td>1</td>
-              <td>101</td>
-              <td>中卫</td>
-              <td>自动角反射器</td>
-              <td>打开所有电源</td>
-            </tr>
-            <tr class="table-row">
-              <td>1</td>
-              <td>101</td>
-              <td>中卫</td>
-              <td>自动角反射器</td>
-              <td>打开所有电源</td>
-            </tr>
-            <tr class="table-row">
-              <td>1</td>
-              <td>101</td>
-              <td>中卫</td>
-              <td>自动角反射器</td>
-              <td>打开所有电源</td>
-            </tr>
-            <tr class="table-row">
-              <td>1</td>
-              <td>101</td>
-              <td>中卫</td>
-              <td>自动角反射器</td>
-              <td>打开所有电源</td>
-            </tr>
-            <tr class="table-row">
-              <td>1</td>
-              <td>101</td>
-              <td>中卫</td>
-              <td>自动角反射器</td>
-              <td>打开所有电源</td>
-            </tr>
-            <tr class="table-row">
-              <td>1</td>
-              <td>101</td>
-              <td>中卫</td>
-              <td>自动角反射器</td>
-              <td>打开所有电源</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+          <table>
+            <thead>
+              <tr>
+                <th>日志编号</th>
+                <th>设备编号</th>
+                <th>所属地区</th>
+                <th>设备类型</th>
+                <th>操作内容</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="table-row">
+                <td>1</td>
+                <td>101</td>
+                <td>中卫</td>
+                <td>自动角反射器</td>
+                <td>打开所有电源</td>
+              </tr>
+              <tr class="table-row">
+                <td>1</td>
+                <td>101</td>
+                <td>中卫</td>
+                <td>自动角反射器</td>
+                <td>打开所有电源</td>
+              </tr>
+              <tr class="table-row">
+                <td>1</td>
+                <td>101</td>
+                <td>中卫</td>
+                <td>自动角反射器</td>
+                <td>打开所有电源</td>
+              </tr>
+              <tr class="table-row">
+                <td>1</td>
+                <td>101</td>
+                <td>中卫</td>
+                <td>自动角反射器</td>
+                <td>打开所有电源</td>
+              </tr>
+              <tr class="table-row">
+                <td>1</td>
+                <td>101</td>
+                <td>中卫</td>
+                <td>自动角反射器</td>
+                <td>打开所有电源</td>
+              </tr>
+              <tr class="table-row">
+                <td>1</td>
+                <td>101</td>
+                <td>中卫</td>
+                <td>自动角反射器</td>
+                <td>打开所有电源</td>
+              </tr>
+              <tr class="table-row">
+                <td>1</td>
+                <td>101</td>
+                <td>中卫</td>
+                <td>自动角反射器</td>
+                <td>打开所有电源</td>
+              </tr>
+              <tr class="table-row">
+                <td>1</td>
+                <td>101</td>
+                <td>中卫</td>
+                <td>自动角反射器</td>
+                <td>打开所有电源</td>
+              </tr>
+              <tr class="table-row">
+                <td>1</td>
+                <td>101</td>
+                <td>中卫</td>
+                <td>自动角反射器</td>
+                <td>打开所有电源</td>
+              </tr>
+              <tr class="table-row">
+                <td>1</td>
+                <td>101</td>
+                <td>中卫</td>
+                <td>自动角反射器</td>
+                <td>打开所有电源</td>
+              </tr>
+              <tr class="table-row">
+                <td>1</td>
+                <td>101</td>
+                <td>中卫</td>
+                <td>自动角反射器</td>
+                <td>打开所有电源</td>
+              </tr>
+              <tr class="table-row">
+                <td>1</td>
+                <td>101</td>
+                <td>中卫</td>
+                <td>自动角反射器</td>
+                <td>打开所有电源</td>
+              </tr>
+              <tr class="table-row">
+                <td>1</td>
+                <td>101</td>
+                <td>中卫</td>
+                <td>自动角反射器</td>
+                <td>打开所有电源</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     `;
   }

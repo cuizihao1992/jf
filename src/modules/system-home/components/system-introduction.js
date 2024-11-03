@@ -1,11 +1,11 @@
-import { LitElement, html, css } from "lit";
+import { LitElement, html, css } from 'lit';
 
 class SystemIntroduction extends LitElement {
   static styles = css`
     .container {
       color: #ffffff;
       padding: 16px;
-      font-family: "Microsoft YaHei", sans-serif;
+      font-family: 'Microsoft YaHei', sans-serif;
       position: absolute;
       left: 4px;
       top: 142px;
@@ -33,7 +33,6 @@ class SystemIntroduction extends LitElement {
       background-position: center;
       padding-left: 70px;
       margin-bottom: 15px;
-
     }
 
     .content {
@@ -66,4 +65,4 @@ class SystemIntroduction extends LitElement {
   }
 }
 
-customElements.define("system-introduction", SystemIntroduction);
+customElements.define('system-introduction', SystemIntroduction);

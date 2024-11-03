@@ -1,13 +1,13 @@
-import { LitElement, html, css } from "lit";
-import "../../components/custom-button.js"; // Import the button component
-import { sharedStyles } from "../../components/shared-styles.js"; // 引入共享样式
-import "./components/device-query.js"; // 引入设备查询弹窗组件
-import "./components/posture-adjust.js"; // 引入姿态调整组件
-import "./components/realtime-imagery.js"; // 引入姿态调整组件
-import "./components/angle-detection.js"; // 引入角度检测组件
-import "./components/single-device-log.js"; // 引入设备日志组件
-import "./components/device-list.js";
-import "@/modules/task-management/components/parameter-config.js"; // 引入姿态计算组件
+import { LitElement, html, css } from 'lit';
+import '../../components/custom-button.js'; // Import the button component
+import { sharedStyles } from '../../components/shared-styles.js'; // 引入共享样式
+import './components/device-query.js'; // 引入设备查询弹窗组件
+import './components/posture-adjust.js'; // 引入姿态调整组件
+import './components/realtime-imagery.js'; // 引入姿态调整组件
+import './components/angle-detection.js'; // 引入角度检测组件
+import './components/single-device-log.js'; // 引入设备日志组件
+import './components/device-list.js';
+import '@/modules/task-management/components/parameter-config.js'; // 引入姿态计算组件
 
 class DeviceControl extends LitElement {
   static styles = [sharedStyles];
@@ -24,7 +24,7 @@ class DeviceControl extends LitElement {
 
   constructor() {
     super();
-    this.selectedButton = ""; // 初始化为没有按钮被选中
+    this.selectedButton = ''; // 初始化为没有按钮被选中
     this.isModalOpen = false; // 设备查询弹窗初始为关闭状态
     this.isPostureAdjustModalOpen = false; // 姿态调整弹窗初始为关闭状态
     this.isRealtimeImageryOpen = false; // 实时图像弹窗初始为关闭状态
@@ -38,56 +38,56 @@ class DeviceControl extends LitElement {
       <div class="left-buttons">
         <custom-button
           label="设备查询"
-          ?selected=${this.selectedButton === "query"}
-          @button-click=${() => this.toggleModal("query")}
+          ?selected=${this.selectedButton === 'query'}
+          @button-click=${() => this.toggleModal('query')}
         ></custom-button>
         <custom-button
           label="设备列表"
-          ?selected=${this.selectedButton === "list"}
-          @button-click=${() => this.selectButton("list")}
+          ?selected=${this.selectedButton === 'list'}
+          @button-click=${() => this.selectButton('list')}
         ></custom-button>
       </div>
       <!-- 设备查询弹窗，根据 isModalOpen 条件渲染 -->
       <div class="panel">
-        ${this.isModalOpen && this.selectedButton === "query"
+        ${this.isModalOpen && this.selectedButton === 'query'
           ? html` <device-query
               ?showactions=${true}
               @close-modal=${this.closeModal}
               @open-posture-adjust=${this.openPostureAdjustModal}
             >
             </device-query>`
-          : ""}
+          : ''}
 
         <!-- 实时图像弹窗，根据 isRealtimeImageryOpen 条件渲染 -->
         ${this.isRealtimeImageryOpen
           ? html`<realtime-imagery
               @close-modal=${this.closeRealtimeImagery}
             ></realtime-imagery>`
-          : ""}
+          : ''}
 
         <!-- 角度检测弹窗，根据 isAngleDetectionOpen 条件渲染 -->
         ${this.isAngleDetectionOpen
           ? html`<angle-detection
               @close-modal=${this.closeAngleDetection}
             ></angle-detection>`
-          : ""}
+          : ''}
 
         <!-- 设备日志弹窗，根据 isSingleDeviceLogOpen 条件渲染 -->
         ${this.isSingleDeviceLogOpen
           ? html`<single-device-log
               @close-modal=${this.closeSingleDeviceLog}
             ></single-device-log>`
-          : ""}
+          : ''}
 
         <!-- 参数配置弹窗，根据 isParameterConfigOpen 条件渲染 -->
         ${this.isParameterConfigOpen
           ? html`<parameter-config
               @close-modal=${this.closeParameterConfig}
             ></parameter-config>`
-          : ""}
-        ${this.selectedButton === "list"
+          : ''}
+        ${this.selectedButton === 'list'
           ? html`<device-list></device-list>`
-          : ""}
+          : ''}
       </div>
       <!-- 姿态调整弹窗，根据 isPostureModalOpen 条件渲染 -->
       ${this.isPostureAdjustModalOpen
@@ -100,7 +100,7 @@ class DeviceControl extends LitElement {
               @open-parameter-config=${this.openParameterConfig}
             ></posture-adjust>
           </div>`
-        : ""}
+        : ''}
     `;
   }
 
@@ -110,7 +110,7 @@ class DeviceControl extends LitElement {
       this.isModalOpen = !this.isModalOpen;
     } else {
       this.selectedButton = buttonName;
-      this.isModalOpen = buttonName === "query";
+      this.isModalOpen = buttonName === 'query';
     }
   }
 
@@ -173,4 +173,4 @@ class DeviceControl extends LitElement {
   }
 }
 
-customElements.define("device-control", DeviceControl);
+customElements.define('device-control', DeviceControl);

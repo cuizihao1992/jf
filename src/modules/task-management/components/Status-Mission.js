@@ -19,7 +19,7 @@ class StatusMission extends LitElement {
       z-index: 2;
     }
 
-   .sort-container {
+    .sort-container {
       display: flex;
       justify-content: right;
       align-items: center;
@@ -50,7 +50,8 @@ class StatusMission extends LitElement {
       color: white;
     }
 
-    th, td {
+    th,
+    td {
       padding: 8px;
       text-align: center;
       border-bottom: 1px solid #444;
@@ -60,56 +61,182 @@ class StatusMission extends LitElement {
       background-color: #1a2b4c;
       cursor: pointer;
     }
-    
+
     tr:nth-child(even) {
       background-color: #0d1f33;
     }
-    
+
     .sort-arrow {
       font-size: 14px;
       margin-left: 5px;
       color: #888; /* 默认灰色 */
     }
-    
+
     .sort-arrow.active {
       color: #fff; /* 当前排序方向为白色 */
     }
     .table-container {
       max-height: 470px; /* 限制表格的最大高度 */
       overflow-y: auto; /* 仅表格内容滚动 */
-    }      
+    }
   `;
 
   static properties = {
     tasks: { type: Array },
-    sortDirection: { type: String }
+    sortDirection: { type: String },
   };
 
   constructor() {
     super();
     this.sortDirection = 'asc'; // 初始排序方向
     this.tasks = [
-      { name: '中卫101', code: 'w101', status: '执行中', startTime: '2024-10-10 16:00:00', endTime: '2024-10-10 16:40:00' },
-      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
-      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
-      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
-      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
-      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
-      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
-      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
-      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
-      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
-      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
-      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
-      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
-      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
-      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
-      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
-      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
-      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
-      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
-      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
-      { name: '中卫102', code: 'w102', status: '待执行', startTime: '2024-10-15 16:00:00', endTime: '2024-10-15 16:40:00' },
+      {
+        name: '中卫101',
+        code: 'w101',
+        status: '执行中',
+        startTime: '2024-10-10 16:00:00',
+        endTime: '2024-10-10 16:40:00',
+      },
+      {
+        name: '中卫102',
+        code: 'w102',
+        status: '待执行',
+        startTime: '2024-10-15 16:00:00',
+        endTime: '2024-10-15 16:40:00',
+      },
+      {
+        name: '中卫102',
+        code: 'w102',
+        status: '待执行',
+        startTime: '2024-10-15 16:00:00',
+        endTime: '2024-10-15 16:40:00',
+      },
+      {
+        name: '中卫102',
+        code: 'w102',
+        status: '待执行',
+        startTime: '2024-10-15 16:00:00',
+        endTime: '2024-10-15 16:40:00',
+      },
+      {
+        name: '中卫102',
+        code: 'w102',
+        status: '待执行',
+        startTime: '2024-10-15 16:00:00',
+        endTime: '2024-10-15 16:40:00',
+      },
+      {
+        name: '中卫102',
+        code: 'w102',
+        status: '待执行',
+        startTime: '2024-10-15 16:00:00',
+        endTime: '2024-10-15 16:40:00',
+      },
+      {
+        name: '中卫102',
+        code: 'w102',
+        status: '待执行',
+        startTime: '2024-10-15 16:00:00',
+        endTime: '2024-10-15 16:40:00',
+      },
+      {
+        name: '中卫102',
+        code: 'w102',
+        status: '待执行',
+        startTime: '2024-10-15 16:00:00',
+        endTime: '2024-10-15 16:40:00',
+      },
+      {
+        name: '中卫102',
+        code: 'w102',
+        status: '待执行',
+        startTime: '2024-10-15 16:00:00',
+        endTime: '2024-10-15 16:40:00',
+      },
+      {
+        name: '中卫102',
+        code: 'w102',
+        status: '待执行',
+        startTime: '2024-10-15 16:00:00',
+        endTime: '2024-10-15 16:40:00',
+      },
+      {
+        name: '中卫102',
+        code: 'w102',
+        status: '待执行',
+        startTime: '2024-10-15 16:00:00',
+        endTime: '2024-10-15 16:40:00',
+      },
+      {
+        name: '中卫102',
+        code: 'w102',
+        status: '待执行',
+        startTime: '2024-10-15 16:00:00',
+        endTime: '2024-10-15 16:40:00',
+      },
+      {
+        name: '中卫102',
+        code: 'w102',
+        status: '待执行',
+        startTime: '2024-10-15 16:00:00',
+        endTime: '2024-10-15 16:40:00',
+      },
+      {
+        name: '中卫102',
+        code: 'w102',
+        status: '待执行',
+        startTime: '2024-10-15 16:00:00',
+        endTime: '2024-10-15 16:40:00',
+      },
+      {
+        name: '中卫102',
+        code: 'w102',
+        status: '待执行',
+        startTime: '2024-10-15 16:00:00',
+        endTime: '2024-10-15 16:40:00',
+      },
+      {
+        name: '中卫102',
+        code: 'w102',
+        status: '待执行',
+        startTime: '2024-10-15 16:00:00',
+        endTime: '2024-10-15 16:40:00',
+      },
+      {
+        name: '中卫102',
+        code: 'w102',
+        status: '待执行',
+        startTime: '2024-10-15 16:00:00',
+        endTime: '2024-10-15 16:40:00',
+      },
+      {
+        name: '中卫102',
+        code: 'w102',
+        status: '待执行',
+        startTime: '2024-10-15 16:00:00',
+        endTime: '2024-10-15 16:40:00',
+      },
+      {
+        name: '中卫102',
+        code: 'w102',
+        status: '待执行',
+        startTime: '2024-10-15 16:00:00',
+        endTime: '2024-10-15 16:40:00',
+      },
+      {
+        name: '中卫102',
+        code: 'w102',
+        status: '待执行',
+        startTime: '2024-10-15 16:00:00',
+        endTime: '2024-10-15 16:40:00',
+      },
+      {
+        name: '中卫102',
+        code: 'w102',
+        status: '待执行',
+        startTime: '2024-10-15 16:00:00',
+        endTime: '2024-10-15 16:40:00',
+      },
       // 添加更多任务
     ];
   }
@@ -133,37 +260,52 @@ class StatusMission extends LitElement {
           <button class="close-button" @click="${this.closeModal}">×</button>
         </div>
         <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>任务名</th>
-              <th>任务编号</th>
-              <th>
-                设备开启时间
-                <div class="sort-container">
-                <span @click="${this.sortByStartTime}" style="display: flex; flex-direction: column; align-items: center; margin-left: 5px;">
-                  <span class="sort-arrow ${this.sortDirection === 'asc' ? 'active' : ''}">▲</span>
-                  <span class="sort-arrow ${this.sortDirection === 'desc' ? 'active' : ''}">▼</span>
-                </span>
-                </div>
-              </th>
-              <th>设备关闭时间</th>
-              <th>任务状态</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${this.tasks.map(task => html`
+          <table>
+            <thead>
               <tr>
-                <td>${task.name}</td>
-                <td>${task.code}</td>
-                <td>${task.startTime}</td>
-                <td>${task.endTime}</td>
-                <td>${task.status}</td>
+                <th>任务名</th>
+                <th>任务编号</th>
+                <th>
+                  设备开启时间
+                  <div class="sort-container">
+                    <span
+                      @click="${this.sortByStartTime}"
+                      style="display: flex; flex-direction: column; align-items: center; margin-left: 5px;"
+                    >
+                      <span
+                        class="sort-arrow ${this.sortDirection === 'asc'
+                          ? 'active'
+                          : ''}"
+                        >▲</span
+                      >
+                      <span
+                        class="sort-arrow ${this.sortDirection === 'desc'
+                          ? 'active'
+                          : ''}"
+                        >▼</span
+                      >
+                    </span>
+                  </div>
+                </th>
+                <th>设备关闭时间</th>
+                <th>任务状态</th>
               </tr>
-            `)}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              ${this.tasks.map(
+                (task) => html`
+                  <tr>
+                    <td>${task.name}</td>
+                    <td>${task.code}</td>
+                    <td>${task.startTime}</td>
+                    <td>${task.endTime}</td>
+                    <td>${task.status}</td>
+                  </tr>
+                `
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     `;
   }

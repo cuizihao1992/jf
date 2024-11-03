@@ -8,7 +8,7 @@ class ScopeSelection extends LitElement {
       position: fixed;
       display: block;
       width: 530px;
-      font-family: "Arial", sans-serif;
+      font-family: 'Arial', sans-serif;
       background: rgba(13, 31, 51, 0.9);
       color: white;
       border-radius: 10px;
@@ -76,7 +76,7 @@ class ScopeSelection extends LitElement {
       text-align: right;
       white-space: nowrap;
     }
-    input[type="text"] {
+    input[type='text'] {
       width: 80px;
       padding: 4px;
       border-radius: 5px;
@@ -98,14 +98,18 @@ class ScopeSelection extends LitElement {
     button:hover {
       background-color: #3c72b4;
     }
-    .direction-container, .orbit-container, .attitude-container {
+    .direction-container,
+    .orbit-container,
+    .attitude-container {
       border: 1px solid #ccc;
       border-radius: 8px;
       padding: 15px;
       margin-bottom: 16px;
       position: relative;
     }
-    .direction-title, .orbit-title, .attitude-title {
+    .direction-title,
+    .orbit-title,
+    .attitude-title {
       position: absolute;
       top: -12px;
       left: 10px;
@@ -127,7 +131,8 @@ class ScopeSelection extends LitElement {
       margin-right: 72px;
       margin-left: 45px;
     }
-    .direction-options label, .orbit-parameters .form-group {
+    .direction-options label,
+    .orbit-parameters .form-group {
       flex: -1 1 50%;
     }
     .attitude-container .form-group {
@@ -190,45 +195,57 @@ class ScopeSelection extends LitElement {
             <div class="orbit-container">
               <span class="orbit-title">轨道参数</span>
               <div class="direction-options">
-                <label><input type="checkbox" name="direction" value="leftView" />左向侧视</label>
-                <label><input type="checkbox" name="direction" value="rightView" />右向侧视</label>
+                <label
+                  ><input
+                    type="checkbox"
+                    name="direction"
+                    value="leftView"
+                  />左向侧视</label
+                >
+                <label
+                  ><input
+                    type="checkbox"
+                    name="direction"
+                    value="rightView"
+                  />右向侧视</label
+                >
               </div>
               <div class="orbit-parameters">
                 <div class="form-group">
                   <label>近距端视角：</label>
-                  <input type="text"/>
+                  <input type="text" />
                 </div>
                 <div class="form-group">
                   <label>半长轴：</label>
-                  <input type="text"/>
+                  <input type="text" />
                 </div>
                 <div class="form-group">
                   <label>轨道倾角：</label>
-                  <input type="text"/>
+                  <input type="text" />
                 </div>
                 <div class="form-group">
                   <label>升交点精度：</label>
-                  <input type="text"/>
+                  <input type="text" />
                 </div>
                 <div class="form-group">
                   <label>扩展范围：</label>
-                  <input type="text"/>
+                  <input type="text" />
                 </div>
                 <div class="form-group">
                   <label>远距端视角：</label>
-                  <input type="text"/>
+                  <input type="text" />
                 </div>
                 <div class="form-group">
                   <label>离心率：</label>
-                  <input type="text"/>
+                  <input type="text" />
                 </div>
                 <div class="form-group">
                   <label>近心点辐角：</label>
-                  <input type="text"/>
+                  <input type="text" />
                 </div>
                 <div class="form-group">
                   <label>真近点角：</label>
-                  <input type="text"/>
+                  <input type="text" />
                 </div>
               </div>
             </div>

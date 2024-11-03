@@ -1,4 +1,4 @@
-import { LitElement, html, css } from "lit";
+import { LitElement, html, css } from 'lit';
 
 class ParameterConfig extends LitElement {
   static styles = css`
@@ -8,7 +8,7 @@ class ParameterConfig extends LitElement {
       position: fixed;
       display: block;
       width: 540px;
-      font-family: "Arial", sans-serif;
+      font-family: 'Arial', sans-serif;
       background: rgba(13, 31, 51, 0.9);
       color: white;
       border-radius: 10px;
@@ -67,12 +67,12 @@ class ParameterConfig extends LitElement {
     .form-group {
       margin-bottom: 10px;
       display: flex;
-      justify-content: space-between
+      justify-content: space-between;
     }
     label {
       margin-left: 4px;
     }
-    input[type="text"] {
+    input[type='text'] {
       width: 100px;
       padding: 4px;
       border-radius: 5px;
@@ -92,14 +92,18 @@ class ParameterConfig extends LitElement {
     button:hover {
       background-color: #3c72b4;
     }
-    .direction-container, .orbit-container, .attitude-container {
+    .direction-container,
+    .orbit-container,
+    .attitude-container {
       border: 1px solid #ccc;
       border-radius: 8px;
       padding: 15px;
       margin-bottom: 16px;
       position: relative;
     }
-    .direction-title, .orbit-title, .attitude-title {
+    .direction-title,
+    .orbit-title,
+    .attitude-title {
       position: absolute;
       top: -12px;
       left: 10px;
@@ -107,13 +111,14 @@ class ParameterConfig extends LitElement {
       padding: 0 4px;
       font-weight: bold;
     }
-    .direction-options, .orbit-parameters {
+    .direction-options,
+    .orbit-parameters {
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between
-
+      justify-content: space-between;
     }
-    .direction-options label, .orbit-parameters .form-group {
+    .direction-options label,
+    .orbit-parameters .form-group {
       flex: -1 1 50%;
     }
     .close-button {
@@ -224,4 +229,4 @@ class ParameterConfig extends LitElement {
   }
 }
 
-customElements.define("parameter-config", ParameterConfig);
+customElements.define('parameter-config', ParameterConfig);

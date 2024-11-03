@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 
-class DeviceApprove extends LitElement { 
+class DeviceApprove extends LitElement {
   static styles = css`
     .modal {
       padding: 20px;
@@ -8,7 +8,7 @@ class DeviceApprove extends LitElement {
       color: white;
       border-radius: 10px;
       width: 900px;
-      height: 700px; 
+      height: 700px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
       border: 1px solid rgba(42, 130, 228, 1);
@@ -56,7 +56,6 @@ class DeviceApprove extends LitElement {
       margin-left: 10px;
     }
 
-
     table {
       width: 100%;
       border-collapse: collapse;
@@ -101,9 +100,15 @@ class DeviceApprove extends LitElement {
       margin-right: 5px;
     }
 
-    .status-online { background-color: green; }
-    .status-warning { background-color: orange; }
-    .status-offline { background-color: red; }
+    .status-online {
+      background-color: green;
+    }
+    .status-warning {
+      background-color: orange;
+    }
+    .status-offline {
+      background-color: red;
+    }
 
     a {
       color: #1e90ff;
@@ -113,14 +118,19 @@ class DeviceApprove extends LitElement {
     .table-container {
       max-height: 565px; /* 限制表格的最大高度 */
       overflow-y: auto; /* 仅表格内容滚动 */
-    }        
+    }
   `;
 
   render() {
     return html`
       <div class="modal">
-        <div class="header">设备审批<button class="close-button" @click="${this.closeModal}">×</button></div><hr />
-      <div class="form-container">
+        <div class="header">
+          设备审批<button class="close-button" @click="${this.closeModal}">
+            ×
+          </button>
+        </div>
+        <hr />
+        <div class="form-container">
           <div class="form-group">
             <label for="search-type">任务查询类型:</label>
             <select id="search-type" style="background-color: gray;">
@@ -129,10 +139,15 @@ class DeviceApprove extends LitElement {
           </div>
           <div class="form-group">
             <label for="search-condition">查询条件:</label>
-            <input type="text" id="search-condition" style="background-color: white; " />
+            <input
+              type="text"
+              id="search-condition"
+              style="background-color: white; "
+            />
           </div>
           <button class="query-button">查询</button>
-        </div><hr />
+        </div>
+        <hr />
         <div class="form-container">
           <div class="form-group">
             <label for="location">所属地区:</label>
@@ -154,52 +169,197 @@ class DeviceApprove extends LitElement {
           </div>
         </div>
 
-            <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>设备编号</th>
-              <th>所属地区</th>
-              <th>提交用户名</th>
-              <th>审批类型</th>
-              <th>设备类型</th>
-              <th>审批状态</th>
-              <th>申请时间</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${this.renderRows()}
-          </tbody>
-        </table>
-      </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>设备编号</th>
+                <th>所属地区</th>
+                <th>提交用户名</th>
+                <th>审批类型</th>
+                <th>设备类型</th>
+                <th>审批状态</th>
+                <th>申请时间</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${this.renderRows()}
+            </tbody>
+          </table>
+        </div>
       </div>
     `;
   }
 
   renderRows() {
     const devices = [
-      { id: 101, type: '自动角反射器', region: '中卫', userName: '张三', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
-      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
-      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
-      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
-      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
-      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
-      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
-      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
-      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
-      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
-      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
-      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
-      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
-      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
-      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
-      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
-      { id: 101, type: '自动角反射器', region: '中卫', userName: '李四', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
-      { id: 101, type: '自动角反射器', region: '中卫', userName: '王五', approveType: '添加', approveStatus: '关机' , time: '2024-9-24 16:21:45'},
+      {
+        id: 101,
+        type: '自动角反射器',
+        region: '中卫',
+        userName: '张三',
+        approveType: '添加',
+        approveStatus: '关机',
+        time: '2024-9-24 16:21:45',
+      },
+      {
+        id: 101,
+        type: '自动角反射器',
+        region: '中卫',
+        userName: '李四',
+        approveType: '添加',
+        approveStatus: '关机',
+        time: '2024-9-24 16:21:45',
+      },
+      {
+        id: 101,
+        type: '自动角反射器',
+        region: '中卫',
+        userName: '李四',
+        approveType: '添加',
+        approveStatus: '关机',
+        time: '2024-9-24 16:21:45',
+      },
+      {
+        id: 101,
+        type: '自动角反射器',
+        region: '中卫',
+        userName: '李四',
+        approveType: '添加',
+        approveStatus: '关机',
+        time: '2024-9-24 16:21:45',
+      },
+      {
+        id: 101,
+        type: '自动角反射器',
+        region: '中卫',
+        userName: '李四',
+        approveType: '添加',
+        approveStatus: '关机',
+        time: '2024-9-24 16:21:45',
+      },
+      {
+        id: 101,
+        type: '自动角反射器',
+        region: '中卫',
+        userName: '李四',
+        approveType: '添加',
+        approveStatus: '关机',
+        time: '2024-9-24 16:21:45',
+      },
+      {
+        id: 101,
+        type: '自动角反射器',
+        region: '中卫',
+        userName: '李四',
+        approveType: '添加',
+        approveStatus: '关机',
+        time: '2024-9-24 16:21:45',
+      },
+      {
+        id: 101,
+        type: '自动角反射器',
+        region: '中卫',
+        userName: '李四',
+        approveType: '添加',
+        approveStatus: '关机',
+        time: '2024-9-24 16:21:45',
+      },
+      {
+        id: 101,
+        type: '自动角反射器',
+        region: '中卫',
+        userName: '李四',
+        approveType: '添加',
+        approveStatus: '关机',
+        time: '2024-9-24 16:21:45',
+      },
+      {
+        id: 101,
+        type: '自动角反射器',
+        region: '中卫',
+        userName: '李四',
+        approveType: '添加',
+        approveStatus: '关机',
+        time: '2024-9-24 16:21:45',
+      },
+      {
+        id: 101,
+        type: '自动角反射器',
+        region: '中卫',
+        userName: '李四',
+        approveType: '添加',
+        approveStatus: '关机',
+        time: '2024-9-24 16:21:45',
+      },
+      {
+        id: 101,
+        type: '自动角反射器',
+        region: '中卫',
+        userName: '李四',
+        approveType: '添加',
+        approveStatus: '关机',
+        time: '2024-9-24 16:21:45',
+      },
+      {
+        id: 101,
+        type: '自动角反射器',
+        region: '中卫',
+        userName: '李四',
+        approveType: '添加',
+        approveStatus: '关机',
+        time: '2024-9-24 16:21:45',
+      },
+      {
+        id: 101,
+        type: '自动角反射器',
+        region: '中卫',
+        userName: '李四',
+        approveType: '添加',
+        approveStatus: '关机',
+        time: '2024-9-24 16:21:45',
+      },
+      {
+        id: 101,
+        type: '自动角反射器',
+        region: '中卫',
+        userName: '李四',
+        approveType: '添加',
+        approveStatus: '关机',
+        time: '2024-9-24 16:21:45',
+      },
+      {
+        id: 101,
+        type: '自动角反射器',
+        region: '中卫',
+        userName: '李四',
+        approveType: '添加',
+        approveStatus: '关机',
+        time: '2024-9-24 16:21:45',
+      },
+      {
+        id: 101,
+        type: '自动角反射器',
+        region: '中卫',
+        userName: '李四',
+        approveType: '添加',
+        approveStatus: '关机',
+        time: '2024-9-24 16:21:45',
+      },
+      {
+        id: 101,
+        type: '自动角反射器',
+        region: '中卫',
+        userName: '王五',
+        approveType: '添加',
+        approveStatus: '关机',
+        time: '2024-9-24 16:21:45',
+      },
     ];
 
-    return devices.map(device => html`
+    return devices.map(
+      (device) => html`
       <tr class="table-row">
         <td>${device.id}</a></td>
         <td>${device.region}</td>
@@ -211,20 +371,23 @@ class DeviceApprove extends LitElement {
         <td><a @click="${() => this.openDeviceReview()}">查看</a>
         /<a @click="${() => this.openDeviceshenpi()}">审核</a></td>
       </tr>
-    `);
+    `
+    );
   }
 
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
   openDeviceReview() {
-
-    this.dispatchEvent(new CustomEvent('open-device-review'));    /*this.showConfirmation=false;
+    this.dispatchEvent(
+      new CustomEvent('open-device-review')
+    ); /*this.showConfirmation=false;
     this.dispatchEvent(new CustomEvent('open-task-details'));*/
   }
   openDeviceshenpi() {
-
-    this.dispatchEvent(new CustomEvent('open-device-shenpi'));    /*this.showConfirmation=false;
+    this.dispatchEvent(
+      new CustomEvent('open-device-shenpi')
+    ); /*this.showConfirmation=false;
     this.dispatchEvent(new CustomEvent('open-task-details'));*/
   }
   handleClose() {
@@ -232,7 +395,6 @@ class DeviceApprove extends LitElement {
     // 例如，隐藏组件或销毁组件
     this.remove();
     this.dispatchEvent(new CustomEvent('close-modal'));
-
   }
 }
 

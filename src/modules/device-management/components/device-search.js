@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 
-class DeviceSearch extends LitElement { 
+class DeviceSearch extends LitElement {
   static styles = css`
     .modal {
       padding: 20px;
@@ -8,7 +8,7 @@ class DeviceSearch extends LitElement {
       color: white;
       border-radius: 10px;
       width: 900px;
-      height: 700px; 
+      height: 700px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
       border: 1px solid rgba(42, 130, 228, 1);
@@ -56,7 +56,6 @@ class DeviceSearch extends LitElement {
       margin-left: 10px;
     }
 
-
     table {
       width: 100%;
       border-collapse: collapse;
@@ -101,9 +100,15 @@ class DeviceSearch extends LitElement {
       margin-right: 5px;
     }
 
-    .status-online { background-color: green; }
-    .status-warning { background-color: orange; }
-    .status-offline { background-color: red; }
+    .status-online {
+      background-color: green;
+    }
+    .status-warning {
+      background-color: orange;
+    }
+    .status-offline {
+      background-color: red;
+    }
 
     a {
       color: #1e90ff;
@@ -113,14 +118,19 @@ class DeviceSearch extends LitElement {
     .table-container {
       max-height: 565px; /* 限制表格的最大高度 */
       overflow-y: auto; /* 仅表格内容滚动 */
-    }      
+    }
   `;
 
   render() {
     return html`
       <div class="modal">
-        <div class="header">设备查询<button class="close-button" @click="${this.closeModal}">×</button></div><hr />
-      <div class="form-container">
+        <div class="header">
+          设备查询<button class="close-button" @click="${this.closeModal}">
+            ×
+          </button>
+        </div>
+        <hr />
+        <div class="form-container">
           <div class="form-group">
             <label for="search-type">任务查询类型:</label>
             <select id="search-type" style="background-color: gray;">
@@ -129,10 +139,15 @@ class DeviceSearch extends LitElement {
           </div>
           <div class="form-group">
             <label for="search-condition">查询条件:</label>
-            <input type="text" id="search-condition" style="background-color: white; " />
+            <input
+              type="text"
+              id="search-condition"
+              style="background-color: white; "
+            />
           </div>
           <button class="query-button">查询</button>
-        </div><hr />
+        </div>
+        <hr />
         <div class="form-container">
           <div class="form-group">
             <label for="location">所属地区:</label>
@@ -154,55 +169,224 @@ class DeviceSearch extends LitElement {
           </div>
         </div>
 
-          <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>设备编号</th>
-              <th>设备时间</th>
-              <th>设备类型</th>
-              <th>所属地区</th>
-              <th>连接状态</th>
-              <th>电源状态</th>
-              <th>设备状态</th>
-              <th>设备详情</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${this.renderRows()}
-          </tbody>
-        </table>
-      </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>设备编号</th>
+                <th>设备时间</th>
+                <th>设备类型</th>
+                <th>所属地区</th>
+                <th>连接状态</th>
+                <th>电源状态</th>
+                <th>设备状态</th>
+                <th>设备详情</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${this.renderRows()}
+            </tbody>
+          </table>
+        </div>
       </div>
     `;
   }
 
   renderRows() {
     const devices = [
-      { id: 101, time: '2024-9-24 16:21:45', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 102, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 103, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 104, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 104, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 104, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 104, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 104, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 104, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 104, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 104, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 104, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 104, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 104, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 104, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 104, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 104, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 104, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 104, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 104, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
-      { id: 104, time: '2024-9-24 16:21:50', type: '自动角反射器', region: '中卫', status: '在线', power: '⚡', deviceStatus: '关机' },
+      {
+        id: 101,
+        time: '2024-9-24 16:21:45',
+        type: '自动角反射器',
+        region: '中卫',
+        status: '在线',
+        power: '⚡',
+        deviceStatus: '关机',
+      },
+      {
+        id: 102,
+        time: '2024-9-24 16:21:50',
+        type: '自动角反射器',
+        region: '中卫',
+        status: '在线',
+        power: '⚡',
+        deviceStatus: '关机',
+      },
+      {
+        id: 103,
+        time: '2024-9-24 16:21:50',
+        type: '自动角反射器',
+        region: '中卫',
+        status: '在线',
+        power: '⚡',
+        deviceStatus: '关机',
+      },
+      {
+        id: 104,
+        time: '2024-9-24 16:21:50',
+        type: '自动角反射器',
+        region: '中卫',
+        status: '在线',
+        power: '⚡',
+        deviceStatus: '关机',
+      },
+      {
+        id: 104,
+        time: '2024-9-24 16:21:50',
+        type: '自动角反射器',
+        region: '中卫',
+        status: '在线',
+        power: '⚡',
+        deviceStatus: '关机',
+      },
+      {
+        id: 104,
+        time: '2024-9-24 16:21:50',
+        type: '自动角反射器',
+        region: '中卫',
+        status: '在线',
+        power: '⚡',
+        deviceStatus: '关机',
+      },
+      {
+        id: 104,
+        time: '2024-9-24 16:21:50',
+        type: '自动角反射器',
+        region: '中卫',
+        status: '在线',
+        power: '⚡',
+        deviceStatus: '关机',
+      },
+      {
+        id: 104,
+        time: '2024-9-24 16:21:50',
+        type: '自动角反射器',
+        region: '中卫',
+        status: '在线',
+        power: '⚡',
+        deviceStatus: '关机',
+      },
+      {
+        id: 104,
+        time: '2024-9-24 16:21:50',
+        type: '自动角反射器',
+        region: '中卫',
+        status: '在线',
+        power: '⚡',
+        deviceStatus: '关机',
+      },
+      {
+        id: 104,
+        time: '2024-9-24 16:21:50',
+        type: '自动角反射器',
+        region: '中卫',
+        status: '在线',
+        power: '⚡',
+        deviceStatus: '关机',
+      },
+      {
+        id: 104,
+        time: '2024-9-24 16:21:50',
+        type: '自动角反射器',
+        region: '中卫',
+        status: '在线',
+        power: '⚡',
+        deviceStatus: '关机',
+      },
+      {
+        id: 104,
+        time: '2024-9-24 16:21:50',
+        type: '自动角反射器',
+        region: '中卫',
+        status: '在线',
+        power: '⚡',
+        deviceStatus: '关机',
+      },
+      {
+        id: 104,
+        time: '2024-9-24 16:21:50',
+        type: '自动角反射器',
+        region: '中卫',
+        status: '在线',
+        power: '⚡',
+        deviceStatus: '关机',
+      },
+      {
+        id: 104,
+        time: '2024-9-24 16:21:50',
+        type: '自动角反射器',
+        region: '中卫',
+        status: '在线',
+        power: '⚡',
+        deviceStatus: '关机',
+      },
+      {
+        id: 104,
+        time: '2024-9-24 16:21:50',
+        type: '自动角反射器',
+        region: '中卫',
+        status: '在线',
+        power: '⚡',
+        deviceStatus: '关机',
+      },
+      {
+        id: 104,
+        time: '2024-9-24 16:21:50',
+        type: '自动角反射器',
+        region: '中卫',
+        status: '在线',
+        power: '⚡',
+        deviceStatus: '关机',
+      },
+      {
+        id: 104,
+        time: '2024-9-24 16:21:50',
+        type: '自动角反射器',
+        region: '中卫',
+        status: '在线',
+        power: '⚡',
+        deviceStatus: '关机',
+      },
+      {
+        id: 104,
+        time: '2024-9-24 16:21:50',
+        type: '自动角反射器',
+        region: '中卫',
+        status: '在线',
+        power: '⚡',
+        deviceStatus: '关机',
+      },
+      {
+        id: 104,
+        time: '2024-9-24 16:21:50',
+        type: '自动角反射器',
+        region: '中卫',
+        status: '在线',
+        power: '⚡',
+        deviceStatus: '关机',
+      },
+      {
+        id: 104,
+        time: '2024-9-24 16:21:50',
+        type: '自动角反射器',
+        region: '中卫',
+        status: '在线',
+        power: '⚡',
+        deviceStatus: '关机',
+      },
+      {
+        id: 104,
+        time: '2024-9-24 16:21:50',
+        type: '自动角反射器',
+        region: '中卫',
+        status: '在线',
+        power: '⚡',
+        deviceStatus: '关机',
+      },
     ];
 
-    return devices.map(device => html`
+    return devices.map(
+      (device) => html`
       <tr class="table-row">
         <td>${device.id}</a></td>
         <td>${device.time}</td>
@@ -213,18 +397,18 @@ class DeviceSearch extends LitElement {
         <td>${device.deviceStatus}</td>
         <td><a @click="${() => this.openDeviceParticulars()}">查看</a></td>
       </tr>
-    `);
+    `
+    );
   }
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
   openDeviceParticulars() {
-
-    this.dispatchEvent(new CustomEvent('open-device-particulars'));    /*this.showConfirmation=false;
+    this.dispatchEvent(
+      new CustomEvent('open-device-particulars')
+    ); /*this.showConfirmation=false;
     this.dispatchEvent(new CustomEvent('open-task-details'));*/
   }
-
-  
 }
 
 customElements.define('device-search', DeviceSearch);

@@ -1,6 +1,6 @@
-import { LitElement, html, css } from "lit";
-import "./components/system-introduction";
-import "./components/equipment-status";
+import { LitElement, html, css } from 'lit';
+import './components/system-introduction';
+import './components/equipment-status';
 class SystemHome extends LitElement {
   static styles = css`
     .content {
@@ -20,4 +20,4 @@ class SystemHome extends LitElement {
   }
 }
 
-customElements.define("system-home", SystemHome);
+customElements.define('system-home', SystemHome);

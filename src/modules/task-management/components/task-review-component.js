@@ -2,13 +2,13 @@ import { LitElement, html, css } from 'lit';
 
 class TaskReviewComponent extends LitElement {
   static styles = css`
-      .modal {
+    .modal {
       padding: 20px;
       background: rgba(0, 9, 36, 0.8);
       color: white;
       border-radius: 10px;
       width: 900px;
-      height: 700px; 
+      height: 700px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
       border: 1px solid rgba(42, 130, 228, 1);
@@ -56,12 +56,10 @@ class TaskReviewComponent extends LitElement {
       margin-left: 10px;
     }
 
-
     table {
       width: 100%;
       border-collapse: collapse;
       color: white;
-
     }
 
     th {
@@ -102,9 +100,15 @@ class TaskReviewComponent extends LitElement {
       margin-right: 5px;
     }
 
-    .status-online { background-color: green; }
-    .status-warning { background-color: orange; }
-    .status-offline { background-color: red; }
+    .status-online {
+      background-color: green;
+    }
+    .status-warning {
+      background-color: orange;
+    }
+    .status-offline {
+      background-color: red;
+    }
 
     a {
       color: #1e90ff;
@@ -114,14 +118,19 @@ class TaskReviewComponent extends LitElement {
     .table-container {
       max-height: 565px; /* 限制表格的最大高度 */
       overflow-y: auto; /* 仅表格内容滚动 */
-    }       
+    }
   `;
 
   render() {
     return html`
       <div class="modal">
-        <div class="header">审核列表<button class="close-button" @click="${this.closeModal}">×</button></div><hr />
-      <div class="form-container">
+        <div class="header">
+          审核列表<button class="close-button" @click="${this.closeModal}">
+            ×
+          </button>
+        </div>
+        <hr />
+        <div class="form-container">
           <div class="form-group">
             <label for="search-type">任务查询类型:</label>
             <select id="search-type" style="background-color: gray;">
@@ -130,10 +139,15 @@ class TaskReviewComponent extends LitElement {
           </div>
           <div class="form-group">
             <label for="search-condition">查询条件:</label>
-            <input type="text" id="search-condition" style="background-color: white; " />
+            <input
+              type="text"
+              id="search-condition"
+              style="background-color: white; "
+            />
           </div>
           <button class="query-button">查询</button>
-        </div><hr />
+        </div>
+        <hr />
         <div class="form-container">
           <div class="form-group">
             <label for="location">所属地区:</label>
@@ -156,49 +170,178 @@ class TaskReviewComponent extends LitElement {
         </div>
 
         <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>任务名</th>
-              <th>任务编号</th>
-              <th>提交用户名</th>
-              <th>设备类型</th>
-              <th>所属地区</th>
-              <th>任务提交时间</th>
-              <th>审批状态</th>
-              <th>任务审核</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${this.renderRows()}
-          </tbody>
-        </table>
-      </div>
+          <table>
+            <thead>
+              <tr>
+                <th>任务名</th>
+                <th>任务编号</th>
+                <th>提交用户名</th>
+                <th>设备类型</th>
+                <th>所属地区</th>
+                <th>任务提交时间</th>
+                <th>审批状态</th>
+                <th>任务审核</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${this.renderRows()}
+            </tbody>
+          </table>
+        </div>
       </div>
     `;
   }
 
   renderRows() {
     const taskReview = [
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态' },
-      { taskName: '任务名', taskId: '任务编号', submitName: '提交用户名', deviceType: '设备类型', region: '所属地区', taskTime: '任务提交时间', approveStatus: '审批状态' },
+      {
+        taskName: '任务名',
+        taskId: '任务编号',
+        submitName: '提交用户名',
+        deviceType: '设备类型',
+        region: '所属地区',
+        taskTime: '任务提交时间',
+        approveStatus: '审批状态',
+      },
+      {
+        taskName: '任务名',
+        taskId: '任务编号',
+        submitName: '提交用户名',
+        deviceType: '设备类型',
+        region: '所属地区',
+        taskTime: '任务提交时间',
+        approveStatus: '审批状态',
+      },
+      {
+        taskName: '任务名',
+        taskId: '任务编号',
+        submitName: '提交用户名',
+        deviceType: '设备类型',
+        region: '所属地区',
+        taskTime: '任务提交时间',
+        approveStatus: '审批状态',
+      },
+      {
+        taskName: '任务名',
+        taskId: '任务编号',
+        submitName: '提交用户名',
+        deviceType: '设备类型',
+        region: '所属地区',
+        taskTime: '任务提交时间',
+        approveStatus: '审批状态',
+      },
+      {
+        taskName: '任务名',
+        taskId: '任务编号',
+        submitName: '提交用户名',
+        deviceType: '设备类型',
+        region: '所属地区',
+        taskTime: '任务提交时间',
+        approveStatus: '审批状态',
+      },
+      {
+        taskName: '任务名',
+        taskId: '任务编号',
+        submitName: '提交用户名',
+        deviceType: '设备类型',
+        region: '所属地区',
+        taskTime: '任务提交时间',
+        approveStatus: '审批状态',
+      },
+      {
+        taskName: '任务名',
+        taskId: '任务编号',
+        submitName: '提交用户名',
+        deviceType: '设备类型',
+        region: '所属地区',
+        taskTime: '任务提交时间',
+        approveStatus: '审批状态',
+      },
+      {
+        taskName: '任务名',
+        taskId: '任务编号',
+        submitName: '提交用户名',
+        deviceType: '设备类型',
+        region: '所属地区',
+        taskTime: '任务提交时间',
+        approveStatus: '审批状态',
+      },
+      {
+        taskName: '任务名',
+        taskId: '任务编号',
+        submitName: '提交用户名',
+        deviceType: '设备类型',
+        region: '所属地区',
+        taskTime: '任务提交时间',
+        approveStatus: '审批状态',
+      },
+      {
+        taskName: '任务名',
+        taskId: '任务编号',
+        submitName: '提交用户名',
+        deviceType: '设备类型',
+        region: '所属地区',
+        taskTime: '任务提交时间',
+        approveStatus: '审批状态',
+      },
+      {
+        taskName: '任务名',
+        taskId: '任务编号',
+        submitName: '提交用户名',
+        deviceType: '设备类型',
+        region: '所属地区',
+        taskTime: '任务提交时间',
+        approveStatus: '审批状态',
+      },
+      {
+        taskName: '任务名',
+        taskId: '任务编号',
+        submitName: '提交用户名',
+        deviceType: '设备类型',
+        region: '所属地区',
+        taskTime: '任务提交时间',
+        approveStatus: '审批状态',
+      },
+      {
+        taskName: '任务名',
+        taskId: '任务编号',
+        submitName: '提交用户名',
+        deviceType: '设备类型',
+        region: '所属地区',
+        taskTime: '任务提交时间',
+        approveStatus: '审批状态',
+      },
+      {
+        taskName: '任务名',
+        taskId: '任务编号',
+        submitName: '提交用户名',
+        deviceType: '设备类型',
+        region: '所属地区',
+        taskTime: '任务提交时间',
+        approveStatus: '审批状态',
+      },
+      {
+        taskName: '任务名',
+        taskId: '任务编号',
+        submitName: '提交用户名',
+        deviceType: '设备类型',
+        region: '所属地区',
+        taskTime: '任务提交时间',
+        approveStatus: '审批状态',
+      },
+      {
+        taskName: '任务名',
+        taskId: '任务编号',
+        submitName: '提交用户名',
+        deviceType: '设备类型',
+        region: '所属地区',
+        taskTime: '任务提交时间',
+        approveStatus: '审批状态',
+      },
     ];
 
-    return taskReview.map(taskReview => html`
+    return taskReview.map(
+      (taskReview) => html`
       <tr class="table-row">
         <td>${taskReview.taskName}</a></td>
         <td>${taskReview.taskId}</td>
@@ -210,7 +353,8 @@ class TaskReviewComponent extends LitElement {
         <td><a @click="${() => this.openTaskReviewDetails()}">查看</a>
         /<a @click="${() => this.openTaskReviewReview()}"}">审核</a></td>
       </tr>
-    `);
+    `
+    );
   }
 
   closeModal() {
@@ -227,6 +371,5 @@ class TaskReviewComponent extends LitElement {
     this.dispatchEvent(new CustomEvent('open-task-review-review'));
   }
 }
-
 
 customElements.define('task-review-component', TaskReviewComponent);

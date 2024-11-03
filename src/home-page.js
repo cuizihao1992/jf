@@ -1,14 +1,14 @@
-import { LitElement, html, css } from "lit";
-import { Router } from "@vaadin/router";
+import { LitElement, html, css } from 'lit';
+import { Router } from '@vaadin/router';
 
 // 导入子组件
-import "@/modules/system-home/index.js";
-import "@/modules/device-control/index.js";
-import "@/modules/task-management/index.js";
-import "@/modules/device-management/index.js";
-import "@/modules/user-management/index.js";
-import "@/modules/log-management/index.js";
-import "@/components/login-page.js"; // 引入登录页面组件
+import '@/modules/system-home/index.js';
+import '@/modules/device-control/index.js';
+import '@/modules/task-management/index.js';
+import '@/modules/device-management/index.js';
+import '@/modules/user-management/index.js';
+import '@/modules/log-management/index.js';
+import '@/components/login-page.js'; // 引入登录页面组件
 
 class HomePage extends LitElement {
   static styles = css`
@@ -27,7 +27,7 @@ class HomePage extends LitElement {
 
     /* 顶部栏 */
     .header {
-      background-image: url("/images/header-bg.png");
+      background-image: url('/images/header-bg.png');
       background-size: cover;
       background-position: center;
       text-align: center;
@@ -61,13 +61,15 @@ class HomePage extends LitElement {
       color: #ffffff;
       padding: 10px 20px;
       font-size: 18px;
-      background-image: url("/images/button-bg.png");
+      background-image: url('/images/button-bg.png');
       background-size: cover; /* 确保背景图片覆盖按钮 */
       background-repeat: no-repeat;
       background-position: center;
       border-radius: 5px;
       cursor: pointer;
-      transition: background-color 0.3s, color 0.3s;
+      transition:
+        background-color 0.3s,
+        color 0.3s;
     }
 
     .nav a:hover {
@@ -80,31 +82,31 @@ class HomePage extends LitElement {
   `;
 
   firstUpdated() {
-    const router = new Router(this.shadowRoot.querySelector(".content"));
+    const router = new Router(this.shadowRoot.querySelector('.content'));
     router.setRoutes([
-      { path: "/", component: "system-home" },
-      { path: "/device-control", component: "device-control" },
-      { path: "/task-management", component: "task-management" },
-      { path: "/device-management", component: "device-management" },
-      { path: "/user-management", component: "user-management" },
-      { path: "/log-management", component: "log-management" },
-      { path: "/login", component: "login-page" }, // 添加登录页路由
-      { path: "(.*)", redirect: "/" }, // 默认重定向到首页
+      { path: '/', component: 'system-home' },
+      { path: '/device-control', component: 'device-control' },
+      { path: '/task-management', component: 'task-management' },
+      { path: '/device-management', component: 'device-management' },
+      { path: '/user-management', component: 'user-management' },
+      { path: '/log-management', component: 'log-management' },
+      { path: '/login', component: 'login-page' }, // 添加登录页路由
+      { path: '(.*)', redirect: '/' }, // 默认重定向到首页
     ]);
 
-    window.addEventListener("popstate", () => {
+    window.addEventListener('popstate', () => {
       this.requestUpdate(); // 当 URL 变化时更新
     });
   }
 
   // 根据当前路径判断是否为登录页面
   isLoginPage() {
-    return window.location.pathname === "/login";
+    return window.location.pathname === '/login';
   }
 
   // 根据当前路径获取激活的导航项
   isActive(path) {
-    return window.location.pathname === path ? "active" : "";
+    return window.location.pathname === path ? 'active' : '';
   }
 
   render() {
@@ -117,15 +119,15 @@ class HomePage extends LitElement {
             <div class="nav">
               <!-- 左侧按钮 -->
               <div class="nav-left">
-                <a href="/" class="${this.isActive("/")}">系统首页</a>
+                <a href="/" class="${this.isActive('/')}">系统首页</a>
                 <a
                   href="/device-control"
-                  class="${this.isActive("/device-control")}"
+                  class="${this.isActive('/device-control')}"
                   >设备控制</a
                 >
                 <a
                   href="/task-management"
-                  class="${this.isActive("/task-management")}"
+                  class="${this.isActive('/task-management')}"
                   >任务管理</a
                 >
               </div>
@@ -134,26 +136,26 @@ class HomePage extends LitElement {
               <div class="nav-right">
                 <a
                   href="/device-management"
-                  class="${this.isActive("/device-management")}"
+                  class="${this.isActive('/device-management')}"
                   >设备管理</a
                 >
                 <a
                   href="/user-management"
-                  class="${this.isActive("/user-management")}"
+                  class="${this.isActive('/user-management')}"
                   >用户管理</a
                 >
                 <a
                   href="/log-management"
-                  class="${this.isActive("/log-management")}"
+                  class="${this.isActive('/log-management')}"
                   >日志管理</a
                 >
               </div>
             </div>
           `
-        : ""}
+        : ''}
       <div class="content"></div>
     `;
   }
 }
 
-customElements.define("home-page", HomePage);
+customElements.define('home-page', HomePage);

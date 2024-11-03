@@ -1,4 +1,4 @@
-import { LitElement, html, css } from "lit";
+import { LitElement, html, css } from 'lit';
 
 class SingleDeviceLog extends LitElement {
   static styles = css`
@@ -11,13 +11,13 @@ class SingleDeviceLog extends LitElement {
       color: white;
       border-radius: 10px;
       min-width: 650px;
-      height: 600px; 
+      height: 600px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       opacity: 1;
       border: 1px solid rgba(42, 130, 228, 1);
       background-size: cover;
       background-position: center;
-      Z-INDEX: 2;
+      z-index: 2;
     }
 
     .header {
@@ -59,7 +59,6 @@ class SingleDeviceLog extends LitElement {
       cursor: pointer;
       margin-left: 10px;
     }
-
 
     table {
       width: 100%;
@@ -106,9 +105,15 @@ class SingleDeviceLog extends LitElement {
       margin-right: 5px;
     }
 
-    .status-online { background-color: green; }
-    .status-warning { background-color: orange; }
-    .status-offline { background-color: red; }
+    .status-online {
+      background-color: green;
+    }
+    .status-warning {
+      background-color: orange;
+    }
+    .status-offline {
+      background-color: red;
+    }
 
     a {
       color: #1e90ff;
@@ -124,8 +129,13 @@ class SingleDeviceLog extends LitElement {
   render() {
     return html`
       <div class="modal">
-        <div class="header">设备日志<button class="close-button" @click="${this.closeModal}">×</button></div><hr />
-      <div class="form-container">
+        <div class="header">
+          设备日志<button class="close-button" @click="${this.closeModal}">
+            ×
+          </button>
+        </div>
+        <hr />
+        <div class="form-container">
           <div class="form-group">
             <label for="search-type">日志查询方式:</label>
             <select id="search-type" style="background-color: gray;">
@@ -134,26 +144,30 @@ class SingleDeviceLog extends LitElement {
           </div>
           <div class="form-group">
             <label for="search-condition">查询条件:</label>
-            <input type="text" id="search-condition" style="background-color: white; " />
+            <input
+              type="text"
+              id="search-condition"
+              style="background-color: white; "
+            />
           </div>
           <button class="query-button">查询</button>
         </div>
         <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>日志编号</th>
-              <th>日志生成时间</th>
-              <th>操作用户</th>
-              <th>设备编号</th>
-              <th>所属地区</th>
-              <th>操作内容</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${this.renderRows()}
-          </tbody>
-        </table>
+          <table>
+            <thead>
+              <tr>
+                <th>日志编号</th>
+                <th>日志生成时间</th>
+                <th>操作用户</th>
+                <th>设备编号</th>
+                <th>所属地区</th>
+                <th>操作内容</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${this.renderRows()}
+            </tbody>
+          </table>
         </div>
       </div>
     `;
@@ -161,33 +175,226 @@ class SingleDeviceLog extends LitElement {
 
   renderRows() {
     const deviceLog = [
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
-      { logId: 1, logTime: '2024-9-24 16:21:45', userName: '张三', deviceId: '自动角反射器', region: '中卫', deviceType: '自动角反射器', operationContent: '打开所有电源' },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
+      {
+        logId: 1,
+        logTime: '2024-9-24 16:21:45',
+        userName: '张三',
+        deviceId: '自动角反射器',
+        region: '中卫',
+        deviceType: '自动角反射器',
+        operationContent: '打开所有电源',
+      },
     ];
 
-    return deviceLog.map(deviceLog => html`
+    return deviceLog.map(
+      (deviceLog) => html`
       <tr class="table-row">
         <td>${deviceLog.logId}</a></td>
         <td>${deviceLog.logTime}</td>
@@ -196,13 +403,13 @@ class SingleDeviceLog extends LitElement {
         <td>${deviceLog.region}</td>
         <td>${deviceLog.operationContent}</td>
       </tr>
-    `);
+    `
+    );
   }
 
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
-
   }
 }
 
-customElements.define("single-device-log", SingleDeviceLog);
+customElements.define('single-device-log', SingleDeviceLog);

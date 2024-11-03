@@ -1,4 +1,4 @@
-import { LitElement, html, css } from "lit";
+import { LitElement, html, css } from 'lit';
 
 class FaultDetails extends LitElement {
   static styles = css`
@@ -60,131 +60,135 @@ class FaultDetails extends LitElement {
     .table-container {
       max-height: 640px; /* 限制表格的最大高度 */
       overflow-y: auto; /* 仅表格内容滚动 */
-    }       
+    }
   `;
 
   render() {
     return html`
       <div class="modal">
-        <div class="header">故障列表<button class="close-button" @click="${this.closeModal}">×</button></div>
-        <hr>
+        <div class="header">
+          故障列表<button class="close-button" @click="${this.closeModal}">
+            ×
+          </button>
+        </div>
+        <hr />
         <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>设备编号</th>
-              <th>设备类型</th>
-              <th>所属地区</th>
-              <th>故障情况</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="table-row">
-              <td>101</td>
-              <td>自动角反射器</td>
-              <td>中卫</td>
-              <td>设备电源故障</td>
-            </tr>
-            <tr class="table-row">
-              <td>101</td>
-              <td>自动角反射器</td>
-              <td>中卫</td>
-              <td>设备电源故障</td>
-            </tr>
-            <tr class="table-row">
-              <td>101</td>
-              <td>自动角反射器</td>
-              <td>中卫</td>
-              <td>设备电源故障</td>
-            </tr>
-            <tr class="table-row">
-              <td>101</td>
-              <td>自动角反射器</td>
-              <td>中卫</td>
-              <td>设备电源故障</td>
-            </tr>
-            <tr class="table-row">
-              <td>101</td>
-              <td>自动角反射器</td>
-              <td>中卫</td>
-              <td>设备电源故障</td>
-            </tr>
-            <tr class="table-row">
-              <td>101</td>
-              <td>自动角反射器</td>
-              <td>中卫</td>
-              <td>设备电源故障</td>
-            </tr>
-            <tr class="table-row">
-              <td>101</td>
-              <td>自动角反射器</td>
-              <td>中卫</td>
-              <td>设备电源故障</td>
-            </tr>
-            <tr class="table-row">
-              <td>101</td>
-              <td>自动角反射器</td>
-              <td>中卫</td>
-              <td>设备电源故障</td>
-            </tr>
-            <tr class="table-row">
-              <td>101</td>
-              <td>自动角反射器</td>
-              <td>中卫</td>
-              <td>设备电源故障</td>
-            </tr>
-            <tr class="table-row">
-              <td>101</td>
-              <td>自动角反射器</td>
-              <td>中卫</td>
-              <td>设备电源故障</td>
-            </tr>
-            <tr class="table-row">
-              <td>101</td>
-              <td>自动角反射器</td>
-              <td>中卫</td>
-              <td>设备电源故障</td>
-            </tr>
-            <tr class="table-row">
-              <td>101</td>
-              <td>自动角反射器</td>
-              <td>中卫</td>
-              <td>设备电源故障</td>
-            </tr>
-            <tr class="table-row">
-              <td>101</td>
-              <td>自动角反射器</td>
-              <td>中卫</td>
-              <td>设备电源故障</td>
-            </tr>
-            <tr class="table-row">
-              <td>101</td>
-              <td>自动角反射器</td>
-              <td>中卫</td>
-              <td>设备电源故障</td>
-            </tr>
-            <tr class="table-row">
-              <td>101</td>
-              <td>自动角反射器</td>
-              <td>中卫</td>
-              <td>设备电源故障</td>
-            </tr>
-            <tr class="table-row">
-              <td>101</td>
-              <td>自动角反射器</td>
-              <td>中卫</td>
-              <td>设备电源故障</td>
-            </tr>
-            <tr class="table-row">
-              <td>101</td>
-              <td>自动角反射器</td>
-              <td>中卫</td>
-              <td>设备电源故障</td>
-            </tr>
-            <!-- Add more fault rows as needed -->
-          </tbody>
-        </table>
-      </div>
+          <table>
+            <thead>
+              <tr>
+                <th>设备编号</th>
+                <th>设备类型</th>
+                <th>所属地区</th>
+                <th>故障情况</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="table-row">
+                <td>101</td>
+                <td>自动角反射器</td>
+                <td>中卫</td>
+                <td>设备电源故障</td>
+              </tr>
+              <tr class="table-row">
+                <td>101</td>
+                <td>自动角反射器</td>
+                <td>中卫</td>
+                <td>设备电源故障</td>
+              </tr>
+              <tr class="table-row">
+                <td>101</td>
+                <td>自动角反射器</td>
+                <td>中卫</td>
+                <td>设备电源故障</td>
+              </tr>
+              <tr class="table-row">
+                <td>101</td>
+                <td>自动角反射器</td>
+                <td>中卫</td>
+                <td>设备电源故障</td>
+              </tr>
+              <tr class="table-row">
+                <td>101</td>
+                <td>自动角反射器</td>
+                <td>中卫</td>
+                <td>设备电源故障</td>
+              </tr>
+              <tr class="table-row">
+                <td>101</td>
+                <td>自动角反射器</td>
+                <td>中卫</td>
+                <td>设备电源故障</td>
+              </tr>
+              <tr class="table-row">
+                <td>101</td>
+                <td>自动角反射器</td>
+                <td>中卫</td>
+                <td>设备电源故障</td>
+              </tr>
+              <tr class="table-row">
+                <td>101</td>
+                <td>自动角反射器</td>
+                <td>中卫</td>
+                <td>设备电源故障</td>
+              </tr>
+              <tr class="table-row">
+                <td>101</td>
+                <td>自动角反射器</td>
+                <td>中卫</td>
+                <td>设备电源故障</td>
+              </tr>
+              <tr class="table-row">
+                <td>101</td>
+                <td>自动角反射器</td>
+                <td>中卫</td>
+                <td>设备电源故障</td>
+              </tr>
+              <tr class="table-row">
+                <td>101</td>
+                <td>自动角反射器</td>
+                <td>中卫</td>
+                <td>设备电源故障</td>
+              </tr>
+              <tr class="table-row">
+                <td>101</td>
+                <td>自动角反射器</td>
+                <td>中卫</td>
+                <td>设备电源故障</td>
+              </tr>
+              <tr class="table-row">
+                <td>101</td>
+                <td>自动角反射器</td>
+                <td>中卫</td>
+                <td>设备电源故障</td>
+              </tr>
+              <tr class="table-row">
+                <td>101</td>
+                <td>自动角反射器</td>
+                <td>中卫</td>
+                <td>设备电源故障</td>
+              </tr>
+              <tr class="table-row">
+                <td>101</td>
+                <td>自动角反射器</td>
+                <td>中卫</td>
+                <td>设备电源故障</td>
+              </tr>
+              <tr class="table-row">
+                <td>101</td>
+                <td>自动角反射器</td>
+                <td>中卫</td>
+                <td>设备电源故障</td>
+              </tr>
+              <tr class="table-row">
+                <td>101</td>
+                <td>自动角反射器</td>
+                <td>中卫</td>
+                <td>设备电源故障</td>
+              </tr>
+              <!-- Add more fault rows as needed -->
+            </tbody>
+          </table>
+        </div>
       </div>
     `;
   }
@@ -194,4 +198,4 @@ class FaultDetails extends LitElement {
   }
 }
 
-customElements.define("fault-details", FaultDetails);
+customElements.define('fault-details', FaultDetails);

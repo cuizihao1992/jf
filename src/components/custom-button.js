@@ -20,17 +20,20 @@ class CustomButton extends LitElement {
       text-align: center;
       width: 100%;
       cursor: pointer;
-      transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-      background-image: url("/images/left-btn-bg.png");
+      transition:
+        background-color 0.3s,
+        color 0.3s,
+        border-color 0.3s;
+      background-image: url('/images/left-btn-bg.png');
       background-size: cover;
       background-position: center;
     }
     button.selected {
-      color: #FFEB3B; /* White text on hover */
+      color: #ffeb3b; /* White text on hover */
     }
 
     button:hover {
-      color: #FFEB3B; /* White text on hover */
+      color: #ffeb3b; /* White text on hover */
     }
   `;
 
@@ -55,10 +58,12 @@ class CustomButton extends LitElement {
 
   handleClick() {
     // Emit a custom event when the button is clicked
-    this.dispatchEvent(new CustomEvent('button-click', {
-      bubbles: true,
-      composed: true
-    }));
+    this.dispatchEvent(
+      new CustomEvent('button-click', {
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 }
 

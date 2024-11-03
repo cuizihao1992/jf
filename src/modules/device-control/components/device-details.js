@@ -1,4 +1,4 @@
-import { LitElement, html, css } from "lit";
+import { LitElement, html, css } from 'lit';
 
 class DeviceDetails extends LitElement {
   static styles = css`
@@ -8,7 +8,7 @@ class DeviceDetails extends LitElement {
       left: calc(100% + 30px);
       display: block;
       width: 400px;
-      font-family: "Arial", sans-serif;
+      font-family: 'Arial', sans-serif;
       background: linear-gradient(135deg, #003366, #005599);
       color: white;
       border-radius: 10px;
@@ -69,4 +69,4 @@ class DeviceDetails extends LitElement {
   }
 }
 
-customElements.define("device-details", DeviceDetails);
+customElements.define('device-details', DeviceDetails);

@@ -49,16 +49,16 @@ class ViewInformation extends LitElement {
       width: 150px;
       color: #000;
       text-align: center;
-      margin-left:-35px;
+      margin-left: -35px;
       height: 24px;
       border-radius: 5px;
     }
-    .form-group select{
+    .form-group select {
       border: 1px solid #333;
       width: 155px;
       color: #000;
       text-align: center;
-      margin-left:-35px;
+      margin-left: -35px;
       height: 27px;
       border-radius: 5px;
     }
@@ -67,7 +67,6 @@ class ViewInformation extends LitElement {
       padding: 5px;
       margin-bottom: 9px;
       border-radius: 5px;
-     
     }
     h3 {
       margin: 10px 0;
@@ -107,7 +106,7 @@ class ViewInformation extends LitElement {
       font-size: 14px;
       color: #aaa;
     }
-     .submit-button {
+    .submit-button {
       width: 45px;
       height: 30px;
       align-self: end;
@@ -172,153 +171,154 @@ class ViewInformation extends LitElement {
         <div class="section">
           <h3>用户权限</h3>
           <h4>用户所属地区的设备使用权限：</h4>
-          
+
           <div class="table-container">
-          <table class="device-table">
-            <thead>
-              <tr>
-                <th><input type="checkbox" /></th>
-                <th>设备编号</th>
-                <th>所属地区</th>
-                <th>设备类型</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>101</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>102</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>102</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>102</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>102</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>102</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>102</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>102</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>102</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>102</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>102</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>102</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>102</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>102</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>102</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>102</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>102</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>102</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>102</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>102</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>103</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" class="device-checkbox" /></td>
-                <td>104</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-              </tr>
-            </tbody>
-          </table>
-      </div>
+            <table class="device-table">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" /></th>
+                  <th>设备编号</th>
+                  <th>所属地区</th>
+                  <th>设备类型</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>101</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>102</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>102</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>102</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>102</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>102</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>102</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>102</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>102</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>102</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>102</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>102</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>102</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>102</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>102</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>102</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>102</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>102</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>102</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>102</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>103</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>104</td>
+                  <td>中卫</td>
+                  <td>自动角反射器</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     `;
   }
@@ -329,7 +329,6 @@ class ViewInformation extends LitElement {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
 }
-
 
 // Register the custom element
 customElements.define('view-information', ViewInformation);

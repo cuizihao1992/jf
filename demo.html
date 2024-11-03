@@ -1,55 +1,64 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <title>Lit 响应式示例</title>
-  <script type="module" src="https://unpkg.com/lit@2.7.5/index.js?module"></script>
-</head>
-<body>
-  <my-counter id="counter"></my-counter>
-  <div id="message">当前计数: 0</div>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Lit 响应式示例</title>
+    <script
+      type="module"
+      src="https://unpkg.com/lit@2.7.5/index.js?module"
+    ></script>
+  </head>
+  <body>
+    <my-counter id="counter"></my-counter>
+    <div id="message">当前计数: 0</div>
 
-  <script type="module">
-    import { LitElement, html, css } from 'https://unpkg.com/lit@2.7.5/index.js?module';
+    <script type="module">
+      import {
+        LitElement,
+        html,
+        css,
+      } from 'https://unpkg.com/lit@2.7.5/index.js?module';
 
-    class MyCounter extends LitElement {
-      static properties = {
-        count: { type: Number }
-      };
+      class MyCounter extends LitElement {
+        static properties = {
+          count: { type: Number },
+        };
 
-      constructor() {
-        super();
-        this.count = 0;
-      }
+        constructor() {
+          super();
+          this.count = 0;
+        }
 
-      static styles = css`
-        /* 样式内容 */
-      `;
-
-      increment() {
-        this.count += 1;
-        this.dispatchEvent(new CustomEvent('count-changed', { detail: { count: this.count } }));
-      }
-
-      render() {
-        return html`
-          <div class="counter">
-            <div class="count">计数: ${this.count}</div>
-            <button @click="${this.increment}">增加</button>
-          </div>
+        static styles = css`
+          /* 样式内容 */
         `;
+
+        increment() {
+          this.count += 1;
+          this.dispatchEvent(
+            new CustomEvent('count-changed', { detail: { count: this.count } })
+          );
+        }
+
+        render() {
+          return html`
+            <div class="counter">
+              <div class="count">计数: ${this.count}</div>
+              <button @click="${this.increment}">增加</button>
+            </div>
+          `;
+        }
       }
-    }
 
-    customElements.define('my-counter', MyCounter);
+      customElements.define('my-counter', MyCounter);
 
-    // 监听自定义事件
-    const counter = document.getElementById('counter');
-    const message = document.getElementById('message');
+      // 监听自定义事件
+      const counter = document.getElementById('counter');
+      const message = document.getElementById('message');
 
-    counter.addEventListener('count-changed', (e) => {
-      message.textContent = `当前计数: ${e.detail.count}`;
-    });
-  </script>
-</body>
+      counter.addEventListener('count-changed', (e) => {
+        message.textContent = `当前计数: ${e.detail.count}`;
+      });
+    </script>
+  </body>
 </html>

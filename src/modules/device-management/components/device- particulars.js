@@ -66,7 +66,7 @@ class Deviceparticulars extends LitElement {
       width: 150px;
       text-align: center;
     }
-     .task-info {
+    .task-info {
       grid-column: 1; /* 占第一列 */
       display: grid;
       gap: 5px; /* 间距 */
@@ -82,7 +82,6 @@ class Deviceparticulars extends LitElement {
       padding-bottom: 1px; /* 内边距 */
       text-align: left;
       font-size: 20px; /* 字体大小 */
-
     }
     .task-info .row {
       display: flex;
@@ -95,7 +94,7 @@ class Deviceparticulars extends LitElement {
       width: 100px; /* 标签宽度 */
       font-size: 14px; /* 字体大小 */
     }
-      .close-button {
+    .close-button {
       cursor: pointer;
       color: white;
       background: none;
@@ -104,7 +103,6 @@ class Deviceparticulars extends LitElement {
       font-weight: bold;
       float: right;
     }
-
   `;
 
   render() {

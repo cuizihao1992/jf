@@ -1,11 +1,11 @@
-import { LitElement, html, css } from "lit";
+import { LitElement, html, css } from 'lit';
 
 class EquipmentStatus extends LitElement {
   static styles = css`
     .container {
       color: #ffffff;
       padding: 16px;
-      font-family: "Microsoft YaHei", sans-serif;
+      font-family: 'Microsoft YaHei', sans-serif;
       position: absolute;
       right: 0px;
       top: 142px;
@@ -80,4 +80,4 @@ class EquipmentStatus extends LitElement {
   }
 }
 
-customElements.define("equipment-status", EquipmentStatus);
+customElements.define('equipment-status', EquipmentStatus);
