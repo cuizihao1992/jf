@@ -73,29 +73,25 @@ class TaskManagement extends LitElement {
           @button-click=${() => this.setActiveComponent('reviewTasks')}
         ></custom-button>
       </div>
+
       <div class="panel">${this.renderActiveComponent()}</div>
+
       <div class="panel-right">
-        <!-- 任务详情弹窗 -->
         ${this.isTaskDetailsOpen
           ? html`<task-details
               @close-modal=${this.closeTaskDetails}
             ></task-details>`
           : ''}
-
-        <!-- 故障详情弹窗 -->
         ${this.isFaultDetailsOpen
           ? html`<fault-details
               @close-modal=${this.closeFaultDetails}
             ></fault-details>`
           : ''}
-
-        <!-- 设备日志弹窗 -->
         ${this.isTaskLogOpen
           ? html`<task-log-component
               @close-modal=${this.closeTaskLog}
             ></task-log-component>`
           : ''}
-        <!-- 任务审核详情弹窗 -->
         ${this.isTaskReviewDetailOpen
           ? html`<task-review-detail
               @close-modal=${this.closeTaskReviewDetail}
@@ -106,13 +102,11 @@ class TaskManagement extends LitElement {
               @close-modal=${this.closeTaskReviewReview}
             ></task-review-review>`
           : ''}
-        <!-- 任务状态弹窗 -->
         ${this.isStatusMissionOpen
           ? html`<status-mission
               @close-modal=${this.closeStatusMission}
             ></status-mission>`
           : ''}
-        <!-- 范围选择弹窗 -->
         ${this.isScopeSelectionOpen
           ? html`<scope-selection
               @close-modal=${this.closeScopeSelection}

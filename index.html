@@ -1,21 +1,25 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>设备查询系统</title>
-    <style>
-      body {
-        border: 0;
-        padding: 0;
-        margin: 0;
-      }
-    </style>
-  </head>
 
-  <body>
-    <home-page></home-page>
-    <!-- 引用主页组件 -->
-    <script type="module" src="./src/home-page.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>设备查询系统</title>
+  <style>
+    body {
+      border: 0;
+      padding: 0;
+      margin: 0;
+    }
+  </style>
+  <!-- 添加 Mapbox GL JS CSS -->
+  <link href='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css' rel='stylesheet' />
+</head>
+
+
+<body>
+  <home-page></home-page> <!-- 引用主页组件 -->
+  <script type="module" src="./src/home-page.js"></script>
+</body>
+
 </html>
