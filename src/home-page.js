@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { Router } from '@vaadin/router';
-// import mapboxgl from 'mapbox-gl';
+import mapboxgl from 'mapbox-gl';
 
 // 导入子组件
 import '@/modules/system-home/index.js';
