@@ -1,6 +1,6 @@
 // api.js
 
-const baseUrl = 'http://localhost/dev-api/system';
+const baseUrl = 'http://fk3510tn3811.vicp.fun/jf-prod-api/system';
 
 class ApiService {
   constructor(resource) {
@@ -21,7 +21,7 @@ class ApiService {
         Accept: 'application/json, text/plain, */*',
         'Content-Type': 'application/json;charset=UTF-8',
         Authorization:
-          'Bearer eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6IjY0MzE4N2FmLTFmOGEtNDM5NS05Zjc5LThmN2YzOTYzYmIwMyJ9.0X-z6e3m2lX8YY7OQs747f4HHyZKY4zLmtHpOO_ltsqAjFRF0YvLFavyBs0RHZsd2z4EdJOWtAu1fk0r_wTThg',
+          'Bearer eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6IjUzZmFkZjNmLWI1YmQtNDMwYS1hMjdlLTE5NzY0ZGI0MDA0YSJ9.2_gQANH3CK1626_swTozabfK-la4bJYL9_dRziirCjUrQdek39L7BGyvz-ec0nBaILbJW88rSuE1P2T1-na01g',
         Cookie:
           'Admin-Token=eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImY2NjEzMDI1LTU1ZDMtNGI3NC04NTk5LTMyNWUxMTc5NGY4MCJ9.PzmxmwNupLnfzArzk1DU7jv-9NnwMJwE3OTQwwu4tniVHGhuK6o88EOXlKSNGukXHivdbM0T43LuzozdzQppUA',
       },
