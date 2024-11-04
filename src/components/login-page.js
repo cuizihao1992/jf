@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import { property } from 'lit/decorators.js';
 
 class LoginPage extends LitElement {
   static styles = css`
@@ -95,6 +96,17 @@ class LoginPage extends LitElement {
     }
   `;
 
+  static get properties() {
+    return {
+      captchaImg: { type: String },
+      uuid: { type: String },
+    };
+  }
+  constructor() {
+    super();
+    this.getCaptcha();
+  }
+
   render() {
     return html`
       <div class="login-container">
@@ -108,6 +120,7 @@ class LoginPage extends LitElement {
               id="username"
               name="username"
               placeholder="请输入用户名"
+              value="admin"
             />
           </div>
           <div class="form-group">
@@ -117,10 +130,30 @@ class LoginPage extends LitElement {
               id="password"
               name="password"
               placeholder="请输入密码"
+              value="admin123"
+            />
+          </div>
+          <div class="form-group">
+            <label for="captcha">验证码</label>
+            <input
+              type="text"
+              id="captcha"
+              name="captcha"
+              placeholder="请输入验证码"
+            />
+            <!-- 使用 data:image/png;base64,${this.captchaImg} 自动更新图片 -->
+            <img
+              src="data:image/png;base64,${this.captchaImg}"
+              alt="验证码"
+              @click="${this.getCaptcha}"
+              style="cursor: pointer;"
             />
           </div>
           <div class="role-group">
-            <label><input type="radio" name="role" value="user" /> 用户</label>
+            <label
+              ><input type="radio" name="role" value="user" checked />
+              用户</label
+            >
             <label
               ><input type="radio" name="role" value="admin" /> 管理员</label
             >
@@ -138,16 +171,73 @@ class LoginPage extends LitElement {
     `;
   }
 
-  login() {
+  async getCaptcha() {
+    try {
+      const response = await fetch(
+        'http://fk3510tn3811.vicp.fun/jf-prod-api/captchaImage'
+      );
+      const data = await response.json();
+      if (data.code === 200) {
+        this.captchaImg = data.img; // 更新 captchaImg 响应式属性
+        this.uuid = data.uuid;
+      } else {
+        console.error('获取验证码失败:', data.msg);
+      }
+    } catch (error) {
+      console.error('验证码请求出错:', error);
+    }
+  }
+
+  async login() {
     const username = this.shadowRoot.querySelector('#username').value;
     const password = this.shadowRoot.querySelector('#password').value;
     const role = this.shadowRoot.querySelector(
       'input[name="role"]:checked'
     ).value;
+    const code = this.shadowRoot.querySelector('#captcha').value;
 
-    console.log('登录信息:', { username, password, role });
+    console.log('登录信息:', {
+      username,
+      password,
+      role,
+      code,
+      uuid: this.uuid,
+    });
 
-    // 处理登录逻辑，比如调用 API 验证登录信息
+    try {
+      const response = await fetch(
+        'http://fk3510tn3811.vicp.fun/jf-prod-api/login',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            Accept: 'application/json, text/plain, */*',
+            isToken: 'false',
+            repeatSubmit: 'false',
+          },
+          body: JSON.stringify({
+            username,
+            password,
+            code,
+            uuid: this.uuid,
+          }),
+        }
+      );
+      const data = await response.json();
+      if (data.code === 200 && data.token) {
+        console.log('登录成功:', data);
+
+        // 将 token 存入 cookies
+        document.cookie = `Admin-Token=${data.token}; path=/; max-age=86400`; // 设置有效期为1天
+
+        // 跳转到路径 "/"
+        window.location.href = '/';
+      } else {
+        console.error('登录失败:', data.msg);
+      }
+    } catch (error) {
+      console.error('登录请求出错:', error);
+    }
   }
 }
 

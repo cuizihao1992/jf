@@ -1,4 +1,4 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, unsafeCSS } from 'lit';
 import { Router } from '@vaadin/router';
 import mapboxgl from 'mapbox-gl';
 
@@ -10,118 +10,10 @@ import '@/modules/device-management/index.js';
 import '@/modules/user-management/index.js';
 import '@/modules/log-management/index.js';
 import '@/components/login-page.js'; // 引入登录页面组件
-
+import styles from './home-page.css?inline';
 class HomePage extends LitElement {
   static styles = css`
-    :host {
-      display: block;
-      font-family: Arial, sans-serif;
-      background-color: #f5f7fa;
-      min-height: 100vh;
-      --mapboxgl-ctrl-attrib-inner: none;
-    }
-
-    .content {
-      border: 0;
-      padding: 0;
-      margin: 0;
-      height: 0; /* 添加这一行 */
-      overflow: hidden; /* 添加这一行 */
-    }
-
-    /* 顶部栏 */
-    .header {
-      background-image: url('/images/header-bg.png');
-      background-size: cover;
-      background-position: center;
-      text-align: center;
-      opacity: 1;
-      font-size: 45px;
-      font-weight: 400;
-      letter-spacing: 0px;
-      line-height: 65.16px;
-      color: rgba(255, 255, 255, 1);
-      vertical-align: top;
-      position: relative; /* 添加相对定位 */
-      z-index: 1; /* 确保在地图上层 */
-    }
-
-    /* 导航栏 */
-    .nav {
-      position: relative;
-      top: -25px;
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 20px;
-      z-index: 1; /* 确保在地图上层 */
-    }
-
-    /* 左右两个分组 */
-    .nav-left,
-    .nav-right {
-      display: flex;
-      gap: 10px; /* 按钮之间的间隔 */
-    }
-
-    .nav a {
-      text-decoration: none;
-      color: #ffffff;
-      padding: 10px 20px;
-      font-size: 18px;
-      background-image: url('/images/button-bg.png');
-      background-size: cover; /* 确保背景图片覆盖按钮 */
-      background-repeat: no-repeat;
-      background-position: center;
-      border-radius: 5px;
-      cursor: pointer;
-      transition:
-        background-color 0.3s,
-        color 0.3s;
-    }
-
-    .nav a:hover {
-      color: #ffeb3b;
-    }
-
-    .nav a.active {
-      color: #ffeb3b;
-    }
-    #map {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      height: 100vh;
-      margin: 0;
-      z-index: 0; /* 改为0，而不是-1 */
-    }
-    #map .mapboxgl-ctrl-bottom-right,
-    #map .mapboxgl-ctrl-bottom-left {
-      display: none;
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 20px;
-    }
-
-    .header-left {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      font-size: 16px;
-      color: white;
-      margin-top: -25px; /* 向上移动时间显示 */
-      font-weight: bold;
-    }
-    .header-left div {
-      display: flex;
-      gap: 20px; /* 控制位置和时间之间的间距 */
-      font-weight: bold;
-    }
+    ${unsafeCSS(styles)}
   `;
   static properties = {
     currentTime: { type: String },
@@ -148,22 +40,7 @@ class HomePage extends LitElement {
     });
     setTimeout(() => this.updateTime(), 1000);
   }
-  firstUpdated() {
-    const router = new Router(this.shadowRoot.querySelector('.content'));
-    router.setRoutes([
-      { path: '/', component: 'system-home' },
-      { path: '/device-control', component: 'device-control' },
-      { path: '/task-management', component: 'task-management' },
-      { path: '/device-management', component: 'device-management' },
-      { path: '/user-management', component: 'user-management' },
-      { path: '/log-management', component: 'log-management' },
-      { path: '/login', component: 'login-page' }, // 添加登录页路由
-      { path: '(.*)', redirect: '/' }, // 默认重定向到首页
-    ]);
-
-    window.addEventListener('popstate', () => {
-      this.requestUpdate(); // 当 URL 变化时更新
-    });
+  initMap() {
     // 初始化地图
     mapboxgl.accessToken =
       'pk.eyJ1IjoiaG9uZ2xpbmdqaW4xOTk0IiwiYSI6ImNrczhvZTNmbDN0ZnEycHM3aTkyanp3NmsifQ.iCdeT5IE9GlGKmExl0U6zA'; // 替换为你的 token
@@ -230,6 +107,27 @@ class HomePage extends LitElement {
         'country-label'
       );
     });
+  }
+  firstUpdated() {
+    const router = new Router(this.shadowRoot.querySelector('.content'));
+    router.setRoutes([
+      { path: '/', component: 'system-home' },
+      { path: '/device-control', component: 'device-control' },
+      { path: '/task-management', component: 'task-management' },
+      { path: '/device-management', component: 'device-management' },
+      { path: '/user-management', component: 'user-management' },
+      { path: '/log-management', component: 'log-management' },
+      { path: '/login', component: 'login-page' }, // 添加登录页路由
+      { path: '(.*)', redirect: '/' }, // 默认重定向到首页
+    ]);
+
+    window.addEventListener('popstate', () => {
+      this.requestUpdate(); // 当 URL 变化时更新
+    });
+    const mapDiv = this.shadowRoot.querySelector('#map');
+    if (mapDiv) {
+      this.initMap();
+    }
   }
 
   // 根据当前路径判断是否为登录页面

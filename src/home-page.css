@@ -1,0 +1,94 @@
+:host {
+  display: block;
+  font-family: Arial, sans-serif;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+  /* --mapboxgl-ctrl-attrib-inner: none; */
+}
+
+.content {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden; /* 添加这一行 */
+}
+
+/* 顶部栏 */
+.header {
+  background-image: url('/images/header-bg.png');
+  background-size: cover;
+  background-position: center;
+  text-align: center;
+  opacity: 1;
+  font-size: 45px;
+  font-weight: 400;
+  letter-spacing: 0px;
+  line-height: 65.16px;
+  color: rgba(255, 255, 255, 1);
+  vertical-align: top;
+  position: relative; /* 添加相对定位 */
+  z-index: 1; /* 确保在地图上层 */
+}
+
+/* 导航栏 */
+.nav {
+  position: relative;
+  top: -25px;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  z-index: 1; /* 确保在地图上层 */
+}
+
+/* 左右两个分组 */
+.nav-left,
+.nav-right {
+  display: flex;
+  gap: 10px; /* 按钮之间的间隔 */
+}
+
+.nav a {
+  text-decoration: none;
+  color: #ffffff;
+  padding: 10px 20px;
+  font-size: 18px;
+  background-image: url('/images/button-bg.png');
+  background-size: cover; /* 确保背景图片覆盖按钮 */
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 5px;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+.nav a:hover {
+  color: #ffeb3b;
+}
+
+.nav a.active {
+  color: #ffeb3b;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 16px;
+  color: white;
+  margin-top: -25px; /* 向上移动时间显示 */
+  font-weight: bold;
+}
+.header-left div {
+  display: flex;
+  gap: 20px; /* 控制位置和时间之间的间距 */
+  font-weight: bold;
+}

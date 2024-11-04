@@ -1,5 +1,5 @@
 // api.js
-
+import { getToken } from '../components/auth';
 const baseUrl = 'http://fk3510tn3811.vicp.fun/jf-prod-api/system';
 
 class ApiService {
@@ -19,11 +19,8 @@ class ApiService {
       method,
       headers: {
         Accept: 'application/json, text/plain, */*',
+        Authorization: 'Bearer ' + getToken(),
         'Content-Type': 'application/json;charset=UTF-8',
-        Authorization:
-          'Bearer eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6IjUzZmFkZjNmLWI1YmQtNDMwYS1hMjdlLTE5NzY0ZGI0MDA0YSJ9.2_gQANH3CK1626_swTozabfK-la4bJYL9_dRziirCjUrQdek39L7BGyvz-ec0nBaILbJW88rSuE1P2T1-na01g',
-        Cookie:
-          'Admin-Token=eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6ImY2NjEzMDI1LTU1ZDMtNGI3NC04NTk5LTMyNWUxMTc5NGY4MCJ9.PzmxmwNupLnfzArzk1DU7jv-9NnwMJwE3OTQwwu4tniVHGhuK6o88EOXlKSNGukXHivdbM0T43LuzozdzQppUA',
       },
     };
 
