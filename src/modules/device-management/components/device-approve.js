@@ -122,6 +122,32 @@ class DeviceApprove extends LitElement {
     }
   `;
 
+  static get properties() {
+    return {
+      deviceReviews: { type: Array }, // 添加设备审核属性
+    };
+  }
+
+  constructor() {
+    super();
+    this.deviceReviews = [];
+    this.fetchDeviceReviews(); // 初始化时获取设备审核数据
+  }
+
+  async fetchDeviceReviews() {
+    try {
+      const params = {
+        pageNum: 1,
+        pageSize: 100000,
+        // 可以根据需要添加其他查询参数
+      };
+      const data = await deviceReviewService.list(params);
+      this.deviceReviews = data.rows;
+    } catch (error) {
+      console.error('获取设备审核数据失败:', error);
+    }
+  }
+
   render() {
     return html`
       <div class="modal">

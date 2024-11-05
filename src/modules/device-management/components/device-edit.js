@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit';
-import { deviceService } from '@/api/fetch.js'; 
+import { deviceService } from '@/api/fetch.js';
 
 class DeviceEdit extends LitElement {
   static styles = css`
@@ -165,7 +165,7 @@ class DeviceEdit extends LitElement {
   `;
   static get properties() {
     return {
-      devices: { type: Array  },
+      devices: { type: Array },
     };
   }
 
@@ -188,7 +188,7 @@ class DeviceEdit extends LitElement {
       console.error('获取设备审核数据失败:', error);
     }
   }
-  
+
   render() {
     return html`
       <div class="modal">
@@ -277,8 +277,6 @@ class DeviceEdit extends LitElement {
   }
 
   renderRows() {
-    
-
     return this.devices.map(
       (device) => html`
       <tr class="table-row">
@@ -289,7 +287,7 @@ class DeviceEdit extends LitElement {
         <td>${device.connectionStatus}</td>
         <td><span class="status-icon status-online">${device.powerStatus}</span></td>
         <td>${device.deviceStatus}</td>
-         <td><a @click="${() => this.openDevicexiangqing1()}">查看</a>
+         <td><a @click="${() => this.openDeviceParticulars()}">查看</a>
         /<a @click="${() => this.openDevicexiangqing()}">编辑</a>
         /<a @click="${() => this.openRevokeConfirmation()}">删除</a></td>
       </tr>
@@ -306,8 +304,11 @@ class DeviceEdit extends LitElement {
     ); /*this.showConfirmation=false;
     this.dispatchEvent(new CustomEvent('open-task-details'));*/
   }
-  openDevicexiangqing1() {
-    this.dispatchEvent(new CustomEvent('open-device-xiangqing1'));
+  openDeviceParticulars() {
+    this.dispatchEvent(
+      new CustomEvent('open-device-particulars')
+    ); /*this.showConfirmation=false;
+    this.dispatchEvent(new CustomEvent('open-task-details'));*/
   }
   handleClose() {
     // 这里可以添加关闭窗口的逻辑

@@ -19,8 +19,7 @@ class ApiService {
       method,
       headers: {
         Accept: 'application/json, text/plain, */*',
-        Authorization: 
-        'Bearer ' + getToken(),
+        Authorization: 'Bearer ' + getToken(),
         'Content-Type': 'application/json;charset=UTF-8',
       },
     };
@@ -67,9 +66,10 @@ const regionService = new ApiService('regions');
 const deviceService = new ApiService('devices');
 const deviceTypeService = new ApiService('types');
 const deviceTaskService = new ApiService('deviceTask');
+const deviceLogsService = new ApiService('logs');
+const deviceReviewService = new ApiService('reviews');
 const statusHistoryService = new ApiService('history');
 const reviewService = new ApiService('reviews');
-const deviceReviewService = new ApiService('reviews');
 const logService = new ApiService('logs');
 
 // 导出实例
@@ -83,6 +83,7 @@ export {
   deviceTaskService,
   statusHistoryService,
   reviewService,
-  deviceReviewService,
   logService,
+  deviceLogsService,
+  deviceReviewService,
 };
