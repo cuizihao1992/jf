@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import { reviewService } from '@/api/fetch.js';
 
 class deviceReview extends LitElement {
   static styles = css`
@@ -169,6 +170,56 @@ class deviceReview extends LitElement {
       margin-top: 0px;
     }
   `;
+  static get properties() {
+    return {
+      reviews: { type: Array },
+      showConfirmation: { type: Boolean },
+      searchType: { type: String },
+      searchCondition: { type: String },
+      reviewStatus: { type: String },
+    };
+  }
+
+  constructor() {
+    super();
+    this.reviews = [];
+    this.showConfirmation = false;
+    this.searchType = 'taskNumber'; // 默认查询类型为任务编号
+    this.searchCondition = ''; // 查询条件初始化为空
+    this.reviewStatus = ''; // 审批状态初始化为空
+    this.fetchTasks();
+  }
+
+  async fetchTasks() {
+    try {
+      const params = {
+        pageNum: 1,
+        pageSize: 100000,
+        [this.searchType]: this.searchCondition, // 动态属性查询
+        reviewStatus: this.reviewStatus, // 审批状态过滤
+      };
+      const data = await taskService.list(params);
+      this.tasks = data.rows;
+    } catch (error) {
+      console.error('获取任务列表失败:', error);
+    }
+  }
+
+  handleSearchTypeChange(event) {
+    this.searchType = event.target.value;
+  }
+
+  handleSearchConditionChange(event) {
+    this.searchCondition = event.target.value;
+  }
+
+  handleReviewStatusChange(event) {
+    this.reviewStatus = event.target.value;
+  }
+
+  clearSearchCondition() {
+    this.searchCondition = '';
+  }
 
   render() {
     return html`

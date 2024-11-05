@@ -115,10 +115,17 @@ class DeviceControl extends LitElement {
   }
 
   // 选择设备列表按钮的逻辑
-  selectButton(buttonName) {
-    this.selectedButton = buttonName;
-    this.isModalOpen = false;
+  // 选择设备列表按钮的逻辑
+selectButton(buttonName) {
+  if (buttonName === 'list') {
+    this.isModalOpen = false; // Close any other modals
+    this.selectedButton = this.selectedButton === 'list' ? '' : 'list'; // Toggle selection
+  } else {
+    this.selectedButton = buttonName; // Set the selected button
+    this.isModalOpen = false; 
+    this.isPostureAdjustModalOpen = false; // Close any open modals
   }
+}
 
   // 打开姿态调整弹窗
   openPostureAdjustModal() {

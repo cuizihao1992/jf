@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import { taskService } from '@/api/fetch.js';
 
 class TaskQueryComponent extends LitElement {
   static styles = css`
@@ -120,6 +121,51 @@ class TaskQueryComponent extends LitElement {
       overflow-y: auto; /* 仅表格内容滚动 */
     }
   `;
+  static get properties() {
+    return {
+      tasks: { type: Array }, // 添加设备审核属性
+    };
+  }
+  constructor() {
+    super();
+    this.tasks = [];
+    this.showConfirmation = false;
+    this.searchType = 'taskNumber'; // 默认查询类型为任务编号
+    this.searchCondition = ''; // 查询条件初始化为空
+    this.reviewStatus = ''; // 审批状态初始化为空
+    this.fetchTasks();
+  }
+
+  async fetchTasks() {
+    try {
+      const params = {
+        pageNum: 1,
+        pageSize: 100000,
+        [this.searchType]: this.searchCondition, // 动态属性查询
+        reviewStatus: this.reviewStatus, // 审批状态过滤
+      };
+      const data = await taskService.list(params);
+      this.tasks = data.rows;
+    } catch (error) {
+      console.error('获取任务列表失败:', error);
+    }
+  }
+
+  handleSearchTypeChange(event) {
+    this.searchType = event.target.value;
+  }
+
+  handleSearchConditionChange(event) {
+    this.searchCondition = event.target.value;
+  }
+
+  handleReviewStatusChange(event) {
+    this.reviewStatus = event.target.value;
+  }
+
+  clearSearchCondition() {
+    this.searchCondition = '';
+  }
 
   render() {
     return html`
@@ -196,236 +242,24 @@ class TaskQueryComponent extends LitElement {
   }
 
   renderRows() {
-    const taskQuery = [
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskStatus: '任务状态',
-        openTime: '设备开启时间',
-        closeTime: '设备关闭时间',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskStatus: '任务状态',
-        openTime: '设备开启时间',
-        closeTime: '设备关闭时间',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskStatus: '任务状态',
-        openTime: '设备开启时间',
-        closeTime: '设备关闭时间',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskStatus: '任务状态',
-        openTime: '设备开启时间',
-        closeTime: '设备关闭时间',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskStatus: '任务状态',
-        openTime: '设备开启时间',
-        closeTime: '设备关闭时间',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskStatus: '任务状态',
-        openTime: '设备开启时间',
-        closeTime: '设备关闭时间',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskStatus: '任务状态',
-        openTime: '设备开启时间',
-        closeTime: '设备关闭时间',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskStatus: '任务状态',
-        openTime: '设备开启时间',
-        closeTime: '设备关闭时间',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskStatus: '任务状态',
-        openTime: '设备开启时间',
-        closeTime: '设备关闭时间',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskStatus: '任务状态',
-        openTime: '设备开启时间',
-        closeTime: '设备关闭时间',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskStatus: '任务状态',
-        openTime: '设备开启时间',
-        closeTime: '设备关闭时间',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskStatus: '任务状态',
-        openTime: '设备开启时间',
-        closeTime: '设备关闭时间',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskStatus: '任务状态',
-        openTime: '设备开启时间',
-        closeTime: '设备关闭时间',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskStatus: '任务状态',
-        openTime: '设备开启时间',
-        closeTime: '设备关闭时间',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskStatus: '任务状态',
-        openTime: '设备开启时间',
-        closeTime: '设备关闭时间',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskStatus: '任务状态',
-        openTime: '设备开启时间',
-        closeTime: '设备关闭时间',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskStatus: '任务状态',
-        openTime: '设备开启时间',
-        closeTime: '设备关闭时间',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskStatus: '任务状态',
-        openTime: '设备开启时间',
-        closeTime: '设备关闭时间',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskStatus: '任务状态',
-        openTime: '设备开启时间',
-        closeTime: '设备关闭时间',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskStatus: '任务状态',
-        openTime: '设备开启时间',
-        closeTime: '设备关闭时间',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskStatus: '任务状态',
-        openTime: '设备开启时间',
-        closeTime: '设备关闭时间',
-      },
-    ];
-
-    return taskQuery.map(
-      (taskQuery) => html`
-      <tr class="table-row">
-        <td>${taskQuery.taskName}</a></td>
-        <td>${taskQuery.taskId}</td>
-        <td>${taskQuery.submitName}</td>
-        <td>${taskQuery.deviceType}</td>
-        <td>${taskQuery.region}</td>
-        <td>${taskQuery.taskStatus}</td>
-        <td>${taskQuery.openTime}</td>
-        <td>${taskQuery.closeTime}</td>
-        <td><a @click="${() => this.openTaskDetails()}">查看</a></td>
+    return this.tasks.map(
+      (task, index) => html`
+        <tr class="table-row">
+          <td>${task.taskName}</td>
+          <td>${task.taskNumber}</td>
+          <td>${task.userId}</td>
+          <td>${task.deviceType}</td>
+          <td>${task.region}</td>
+          <td>${task.taskStatus}</td>
+          <td>${task.startTime}</td>
+          <td>${task.endTime}</td>
+        
+        
+         <td><a @click="${() => this.openTaskDetails()}">查看</a></td>
         <td><a @click="${() => this.openFaultDetails()}">查看</a></td>
         <td><a @click="${() => this.openTaskLog()}">查看</a></td>
-
-      </tr>
-    `
+        </tr>
+      `
     );
   }
 
