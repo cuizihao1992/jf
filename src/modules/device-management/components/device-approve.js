@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import { deviceReviewService } from '@/api/fetch.js'; // 引入设备审核服务
 
 class DeviceApprove extends LitElement {
   static styles = css`
@@ -121,6 +122,32 @@ class DeviceApprove extends LitElement {
     }
   `;
 
+  static get properties() {
+    return {
+      deviceReviews: { type: Array }, // 添加设备审核属性
+    };
+  }
+
+  constructor() {
+    super();
+    this.deviceReviews = [];
+    this.fetchDeviceReviews(); // 初始化时获取设备审核数据
+  }
+
+  async fetchDeviceReviews() {
+    try {
+      const params = {
+        pageNum: 1,
+        pageSize: 100000,
+        // 可以根据需要添加其他查询参数
+      };
+      const data = await deviceReviewService.list(params);
+      this.deviceReviews = data.rows;
+    } catch (error) {
+      console.error('获取设备审核数据失败:', error);
+    }
+  }
+
   render() {
     return html`
       <div class="modal">
@@ -145,7 +172,9 @@ class DeviceApprove extends LitElement {
               style="background-color: white; "
             />
           </div>
-          <button class="query-button">查询</button>
+          <button class="query-button" @click="${this.fetchDeviceReviews}">
+            查询
+          </button>
         </div>
         <hr />
         <div class="form-container">
@@ -193,208 +222,39 @@ class DeviceApprove extends LitElement {
   }
 
   renderRows() {
-    const devices = [
-      {
-        id: 101,
-        type: '自动角反射器',
-        region: '中卫',
-        userName: '张三',
-        approveType: '添加',
-        approveStatus: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 101,
-        type: '自动角反射器',
-        region: '中卫',
-        userName: '李四',
-        approveType: '添加',
-        approveStatus: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 101,
-        type: '自动角反射器',
-        region: '中卫',
-        userName: '李四',
-        approveType: '添加',
-        approveStatus: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 101,
-        type: '自动角反射器',
-        region: '中卫',
-        userName: '李四',
-        approveType: '添加',
-        approveStatus: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 101,
-        type: '自动角反射器',
-        region: '中卫',
-        userName: '李四',
-        approveType: '添加',
-        approveStatus: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 101,
-        type: '自动角反射器',
-        region: '中卫',
-        userName: '李四',
-        approveType: '添加',
-        approveStatus: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 101,
-        type: '自动角反射器',
-        region: '中卫',
-        userName: '李四',
-        approveType: '添加',
-        approveStatus: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 101,
-        type: '自动角反射器',
-        region: '中卫',
-        userName: '李四',
-        approveType: '添加',
-        approveStatus: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 101,
-        type: '自动角反射器',
-        region: '中卫',
-        userName: '李四',
-        approveType: '添加',
-        approveStatus: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 101,
-        type: '自动角反射器',
-        region: '中卫',
-        userName: '李四',
-        approveType: '添加',
-        approveStatus: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 101,
-        type: '自动角反射器',
-        region: '中卫',
-        userName: '李四',
-        approveType: '添加',
-        approveStatus: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 101,
-        type: '自动角反射器',
-        region: '中卫',
-        userName: '李四',
-        approveType: '添加',
-        approveStatus: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 101,
-        type: '自动角反射器',
-        region: '中卫',
-        userName: '李四',
-        approveType: '添加',
-        approveStatus: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 101,
-        type: '自动角反射器',
-        region: '中卫',
-        userName: '李四',
-        approveType: '添加',
-        approveStatus: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 101,
-        type: '自动角反射器',
-        region: '中卫',
-        userName: '李四',
-        approveType: '添加',
-        approveStatus: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 101,
-        type: '自动角反射器',
-        region: '中卫',
-        userName: '李四',
-        approveType: '添加',
-        approveStatus: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 101,
-        type: '自动角反射器',
-        region: '中卫',
-        userName: '李四',
-        approveType: '添加',
-        approveStatus: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 101,
-        type: '自动角反射器',
-        region: '中卫',
-        userName: '王五',
-        approveType: '添加',
-        approveStatus: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-    ];
-
-    return devices.map(
-      (device) => html`
-      <tr class="table-row">
-        <td>${device.id}</a></td>
-        <td>${device.region}</td>
-        <td>${device.userName}</td>
-        <td>${device.approveType}</td>
-        <td>${device.type}</td>
-        <td>${device.approveStatus}</td>
-        <td>${device.time}</td>
-        <td><a @click="${() => this.openDeviceReview()}">查看</a>
-        /<a @click="${() => this.openDeviceshenpi()}">审核</a></td>
-      </tr>
-    `
+    return this.deviceReviews.map(
+      (review) => html`
+        <tr class="table-row">
+          <td>${review.deviceId}</td>
+          <td>${review.region}</td>
+          <td>${review.userName}</td>
+          <td>${review.approveType}</td>
+          <td>${review.deviceType}</td>
+          <td>${review.reviewStatus}</td>
+          <td>${review.createdTime}</td>
+          <td>
+            <a @click="${() => this.openDeviceReview(review)}">查看</a> /
+            <a @click="${() => this.openDeviceshenpi(review)}">审核</a>
+          </td>
+        </tr>
+      `
     );
   }
 
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
-  openDeviceReview() {
+
+  openDeviceReview(review) {
     this.dispatchEvent(
-      new CustomEvent('open-device-review')
-    ); /*this.showConfirmation=false;
-    this.dispatchEvent(new CustomEvent('open-task-details'));*/
+      new CustomEvent('open-device-review', { detail: review })
+    );
   }
-  openDeviceshenpi() {
+
+  openDeviceshenpi(review) {
     this.dispatchEvent(
-      new CustomEvent('open-device-shenpi')
-    ); /*this.showConfirmation=false;
-    this.dispatchEvent(new CustomEvent('open-task-details'));*/
-  }
-  handleClose() {
-    // 这里可以添加关闭窗口的逻辑
-    // 例如，隐藏组件或销毁组件
-    this.remove();
-    this.dispatchEvent(new CustomEvent('close-modal'));
+      new CustomEvent('open-device-shenpi', { detail: review })
+    );
   }
 }
 

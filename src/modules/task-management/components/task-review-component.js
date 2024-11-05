@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import { taskService } from '@/api/fetch.js'; // 引入任务服务
 
 class TaskReviewComponent extends LitElement {
   static styles = css`
@@ -120,6 +121,31 @@ class TaskReviewComponent extends LitElement {
       overflow-y: auto; /* 仅表格内容滚动 */
     }
   `;
+  static get properties() {
+    return {
+      taskReviews: { type: Array }, // 添加任务审核属性
+    };
+  }
+
+  constructor() {
+    super();
+    this.taskReviews = [];
+    this.fetchTaskReviews(); // 初始化时获取任务审核数据
+  }
+
+  async fetchTaskReviews() {
+    try {
+      const params = {
+        pageNum: 1,
+        pageSize: 100000,
+        // 可以根据需要添加其他查询参数
+      };
+      const data = await taskService.list(params);
+      this.taskReviews = data.rows;
+    } catch (error) {
+      console.error('获取任务审核列表失败:', error);
+    }
+  }
 
   render() {
     return html`
@@ -145,7 +171,9 @@ class TaskReviewComponent extends LitElement {
               style="background-color: white; "
             />
           </div>
-          <button class="query-button">查询</button>
+          <button class="query-button" @click="${this.fetchTaskReviews}">
+            查询
+          </button>
         </div>
         <hr />
         <div class="form-container">
@@ -193,182 +221,40 @@ class TaskReviewComponent extends LitElement {
   }
 
   renderRows() {
-    const taskReview = [
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskTime: '任务提交时间',
-        approveStatus: '审批状态',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskTime: '任务提交时间',
-        approveStatus: '审批状态',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskTime: '任务提交时间',
-        approveStatus: '审批状态',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskTime: '任务提交时间',
-        approveStatus: '审批状态',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskTime: '任务提交时间',
-        approveStatus: '审批状态',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskTime: '任务提交时间',
-        approveStatus: '审批状态',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskTime: '任务提交时间',
-        approveStatus: '审批状态',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskTime: '任务提交时间',
-        approveStatus: '审批状态',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskTime: '任务提交时间',
-        approveStatus: '审批状态',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskTime: '任务提交时间',
-        approveStatus: '审批状态',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskTime: '任务提交时间',
-        approveStatus: '审批状态',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskTime: '任务提交时间',
-        approveStatus: '审批状态',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskTime: '任务提交时间',
-        approveStatus: '审批状态',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskTime: '任务提交时间',
-        approveStatus: '审批状态',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskTime: '任务提交时间',
-        approveStatus: '审批状态',
-      },
-      {
-        taskName: '任务名',
-        taskId: '任务编号',
-        submitName: '提交用户名',
-        deviceType: '设备类型',
-        region: '所属地区',
-        taskTime: '任务提交时间',
-        approveStatus: '审批状态',
-      },
-    ];
-
-    return taskReview.map(
+    return this.taskReviews.map(
       (taskReview) => html`
-      <tr class="table-row">
-        <td>${taskReview.taskName}</a></td>
-        <td>${taskReview.taskId}</td>
-        <td>${taskReview.submitName}</td>
-        <td>${taskReview.deviceType}</td>
-        <td>${taskReview.region}</td>
-        <td>${taskReview.taskTime}</td>
-        <td>${taskReview.approveStatus}</td>
-        <td><a @click="${() => this.openTaskReviewDetails()}">查看</a>
-        /<a @click="${() => this.openTaskReviewReview()}"}">审核</a></td>
-      </tr>
-    `
+        <tr class="table-row">
+          <td>${taskReview.taskName}</td>
+          <td>${taskReview.taskNumber}</td>
+          <td>${taskReview.userId}</td>
+          <td>${taskReview.deviceType || '-'}</td>
+          <td>${taskReview.region || '-'}</td>
+          <td>${taskReview.createdTime}</td>
+          <td>${taskReview.reviewStatus}</td>
+          <td>
+            <a @click="${() => this.openTaskReviewDetails(taskReview)}">查看</a>
+            /
+            <a @click="${() => this.openTaskReviewReview(taskReview)}">审核</a>
+          </td>
+        </tr>
+      `
     );
   }
 
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
-  openTaskReviewDetails() {
-    this.showTaskDetails = true;
-    this.showTaskReviewReview = false;
-    this.dispatchEvent(new CustomEvent('open-task-review-detail'));
+
+  openTaskReviewDetails(taskReview) {
+    this.dispatchEvent(
+      new CustomEvent('open-task-review-detail', { detail: taskReview })
+    );
   }
-  openTaskReviewReview() {
-    this.showTaskDetail = false;
-    this.showTaskReviewReview = true;
-    this.dispatchEvent(new CustomEvent('open-task-review-review'));
+
+  openTaskReviewReview(taskReview) {
+    this.dispatchEvent(
+      new CustomEvent('open-task-review-review', { detail: taskReview })
+    );
   }
 }
 

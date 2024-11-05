@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import { deviceLogsService } from '@/api/fetch.js'; // 引入设备日志服务
 
 class DeviceLog extends LitElement {
   static styles = css`
@@ -120,6 +121,31 @@ class DeviceLog extends LitElement {
       text-decoration: none;
     }
   `;
+  static get properties() {
+    return {
+      deviceLogs: { type: Array }, // 添加设备日志属性
+    };
+  }
+
+  constructor() {
+    super();
+    this.deviceLogs = [];
+    this.fetchDeviceLogs(); // 初始化时获取设备日志
+  }
+
+  async fetchDeviceLogs() {
+    try {
+      const params = {
+        pageNum: 1,
+        pageSize: 100000,
+        // 可以根据需要添加其他查询参数
+      };
+      const data = await deviceLogsService.list(params);
+      this.deviceLogs = data.rows;
+    } catch (error) {
+      console.error('获取设备日志失败:', error);
+    }
+  }
 
   render() {
     return html`
@@ -145,7 +171,9 @@ class DeviceLog extends LitElement {
               style="background-color: white; "
             />
           </div>
-          <button class="query-button">查询</button>
+          <button class="query-button" @click="${this.fetchDeviceLogs}">
+            查询
+          </button>
         </div>
         <hr />
         <div class="form-container">
@@ -186,210 +214,18 @@ class DeviceLog extends LitElement {
   }
 
   renderRows() {
-    const deviceLog = [
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-        operationContent: '打开所有电源',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-        operationContent: '打开所有电源',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-        operationContent: '打开所有电源',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-        operationContent: '打开所有电源',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-        operationContent: '打开所有电源',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-        operationContent: '打开所有电源',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-        operationContent: '打开所有电源',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-        operationContent: '打开所有电源',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-        operationContent: '打开所有电源',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-        operationContent: '打开所有电源',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-        operationContent: '打开所有电源',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-        operationContent: '打开所有电源',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-        operationContent: '打开所有电源',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-        operationContent: '打开所有电源',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-        operationContent: '打开所有电源',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-        operationContent: '打开所有电源',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-        operationContent: '打开所有电源',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-        operationContent: '打开所有电源',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-        operationContent: '打开所有电源',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-        operationContent: '打开所有电源',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-        operationContent: '打开所有电源',
-      },
-    ];
-
-    return deviceLog.map(
-      (deviceLog) => html`
-      <tr class="table-row">
-        <td>${deviceLog.logId}</a></td>
-        <td>${deviceLog.logTime}</td>
-        <td>${deviceLog.userName}</td>
-        <td>${deviceLog.logType}</td>
-        <td>${deviceLog.region}</td>
-        <td>${deviceLog.deviceType}</td>
-        <td>${deviceLog.operationContent}</td>
-      </tr>
-    `
+    return this.deviceLogs.map(
+      (log) => html`
+        <tr class="table-row">
+          <td>${log.logId}</td>
+          <td>${log.timestamp}</td>
+          <td>${log.userId}</td>
+          <td>${log.eventType}</td>
+          <td>${log.region || '-'}</td>
+          <td>${log.deviceType || '-'}</td>
+          <td>${log.eventDescription}</td>
+        </tr>
+      `
     );
   }
 

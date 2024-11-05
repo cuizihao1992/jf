@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import { errorService } from '@/api/fetch.js'; // 引入 errorService
 
 class FaultDetails extends LitElement {
   static styles = css`
@@ -62,7 +63,30 @@ class FaultDetails extends LitElement {
       overflow-y: auto; /* 仅表格内容滚动 */
     }
   `;
+  static get properties() {
+    return {
+      faults: { type: Array }, // 添加 faults 属性
+    };
+  }
 
+  constructor() {
+    super();
+    this.faults = []; // 初始化 faults
+    this.fetchFaults(); // 在构造函数中调用 fetchFaults
+  }
+
+  async fetchFaults() {
+    try {
+      const params = {
+        pageNum: 1,
+        pageSize: 100000,
+      };
+      const data = await errorService.list(params);
+      this.faults = data.rows; // 将获取的数据赋值给 faults
+    } catch (error) {
+      console.error('获取故障列表失败:', error);
+    }
+  }
   render() {
     return html`
       <div class="modal">
@@ -83,114 +107,25 @@ class FaultDetails extends LitElement {
               </tr>
             </thead>
             <tbody>
-              <tr class="table-row">
-                <td>101</td>
-                <td>自动角反射器</td>
-                <td>中卫</td>
-                <td>设备电源故障</td>
-              </tr>
-              <tr class="table-row">
-                <td>101</td>
-                <td>自动角反射器</td>
-                <td>中卫</td>
-                <td>设备电源故障</td>
-              </tr>
-              <tr class="table-row">
-                <td>101</td>
-                <td>自动角反射器</td>
-                <td>中卫</td>
-                <td>设备电源故障</td>
-              </tr>
-              <tr class="table-row">
-                <td>101</td>
-                <td>自动角反射器</td>
-                <td>中卫</td>
-                <td>设备电源故障</td>
-              </tr>
-              <tr class="table-row">
-                <td>101</td>
-                <td>自动角反射器</td>
-                <td>中卫</td>
-                <td>设备电源故障</td>
-              </tr>
-              <tr class="table-row">
-                <td>101</td>
-                <td>自动角反射器</td>
-                <td>中卫</td>
-                <td>设备电源故障</td>
-              </tr>
-              <tr class="table-row">
-                <td>101</td>
-                <td>自动角反射器</td>
-                <td>中卫</td>
-                <td>设备电源故障</td>
-              </tr>
-              <tr class="table-row">
-                <td>101</td>
-                <td>自动角反射器</td>
-                <td>中卫</td>
-                <td>设备电源故障</td>
-              </tr>
-              <tr class="table-row">
-                <td>101</td>
-                <td>自动角反射器</td>
-                <td>中卫</td>
-                <td>设备电源故障</td>
-              </tr>
-              <tr class="table-row">
-                <td>101</td>
-                <td>自动角反射器</td>
-                <td>中卫</td>
-                <td>设备电源故障</td>
-              </tr>
-              <tr class="table-row">
-                <td>101</td>
-                <td>自动角反射器</td>
-                <td>中卫</td>
-                <td>设备电源故障</td>
-              </tr>
-              <tr class="table-row">
-                <td>101</td>
-                <td>自动角反射器</td>
-                <td>中卫</td>
-                <td>设备电源故障</td>
-              </tr>
-              <tr class="table-row">
-                <td>101</td>
-                <td>自动角反射器</td>
-                <td>中卫</td>
-                <td>设备电源故障</td>
-              </tr>
-              <tr class="table-row">
-                <td>101</td>
-                <td>自动角反射器</td>
-                <td>中卫</td>
-                <td>设备电源故障</td>
-              </tr>
-              <tr class="table-row">
-                <td>101</td>
-                <td>自动角反射器</td>
-                <td>中卫</td>
-                <td>设备电源故障</td>
-              </tr>
-              <tr class="table-row">
-                <td>101</td>
-                <td>自动角反射器</td>
-                <td>中卫</td>
-                <td>设备电源故障</td>
-              </tr>
-              <tr class="table-row">
-                <td>101</td>
-                <td>自动角反射器</td>
-                <td>中卫</td>
-                <td>设备电源故障</td>
-              </tr>
-              <!-- Add more fault rows as needed -->
+              ${this.renderRows()}
             </tbody>
           </table>
         </div>
       </div>
     `;
+  }
+
+  renderRows() {
+    return this.faults.map(
+      (fault) => html`
+        <tr class="table-row">
+          <td>${fault.taskId}</td>
+          <td>${fault.typeName}</td>
+          <td>${fault.regionName}</td>
+          <td>${fault.errorMessage}</td>
+        </tr>
+      `
+    );
   }
 
   closeModal() {
