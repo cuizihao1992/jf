@@ -103,49 +103,48 @@ class Devicexiangqing1 extends LitElement {
 
         <div class="task-info">
           <h2>设备信息</h2>
-        <div class="row-task">
+       <div class="row-task">
     <label for="task-name" style="display:inline-block;width:100px;">设备编号:</label>
-    <input type="text" id="task-name"  style="width:180px;height:25px;border-radius: 4px; /* 圆角 */"/>
+    <input type="text" id="task-name" readonly style="width:180px;height:25px;border-radius: 4px; /* 圆角 */"/>
 </div>
 <div class="row-device-type">
     <label for="device-type" style="display:inline-block;width:100px;">所属地区:</label>
-    <select id="device-type"style="width:140px; height:35px;border-radius: 4px;">
+    <select id="device-type" readonly style="width:140px; height:35px;border-radius: 4px;">
         <option>中卫</option>
     </select>
 </div>
 <div class="row-start-time">
     <label for="start-time" style="display:inline-block;width:100px;">设备类型:</label>
-    <select type="text" id="start-time"  style="width:140px;height:35px;border-radius: 4px; /* 圆角 */"/>
+    <select type="text" id="start-time" readonly style="width:140px;height:35px;border-radius: 4px; /* 圆角 */">
         <option>自动角反射器</option>
-        </select>
+    </select>
 </div>
 
 <div class="row-location">
     <label for="location" style="display:inline-block;width:100px;">偏磁角度:</label>
-    <input id="location" style="width:180px;height:25px;border-radius: 4px;">
-    </input>
+    <input id="location" readonly style="width:180px;height:25px;border-radius: 4px;">
 </div>
-
 
 <div class="row-end-time">
     <label for="end-time" style="display:inline-block;width:100px;">安装方位角度:</label>
-    <input type="text" id="end-time"  style="width:180px;height:25px;border-radius: 4px; /* 圆角 */"/>
+    <input type="text" id="end-time" readonly style="width:180px;height:25px;border-radius: 4px; /* 圆角 */"/>
 </div>
 
 <div class="row-execution-time">
     <label for="execution-time-1" style="display:inline-block;width:100px;">安装俯仰角度:</label>
-    <input type="number" id="execution-time-1"  style="width:180px;height:25px;border-radius: 4px; /* 圆角 */"/>
+    <input type="text" id="execution-time-1" readonly style="width:180px;height:25px;border-radius: 4px; /* 圆角 */"/>
 </div>
 
 <div class="row-device-longitude">
     <label for="device-longitude" style="display:inline-block;width:100px;">设备所在经度:</label>
-    <input type="number" id="device-longitude"  style="width:180px;height:25px;border-radius: 4px; /* 圆角 */"/>
+    <input type="text" id="device-longitude" readonly style="width:180px;height:25px;border-radius: 4px; /* 圆角 */"/>
 </div>
 
 <div class="row-device-latitude">
     <label for="device-latitude" style="display:inline-block;width:100px;">设备所在纬度:</label>
-    <input type="number" id="device-latitude"  style="width:180px;height:25px;border-radius: 4px; /* 圆角 */"/>
+    <input type="text" id="device-latitude" readonly style="width:180px;height:25px;border-radius: 4px; /* 圆角 */"/>
 </div>
+
         </div>
 
       </div>
