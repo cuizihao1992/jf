@@ -4,12 +4,13 @@ import { defineConfig } from 'vite';
 import path from 'path';
 export default defineConfig({
   root: './',
+  base: '/screen',
   build: {
-    outDir: 'dist',
+    outDir: 'screen',
     rollupOptions: {
       input: {
         main: 'index.html',
-        anotherPage: 'another-page.html', // 如果有多个入口页面
+        anotherPage: 'demo.html', // 如果有多个入口页面
       },
     },
   },
