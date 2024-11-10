@@ -140,6 +140,7 @@ class TaskManagement extends LitElement {
       this.isTaskEditOpen = false;
       this.isStatusMissionOpen = false;
       this.isScopeSelectionOpen = false; // 设置当前选中的按钮
+      this.isParameterConfigOpen = false;
     }
   }
 

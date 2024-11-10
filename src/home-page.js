@@ -1,6 +1,8 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import { Router } from '@vaadin/router';
 import mapboxgl from 'mapbox-gl';
+import MapboxDraw from '@mapbox/mapbox-gl-draw';
+import * as turf from '@turf/turf';
 
 // 导入子组件
 import '@/modules/system-home/index.js';
@@ -18,6 +20,8 @@ class HomePage extends LitElement {
   static properties = {
     currentTime: { type: String },
     currentLocation: { type: String },
+    points: { type: Array },
+    draw: { type: Object },
   };
 
   constructor() {
@@ -25,8 +29,34 @@ class HomePage extends LitElement {
     this.currentTime = '';
     this.currentLocation = '北京市';
     this.updateTime();
-  }
+    this.points = [];
+    this.draw = null;
+    this.currentPickingPosition = null;
+    this.drawMode = 'pick';
 
+    // 添加确定按钮的事件监听
+    window.addEventListener('draw-polygon', (e) => {
+      const allPoints = this.draw.getAll();
+      if (allPoints.features.length === 4) {
+        this.drawPolygon(allPoints.features);
+      }
+    });
+    // 添加模式切换事件监听
+    window.addEventListener('change-draw-mode', (e) => {
+      this.drawMode = e.detail.mode;
+      if (this.drawMode === 'draw') {
+        this.draw.changeMode('draw_polygon');
+      } else {
+        this.draw.changeMode('simple_select');
+        this.draw.deleteAll();
+      }
+    });
+
+    // 添加清除特征事件监听
+    window.addEventListener('clear-all-features', () => {
+      this.draw.deleteAll();
+    });
+  }
   updateTime() {
     const now = new Date();
     this.currentTime = now.toLocaleString('zh-CN', {
@@ -43,7 +73,7 @@ class HomePage extends LitElement {
   initMap() {
     // 初始化地图
     mapboxgl.accessToken =
-      'pk.eyJ1IjoiaG9uZ2xpbmdqaW4xOTk0IiwiYSI6ImNrczhvZTNmbDN0ZnEycHM3aTkyanp3NmsifQ.iCdeT5IE9GlGKmExl0U6zA'; // 替换为你的 token
+      'pk.eyJ1IjoiaG9uZ2xpbmdqaW4xOTk0IiwiYSI6ImNrczhvZTNmbDN0ZnEycHM3aTkyanp3NmsifQ.iCdeT5IE9GlGKmExl0U6zA';
 
     const map = new mapboxgl.Map({
       container: this.shadowRoot.getElementById('map'),
@@ -51,10 +81,67 @@ class HomePage extends LitElement {
       center: [116.397428, 39.90923],
       zoom: 12,
       attributionControl: false,
-      language: 'zh-Hans', // 设置为简体中文
+      language: 'zh-Hans',
       localIdeographFontFamily: "'Microsoft YaHei', 'SimHei', sans-serif",
     });
 
+    // 初始化 Draw 控件
+    this.draw = new MapboxDraw({
+      displayControlsDefault: false,
+      controls: {
+        point: true,
+        polygon: true,
+        trash: true,
+      },
+    });
+
+    // 添加 Draw 控件到地图
+    map.addControl(this.draw);
+
+    // 监听开始拾取事件
+    window.addEventListener('start-picking', (e) => {
+      this.currentPickingPosition = e.detail.position;
+    });
+
+    // 监听点击事件
+    // 监听点击事件
+    map.on('click', (e) => {
+      if (this.drawMode !== 'pick' || !this.currentPickingPosition) return;
+      const coords = [e.lngLat.lng, e.lngLat.lat];
+      const point = {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: coords,
+        },
+      };
+      map.on('draw.create', (e) => {
+        if (this.drawMode === 'draw') {
+          const polygon = e.features[0];
+          // 处理绘制的多边形
+          console.log('Drawn polygon:', polygon);
+        }
+      });
+      // 清除之前的点（如果存在）
+      const existingPoints = this.draw.getAll();
+      existingPoints.features.forEach((feature) => {
+        if (feature.properties.position === this.currentPickingPosition) {
+          this.draw.delete(feature.id);
+        }
+      });
+
+      // 添加新的点
+      const pointId = this.draw.add(point)[0];
+      const addedFeature = this.draw.get(pointId);
+      addedFeature.properties = { position: this.currentPickingPosition };
+      this.draw.add(addedFeature);
+
+      // 更新坐标 - 直接传入位置字符串
+      this.updateInputField(this.currentPickingPosition, coords);
+
+      // 重置当前拾取位置
+      this.currentPickingPosition = null;
+    });
     // 在地图加载完成后设置中文显示
     map.on('load', () => {
       // 更全面的中文标签设置
@@ -107,6 +194,42 @@ class HomePage extends LitElement {
         'country-label'
       );
     });
+  }
+
+  updateInputField(position, coords) {
+    console.log('Updating coordinates:', position, coords); // 调试日志
+
+    // 使用全局事件
+    const event = new CustomEvent('update-coordinates', {
+      detail: {
+        position: position,
+        coordinates: `${coords[0].toFixed(6)}, ${coords[1].toFixed(6)}`,
+      },
+    });
+    window.dispatchEvent(event);
+  }
+
+  // 添加绘制多边形的方法
+  drawPolygon(points) {
+    // 将点按照顺序排列（左上、右上、右下、左下）
+    const positions = ['左上', '右上', '右下', '左下'];
+    const orderedPoints = positions.map(
+      (pos) =>
+        points.find((p) => p.properties.position === pos).geometry.coordinates
+    );
+
+    const polygon = {
+      type: 'Feature',
+      geometry: {
+        type: 'Polygon',
+        coordinates: [[...orderedPoints, orderedPoints[0]]], // 闭合多边形
+      },
+    };
+
+    // 删除所有点
+    this.draw.deleteAll();
+    // 添加多边形
+    this.draw.add(polygon);
   }
   firstUpdated() {
     const router = new Router(this.shadowRoot.querySelector('.content'));

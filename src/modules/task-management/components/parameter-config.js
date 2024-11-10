@@ -73,7 +73,7 @@ class ParameterConfig extends LitElement {
       margin-left: 4px;
     }
     input[type='text'] {
-      width: 100px;
+      width: 80px;
       padding: 4px;
       border-radius: 5px;
     }
@@ -144,10 +144,80 @@ class ParameterConfig extends LitElement {
     this.selectedTab = tab;
   }
 
+  calculateAngles() {
+    if (this.selectedTab === 'inputParams') {
+      const azimuth = this.shadowRoot.querySelector(
+        'input[name="azimuth"]'
+      ).value;
+      const elevation = this.shadowRoot.querySelector(
+        'input[name="elevation"]'
+      ).value;
+
+      alert(`方位角: ${azimuth}°\n俯仰角: ${elevation}°`);
+      return;
+    }
+
+    const semiMajorAxis = parseFloat(
+      this.shadowRoot.querySelector('input[name="semiMajorAxis"]').value
+    );
+    const visualAngle = parseFloat(
+      this.shadowRoot.querySelector('input[name="visualAngle"]').value
+    );
+    const radiusVector = parseFloat(
+      this.shadowRoot.querySelector('input[name="radiusVector"]').value
+    );
+    const orbitInclination = parseFloat(
+      this.shadowRoot.querySelector('input[name="orbitInclination"]').value
+    );
+    const magneticDeclination = parseFloat(
+      this.shadowRoot.querySelector('input[name="magneticDeclination"]').value
+    );
+    const latitude = parseFloat(
+      this.shadowRoot.querySelector('input[name="latitude"]').value
+    );
+    const fixedAngle = parseFloat(
+      this.shadowRoot.querySelector('input[name="fixedAngle"]').value
+    );
+
+    if (
+      isNaN(semiMajorAxis) ||
+      isNaN(visualAngle) ||
+      isNaN(radiusVector) ||
+      isNaN(orbitInclination) ||
+      isNaN(magneticDeclination) ||
+      isNaN(latitude) ||
+      isNaN(fixedAngle)
+    ) {
+      alert('请输入有效的数值');
+      return;
+    }
+
+    const incidenceRad =
+      Math.asin(
+        (semiMajorAxis * Math.sin((visualAngle * Math.PI) / 180)) / radiusVector
+      ) *
+      (180 / Math.PI);
+
+    const trajectory = this.shadowRoot.querySelector(
+      'input[name="trajectory"]:checked'
+    ).value;
+    const cosValue =
+      Math.cos((orbitInclination * Math.PI) / 180) /
+      Math.cos((latitude * Math.PI) / 180);
+    const azimuthRad = Math.asin(
+      trajectory === 'ascend' ? cosValue : -cosValue
+    );
+    const azimuth = (azimuthRad * 180) / Math.PI + magneticDeclination;
+
+    const elevation = fixedAngle - incidenceRad;
+
+    alert(`方位角: ${azimuth.toFixed(2)}°\n俯仰角: ${elevation.toFixed(2)}°`);
+  }
+
   render() {
     return html`
       <div class="parameter-config">
-      <span class="close-button" @click="${this.handleClose}">×</span>
+        <span class="close-button" @click="${this.handleClose}">×</span>
         <div class="header">配置参数</div>
         <div class="tabs">
           <div
@@ -165,64 +235,97 @@ class ParameterConfig extends LitElement {
             输入参数
           </div>
         </div>
-      <div class="container">
-        <div class="content" ?active=${this.selectedTab === 'orbitMatch'}>
-          <div class="direction-container">
-            <span class="direction-title">波束方向</span>
-            <div class="direction-options">
-              <label><input type="checkbox" name="direction" value="leftView" />左向侧视</label>
-              <label><input type="checkbox" name="direction" value="leftView" />右向侧视</label>
-              
-              <label><input type="radio" name="trajectory" value="ascend" />升轨</label>
-              <label><input type="radio" name="trajectory" value="descend" />降轨</label>
-            </div>
-          </div>
-          
-          <div class="orbit-container">
-            <span class="orbit-title">卫星轨道参数</span>
-            <div class="orbit-parameters">
-              <div class="form-group">
-                <label>视角：</label>
-                <input type="text"/>
-              </div>
-              <div class="form-group">
-              <label>半长轴：</label>
-                <input type="text"/>
-              </div>
-              <div class="form-group">
-                <label>轨道倾角：</label>
-                <input type="text"/>
-              </div>
-              <div class="form-group">
-                <label>磁偏角：</label>
-                <input type="text"/>
-              </div>
-              <div class="form-group">
-                <label>地面点矢量半径：</label>
-                <input type="text"/>
-              </div>
-            </div>
-          </div>
-        </div>
+        <div class="container">
+          <div class="content" ?active=${this.selectedTab === 'orbitMatch'}>
+            <div class="direction-container">
+              <span class="direction-title">波束方向</span>
+              <div class="direction-options">
+                <label
+                  ><input
+                    type="checkbox"
+                    name="direction"
+                    value="leftView"
+                  />左向侧视</label
+                >
+                <label
+                  ><input
+                    type="checkbox"
+                    name="direction"
+                    value="rightView"
+                  />右向侧视</label
+                >
 
-        <div class="content" ?active=${this.selectedTab === 'inputParams'}>
-          <div class="attitude-container">
-            <span class="attitude-title">姿态参数</span>
-            <div class="form-group">
-              <label>方位角:</label>
-              <input type="text" />
-              <label>俯仰角:</label>
-              <input type="text" />
+                <label
+                  ><input
+                    type="radio"
+                    name="trajectory"
+                    value="ascend"
+                  />升轨</label
+                >
+                <label
+                  ><input
+                    type="radio"
+                    name="trajectory"
+                    value="descend"
+                  />降轨</label
+                >
+              </div>
+            </div>
+
+            <div class="orbit-container">
+              <span class="orbit-title">卫星轨道参数</span>
+              <div class="orbit-parameters">
+                <div class="form-group">
+                  <label>视角：</label>
+                  <input type="text" name="visualAngle" />
+                </div>
+                <div class="form-group">
+                  <label>半长轴：</label>
+                  <input type="text" name="semiMajorAxis" />
+                </div>
+                <div class="form-group">
+                  <label>轨道倾角：</label>
+                  <input type="text" name="orbitInclination" />
+                </div>
+                <div class="form-group">
+                  <label>磁偏角：</label>
+                  <input type="text" name="magneticDeclination" />
+                </div>
+                <div class="form-group">
+                  <label>地面点矢量半径：</label>
+                  <input type="text" name="radiusVector" />
+                </div>
+                <div class="form-group">
+                  <label>固定角：</label>
+                  <input type="text" name="fixedAngle" />
+                </div>
+                <div class="form-group">
+                  <label>成像中心纬度：</label>
+                  <input type="text" name="latitude" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content" ?active=${this.selectedTab === 'inputParams'}>
+            <div class="attitude-container">
+              <span class="attitude-title">姿态参数</span>
+              <div class="form-group">
+                <label>方位角:</label>
+                <input type="text" name="azimuth" />
+                <label>俯仰角:</label>
+                <input type="text" name="elevation" />
+              </div>
             </div>
           </div>
         </div>
+        <div class="button-container">
+          <button @click="${this.calculateAngles}">确定</button>
+        </div>
       </div>
-      <div class="button-container">
-            <button">确定</button>
-      </div>
-    </div>
     `;
   }
+
   handleClose() {
     this.remove();
     this.dispatchEvent(new CustomEvent('close-modal'));

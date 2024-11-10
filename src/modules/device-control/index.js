@@ -44,7 +44,7 @@ class DeviceControl extends LitElement {
         <custom-button
           label="设备列表"
           ?selected=${this.selectedButton === 'list'}
-          @button-click=${() => this.selectButton('list')}
+          @button-click=${() => this.setActiveComponent('list')}
         ></custom-button>
       </div>
       <!-- 设备查询弹窗，根据 isModalOpen 条件渲染 -->
@@ -116,16 +116,26 @@ class DeviceControl extends LitElement {
 
   // 选择设备列表按钮的逻辑
   // 选择设备列表按钮的逻辑
-selectButton(buttonName) {
-  if (buttonName === 'list') {
-    this.isModalOpen = false; // Close any other modals
-    this.selectedButton = this.selectedButton === 'list' ? '' : 'list'; // Toggle selection
-  } else {
-    this.selectedButton = buttonName; // Set the selected button
-    this.isModalOpen = false; 
-    this.isPostureAdjustModalOpen = false; // Close any open modals
+  selectButton(buttonName) {
+    if (buttonName === 'list') {
+      this.isModalOpen = false; // Close any other modals
+      this.selectedButton = this.selectedButton === 'list' ? '' : 'list'; // Toggle selection
+    } else {
+      this.selectedButton = buttonName; // Set the selected button
+      this.isModalOpen = false;
+      this.isPostureAdjustModalOpen = false; // Close any open modals
+    }
   }
-}
+  setActiveComponent(componentName) {
+    // 如果点击的按钮已经选中，取消选中并关闭组件
+    if (this.activeComponent === componentName) {
+      this.activeComponent = ''; // 关闭组件
+      this.selectedButton = ''; // 清除选中状态
+    } else {
+      this.activeComponent = componentName; // 切换到新组件
+      this.selectedButton = componentName;
+    }
+  }
 
   // 打开姿态调整弹窗
   openPostureAdjustModal() {
