@@ -7,9 +7,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:screen": "vite build --mode screen",
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@mapbox/mapbox-gl-draw": "^1.4.3",
+    "@turf/turf": "^7.1.0",
     "@vaadin/router": "^2.0.0",
     "axios": "^1.7.7",
     "js-cookie": "^3.0.5",
