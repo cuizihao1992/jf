@@ -42,14 +42,17 @@ class ApiService {
     return this.fetchData(`${this.resource}/list`, 'GET', params);
   }
 
+  get(id) {
+    return this.fetchData(`${this.resource}/${id}`, 'GET');
+  }
   // 添加数据（add）
   add(data) {
     return this.fetchData(this.resource, 'POST', data);
   }
 
   // 更新数据（update）
-  update(id, data) {
-    return this.fetchData(`${this.resource}/${id}`, 'PUT', data);
+  update(data) {
+    return this.fetchData(`${this.resource}`, 'PUT', data);
   }
 
   // 删除数据（delete）

@@ -253,11 +253,12 @@ class TaskQueryComponent extends LitElement {
           <td>${task.taskStatus}</td>
           <td>${task.startTime}</td>
           <td>${task.endTime}</td>
-        
-        
-         <td><a @click="${() => this.openTaskDetails()}">查看</a></td>
-        <td><a @click="${() => this.openFaultDetails()}">查看</a></td>
-        <td><a @click="${() => this.openTaskLog()}">查看</a></td>
+
+          <td>
+            <a @click="${() => this.openTaskDetails(task, false)}">查看</a>
+          </td>
+          <td><a @click="${() => this.openFaultDetails()}">查看</a></td>
+          <td><a @click="${() => this.openTaskLog()}">查看</a></td>
         </tr>
       `
     );
@@ -266,10 +267,16 @@ class TaskQueryComponent extends LitElement {
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
-  openTaskDetails() {
+  openTaskDetails(task, isEdit = false) {
     console.log('open task details');
 
-    this.dispatchEvent(new CustomEvent('open-task-details'));
+    this.dispatchEvent(
+      new CustomEvent('open-task-details', {
+        detail: { task, isEdit },
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 
   openFaultDetails() {
