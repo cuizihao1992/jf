@@ -174,8 +174,8 @@ class TaskManagement extends LitElement {
       case 'reviewTasks':
         return html`<task-review-component
           @close-modal=${this.closeTasks}
-          @open-task-review-detail=${this.openTaskReviewDetail}
-          @open-task-review-review=${this.openTaskReviewReview}
+          @open-task-review-detail=${this.openTaskDetails}
+          @open-task-review-review=${this.openTaskDetails}
         ></task-review-component>`;
       default:
         return ''; // 不显示任何组件
@@ -216,24 +216,7 @@ class TaskManagement extends LitElement {
     this.isFaultDetailsOpen = false;
     //this.activeComponent = "taskLog"; // 设置为设备日志组件
   }
-  openTaskReviewDetail() {
-    this.isTaskReviewDetailOpen = true;
-    this.isTaskReviewReviewOpen = false; // 打开设备日志弹窗
-    //this.activeComponent = "taskReviewDetail"; // 设置为设备日志组件
-  }
-  openTaskReviewReview() {
-    this.isTaskReviewReviewOpen = true;
-    this.isTaskReviewDetailOpen = false; // 打开设备日志弹窗
-    //this.activeComponent = "taskReviewDetail"; // 设置为设备日志组件
-  }
-  openRevokeConfirmation() {
-    this.isRevokeConfirmationOpen = true;
-    this.isTaskDetailsOpen = false;
-  }
-  openTaskEdit() {
-    this.isTaskEditOpen = true;
-    this.isTaskDetailsOpen = false; // 打开设备日志弹窗
-  }
+
   closeTaskEdit() {
     this.isTaskEditOpen = false; // 打开设备日志弹窗
   }
@@ -251,9 +234,6 @@ class TaskManagement extends LitElement {
     this.isParameterConfigOpen = true;
     this.isScopeSelectionOpen = false;
     this.isStatusMissionOpen = false; // 打开设备日志弹窗
-  }
-  closeRevokeConfirmation() {
-    this.isRevokeConfirmationOpen = false;
   }
 
   closeTaskDetails() {

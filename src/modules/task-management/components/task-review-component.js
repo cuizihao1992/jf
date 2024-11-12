@@ -247,13 +247,17 @@ class TaskReviewComponent extends LitElement {
 
   openTaskReviewDetails(taskReview) {
     this.dispatchEvent(
-      new CustomEvent('open-task-review-detail', { detail: taskReview })
+      new CustomEvent('open-task-review-detail', {
+        detail: { task: taskReview, isReview: true },
+      })
     );
   }
 
   openTaskReviewReview(taskReview) {
     this.dispatchEvent(
-      new CustomEvent('open-task-review-review', { detail: taskReview })
+      new CustomEvent('open-task-review-review', {
+        detail: { task: taskReview, isReview: true, isReviewEdit: true },
+      })
     );
   }
 }

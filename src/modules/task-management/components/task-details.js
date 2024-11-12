@@ -71,6 +71,7 @@ class TaskDetails extends LitElement {
   render() {
     const isEdit = this.data.isEdit;
     const isReview = this.data.isReview;
+    const isReviewEdit = this.data.isReviewEdit;
 
     const deviceListTableRows = this.deviceListRows.map(
       (device) => html`
@@ -232,19 +233,24 @@ class TaskDetails extends LitElement {
               </table>
             </div>
             <!-- 新增的保存和取消按钮 -->
-            <div class="button-group">
-              <button class="button cancel-button" @click="${this.cancelEdit}">
-                取消
-              </button>
-              ${isEdit
-                ? html`<button
-                    class="button save-button"
-                    @click="${this.saveTask}"
+            ${isReview
+              ? ''
+              : html`<div class="button-group">
+                  <button
+                    class="button cancel-button"
+                    @click="${this.cancelEdit}"
                   >
-                    保存
-                  </button>`
-                : ''}
-            </div>
+                    取消
+                  </button>
+                  ${isEdit
+                    ? html`<button
+                        class="button save-button"
+                        @click="${this.saveTask}"
+                      >
+                        保存
+                      </button>`
+                    : ''}
+                </div>`}
           </div>
           ${isReview
             ? html`<div class="review-info">
@@ -264,7 +270,9 @@ class TaskDetails extends LitElement {
                   <label for="notes">备注:</label>
                   <textarea id="notes" placeholder=""></textarea>
                 </div>
-                <button class="submit-button">确定</button>
+                ${isReviewEdit
+                  ? html`<button class="submit-button">确定</button>`
+                  : ''}
               </div>`
             : ''}
         </div>
