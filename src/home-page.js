@@ -72,9 +72,8 @@ class HomePage extends LitElement {
   }
   initMap() {
     // 初始化地图
-    mapboxgl.accessToken =
-      'pk.eyJ1IjoiaG9uZ2xpbmdqaW4xOTk0IiwiYSI6ImNrczhvZTNmbDN0ZnEycHM3aTkyanp3NmsifQ.iCdeT5IE9GlGKmExl0U6zA';
-
+    mapboxgl.accessToken = 'pk.eyJ1IjoiaG9uZ2xpbmdqaW4xOTk0IiwiYSI6ImNrczhvZTNmbDN0ZnEycHM3aTkyanp3NmsifQ.iCdeT5IE9GlGKmExl0U6zA';
+  
     const map = new mapboxgl.Map({
       container: this.shadowRoot.getElementById('map'),
       style: 'mapbox://styles/mapbox/dark-v11',
@@ -84,26 +83,67 @@ class HomePage extends LitElement {
       language: 'zh-Hans',
       localIdeographFontFamily: "'Microsoft YaHei', 'SimHei', sans-serif",
     });
-
-    // 初始化 Draw 控件
-    this.draw = new MapboxDraw({
-      displayControlsDefault: false,
-      controls: {
-        point: true,
-        polygon: true,
-        trash: true,
-      },
+  
+    // 在地图加载完成后设置中文显示和样式
+    map.on('load', () => {
+      // 先添加 Draw 控件
+      this.draw = new MapboxDraw({
+        displayControlsDefault: false,
+        controls: {
+          point: true,
+          polygon: true,
+          trash: true,
+        },
+      });
+      map.addControl(this.draw);
+  
+      // 然后设置地图样式
+      map.setPaintProperty('background', 'background-color', 'rgba(0, 9, 36, 0.8)');
+      map.setPaintProperty('water', 'fill-color', 'rgba(0, 15, 60, 0.8)');
+      map.setPaintProperty('land', 'background-color', 'rgba(0, 9, 36, 0.8)');
+      map.setPaintProperty('building', 'fill-color', 'rgba(0, 12, 45, 0.8)');
+  
+      // 添加颜色覆盖层
+      if (!map.getLayer('color-overlay')) {
+        map.addLayer({
+          id: 'color-overlay',
+          type: 'background',
+          paint: {
+            'background-color': 'rgba(0, 9, 36, 0.3)',
+            'background-opacity': 0.7,
+          },
+        });
+      }
+  
+      // 设置中文标签
+      const setChineseLabels = () => {
+        const labelLayers = map.getStyle().layers.filter(layer =>
+          layer.id.includes('label') || 
+          layer.id.includes('place') || 
+          layer.id.includes('poi') || 
+          layer.id.includes('text')
+        );
+  
+        labelLayers.forEach(layer => {
+          if (map.getLayoutProperty(layer.id, 'text-field')) {
+            map.setLayoutProperty(layer.id, 'text-field', [
+              'coalesce',
+              ['get', 'name_zh'],
+              ['get', 'name']
+            ]);
+          }
+        });
+      };
+  
+      setChineseLabels();
+      map.on('styledata', setChineseLabels);
     });
-
-    // 添加 Draw 控件到地图
-    map.addControl(this.draw);
-
+  
     // 监听开始拾取事件
     window.addEventListener('start-picking', (e) => {
       this.currentPickingPosition = e.detail.position;
     });
-
-    // 监听点击事件
+  
     // 监听点击事件
     map.on('click', (e) => {
       if (this.drawMode !== 'pick' || !this.currentPickingPosition) return;
@@ -115,6 +155,8 @@ class HomePage extends LitElement {
           coordinates: coords,
         },
       };
+  
+      // 监听绘制创建事件
       map.on('draw.create', (e) => {
         if (this.drawMode === 'draw') {
           const polygon = e.features[0];
@@ -122,6 +164,7 @@ class HomePage extends LitElement {
           console.log('Drawn polygon:', polygon);
         }
       });
+  
       // 清除之前的点（如果存在）
       const existingPoints = this.draw.getAll();
       existingPoints.features.forEach((feature) => {
@@ -129,70 +172,18 @@ class HomePage extends LitElement {
           this.draw.delete(feature.id);
         }
       });
-
+  
       // 添加新的点
       const pointId = this.draw.add(point)[0];
       const addedFeature = this.draw.get(pointId);
       addedFeature.properties = { position: this.currentPickingPosition };
       this.draw.add(addedFeature);
-
+  
       // 更新坐标 - 直接传入位置字符串
       this.updateInputField(this.currentPickingPosition, coords);
-
+  
       // 重置当前拾取位置
       this.currentPickingPosition = null;
-    });
-    // 在地图加载完成后设置中文显示
-    map.on('load', () => {
-      // 更全面的中文标签设置
-      const setChineseLabels = () => {
-        const labelLayers = map
-          .getStyle()
-          .layers.filter(
-            (layer) =>
-              layer.id.includes('label') ||
-              layer.id.includes('place') ||
-              layer.id.includes('poi') ||
-              layer.id.includes('text')
-          );
-
-        labelLayers.forEach((layer) => {
-          if (map.getLayoutProperty(layer.id, 'text-field')) {
-            map.setLayoutProperty(layer.id, 'text-field', [
-              'coalesce',
-              ['get', 'name_zh'],
-              ['get', 'name'],
-            ]);
-          }
-        });
-      };
-
-      setChineseLabels();
-
-      // 监听样式变化，重新应用中文设置
-      map.on('styledata', setChineseLabels);
-
-      // 设置深蓝色样式
-      map.setPaintProperty(
-        'background',
-        'background-color',
-        'rgba(0, 9, 36, 0.8)'
-      );
-      map.setPaintProperty('water', 'fill-color', 'rgba(0, 15, 60, 0.8)');
-      map.setPaintProperty('land', 'background-color', 'rgba(0, 9, 36, 0.8)');
-      map.setPaintProperty('building', 'fill-color', 'rgba(0, 12, 45, 0.8)');
-
-      map.addLayer(
-        {
-          id: 'color-overlay',
-          type: 'background',
-          paint: {
-            'background-color': 'rgba(0, 9, 36, 0.3)',
-            'background-opacity': 0.7,
-          },
-        },
-        'country-label'
-      );
     });
   }
 
