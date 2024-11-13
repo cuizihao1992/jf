@@ -153,7 +153,13 @@ class ParameterConfig extends LitElement {
         'input[name="elevation"]'
       ).value;
 
-      alert(`方位角: ${azimuth}°\n俯仰角: ${elevation}°`);
+      // 发送计算结果事件
+      this.dispatchEvent(
+        new CustomEvent('angles-calculated', {
+          detail: { azimuth, elevation },
+        })
+      );
+      this.handleClose();
       return;
     }
 
@@ -211,7 +217,16 @@ class ParameterConfig extends LitElement {
 
     const elevation = fixedAngle - incidenceRad;
 
-    alert(`方位角: ${azimuth.toFixed(2)}°\n俯仰角: ${elevation.toFixed(2)}°`);
+    // 发送计算结果事件
+    this.dispatchEvent(
+      new CustomEvent('angles-calculated', {
+        detail: {
+          azimuth: azimuth.toFixed(2),
+          elevation: elevation.toFixed(2),
+        },
+      })
+    );
+    this.handleClose();
   }
 
   render() {
