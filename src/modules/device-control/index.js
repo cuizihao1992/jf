@@ -91,22 +91,16 @@ class DeviceControl extends LitElement {
                 @close-modal=${this.closeRealtimeImagery}
               ></realtime-imagery>`
             : ''}
-
-          <!-- 角度检测弹窗，根据 isAngleDetectionOpen 条件渲染 -->
           ${this.isAngleDetectionOpen
             ? html`<angle-detection
                 @close-modal=${this.closeAngleDetection}
               ></angle-detection>`
             : ''}
-
-          <!-- 设备日志弹窗，根据 isSingleDeviceLogOpen 条件渲染 -->
           ${this.isSingleDeviceLogOpen
             ? html`<single-device-log
                 @close-modal=${this.closeSingleDeviceLog}
               ></single-device-log>`
             : ''}
-
-          <!-- 参数配置弹窗，根据 isParameterConfigOpen 条件渲染 -->
           <!-- 参数配置弹窗 -->
           ${this.isParameterConfigOpen
             ? html`<parameter-config
@@ -114,22 +108,7 @@ class DeviceControl extends LitElement {
                 @angles-calculated=${this.handleAnglesCalculated}
               ></parameter-config>`
             : ''}
-          ${this.selectedButton === 'list'
-            ? html`<device-list></device-list>`
-            : ''}
         </div>
-        <!-- 姿态调整弹窗，根据 isPostureModalOpen 条件渲染 -->
-        ${this.isPostureAdjustModalOpen
-          ? html`<div class="panel-right">
-              <posture-adjust
-                @close-modal=${this.closePostureAdjustModal}
-                @open-realtime-imagery=${this.openRealtimeImagery}
-                @open-angle-detection=${this.openAngleDetection}
-                @open-single-device-log=${this.openSingleDeviceLog}
-                @open-parameter-config=${this.openParameterConfig}
-              ></posture-adjust>
-            </div>`
-          : ''}
       </div>
     `;
   }
@@ -142,15 +121,7 @@ class DeviceControl extends LitElement {
       this.isModalOpen = buttonName === 'query';
     }
   }
-  // 添加处理计算角度的方法
-  handleAnglesCalculated(event) {
-    const { azimuth, elevation } = event.detail;
-    const postureAdjust = this.shadowRoot.querySelector('posture-adjust');
-    if (postureAdjust) {
-      postureAdjust.updateAngles(azimuth, elevation);
-    }
-  }
-  // 选择设备列表按钮的逻辑
+
   selectButton(buttonName) {
     if (buttonName === 'list') {
       this.isModalOpen = false;
@@ -215,6 +186,14 @@ class DeviceControl extends LitElement {
 
   closeModal() {
     this.isModalOpen = false;
+  }
+  // 添加处理计算角度的方法
+  handleAnglesCalculated(event) {
+    const { azimuth, elevation } = event.detail;
+    const postureAdjust = this.shadowRoot.querySelector('posture-adjust');
+    if (postureAdjust) {
+      postureAdjust.updateAngles(azimuth, elevation);
+    }
   }
 }
 
