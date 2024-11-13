@@ -45,9 +45,9 @@ class UserManagement extends LitElement {
           @button-click=${() => this.setActiveComponent('userPermissions')}
         ></custom-button>
       </div>
-      <div class="panel">${this.renderActiveComponent()}</div>
-      <!-- 用户信息弹窗 -->
-      <div class="panel-right">
+      <div class="panel">${this.renderActiveComponent()}
+       <!-- 用户信息弹窗 -->
+      <div style="position:absolute;top:0;left:100%;">
         ${this.isUserReviewOpen
           ? html`<user-review
               @close-modal=${this.closeUserReview}

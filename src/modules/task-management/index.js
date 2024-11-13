@@ -77,11 +77,9 @@ class TaskManagement extends LitElement {
         ></custom-button>
       </div>
 
-      <div class="panel">
-        ${this.leftPanel ? this.renderActiveComponent() : ''}
-      </div>
-
-      <div class="panel-right">
+      <div class="panel" >
+        ${this.renderActiveComponent()}
+         <div style="position:absolute;top:0;left:100%;">
         ${this.isTaskDetailsOpen
           ? html`<task-details
               .data=${this.currentTask}
@@ -127,6 +125,7 @@ class TaskManagement extends LitElement {
         ${this.isTaskEditOpen
           ? html`<task-edit @close-modal=${this.closeTaskEdit}></task-edit>`
           : ''}
+        
       </div>
     `;
   }

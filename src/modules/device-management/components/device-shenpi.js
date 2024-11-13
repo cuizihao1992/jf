@@ -4,7 +4,7 @@ class deviceShenpi extends LitElement {
   static styles = css`
     .container {
       position: absolute;
-      left: calc(40% + 245px);
+      left: calc(40%);
       top: 16%;
       width: 340px; /* 增加整体宽度 */
       height: 670px; /* 设置高度为窗口高度 */

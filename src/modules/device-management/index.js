@@ -63,29 +63,29 @@ class DeviceManagement extends LitElement {
         ></custom-button>
       </div>
 
-      <div class="panel">${this.renderActiveComponent()}</div>
-
-      <div class="panel-right">
-        ${this.isDevicexiangqingOpen
-          ? html`<device-xiangqing
-              @close-modal=${this.closeDevicexiangqing}
-            ></device-xiangqing>`
-          : ''}
-        ${this.isDeviceReviewOpen
-          ? html`<device-review
-              @close-modal=${this.closeDeviceReview}
-            ></device-review>`
-          : ''}
-        ${this.isDeviceShenpiOpen
-          ? html`<device-shenpi
-              @close-modal=${this.closeDeviceShenpi}
-            ></device-shenpi>`
-          : ''}
-        ${this.isDeviceParticularsOpen
-          ? html`<device-particulars
-              @close-modal=${this.closeDeviceParticulars}
-            ></device-particulars>`
-          : ''}
+      <div class="panel">
+      ${this.renderActiveComponent()}
+      <div style="position:absolute;top:0;left:100%;">
+      ${this.isDevicexiangqingOpen
+        ? html`<device-xiangqing
+            @close-modal=${this.closeDevicexiangqing}
+          ></device-xiangqing>`
+        : ''}
+      ${this.isDeviceReviewOpen
+        ? html`<device-review
+            @close-modal=${this.closeDeviceReview}
+          ></device-review>`
+        : ''}
+      ${this.isDeviceShenpiOpen
+        ? html`<device-shenpi
+            @close-modal=${this.closeDeviceShenpi}
+          ></device-shenpi>`
+        : ''}
+      ${this.isDeviceParticularsOpen
+        ? html`<device-particulars
+            @close-modal=${this.closeDeviceParticulars}
+          ></device-particulars>`
+        : ''}
       </div>
     `;
   }

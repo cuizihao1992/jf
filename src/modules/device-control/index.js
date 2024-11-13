@@ -1,36 +1,47 @@
 import { LitElement, html, css } from 'lit';
-import '../../components/custom-button.js'; // Import the button component
-import { sharedStyles } from '../../components/shared-styles.js'; // 引入共享样式
-import './components/device-query.js'; // 引入设备查询弹窗组件
-import './components/posture-adjust.js'; // 引入姿态调整组件
-import './components/realtime-imagery.js'; // 引入姿态调整组件
-import './components/angle-detection.js'; // 引入角度检测组件
-import './components/single-device-log.js'; // 引入设备日志组件
+import '../../components/custom-button.js';
+import { sharedStyles } from '../../components/shared-styles.js';
+import './components/device-query.js';
+import './components/posture-adjust.js';
+import './components/realtime-imagery.js';
+import './components/angle-detection.js';
+import './components/single-device-log.js';
 import './components/device-list.js';
-import '@/modules/task-management/components/parameter-config.js'; // 引入姿态计算组件
+import '@/modules/task-management/components/parameter-config.js';
 
 class DeviceControl extends LitElement {
-  static styles = [sharedStyles];
+  static styles = [
+    sharedStyles,
+    css`
+      .modal-container {
+        display: flex;
+        position: absolute;
+      }
+      .posture-adjust-modal {
+        margin-left: 945px; /* 姿态调整弹窗与设备查询弹窗的距离 */
+      }
+    `
+  ];
 
   static properties = {
-    selectedButton: { type: String }, // 管理哪个按钮被选中
-    isModalOpen: { type: Boolean }, // 控制设备查询弹窗的显示状态
-    isPostureAdjustModalOpen: { type: Boolean }, // 控制姿态调整弹窗的显示状态
-    isRealtimeImageryOpen: { type: Boolean }, // 控制实时图像弹窗的显示状态
-    isAngleDetectionOpen: { type: Boolean }, // 控制角度检测弹窗的显示状态
-    isSingleDeviceLogOpen: { type: Boolean }, // 控制设备日志弹窗的显示状态
-    isParameterConfigOpen: { type: Boolean }, // 控制姿态计算弹窗的显示状态
+    selectedButton: { type: String },
+    isModalOpen: { type: Boolean },
+    isPostureAdjustModalOpen: { type: Boolean },
+    isRealtimeImageryOpen: { type: Boolean },
+    isAngleDetectionOpen: { type: Boolean },
+    isSingleDeviceLogOpen: { type: Boolean },
+    isParameterConfigOpen: { type: Boolean },
   };
 
   constructor() {
     super();
-    this.selectedButton = ''; // 初始化为没有按钮被选中
-    this.isModalOpen = false; // 设备查询弹窗初始为关闭状态
-    this.isPostureAdjustModalOpen = false; // 姿态调整弹窗初始为关闭状态
-    this.isRealtimeImageryOpen = false; // 实时图像弹窗初始为关闭状态
-    this.isAngleDetectionOpen = false; // 角度检测弹窗初始为关闭状态
-    this.isSingleDeviceLogOpen = false; // 设备日志弹窗初始为关闭状态
-    this.isParameterConfigOpen = false; // 姿态计算弹窗初始为关闭状态
+    this.selectedButton = '';
+    this.isModalOpen = false;
+    this.isPostureAdjustModalOpen = false;
+    this.isRealtimeImageryOpen = false;
+    this.isAngleDetectionOpen = false;
+    this.isSingleDeviceLogOpen = false;
+    this.isParameterConfigOpen = false;
   }
 
   render() {
@@ -47,64 +58,50 @@ class DeviceControl extends LitElement {
           @button-click=${() => this.setActiveComponent('list')}
         ></custom-button>
       </div>
-      <!-- 设备查询弹窗，根据 isModalOpen 条件渲染 -->
+
       <div class="panel">
-        ${this.isModalOpen && this.selectedButton === 'query'
-          ? html` <device-query
-              ?showactions=${true}
-              @close-modal=${this.closeModal}
-              @open-posture-adjust=${this.openPostureAdjustModal}
-            >
-            </device-query>`
-          : ''}
+        ${this.selectedButton === 'list' ? html`<device-list></device-list>` : ''}
 
-        <!-- 实时图像弹窗，根据 isRealtimeImageryOpen 条件渲染 -->
-        ${this.isRealtimeImageryOpen
-          ? html`<realtime-imagery
+        <div class="modal-container">
+          ${this.isModalOpen && this.selectedButton === 'query'
+            ? html`
+                <device-query
+                  ?showactions=${true}
+                  @close-modal=${this.closeModal}
+                  @open-posture-adjust=${this.openPostureAdjustModal}
+                ></device-query>
+              `
+            : ''}
+          ${this.isPostureAdjustModalOpen
+            ? html`
+                <posture-adjust
+                  class="posture-adjust-modal"
+                  @close-modal=${this.closePostureAdjustModal}
+                  @open-realtime-imagery=${this.openRealtimeImagery}
+                  @open-angle-detection=${this.openAngleDetection}
+                  @open-single-device-log=${this.openSingleDeviceLog}
+                  @open-parameter-config=${this.openParameterConfig}
+                ></posture-adjust>
+              `
+            : ''}
+            ${this.isRealtimeImageryOpen
+              ? html`<realtime-imagery
               @close-modal=${this.closeRealtimeImagery}
-            ></realtime-imagery>`
-          : ''}
-
-        <!-- 角度检测弹窗，根据 isAngleDetectionOpen 条件渲染 -->
-        ${this.isAngleDetectionOpen
-          ? html`<angle-detection
-              @close-modal=${this.closeAngleDetection}
-            ></angle-detection>`
-          : ''}
-
-        <!-- 设备日志弹窗，根据 isSingleDeviceLogOpen 条件渲染 -->
-        ${this.isSingleDeviceLogOpen
-          ? html`<single-device-log
-              @close-modal=${this.closeSingleDeviceLog}
-            ></single-device-log>`
-          : ''}
-
-        <!-- 参数配置弹窗，根据 isParameterConfigOpen 条件渲染 -->
-        ${this.isParameterConfigOpen
-          ? html`<parameter-config
-              @close-modal=${this.closeParameterConfig}
-            ></parameter-config>`
-          : ''}
-        ${this.selectedButton === 'list'
-          ? html`<device-list></device-list>`
-          : ''}
-      </div>
-      <!-- 姿态调整弹窗，根据 isPostureModalOpen 条件渲染 -->
-      ${this.isPostureAdjustModalOpen
-        ? html`<div class="panel-right">
-            <posture-adjust
-              @close-modal=${this.closePostureAdjustModal}
-              @open-realtime-imagery=${this.openRealtimeImagery}
-              @open-angle-detection=${this.openAngleDetection}
-              @open-single-device-log=${this.openSingleDeviceLog}
-              @open-parameter-config=${this.openParameterConfig}
-            ></posture-adjust>
-          </div>`
-        : ''}
+              ></realtime-imagery>`
+              : ''}
+            ${this.isAngleDetectionOpen
+              ? html`<angle-detection @close-modal=${this.closeAngleDetection}></angle-detection>`
+              : ''}
+            ${this.isSingleDeviceLogOpen
+              ? html`<single-device-log @close-modal=${this.closeSingleDeviceLog}></single-device-log>`
+              : ''}
+            ${this.isParameterConfigOpen
+              ? html`<parameter-config @close-modal=${this.closeParameterConfig}></parameter-config>`
+              : ''}
+        </div>
     `;
   }
 
-  // 切换设备查询弹窗的显示/隐藏状态
   toggleModal(buttonName) {
     if (this.selectedButton === buttonName) {
       this.isModalOpen = !this.isModalOpen;
@@ -114,79 +111,70 @@ class DeviceControl extends LitElement {
     }
   }
 
-  // 选择设备列表按钮的逻辑
-  // 选择设备列表按钮的逻辑
   selectButton(buttonName) {
     if (buttonName === 'list') {
-      this.isModalOpen = false; // Close any other modals
-      this.selectedButton = this.selectedButton === 'list' ? '' : 'list'; // Toggle selection
-    } else {
-      this.selectedButton = buttonName; // Set the selected button
       this.isModalOpen = false;
-      this.isPostureAdjustModalOpen = false; // Close any open modals
-    }
-  }
-  setActiveComponent(componentName) {
-    // 如果点击的按钮已经选中，取消选中并关闭组件
-    if (this.activeComponent === componentName) {
-      this.activeComponent = ''; // 关闭组件
-      this.selectedButton = ''; // 清除选中状态
+      this.selectedButton = this.selectedButton === 'list' ? '' : 'list';
     } else {
-      this.activeComponent = componentName; // 切换到新组件
-      this.selectedButton = componentName;
+      this.selectedButton = buttonName;
+      this.isModalOpen = false;
+      this.isPostureAdjustModalOpen = false;
     }
   }
 
-  // 打开姿态调整弹窗
+  setActiveComponent(componentName) {
+    if (this.activeComponent === componentName) {
+      this.activeComponent = '';
+      this.selectedButton = '';
+    } else {
+      this.activeComponent = componentName;
+      this.selectedButton = componentName;
+      this.isPostureAdjustModalOpen = false;
+    }
+  }
+
   openPostureAdjustModal() {
     this.isPostureAdjustModalOpen = true;
   }
-  // 打开实时图像弹窗
+
   openRealtimeImagery() {
     this.isRealtimeImageryOpen = true;
   }
-  // 打开角度检测弹窗
+
   openAngleDetection() {
     this.isAngleDetectionOpen = true;
   }
-  // 打开设备日志弹窗
+
   openSingleDeviceLog() {
     this.isSingleDeviceLogOpen = true;
   }
-  // 打开姿态计算弹窗
+
   openParameterConfig() {
     this.isParameterConfigOpen = true;
   }
 
-  // 关闭姿态计算弹窗
   closeParameterConfig() {
     this.isParameterConfigOpen = false;
   }
 
-  // 关闭角度检测弹窗
   closeAngleDetection() {
     this.isAngleDetectionOpen = false;
   }
-  // 关闭设备日志弹窗
+
   closeSingleDeviceLog() {
     this.isSingleDeviceLogOpen = false;
   }
 
-  // 关闭姿态调整弹窗
   closePostureAdjustModal() {
     this.isPostureAdjustModalOpen = false;
   }
-  // 关闭实时图像弹窗
+
   closeRealtimeImagery() {
     this.isRealtimeImageryOpen = false;
   }
 
   closeModal() {
     this.isModalOpen = false;
-  }
-
-  selectButton(buttonName) {
-    this.selectedButton = buttonName; // 更新选中的按钮
   }
 }
 
