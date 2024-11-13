@@ -254,6 +254,17 @@ class PostureAdjust extends LitElement {
     }
   `;
 
+  static properties = {
+    horizontalAngle: { type: String },
+    pitchAngle: { type: String }
+  };
+
+  constructor() {
+    super();
+    this.horizontalAngle = '';
+    this.pitchAngle = '';
+  }
+
   render() {
     return html`
       <div class="modal">
@@ -310,12 +321,12 @@ class PostureAdjust extends LitElement {
               <div class="switch-label">安装姿态</div>
               <div class="angle-container">
                 <div class="angle-row">
-                  <label>方位角：</label
-                  ><input type="text" value="0°" readonly />
+                  <label>方位角：</label>
+                  <input type="text" value="0°" readonly />
                 </div>
                 <div class="angle-row">
-                  <label>俯仰角：</label
-                  ><input type="text" value="0°" readonly />
+                  <label>俯仰角：</label>
+                  <input type="text" value="0°" readonly />
                 </div>
               </div>
             </div>
@@ -324,12 +335,12 @@ class PostureAdjust extends LitElement {
               <div class="angle-container">
                 <div class="angle-row">
                   <label>水平角：</label>
-                  <input type="text" value="-15.8°" readonly />
+                  <input type="text" value="${this.horizontalAngle}°" readonly />
                   <button class="command-btn">下达指令</button>
                 </div>
                 <div class="angle-row">
                   <label>俯仰角：</label>
-                  <input type="text" value="9.8°" readonly />
+                  <input type="text" value="${this.pitchAngle}°" readonly />
                   <button class="command-btn">下达指令</button>
                 </div>
               </div>
@@ -436,6 +447,12 @@ class PostureAdjust extends LitElement {
 
   openParameterConfig() {
     this.dispatchEvent(new CustomEvent('open-parameter-config'));
+  }
+
+  updateAngles(azimuth, elevation) {
+    this.horizontalAngle = azimuth;
+    this.pitchAngle = elevation;
+    this.requestUpdate();
   }
 }
 

@@ -80,9 +80,11 @@ class DeviceControl extends LitElement {
           : ''}
 
         <!-- 参数配置弹窗，根据 isParameterConfigOpen 条件渲染 -->
+        <!-- 参数配置弹窗 -->
         ${this.isParameterConfigOpen
           ? html`<parameter-config
               @close-modal=${this.closeParameterConfig}
+              @angles-calculated=${this.handleAnglesCalculated}
             ></parameter-config>`
           : ''}
         ${this.selectedButton === 'list'
@@ -113,8 +115,14 @@ class DeviceControl extends LitElement {
       this.isModalOpen = buttonName === 'query';
     }
   }
-
-  // 选择设备列表按钮的逻辑
+  // 添加处理计算角度的方法
+handleAnglesCalculated(event) {
+  const { azimuth, elevation } = event.detail;
+  const postureAdjust = this.shadowRoot.querySelector('posture-adjust');
+  if (postureAdjust) {
+    postureAdjust.updateAngles(azimuth, elevation);
+  }
+}
   // 选择设备列表按钮的逻辑
   selectButton(buttonName) {
     if (buttonName === 'list') {
