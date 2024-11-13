@@ -42,8 +42,8 @@ class LogManagement extends LitElement {
           @button-click=${() => this.setActiveComponent('deviceLog')}
         ></custom-button>
       </div>
-      <div class="panel">${this.renderActiveComponent()}</div>
-      <div class="panel-right">
+      <div class="panel">${this.renderActiveComponent()}
+      <div style="position:absolute;top:0;left:100%;">
         <!-- 任务详情弹窗 -->
         ${this.isTaskDetailsOpen
           ? html`<task-details

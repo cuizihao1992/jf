@@ -4,7 +4,7 @@ class UserReview extends LitElement {
   static styles = css`
     .container {
       position: absolute;
-      left: calc(40% + 130px);
+      left: calc(40%);
       top: 14%;
       width: 340px;
       height: 625px;

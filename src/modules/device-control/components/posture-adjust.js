@@ -13,6 +13,7 @@ class PostureAdjust extends LitElement {
       border: 1px solid #00ffff;
       background-size: cover;
       background-position: center;
+      position: absolute;
     }
 
     .header {

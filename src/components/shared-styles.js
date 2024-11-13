@@ -5,7 +5,7 @@ export const sharedStyles = css`
   }
   .panel {
     position: absolute;
-    left: 10%;
+    left: 3%;
   }
   .panel-right {
     position: absolute;
