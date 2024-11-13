@@ -136,13 +136,14 @@ class DeviceManagement extends LitElement {
   }
   openDevicexiangqing() {
     this.isDevicexiangqingOpen = true;
-    this.isDevicexiangqingOpen1 = false;
+    this.isDeviceParticularsOpen = false;
   }
   closeDevicexiangqing() {
     this.isDevicexiangqingOpen = false;
   }
   openDeviceParticulars() {
     this.isDeviceParticularsOpen = true;
+    this.isDevicexiangqingOpen = false;
     //this.isFaultDetailsOpen = false;
     //this.isTaskLogOpen = false// 打开故障详情弹窗
     // 打开任务详情弹窗
@@ -152,13 +153,6 @@ class DeviceManagement extends LitElement {
     this.isDeviceParticularsOpen = false;
   }
 
-  openDevicexiangqing1() {
-    this.isDevicexiangqingOpen1 = true;
-    this.isDevicexiangqingOpen = false;
-  }
-  closeDevicexiangqing1() {
-    this.isDevicexiangqingOpen1 = false;
-  }
   openDevicereview() {
     this.isDeviceReviewOpen = true;
     this.isDeviceShenpiOpen = false;
