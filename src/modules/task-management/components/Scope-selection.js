@@ -89,7 +89,7 @@ class ScopeSelection extends LitElement {
 
     .button-container {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       gap: 82px; /* Adds spacing between buttons */
       margin-top: 10px;
     }
@@ -98,6 +98,23 @@ class ScopeSelection extends LitElement {
       border: 1px solid #ccc;
       padding: 15px;
       border-radius: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .coordinates-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      width: 45%; // 设置为大约一半的宽度
+    }
+
+    input[type='text'] {
+      width: 130px; // 减小输入框宽度
+      padding: 4px;
+      border-radius: 5px;
     }
     .direction-options {
       display: flex;
@@ -130,8 +147,9 @@ class ScopeSelection extends LitElement {
       gap: 5px;
     }
     .close-button {
-      position: relative;
-      margin-left: 480px;
+      position: absolute;
+      right: 30px;
+      top: 20px;
       font-size: 30px;
       font-weight: bold;
       cursor: pointer;
@@ -190,7 +208,13 @@ class ScopeSelection extends LitElement {
     this.drawMode = 'pick';
     this.hasDrawnPolygon = false;
   }
-
+  handleFitClick() {
+    const event = new CustomEvent('fit-diagonal-points', {
+      bubbles: true,
+      composed: true,
+    });
+    this.dispatchEvent(event);
+  }
   firstUpdated() {
     window.addEventListener('update-coordinates', (e) => {
       console.log('Received coordinates:', e.detail);
@@ -255,9 +279,15 @@ class ScopeSelection extends LitElement {
   handleConfirmClick() {
     const event = new CustomEvent('draw-polygon', {
       bubbles: true,
-      composed: true,
+      composed: true
     });
     this.dispatchEvent(event);
+  
+    // 使用全局 map 实例
+    if (window.mapInstance) {
+      const count = window.mapInstance.querySourceFeatures('selected-points').length;
+      alert(`选中点位数量: ${count}`);
+    }
   }
   render() {
     console.log('Current coordinates:', this.coordinates);
@@ -374,7 +404,7 @@ class ScopeSelection extends LitElement {
                 >
                   拾取模式
                 </button>
-                <button>拟合</button>
+                <button @click=${this.handleFitClick}>拟合</button>
                 <button
                   @click=${this.handleConfirmClick}
                   ?disabled=${this.drawMode === 'draw' && !this.hasDrawnPolygon}
