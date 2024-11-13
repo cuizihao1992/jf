@@ -5,7 +5,6 @@ import './components/device-add.js';
 import './components/device-approve.js'; // 假设有创建任务组件
 import './components/device-edit.js'; // 假设有任务查询组件
 import './components/device-xiangqing.js'; // 假设有任务查询组件
-import './components/device-xiangqing1.js'; // 假设有任务查询组件
 import './components/device-review.js'; // 假设有任务查询组件
 import './components/device-shenpi.js'; // 假设有任务查询组件
 import './components/device-search.js'; // 假设有任务查询组件
@@ -18,7 +17,6 @@ class DeviceManagement extends LitElement {
     selectedButton: { type: String }, // 记录选中的按钮
     activeComponent: { type: String },
     isDevicexiangqingOpen: { type: Boolean },
-    isDevicexiangqingOpen1: { type: Boolean },
     isDeviceReviewOpen: { type: Boolean },
     isDeviceShenpiOpen: { type: Boolean }, // 记录当前显示的组件
     isDeviceSearchOpen: { type: Boolean },
@@ -31,7 +29,6 @@ class DeviceManagement extends LitElement {
     this.activeComponent = '';
     this.isTaskDetailsOpen = false;
     this.isDevicexiangqingOpen = false;
-    this.isDevicexiangqingOpen1 = false;
     this.isDeviceReviewOpen = false;
     this.isDeviceShenpiOpen = false;
     this.isDeviceSearchOpen = false;
@@ -74,11 +71,6 @@ class DeviceManagement extends LitElement {
               @close-modal=${this.closeDevicexiangqing}
             ></device-xiangqing>`
           : ''}
-        ${this.isDevicexiangqingOpen1
-          ? html`<device-xiangqing1
-              @close-modal=${this.closeDevicexiangqing1}
-            ></device-xiangqing1>`
-          : ''}
         ${this.isDeviceReviewOpen
           ? html`<device-review
               @close-modal=${this.closeDeviceReview}
@@ -107,7 +99,6 @@ class DeviceManagement extends LitElement {
       this.activeComponent = componentName; // 切换到新组件
       this.selectedButton = componentName;
       this.isDevicexiangqingOpen = false;
-      this.isDevicexiangqingOpen1 = false;
       this.isDeviceReviewOpen = false;
       this.isDeviceShenpiOpen = false;
       this.isDeviceParticularsOpen = false; // 设置当前选中的按钮
@@ -127,7 +118,7 @@ class DeviceManagement extends LitElement {
         return html`<device-edit
           @close-modal=${this.closeTasks}
           @open-device-xiangqing=${this.openDevicexiangqing}
-          @open-device-xiangqing1=${this.openDevicexiangqing1}
+          @open-device-particulars=${this.openDeviceParticulars}
         ></device-edit>`;
       case 'approveDevice':
         return html`<device-approve
@@ -145,13 +136,14 @@ class DeviceManagement extends LitElement {
   }
   openDevicexiangqing() {
     this.isDevicexiangqingOpen = true;
-    this.isDevicexiangqingOpen1 = false;
+    this.isDeviceParticularsOpen = false;
   }
   closeDevicexiangqing() {
     this.isDevicexiangqingOpen = false;
   }
   openDeviceParticulars() {
     this.isDeviceParticularsOpen = true;
+    this.isDevicexiangqingOpen = false;
     //this.isFaultDetailsOpen = false;
     //this.isTaskLogOpen = false// 打开故障详情弹窗
     // 打开任务详情弹窗
@@ -161,13 +153,6 @@ class DeviceManagement extends LitElement {
     this.isDeviceParticularsOpen = false;
   }
 
-  openDevicexiangqing1() {
-    this.isDevicexiangqingOpen1 = true;
-    this.isDevicexiangqingOpen = false;
-  }
-  closeDevicexiangqing1() {
-    this.isDevicexiangqingOpen1 = false;
-  }
   openDevicereview() {
     this.isDeviceReviewOpen = true;
     this.isDeviceShenpiOpen = false;

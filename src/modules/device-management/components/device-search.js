@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import { deviceService } from '@/api/fetch.js'; 
 
 class DeviceSearch extends LitElement {
   static styles = css`
@@ -120,6 +121,31 @@ class DeviceSearch extends LitElement {
       overflow-y: auto; /* 仅表格内容滚动 */
     }
   `;
+  static get properties() {
+    return {
+      devices: { type: Array  },
+    };
+  }
+
+  constructor() {
+    super();
+    this.devices = [];
+    this.fetchDevices(); // 初始化时获取设备审核数据
+  }
+
+  async fetchDevices() {
+    try {
+      const params = {
+        pageNum: 1,
+        pageSize: 100000,
+        // 可以根据需要添加其他查询参数
+      };
+      const data = await deviceService.list(params);
+      this.devices = data.rows;
+    } catch (error) {
+      console.error('获取设备审核数据失败:', error);
+    }
+  }
 
   render() {
     return html`
@@ -193,207 +219,15 @@ class DeviceSearch extends LitElement {
   }
 
   renderRows() {
-    const devices = [
-      {
-        id: 101,
-        time: '2024-9-24 16:21:45',
-        type: '自动角反射器',
-        region: '中卫',
-        status: '在线',
-        power: '⚡',
-        deviceStatus: '关机',
-      },
-      {
-        id: 102,
-        time: '2024-9-24 16:21:50',
-        type: '自动角反射器',
-        region: '中卫',
-        status: '在线',
-        power: '⚡',
-        deviceStatus: '关机',
-      },
-      {
-        id: 103,
-        time: '2024-9-24 16:21:50',
-        type: '自动角反射器',
-        region: '中卫',
-        status: '在线',
-        power: '⚡',
-        deviceStatus: '关机',
-      },
-      {
-        id: 104,
-        time: '2024-9-24 16:21:50',
-        type: '自动角反射器',
-        region: '中卫',
-        status: '在线',
-        power: '⚡',
-        deviceStatus: '关机',
-      },
-      {
-        id: 104,
-        time: '2024-9-24 16:21:50',
-        type: '自动角反射器',
-        region: '中卫',
-        status: '在线',
-        power: '⚡',
-        deviceStatus: '关机',
-      },
-      {
-        id: 104,
-        time: '2024-9-24 16:21:50',
-        type: '自动角反射器',
-        region: '中卫',
-        status: '在线',
-        power: '⚡',
-        deviceStatus: '关机',
-      },
-      {
-        id: 104,
-        time: '2024-9-24 16:21:50',
-        type: '自动角反射器',
-        region: '中卫',
-        status: '在线',
-        power: '⚡',
-        deviceStatus: '关机',
-      },
-      {
-        id: 104,
-        time: '2024-9-24 16:21:50',
-        type: '自动角反射器',
-        region: '中卫',
-        status: '在线',
-        power: '⚡',
-        deviceStatus: '关机',
-      },
-      {
-        id: 104,
-        time: '2024-9-24 16:21:50',
-        type: '自动角反射器',
-        region: '中卫',
-        status: '在线',
-        power: '⚡',
-        deviceStatus: '关机',
-      },
-      {
-        id: 104,
-        time: '2024-9-24 16:21:50',
-        type: '自动角反射器',
-        region: '中卫',
-        status: '在线',
-        power: '⚡',
-        deviceStatus: '关机',
-      },
-      {
-        id: 104,
-        time: '2024-9-24 16:21:50',
-        type: '自动角反射器',
-        region: '中卫',
-        status: '在线',
-        power: '⚡',
-        deviceStatus: '关机',
-      },
-      {
-        id: 104,
-        time: '2024-9-24 16:21:50',
-        type: '自动角反射器',
-        region: '中卫',
-        status: '在线',
-        power: '⚡',
-        deviceStatus: '关机',
-      },
-      {
-        id: 104,
-        time: '2024-9-24 16:21:50',
-        type: '自动角反射器',
-        region: '中卫',
-        status: '在线',
-        power: '⚡',
-        deviceStatus: '关机',
-      },
-      {
-        id: 104,
-        time: '2024-9-24 16:21:50',
-        type: '自动角反射器',
-        region: '中卫',
-        status: '在线',
-        power: '⚡',
-        deviceStatus: '关机',
-      },
-      {
-        id: 104,
-        time: '2024-9-24 16:21:50',
-        type: '自动角反射器',
-        region: '中卫',
-        status: '在线',
-        power: '⚡',
-        deviceStatus: '关机',
-      },
-      {
-        id: 104,
-        time: '2024-9-24 16:21:50',
-        type: '自动角反射器',
-        region: '中卫',
-        status: '在线',
-        power: '⚡',
-        deviceStatus: '关机',
-      },
-      {
-        id: 104,
-        time: '2024-9-24 16:21:50',
-        type: '自动角反射器',
-        region: '中卫',
-        status: '在线',
-        power: '⚡',
-        deviceStatus: '关机',
-      },
-      {
-        id: 104,
-        time: '2024-9-24 16:21:50',
-        type: '自动角反射器',
-        region: '中卫',
-        status: '在线',
-        power: '⚡',
-        deviceStatus: '关机',
-      },
-      {
-        id: 104,
-        time: '2024-9-24 16:21:50',
-        type: '自动角反射器',
-        region: '中卫',
-        status: '在线',
-        power: '⚡',
-        deviceStatus: '关机',
-      },
-      {
-        id: 104,
-        time: '2024-9-24 16:21:50',
-        type: '自动角反射器',
-        region: '中卫',
-        status: '在线',
-        power: '⚡',
-        deviceStatus: '关机',
-      },
-      {
-        id: 104,
-        time: '2024-9-24 16:21:50',
-        type: '自动角反射器',
-        region: '中卫',
-        status: '在线',
-        power: '⚡',
-        deviceStatus: '关机',
-      },
-    ];
-
-    return devices.map(
+    return this.devices.map(
       (device) => html`
       <tr class="table-row">
         <td>${device.id}</a></td>
-        <td>${device.time}</td>
-        <td>${device.type}</td>
+        <td>${device.lastSyncTime}</td>
+        <td>${device.deviceType}</td>
         <td>${device.region}</td>
-        <td>${device.status}</td>
-        <td><span class="status-icon status-online">${device.power}</span></td>
+        <td>${device.connectionStatus}</td>
+        <td><span class="status-icon status-online">${device.powerStatus}</span></td>
         <td>${device.deviceStatus}</td>
         <td><a @click="${() => this.openDeviceParticulars()}">查看</a></td>
       </tr>

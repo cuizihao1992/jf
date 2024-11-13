@@ -159,6 +159,12 @@ class TaskInfoComponent extends LitElement {
   }
 
   renderRows() {
+    const statusMap = {
+      pending: '审核中',
+      approved: '通过',
+      rejected: '驳回',
+    };
+
     // 使用 tasks 数据渲染表格行
     return this.tasks.map(
       (task, index) => html`
@@ -169,7 +175,7 @@ class TaskInfoComponent extends LitElement {
           <td>${task.userId}</td>
           <td>${task.deviceIds}</td>
           <td>${task.region}</td>
-          <td>${task.reviewStatus}</td>
+          <td>${statusMap[task.reviewStatus] || '未知状态'}</td>
           <td>
             <a @click="${() => this.openTaskDetails(task)}">查看</a> /
             <a @click="${() => this.openTaskEdit(task)}">编辑</a> /
@@ -186,13 +192,13 @@ class TaskInfoComponent extends LitElement {
 
   openTaskDetails(task) {
     this.dispatchEvent(
-      new CustomEvent('open-task-details', { detail: task, isEdit: false })
+      new CustomEvent('open-task-details', { detail: { task, isEdit: false } })
     );
   }
 
   openTaskEdit(task) {
     this.dispatchEvent(
-      new CustomEvent('open-task-edit', { detail: task, isEdit: true })
+      new CustomEvent('open-task-details', { detail: { task, isEdit: true } })
     );
   }
 

@@ -20,6 +20,7 @@ class TaskManagement extends LitElement {
     activeComponent: { type: String }, // 通过字符串控制当前显示的组件
     selectedButton: { type: String }, // 添加状态属性用于记录选中的按钮
     isTaskDetailsOpen: { type: Boolean },
+    leftPanel: { type: Boolean },
     isFaultDetailsOpen: { type: Boolean },
     isTaskLogOpen: { type: Boolean },
     isTaskReviewDetailOpen: { type: Boolean },
@@ -35,6 +36,7 @@ class TaskManagement extends LitElement {
     this.activeComponent = ''; // 初始状态不显示任何组件
     this.selectedButton = ''; // 初始状态没有选中的按钮
     this.isTaskDetailsOpen = false;
+    this.leftPanel = true;
     this.isFaultDetailsOpen = false;
     this.isTaskLogOpen = false;
     this.isTaskReviewDetailOpen = false;
@@ -44,6 +46,7 @@ class TaskManagement extends LitElement {
     this.isScopeSelectionOpen = false;
     this.isParameterConfigOpen = false;
     this.isTaskEditOpen = false;
+    this.currentTask = {};
   }
 
   render() {
@@ -74,11 +77,15 @@ class TaskManagement extends LitElement {
         ></custom-button>
       </div>
 
-      <div class="panel">${this.renderActiveComponent()}</div>
+      <div class="panel">
+        ${this.leftPanel ? this.renderActiveComponent() : ''}
+      </div>
 
       <div class="panel-right">
         ${this.isTaskDetailsOpen
           ? html`<task-details
+              .data=${this.currentTask}
+              @updateData=${this.updateData}
               @close-modal=${this.closeTaskDetails}
             ></task-details>`
           : ''}
@@ -140,6 +147,7 @@ class TaskManagement extends LitElement {
       this.isTaskEditOpen = false;
       this.isStatusMissionOpen = false;
       this.isScopeSelectionOpen = false; // 设置当前选中的按钮
+      this.isParameterConfigOpen = false;
     }
   }
 
@@ -155,7 +163,6 @@ class TaskManagement extends LitElement {
         return html`<task-info-component
           @close-modal=${this.closeTasks}
           @open-task-details=${this.openTaskDetails}
-          @open-task-edit=${this.openTaskEdit}
         ></task-info-component>`;
       case 'queryTasks':
         return html`<task-query-component
@@ -167,8 +174,8 @@ class TaskManagement extends LitElement {
       case 'reviewTasks':
         return html`<task-review-component
           @close-modal=${this.closeTasks}
-          @open-task-review-detail=${this.openTaskReviewDetail}
-          @open-task-review-review=${this.openTaskReviewReview}
+          @open-task-review-detail=${this.openTaskDetails}
+          @open-task-review-review=${this.openTaskDetails}
         ></task-review-component>`;
       default:
         return ''; // 不显示任何组件
@@ -180,14 +187,20 @@ class TaskManagement extends LitElement {
     this.selectedButton = ''; // 清除选中状态
   }
 
+  updateData(event) {
+    this.requestUpdate();
+    this.leftPanel = false;
+    setTimeout(() => {
+      this.leftPanel = true;
+    }, 0); // 使用微小的延时来确保状态更新
+  }
   openTaskDetails(event) {
     this.isTaskDetailsOpen = true;
     this.isFaultDetailsOpen = false;
     this.isTaskLogOpen = false;
     this.isTaskEditOpen = false;
-    const task = event.detail;
-    const isEdit = event.isEdit;
-    console.log('接收到的任务详情:', task);
+    this.currentTask = event.detail;
+    console.log('接收到的任务详情:', event.detail);
   }
 
   openFaultDetails() {
@@ -203,24 +216,7 @@ class TaskManagement extends LitElement {
     this.isFaultDetailsOpen = false;
     //this.activeComponent = "taskLog"; // 设置为设备日志组件
   }
-  openTaskReviewDetail() {
-    this.isTaskReviewDetailOpen = true;
-    this.isTaskReviewReviewOpen = false; // 打开设备日志弹窗
-    //this.activeComponent = "taskReviewDetail"; // 设置为设备日志组件
-  }
-  openTaskReviewReview() {
-    this.isTaskReviewReviewOpen = true;
-    this.isTaskReviewDetailOpen = false; // 打开设备日志弹窗
-    //this.activeComponent = "taskReviewDetail"; // 设置为设备日志组件
-  }
-  openRevokeConfirmation() {
-    this.isRevokeConfirmationOpen = true;
-    this.isTaskDetailsOpen = false;
-  }
-  openTaskEdit() {
-    this.isTaskEditOpen = true;
-    this.isTaskDetailsOpen = false; // 打开设备日志弹窗
-  }
+
   closeTaskEdit() {
     this.isTaskEditOpen = false; // 打开设备日志弹窗
   }
@@ -238,9 +234,6 @@ class TaskManagement extends LitElement {
     this.isParameterConfigOpen = true;
     this.isScopeSelectionOpen = false;
     this.isStatusMissionOpen = false; // 打开设备日志弹窗
-  }
-  closeRevokeConfirmation() {
-    this.isRevokeConfirmationOpen = false;
   }
 
   closeTaskDetails() {

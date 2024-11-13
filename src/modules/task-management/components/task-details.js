@@ -1,328 +1,114 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, unsafeCSS } from 'lit';
+import styles from './css/task-details.css?inline'; // 导入 CSS 文件
+import { deviceTaskService, taskService } from '@/api/fetch.js';
 
 class TaskDetails extends LitElement {
   static styles = css`
-    .container {
-      width: 467px; /* 增加整体宽度 */
-      height: 545px; /* 设置高度为窗口高度 */
-      padding: 15px; /* 内边距 */
-      background-color: rgba(13, 31, 51, 0.9); /* 深色背景 */
-      color: white;
-      font-family: Arial, sans-serif;
-      border-radius: 10px; /* 圆角 */
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .header h1 {
-      margin: 1px;
-      font-size: 24px; /* 字体大小 */
-    }
-    .close-button {
-      cursor: pointer;
-      font-size: 30px; /* 字体大小 */
-    }
-
-    .task-info {
-      grid-column: 1; /* 占第一列 */
-      display: grid;
-      gap: 5px; /* 间距 */
-      border: 1px solid #58a6ff;
-      padding: 10px; /* 内边距 */
-      border-radius: 5px;
-      background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
-      width: 445px;
-      height: 200px; /* 高度缩小至原来的三分之二 */
-    }
-    .task-info h2 {
-      margin: 0;
-      padding-bottom: 1px; /* 内边距 */
-      text-align: left;
-      border-bottom: 1px solid #58a6ff;
-      font-size: 20px; /* 字体大小 */
-    }
-    .task-info .row {
-      display: flex;
-      justify-content: space-between; /* 标签和输入框分布均匀 */
-      align-items: center; /* 垂直居中 */
-      gap: 0px; /* 间距 */
-    }
-    .task-info label {
-      color: white;
-      width: 100px; /* 标签宽度 */
-      font-size: 14px; /* 字体大小 */
-    }
-
-    .plus-minus {
-      display: flex;
-      flex-direction: column; /* 垂直排列 */
-      align-items: center; /* 水平居中 */
-      position: deliver;
-      margin-right: 45px;
-    }
-    .plus-minus button {
-      background-color: #58a6ff;
-      border: none;
-      color: white;
-      font-size: 44px; /* 字体大小 */
-      padding: 0px; /* 内边距 */
-      cursor: pointer;
-      border-radius: 5px;
-      margin: 90px 0; /* 上下间距 */
-      width: 25px;
-      height: 80px;
-      margin-left: 5px;
-    }
-    .device-list {
-      grid-column: 1;
-      display: flex;
-      flex-direction: column;
-      border: 1px solid #58a6ff; /* 边框 */
-      border-radius: 5px; /* 圆角 */
-      padding: 10px; /* 内边距 */
-      background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
-      height: 260px;
-      width: 445px;
-    }
-    .device-list h3 {
-      margin: 0;
-      padding-bottom: 10px; /* 内边距 */
-      font-size: 20px;
-    }
-    .tbody-wrapper {
-      border: 1px solid #58a6ff; /* 边框 */
-      border-radius: 5px; /* 圆角 */
-      padding: 1px; /* 内边距 */
-      background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
-      width: 442px;
-      height: 400px;
-      overflow-y: auto;
-    }
-    .device-list-table {
-      width: 300px;
-      height: 400px;
-      border-collapse: collapse;
-      font-size: 12px;
-      white-space: nowrap;
-    }
-    .device-list-table th,
-    .device-list-table td {
-      padding: 8px; /* 内边距 */
-      text-align: left;
-      border: 1px solid #e6edf7; /* 添加网格线 */
-    }
-    .device-list-table th {
-      position: sticky; /* 使标题行固定 */
-      top: 0; /* 固定在顶部 */
-      background-color: #0d1f33; /* 背景颜色 */
-      color: white; /* 字体颜色 */
-      z-index: 1; /* 确保在其他内容之上 */
-    }
-    .device-list-table tr:nth-child(even) {
-      background-color: #13243a;
-    }
-    .power-status {
-      background-color: #4caf50; /* 按钮背景颜色 */
-      color: white; /* 字体颜色 */
-      padding: 1px 24px; /* 内边距 */
-      border: none; /* 无边框 */
-      border-radius: 5px; /* 圆角 */
-      display: inline-flex; /* 使图标居中 */
-      align-items: center; /* 垂直居中 */
-      justify-content: center; /* 水平居中 */
-      font-size: 16px; /* 字体大小 */
-    }
-    .button-group {
-      display: flex;
-      justify-content: space-between; /* 左右对齐 */
-      align-items: center;
-      margin-top: 15px; /* 上边距 */
-    }
-    .nav-button,
-    .submit-button {
-      background-color: #58a6ff;
-      border: none;
-      color: white;
-      padding: 5px; /* 内边距 */
-      font-size: 12px; /* 字体大小 */
-      cursor: pointer;
-      border-radius: 4px;
-      text-align: center;
-      width: 60px;
-    }
-    .submit-button {
-      background-color: #4caf50; /* 提交按钮颜色 */
-    }
-    element-select {
-      width: 100px;
-      font-size: 13px;
-    }
-
-    select {
-      width: 100px;
-      font-size: 13px;
-      text-align: center;
-    }
-    input {
-      font-size: 13px;
-      text-align: center;
-    }
-    .tbody-new-wrapper {
-      border: 1px solid #58a6ff; /* 边框 */
-      border-radius: 5px; /* 圆角 */
-      padding: 1px; /* 内边距 */
-      background-color: rgba(20, 30, 50, 0.8); /* 背景颜色 */
-      width: 580px;
-      height: 480px;
-      overflow-y: auto;
-    }
-    .confirm-button {
-      background-color: #4caf50;
-      color: white;
-      padding: 8px 17px;
-      border: none;
-      border-radius: 5px;
-      font-size: 14px;
-      cursor: pointer;
-      margin-top: -13px;
-    }
-    .close-button {
-      cursor: pointer;
-      color: white;
-      background: none;
-      border: none;
-      font-size: 25px;
-      font-weight: bold;
-      float: right;
-    }
-    .form-group input {
-      padding: 1px;
-      border: 1px solid #333;
-      width: 150px;
-      height: 24px;
-      color: #000;
-      text-align: center;
-      margin-left: 20px;
-    }
+    ${unsafeCSS(styles)}
   `;
 
-  render() {
-    const deviceRows = [
-      {
-        id: 101,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 102,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 103,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 104,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 104,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 104,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 104,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 104,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 104,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 104,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 104,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-    ];
+  constructor() {
+    super();
+    this.data = {}; // 默认值
+    this.deviceListRows = []; // 用于存储设备信息
+  }
 
-    const deviceStatusRows = deviceRows.map((device) => html``);
-    const deviceListRows = [
-      { id: 201, angle: { horizontal: 0, elevation: 0 } },
-      { id: 202, angle: { horizontal: 10, elevation: 5 } },
-      { id: 203, angle: { horizontal: -5, elevation: 10 } },
-      { id: 203, angle: { horizontal: -5, elevation: 10 } },
-      { id: 203, angle: { horizontal: -5, elevation: 10 } },
-      { id: 203, angle: { horizontal: -5, elevation: 10 } },
-      { id: 203, angle: { horizontal: -5, elevation: 10 } },
-      // 添加更多的设备行
-    ];
-    const deviceListTableRows = deviceListRows.map(
+  // 当组件首次连接到 DOM 时调用该方法，获取设备信息
+  async connectedCallback() {
+    super.connectedCallback();
+    await this.fetchDeviceData();
+  }
+
+  async fetchDeviceData() {
+    const deviceIds = this.data?.task?.deviceIds?.split(',') || [];
+    const deviceData = await Promise.all(
+      deviceIds.map(async (id) => {
+        const res = await deviceTaskService.get(id);
+        return { id, ...res.data }; // 合并设备ID和从接口获取的数据
+      })
+    );
+    this.deviceListRows = deviceData; // 更新设备数据
+    this.requestUpdate(); // 通知 LitElement 重新渲染
+  }
+
+  handleInputChange(event, field) {
+    this.data.task[field] = event.target.value;
+    this.requestUpdate();
+  }
+
+  saveTask() {
+    console.log('Saving task data:', this.data);
+    taskService.update(this.data.task);
+    this.dispatchEvent(
+      new CustomEvent('updateData', { bubbles: true, composed: true })
+    );
+
+    this.closeModal();
+  }
+
+  cancelEdit() {
+    console.log('Cancelling edit');
+    this.closeModal();
+  }
+  formatDateTimeLocal0(dateTime) {
+    if (!dateTime) return '';
+    const date = new Date(dateTime);
+    return date.toISOString().slice(0, 16); // 截取到 'YYYY-MM-DDTHH:MM'
+  }
+  formatDateTimeLocal(dateTime) {
+    if (!dateTime) return '';
+    const date = new Date(dateTime);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // 月份从 0 开始
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  }
+
+  render() {
+    const isEdit = this.data.isEdit;
+    const isReview = this.data.isReview;
+    const isReviewEdit = this.data.isReviewEdit;
+
+    const deviceListTableRows = this.deviceListRows.map(
       (device) => html`
         <tr>
           <td>
-            <input type="checkbox" id="device-${device.id}" />
+            <input
+              type="checkbox"
+              id="device-${device.deviceId}"
+              ?disabled="${!isEdit}"
+            />
             ${device.id}
           </td>
           <td>
-            方位角: ${device.angle.horizontal}° 仰俯角:
-            ${device.angle.elevation}°
+            方位角: ${device.targetAzimuth}° 仰俯角: ${device.targetElevation}°
           </td>
           <td>
             水平角:
-            <input type="text" placeholder="输入角度" style="width: 50px;" />
+            <input
+              type="text"
+              placeholder="输入角度"
+              style="width: 50px;"
+              value="${device.adjustmentAzimuth}"
+              ?disabled="${!isEdit}"
+            />
             俯仰角:
-            <input type="text" placeholder="输入角度" style="width: 50px;" />
+            <input
+              type="text"
+              placeholder="输入角度"
+              style="width: 50px;"
+              value="${device.adjustmentElevation}"
+              ?disabled="${!isEdit}"
+            />
           </td>
         </tr>
       `
     );
+
     return html`
       <div class="container">
         <div class="header">
@@ -337,8 +123,11 @@ class TaskDetails extends LitElement {
               <input
                 type="text"
                 id="task-name"
-                placeholder="中卫101"
-                style="margin-left:19px;width:100px;padding:1px; height:22px;/* 圆角 */"
+                placeholder="请输入任务名"
+                .value="${this.data?.task?.taskName}"
+                ?disabled="${!isEdit}"
+                @input="${(e) => this.handleInputChange(e, 'taskName')}"
+                style="margin-left:19px;width:100px;padding:1px; height:22px;"
               />
               <label for="task-number" style="margin-left:69px"
                 >任务编号:</label
@@ -346,8 +135,11 @@ class TaskDetails extends LitElement {
               <input
                 type="text"
                 id="task-number"
-                placeholder="w101"
-                style="margin-left:4px;width:108px;height:22px;/* 圆角 */"
+                placeholder="请输入任务编号"
+                .value="${this.data?.task?.taskNumber}"
+                ?disabled="${!isEdit}"
+                @input="${(e) => this.handleInputChange(e, 'taskNumber')}"
+                style="margin-left:4px;width:108px;height:22px;"
               />
             </div>
             <div class="row-location">
@@ -355,15 +147,36 @@ class TaskDetails extends LitElement {
               <select
                 id="location"
                 style="margin-left:5px;width:106px;padding:1px; height:22px;"
+                .value="${this.data?.task?.reviewStatus}"
+                ?disabled="${!isEdit}"
+                @change="${(e) => this.handleInputChange(e, 'reviewStatus')}"
               >
-                <option>已提交</option>
+                <option
+                  value="pending"
+                  ?selected="${this.data?.task?.reviewStatus === 'pending'}"
+                >
+                  审核中
+                </option>
+                <option
+                  value="approved"
+                  ?selected="${this.data?.task?.reviewStatus === 'approved'}"
+                >
+                  通过
+                </option>
+                <option
+                  value="rejected"
+                  ?selected="${this.data?.task?.reviewStatus === 'rejected'}"
+                >
+                  驳回
+                </option>
               </select>
               <label for="device-type" style="margin-left:68px"
                 >设备类型:</label
               >
               <select
                 id="device-type"
-                style="margin-left:5px;width:116px;padding:1px; height:25px;/* 圆角 */"
+                style="margin-left:5px;width:116px;padding:1px; height:25px;"
+                ?disabled="${!isEdit}"
               >
                 <option>自动角反射器</option>
               </select>
@@ -371,25 +184,34 @@ class TaskDetails extends LitElement {
             <div class="form-group">
               <label for="start-time">设备开启时间/(年-月-日时-分-秒):</label>
               <input
-                type="text"
+                type="datetime-local"
                 id="start-time"
-                placeholder="2024-09-24 16:21:45"
+                placeholder="请输入设备开启时间"
+                .value="${this.formatDateTimeLocal(this.data?.task?.startTime)}"
+                ?disabled="${!isEdit}"
+                @input="${(e) => this.handleInputChange(e, 'startTime')}"
               />
             </div>
             <div class="form-group">
               <label for="end-time">设备关闭时间/(年-月-日时-分-秒):</label>
               <input
-                type="text"
+                type="datetime-local"
                 id="end-time"
-                placeholder="2024-09-24 16:21:45"
+                placeholder="请输入设备关闭时间"
+                .value="${this.formatDateTimeLocal(this.data?.task?.endTime)}"
+                ?disabled="${!isEdit}"
+                @input="${(e) => this.handleInputChange(e, 'endTime')}"
               />
             </div>
             <div class="form-group">
-              <label for="execution-time">任务执行时间/分钟(整数):</label>
+              <label for="execution-time">任务执行时间/秒(整数):</label>
               <input
                 type="text"
                 id="execution-time"
-                placeholder="40"
+                placeholder="请输入任务执行时间"
+                .value="${this.data?.task?.duration}"
+                ?disabled="${!isEdit}"
+                @input="${(e) => this.handleInputChange(e, 'duration')}"
                 style="margin-left:66px"
               />
             </div>
@@ -401,7 +223,7 @@ class TaskDetails extends LitElement {
                 <thead>
                   <tr>
                     <th>设备编号</th>
-                    <th>设备地理角度</th>
+                    <th>设备目标角度</th>
                     <th>设备调整角度</th>
                   </tr>
                 </thead>
@@ -410,19 +232,55 @@ class TaskDetails extends LitElement {
                 </tbody>
               </table>
             </div>
+            <!-- 新增的保存和取消按钮 -->
+            ${isReview
+              ? ''
+              : html`<div class="button-group">
+                  <button
+                    class="button cancel-button"
+                    @click="${this.cancelEdit}"
+                  >
+                    取消
+                  </button>
+                  ${isEdit
+                    ? html`<button
+                        class="button save-button"
+                        @click="${this.saveTask}"
+                      >
+                        保存
+                      </button>`
+                    : ''}
+                </div>`}
           </div>
+          ${isReview
+            ? html`<div class="review-info">
+                <div class="row">
+                  <label for="reviewer">审核人:</label>
+                  <input type="text" id="reviewer" />
+                </div>
+                <div class="row">
+                  <label for="review-time">审核时间:</label>
+                  <input type="text" id="review-time" />
+                </div>
+                <div class="row">
+                  <label for="review-opinion">审核意见:</label>
+                  <input type="text" id="review-opinion" />
+                </div>
+                <div class="row">
+                  <label for="notes">备注:</label>
+                  <textarea id="notes" placeholder=""></textarea>
+                </div>
+                ${isReviewEdit
+                  ? html`<button class="submit-button">确定</button>`
+                  : ''}
+              </div>`
+            : ''}
         </div>
       </div>
     `;
   }
-  closeModal() {
-    this.dispatchEvent(new CustomEvent('close-modal'));
-  }
 
-  handleClose() {
-    // 这里可以添加关闭窗口的逻辑
-    // 例如，隐藏组件或销毁组件
-    this.remove();
+  closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
 }

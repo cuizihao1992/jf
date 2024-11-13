@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
+import { deviceService } from '@/api/fetch.js'; // 引入设备服务
 
-class Deviceparticulars extends LitElement {
+class DeviceParticulars extends LitElement {
   static styles = css`
     .modal {
       padding: 20px;
@@ -104,67 +105,125 @@ class Deviceparticulars extends LitElement {
       float: right;
     }
   `;
+  static get properties() {
+    return {
+      devices: { type: Array },
+      selectedDevice: { type: Object }, // 添加选中的设备属性
+    };
+  }
+
+  constructor() {
+    super();
+    this.devices = [];
+    this.selectedDevice = {};
+    this.fetchDevices(); // 初始化时获取设备数据
+  }
+
+  async fetchDevices() {
+    try {
+      const params = {
+        pageNum: 1,
+        pageSize: 100000,
+        // 可以根据需要添加其他查询参数
+      };
+      const data = await deviceService.list(params);
+      this.devices = data.rows;
+      if (this.devices.length > 0) {
+        this.selectedDevice = this.devices[0]; // 默认选择第一个设备
+      }
+    } catch (error) {
+      console.error('获取设备数据失败:', error);
+    }
+  }
 
   render() {
     return html`
       <div class="modal">
-        <div class="header">设备详情
-        <button class="close-button" @click="${this.closeModal}">×</button>
+        <div class="header">
+          设备详情
+          <button class="close-button" @click="${this.closeModal}">×</button>
         </div>
         <div class="task-info">
           <h2>设备信息</h2>
-        <div class="row-task">
-    <label for="task-name" style="display:inline-block;width:100px;">设备编号:</label>
-    <input type="text" id="task-name"  style="width:180px;height:25px;border-radius: 4px; /* 圆角 */"/>
-</div>
-
-<div class="row-task-number">
-    <label for="task-number" style="display:inline-block;width:100px;">所属地区:</label>
-    <input type="text" id="task-number"  style="width:180px;height:25px;border-radius: 4px; /* 圆角 */"/>
-</div>
-<div class="row-start-time">
-    <label for="start-time" style="display:inline-block;width:100px;">设备类型:</label>
-    <select type="text" id="start-time"  style="width:140px;height:35px;border-radius: 4px; /* 圆角 */"/>
-        <option>自动角反射器</option>
-        </select>
-</div>
-
-<div class="row-location">
-    <label for="location" style="display:inline-block;width:100px;">偏磁角度:</label>
-    <input id="location" style="width:180px;height:25px;border-radius: 4px;">
-    </input>
-</div>
-
-
-
-<div class="row-end-time">
-    <label for="end-time" style="display:inline-block;width:100px;">安装方位角度:</label>
-    <input type="text" id="end-time"  style="width:180px;height:25px;border-radius: 4px; /* 圆角 */"/>
-</div>
-
-<div class="row-execution-time">
-    <label for="execution-time-1" style="display:inline-block;width:100px;">安装俯仰角度:</label>
-    <input type="number" id="execution-time-1"  style="width:180px;height:25px;border-radius: 4px; /* 圆角 */"/>
-</div>
-
-<div class="row-device-longitude">
-    <label for="device-longitude" style="display:inline-block;width:100px;">设备所在经度:</label>
-    <input type="number" id="device-longitude"  style="width:180px;height:25px;border-radius: 4px; /* 圆角 */"/>
-</div>
-
-<div class="row-device-latitude">
-    <label for="device-latitude" style="display:inline-block;width:100px;">设备所在纬度:</label>
-    <input type="number" id="device-latitude"  style="width:180px;height:25px;border-radius: 4px; /* 圆角 */"/>
-</div>
-
+          <div class="row-task">
+            <label for="task-name">设备编号:</label>
+            <input
+              type="text"
+              id="task-name"
+              .value="${this.selectedDevice.id || ''}"
+              readonly
+            />
+          </div>
+          <div class="row-task-number">
+            <label for="task-number">所属地区:</label>
+            <input
+              type="text"
+              id="task-number"
+              .value="${this.selectedDevice.region || ''}"
+              readonly
+            />
+          </div>
+          <div class="row-start-time">
+            <label for="start-time">设备类型:</label>
+            <input
+              type="text"
+              id="start-time"
+              .value="${this.selectedDevice.deviceType || ''}"
+              readonly
+            />
+          </div>
+          <div class="row-location">
+            <label for="location">偏磁角度:</label>
+            <input
+              id="location"
+              .value="${this.selectedDevice.cpj || ''}"
+              readonly
+            />
+          </div>
+          <div class="row-end-time">
+            <label for="end-time">安装方位角度:</label>
+            <input
+              type="text"
+              id="end-time"
+              .value="${this.selectedDevice.currentAzimuth || ''}"
+              readonly
+            />
+          </div>
+          <div class="row-execution-time">
+            <label for="execution-time-1">安装俯仰角度:</label>
+            <input
+              type="text"
+              id="execution-time-1"
+              .value="${this.selectedDevice.currentElevation || ''}"
+              readonly
+            />
+          </div>
+          <div class="row-device-longitude">
+            <label for="device-longitude">设备所在经度:</label>
+            <input
+              type="text"
+              id="device-longitude"
+              .value="${this.selectedDevice.lon || ''}"
+              readonly
+            />
+          </div>
+          <div class="row-device-latitude">
+            <label for="device-latitude">设备所在纬度:</label>
+            <input
+              type="text"
+              id="device-latitude"
+              .value="${this.selectedDevice.lat || ''}"
+              readonly
+            />
+          </div>
         </div>
-
       </div>
     `;
   }
+
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
 }
 
-customElements.define('device-particulars', Deviceparticulars);
+customElements.define('device-particulars', DeviceParticulars);

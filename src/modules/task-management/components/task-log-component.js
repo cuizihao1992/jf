@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import { deviceLogsService } from '@/api/fetch.js'; // 引入设备日志服务
 
 class TaskLog extends LitElement {
   static styles = css`
@@ -101,6 +102,32 @@ class TaskLog extends LitElement {
     }
   `;
 
+  static get properties() {
+    return {
+      deviceLogs: { type: Array }, // 添加设备日志属性
+    };
+  }
+
+  constructor() {
+    super();
+    this.deviceLogs = [];
+    this.fetchDeviceLogs(); // 初始化时获取设备日志
+  }
+
+  async fetchDeviceLogs() {
+    try {
+      const params = {
+        pageNum: 1,
+        pageSize: 100000,
+        // 可以根据需要添加其他查询参数
+      };
+      const data = await deviceLogsService.list(params);
+      this.deviceLogs = data.rows;
+    } catch (error) {
+      console.error('获取设备日志失败:', error);
+    }
+  }
+
   render() {
     return html`
       <div class="modal">
@@ -125,7 +152,9 @@ class TaskLog extends LitElement {
               style="background-color: white;"
             />
           </div>
-          <button class="query-button">查询</button>
+          <button class="query-button" @click="${this.fetchDeviceLogs}">
+            查询
+          </button>
         </div>
         <hr />
         <div class="form-container">
@@ -154,102 +183,26 @@ class TaskLog extends LitElement {
               </tr>
             </thead>
             <tbody>
-              <tr class="table-row">
-                <td>1</td>
-                <td>101</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-                <td>打开所有电源</td>
-              </tr>
-              <tr class="table-row">
-                <td>1</td>
-                <td>101</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-                <td>打开所有电源</td>
-              </tr>
-              <tr class="table-row">
-                <td>1</td>
-                <td>101</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-                <td>打开所有电源</td>
-              </tr>
-              <tr class="table-row">
-                <td>1</td>
-                <td>101</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-                <td>打开所有电源</td>
-              </tr>
-              <tr class="table-row">
-                <td>1</td>
-                <td>101</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-                <td>打开所有电源</td>
-              </tr>
-              <tr class="table-row">
-                <td>1</td>
-                <td>101</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-                <td>打开所有电源</td>
-              </tr>
-              <tr class="table-row">
-                <td>1</td>
-                <td>101</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-                <td>打开所有电源</td>
-              </tr>
-              <tr class="table-row">
-                <td>1</td>
-                <td>101</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-                <td>打开所有电源</td>
-              </tr>
-              <tr class="table-row">
-                <td>1</td>
-                <td>101</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-                <td>打开所有电源</td>
-              </tr>
-              <tr class="table-row">
-                <td>1</td>
-                <td>101</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-                <td>打开所有电源</td>
-              </tr>
-              <tr class="table-row">
-                <td>1</td>
-                <td>101</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-                <td>打开所有电源</td>
-              </tr>
-              <tr class="table-row">
-                <td>1</td>
-                <td>101</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-                <td>打开所有电源</td>
-              </tr>
-              <tr class="table-row">
-                <td>1</td>
-                <td>101</td>
-                <td>中卫</td>
-                <td>自动角反射器</td>
-                <td>打开所有电源</td>
-              </tr>
+              ${this.renderRows()}
             </tbody>
           </table>
         </div>
       </div>
     `;
+  }
+
+  renderRows() {
+    return this.deviceLogs.map(
+      (log) => html`
+        <tr class="table-row">
+          <td>${log.logId}</td>
+          <td>${log.deviceId}</td>
+          <td>${log.region || '-'}</td>
+          <td>${log.deviceType || '-'}</td>
+          <td>${log.eventDescription}</td>
+        </tr>
+      `
+    );
   }
 
   closeModal() {
