@@ -51,7 +51,7 @@ class DeviceParticulars extends LitElement {
   handleInputChange(event, field) {
     this.selectedDevice = {
       ...this.selectedDevice,
-      [field]: event.target.value
+      [field]: event.target.value,
     };
     this.requestUpdate();
   }
@@ -66,10 +66,10 @@ class DeviceParticulars extends LitElement {
       console.log('保存设备数据:', this.selectedDevice);
       await deviceService.update(this.selectedDevice);
       this.dispatchEvent(
-        new CustomEvent('updateData', { 
+        new CustomEvent('updateData', {
           detail: this.selectedDevice,
-          bubbles: true, 
-          composed: true 
+          bubbles: true,
+          composed: true,
         })
       );
       this.closeModal();
@@ -89,162 +89,165 @@ class DeviceParticulars extends LitElement {
 
   render() {
     return html`
-      <div class="modal">
+      <div class="container">
         <div class="header">
-          ${this.isReview ? '设备审批' : '设备详情'}
+          <h1>${this.isReview ? '设备审批' : '设备详情'}</h1>
           <button class="close-button" @click="${this.closeModal}">×</button>
         </div>
-        <div class="task-info">
-          <h2>设备信息</h2>
-          <div class="row-task">
-            <label for="device-id">设备编号:</label>
-            <input
-              type="text"
-              id="device-id"
-              .value="${this.selectedDevice.id || ''}"
-              ?readonly="${!this.isEdit}"
-              @input="${(e) => this.handleInputChange(e, 'id')}"
-            />
-          </div>
-          <div class="row-task">
-            <label for="device-region">所属地区:</label>
-            <input
-              type="text"
-              id="device-region"
-              .value="${this.selectedDevice.region || ''}"
-              ?readonly="${!this.isEdit}"
-              @input="${(e) => this.handleInputChange(e, 'region')}"
-            />
-          </div>
-          <div class="row-start-time">
-            <label for="device-type">设备类型:</label>
-            <input
-              type="text"
-              id="device-type"
-              .value="${this.selectedDevice.deviceType || ''}"
-              ?readonly="${!this.isEdit}"
-              @input="${(e) => this.handleInputChange(e, 'deviceType')}"
-            />
-          </div>
-          <div class="row-location">
-            <label for="cpj">偏磁角度:</label>
-            <input
-              id="cpj"
-              .value="${this.selectedDevice.cpj || ''}"
-              ?readonly="${!this.isEdit}"
-              @input="${(e) => this.handleInputChange(e, 'cpj')}"
-            />
-          </div>
-          <div class="row-end-time">
-            <label for="currentAzimuth">安装方位角度:</label>
-            <input
-              type="text"
-              id="currentAzimuth"
-              .value="${this.selectedDevice.currentAzimuth || ''}"
-              ?readonly="${!this.isEdit}"
-              @input="${(e) => this.handleInputChange(e, 'currentAzimuth')}"
-            />
-          </div>
-          <div class="row-execution-time">
-            <label for="currentElevation">安装俯仰角度:</label>
-            <input
-              type="text"
-              id="currentElevation"
-              .value="${this.selectedDevice.currentElevation || ''}"
-              ?readonly="${!this.isEdit}"
-              @input="${(e) => this.handleInputChange(e, 'currentElevation')}"
-            />
-          </div>
-          <div class="row-device-longitude">
-            <label for="device-longitude">设备所在经度:</label>
-            <input
-              type="text"
-              id="device-longitude"
-              .value="${this.selectedDevice.lon || ''}"
-              ?readonly="${!this.isEdit}"
-              @input="${(e) => this.handleInputChange(e, 'lon')}"
-            />
-          </div>
-          <div class="row-device-latitude">
-            <label for="device-latitude">设备所在纬度:</label>
-            <input
-              type="text"
-              id="device-latitude"
-              .value="${this.selectedDevice.lat || ''}"
-              ?readonly="${!this.isEdit}"
-              @input="${(e) => this.handleInputChange(e, 'lat')}"
-            />
-          </div>
-        </div>
 
-        ${this.isReview
-          ? html`
-              <div class="review-info">
-                <div class="row">
-                  <label for="reviewer">审核人:</label>
-                  <input
-                    type="text"
-                    id="reviewer"
-                    .value="${this.data.reviewer}"
-                    ?readonly="${!this.isReviewEdit}"
-                    @input="${(e) =>
-                      this.handleReviewInputChange(e, 'reviewer')}"
-                  />
-                </div>
-                <div class="row">
-                  <label for="review-time">审核时间:</label>
-                  <input
-                    type="datetime-local"
-                    id="review-time"
-                    .value="${this.data.reviewTime}"
-                    ?readonly="${!this.isReviewEdit}"
-                    @input="${(e) =>
-                      this.handleReviewInputChange(e, 'reviewTime')}"
-                  />
-                </div>
-                <div class="row">
-                  <label for="review-opinion">审核意见:</label>
-                  <input
-                    type="text"
-                    id="review-opinion"
-                    .value="${this.data.reviewOpinion}"
-                    ?readonly="${!this.isReviewEdit}"
-                    @input="${(e) =>
-                      this.handleReviewInputChange(e, 'reviewOpinion')}"
-                  />
-                </div>
-                <div class="row">
-                  <label for="notes">备注:</label>
-                  <textarea
-                    id="notes"
-                    .value="${this.data.notes}"
-                    ?readonly="${!this.isReviewEdit}"
-                    @input="${(e) => this.handleReviewInputChange(e, 'notes')}"
-                  ></textarea>
-                </div>
-              </div>
-            `
+        ${this.renderDeviceInfo()}
+        ${this.isReview ? this.renderReviewInfo() : ''} ${this.renderButtons()}
+      </div>
+    `;
+  }
+
+  renderDeviceInfo() {
+    return html`
+      <div class="task-info">
+        <h2>设备信息</h2>
+        <div class="row">
+          <label for="device-id">设备编号:</label>
+          <input
+            type="text"
+            id="device-id"
+            .value="${this.selectedDevice.id || ''}"
+            ?disabled="${!this.isEdit}"
+            @input="${(e) => this.handleInputChange(e, 'id')}"
+          />
+        </div>
+        <div class="row">
+          <label for="device-region">所属地区:</label>
+          <input
+            type="text"
+            id="device-region"
+            .value="${this.selectedDevice.region || ''}"
+            ?disabled="${!this.isEdit}"
+            @input="${(e) => this.handleInputChange(e, 'region')}"
+          />
+        </div>
+        <div class="row-start-time">
+          <label for="device-type">设备类型:</label>
+          <input
+            type="text"
+            id="device-type"
+            .value="${this.selectedDevice.deviceType || ''}"
+            ?disabled="${!this.isEdit}"
+            @input="${(e) => this.handleInputChange(e, 'deviceType')}"
+          />
+        </div>
+        <div class="row-location">
+          <label for="cpj">偏磁角度:</label>
+          <input
+            id="cpj"
+            .value="${this.selectedDevice.cpj || ''}"
+            ?disabled="${!this.isEdit}"
+            @input="${(e) => this.handleInputChange(e, 'cpj')}"
+          />
+        </div>
+        <div class="row-end-time">
+          <label for="currentAzimuth">安装方位角度:</label>
+          <input
+            type="text"
+            id="currentAzimuth"
+            .value="${this.selectedDevice.currentAzimuth || ''}"
+            ?disabled="${!this.isEdit}"
+            @input="${(e) => this.handleInputChange(e, 'currentAzimuth')}"
+          />
+        </div>
+        <div class="row-execution-time">
+          <label for="currentElevation">安装俯仰角度:</label>
+          <input
+            type="text"
+            id="currentElevation"
+            .value="${this.selectedDevice.currentElevation || ''}"
+            ?disabled="${!this.isEdit}"
+            @input="${(e) => this.handleInputChange(e, 'currentElevation')}"
+          />
+        </div>
+        <div class="row-device-longitude">
+          <label for="device-longitude">设备所在经度:</label>
+          <input
+            type="text"
+            id="device-longitude"
+            .value="${this.selectedDevice.lon || ''}"
+            ?disabled="${!this.isEdit}"
+            @input="${(e) => this.handleInputChange(e, 'lon')}"
+          />
+        </div>
+        <div class="row-device-latitude">
+          <label for="device-latitude">设备所在纬度:</label>
+          <input
+            type="text"
+            id="device-latitude"
+            .value="${this.selectedDevice.lat || ''}"
+            ?disabled="${!this.isEdit}"
+            @input="${(e) => this.handleInputChange(e, 'lat')}"
+          />
+        </div>
+      </div>
+    `;
+  }
+
+  renderReviewInfo() {
+    return html`
+      <div class="review-info">
+        <div class="row">
+          <label for="reviewer">审核人:</label>
+          <input
+            type="text"
+            id="reviewer"
+            .value="${this.data.reviewer}"
+            ?disabled="${!this.isReviewEdit}"
+            @input="${(e) => this.handleReviewInputChange(e, 'reviewer')}"
+          />
+        </div>
+        <div class="row">
+          <label for="review-time">审核时间:</label>
+          <input
+            type="datetime-local"
+            id="review-time"
+            .value="${this.data.reviewTime}"
+            ?disabled="${!this.isReviewEdit}"
+            @input="${(e) => this.handleReviewInputChange(e, 'reviewTime')}"
+          />
+        </div>
+        <div class="row">
+          <label for="review-opinion">审核意见:</label>
+          <input
+            type="text"
+            id="review-opinion"
+            .value="${this.data.reviewOpinion}"
+            ?disabled="${!this.isReviewEdit}"
+            @input="${(e) => this.handleReviewInputChange(e, 'reviewOpinion')}"
+          />
+        </div>
+        <div class="row">
+          <label for="notes">备注:</label>
+          <textarea
+            id="notes"
+            .value="${this.data.notes}"
+            ?disabled="${!this.isReviewEdit}"
+            @input="${(e) => this.handleReviewInputChange(e, 'notes')}"
+          ></textarea>
+        </div>
+      </div>
+    `;
+  }
+
+  renderButtons() {
+    return html`
+      <div class="button-group">
+        <button class="cancel-button" @click="${this.closeModal}">取消</button>
+        ${this.isEdit
+          ? html`<button class="save-button" @click="${this.saveDevice}">
+              保存
+            </button>`
           : ''}
-
-        <div class="button-group">
-          <button class="cancel-button" @click="${this.closeModal}">
-            取消
-          </button>
-          ${this.isEdit
-            ? html`
-                <button class="save-button" @click="${this.saveDevice}">
-                  保存
-                </button>
-              `
-            : ''}
-          ${this.isReviewEdit
-            ? html`
-                <button class="submit-button" @click="${this.submitReview}">
-                  提交审核
-                </button>
-              `
-            : ''}
-        </div>
+        ${this.isReviewEdit
+          ? html`<button class="submit-button" @click="${this.submitReview}">
+              提交
+            </button>`
+          : ''}
       </div>
     `;
   }
