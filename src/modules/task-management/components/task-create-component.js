@@ -1,103 +1,49 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/task-create-component.css?inline';
+import { deviceService } from '@/api/fetch.js';
 
 class TaskCreateComponent extends LitElement {
   static styles = css`
     ${unsafeCSS(styles)}
   `;
 
-  render() {
-    const deviceRows = [
-      {
-        id: 101,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 102,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 103,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 104,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 104,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 104,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 104,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 104,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 104,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 104,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-      {
-        id: 104,
-        region: '中卫',
-        type: '自动角反射器',
-        status: '关机',
-        time: '2024-9-24 16:21:45',
-      },
-    ];
+  static get properties() {
+    return {
+      devices: { type: Array },
+    };
+  }
 
-    const deviceStatusRows = deviceRows.map(
+  constructor() {
+    super();
+    this.devices = [];
+    this.fetchDevices();
+  }
+
+  async fetchDevices() {
+    try {
+      const params = {
+        pageNum: 1,
+        pageSize: 100000,
+      };
+      const data = await deviceService.list(params);
+      this.devices = data.rows;
+    } catch (error) {
+      console.error('获取设备数据失败:', error);
+    }
+  }
+
+  render() {
+    const deviceStatusRows = this.devices.map(
       (device) => html`
         <tr>
           <td>
             <input type="checkbox" id="device-${device.id}" /> ${device.id}
           </td>
           <td>${device.region}</td>
-          <td>${device.type}</td>
-          <td><button class="power-status">⚡</button></td>
-          <td>${device.status}</td>
-          <td>${device.time}</td>
+          <td>${device.deviceType}</td>
+          <td><button class="power-status">${device.powerStatus}</button></td>
+          <td>${device.deviceStatus}</td>
+          <td>${device.lastSyncTime}</td>
           <td>
             <button
               class="view-button colored-button"
@@ -109,6 +55,7 @@ class TaskCreateComponent extends LitElement {
         </tr>
       `
     );
+
     const deviceListRows = [
       { id: 201, angle: { horizontal: 0, elevation: 0 } },
       { id: 202, angle: { horizontal: 10, elevation: 5 } },
@@ -117,8 +64,8 @@ class TaskCreateComponent extends LitElement {
       { id: 203, angle: { horizontal: -5, elevation: 10 } },
       { id: 203, angle: { horizontal: -5, elevation: 10 } },
       { id: 203, angle: { horizontal: -5, elevation: 10 } },
-      // 添加更多的设备行
     ];
+
     const deviceListTableRows = deviceListRows.map(
       (device) => html`
         <tr>
@@ -139,6 +86,7 @@ class TaskCreateComponent extends LitElement {
         </tr>
       `
     );
+
     return html`
       <div class="container">
         <div class="header">
@@ -274,16 +222,17 @@ class TaskCreateComponent extends LitElement {
   }
 
   handleClose() {
-    // 这里可以添加关闭窗口的逻辑
-    // 例如，隐藏组件或销毁组件
     this.remove();
   }
+
   openStatusMission() {
     this.dispatchEvent(new CustomEvent('open-status-mission'));
   }
+
   openParameterConfig() {
     this.dispatchEvent(new CustomEvent('open-parameter-config'));
   }
+
   openScopeSelection() {
     this.dispatchEvent(new CustomEvent('open-scope-selection'));
   }

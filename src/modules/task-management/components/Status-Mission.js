@@ -1,5 +1,6 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/status-mission.css?inline';
+import { taskService } from '@/api/fetch.js';
 
 class StatusMission extends LitElement {
   static styles = css`
@@ -13,168 +14,40 @@ class StatusMission extends LitElement {
 
   constructor() {
     super();
-    this.sortDirection = 'asc'; // 初始排序方向
-    this.tasks = [
-      {
-        name: '中卫101',
-        code: 'w101',
-        status: '执行中',
-        startTime: '2024-10-10 16:00:00',
-        endTime: '2024-10-10 16:40:00',
-      },
-      {
-        name: '中卫102',
-        code: 'w102',
-        status: '待执行',
-        startTime: '2024-10-15 16:00:00',
-        endTime: '2024-10-15 16:40:00',
-      },
-      {
-        name: '中卫102',
-        code: 'w102',
-        status: '待执行',
-        startTime: '2024-10-15 16:00:00',
-        endTime: '2024-10-15 16:40:00',
-      },
-      {
-        name: '中卫102',
-        code: 'w102',
-        status: '待执行',
-        startTime: '2024-10-15 16:00:00',
-        endTime: '2024-10-15 16:40:00',
-      },
-      {
-        name: '中卫102',
-        code: 'w102',
-        status: '待执行',
-        startTime: '2024-10-15 16:00:00',
-        endTime: '2024-10-15 16:40:00',
-      },
-      {
-        name: '中卫102',
-        code: 'w102',
-        status: '待执行',
-        startTime: '2024-10-15 16:00:00',
-        endTime: '2024-10-15 16:40:00',
-      },
-      {
-        name: '中卫102',
-        code: 'w102',
-        status: '待执行',
-        startTime: '2024-10-15 16:00:00',
-        endTime: '2024-10-15 16:40:00',
-      },
-      {
-        name: '中卫102',
-        code: 'w102',
-        status: '待执行',
-        startTime: '2024-10-15 16:00:00',
-        endTime: '2024-10-15 16:40:00',
-      },
-      {
-        name: '中卫102',
-        code: 'w102',
-        status: '待执行',
-        startTime: '2024-10-15 16:00:00',
-        endTime: '2024-10-15 16:40:00',
-      },
-      {
-        name: '中卫102',
-        code: 'w102',
-        status: '待执行',
-        startTime: '2024-10-15 16:00:00',
-        endTime: '2024-10-15 16:40:00',
-      },
-      {
-        name: '中卫102',
-        code: 'w102',
-        status: '待执行',
-        startTime: '2024-10-15 16:00:00',
-        endTime: '2024-10-15 16:40:00',
-      },
-      {
-        name: '中卫102',
-        code: 'w102',
-        status: '待执行',
-        startTime: '2024-10-15 16:00:00',
-        endTime: '2024-10-15 16:40:00',
-      },
-      {
-        name: '中卫102',
-        code: 'w102',
-        status: '待执行',
-        startTime: '2024-10-15 16:00:00',
-        endTime: '2024-10-15 16:40:00',
-      },
-      {
-        name: '中卫102',
-        code: 'w102',
-        status: '待执行',
-        startTime: '2024-10-15 16:00:00',
-        endTime: '2024-10-15 16:40:00',
-      },
-      {
-        name: '中卫102',
-        code: 'w102',
-        status: '待执行',
-        startTime: '2024-10-15 16:00:00',
-        endTime: '2024-10-15 16:40:00',
-      },
-      {
-        name: '中卫102',
-        code: 'w102',
-        status: '待执行',
-        startTime: '2024-10-15 16:00:00',
-        endTime: '2024-10-15 16:40:00',
-      },
-      {
-        name: '中卫102',
-        code: 'w102',
-        status: '待执行',
-        startTime: '2024-10-15 16:00:00',
-        endTime: '2024-10-15 16:40:00',
-      },
-      {
-        name: '中卫102',
-        code: 'w102',
-        status: '待执行',
-        startTime: '2024-10-15 16:00:00',
-        endTime: '2024-10-15 16:40:00',
-      },
-      {
-        name: '中卫102',
-        code: 'w102',
-        status: '待执行',
-        startTime: '2024-10-15 16:00:00',
-        endTime: '2024-10-15 16:40:00',
-      },
-      {
-        name: '中卫102',
-        code: 'w102',
-        status: '待执行',
-        startTime: '2024-10-15 16:00:00',
-        endTime: '2024-10-15 16:40:00',
-      },
-      {
-        name: '中卫102',
-        code: 'w102',
-        status: '待执行',
-        startTime: '2024-10-15 16:00:00',
-        endTime: '2024-10-15 16:40:00',
-      },
-      // 添加更多任务
-    ];
+    this.sortDirection = 'asc';
+    this.tasks = [];
+    this.fetchTasks(); // 初始化时获取任务数据
+  }
+
+  async fetchTasks() {
+    try {
+      const params = {
+        pageNum: 1,
+        pageSize: 100000, // 获取所有任务
+      };
+      const response = await taskService.list(params);
+      if (response && response.rows) {
+        this.tasks = response.rows.map((task) => ({
+          name: task.taskName,
+          code: task.taskNumber,
+          status: task.taskStatus,
+          startTime: task.startTime,
+          endTime: task.endTime,
+        }));
+      }
+    } catch (error) {
+      console.error('获取任务列表失败:', error);
+    }
   }
 
   sortByStartTime() {
-    // 切换排序方向
     this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
     const direction = this.sortDirection === 'asc' ? 1 : -1;
 
-    // 对任务列表按设备开启时间进行排序
     this.tasks = [...this.tasks].sort((a, b) => {
       return (new Date(a.startTime) - new Date(b.startTime)) * direction;
     });
+    this.requestUpdate();
   }
 
   render() {
@@ -217,17 +90,21 @@ class StatusMission extends LitElement {
               </tr>
             </thead>
             <tbody>
-              ${this.tasks.map(
-                (task) => html`
-                  <tr>
-                    <td>${task.name}</td>
-                    <td>${task.code}</td>
-                    <td>${task.startTime}</td>
-                    <td>${task.endTime}</td>
-                    <td>${task.status}</td>
-                  </tr>
-                `
-              )}
+              ${this.tasks.length
+                ? this.tasks.map(
+                    (task) => html`
+                      <tr>
+                        <td>${task.name}</td>
+                        <td>${task.code}</td>
+                        <td>${task.startTime}</td>
+                        <td>${task.endTime}</td>
+                        <td>${task.status}</td>
+                      </tr>
+                    `
+                  )
+                : html`<tr>
+                    <td colspan="5" style="text-align: center;">暂无数据</td>
+                  </tr>`}
             </tbody>
           </table>
         </div>

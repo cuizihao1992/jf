@@ -147,25 +147,52 @@
 }
 
 .device-status-table {
-  width: 300px;
-  height: 500px;
+  width: 100%;
   border-collapse: collapse;
   font-size: 12px;
   white-space: nowrap;
+  table-layout: fixed;
+}
+
+.device-status-table tbody {
+  min-height: 400px;
+  display: block;
+}
+
+.device-status-table tr {
+  height: 40px;
+  line-height: 40px;
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.device-status-table tbody tr:empty {
+  height: 40px;
+}
+
+.device-status-table tbody:empty::after {
+  content: '';
+  display: block;
+  height: 400px;
+}
+
+.device-status-table thead {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
 }
 
 .device-status-table th,
 .device-status-table td {
-  width: 30px;
-  height: 10px;
   padding: 0 8px;
   text-align: center;
   border: 1px solid #e6edf7;
+  height: 40px;
+  vertical-align: middle;
 }
 
 .device-status-table th {
-  width: 30px;
-  height: 10px;
   position: sticky;
   top: 0;
   background-color: #0d1f33;
@@ -175,6 +202,10 @@
 
 .device-status-table tr:nth-child(even) {
   background-color: #13243a;
+}
+
+.device-status-table tr:nth-child(odd) {
+  background-color: rgba(20, 30, 50, 0.8);
 }
 
 .power-status {
@@ -187,6 +218,7 @@
   align-items: center;
   justify-content: center;
   font-size: 16px;
+  width: 65px;
 }
 
 .colored-button {
@@ -225,6 +257,7 @@ input {
   width: 580px;
   height: 480px;
   overflow-y: auto;
+  position: relative;
 }
 
 .footer-buttons {
