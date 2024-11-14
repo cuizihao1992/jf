@@ -10,6 +10,7 @@ import './components/task-log-component.js';
 import './components/Status-Mission.js'; // 引入任务状态组件
 import './components/Scope-selection.js'; // 引入范围选择组件
 import './components/parameter-config.js'; // 引入范围选择组件
+import './components/task-review-component.js'; // 引入任务审核组件
 class TaskManagement extends LitElement {
   static styles = [sharedStyles];
   static properties = {
