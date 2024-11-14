@@ -49,7 +49,10 @@ class DeviceParticulars extends LitElement {
   }
 
   handleInputChange(event, field) {
-    this.selectedDevice[field] = event.target.value;
+    this.selectedDevice = {
+      ...this.selectedDevice,
+      [field]: event.target.value
+    };
     this.requestUpdate();
   }
 
@@ -58,13 +61,21 @@ class DeviceParticulars extends LitElement {
     this.requestUpdate();
   }
 
-  saveDevice() {
-    console.log('保存设备数据:', this.selectedDevice);
-    deviceService.update(this.selectedDevice);
-    this.dispatchEvent(
-      new CustomEvent('updateData', { bubbles: true, composed: true })
-    );
-    this.closeModal();
+  async saveDevice() {
+    try {
+      console.log('保存设备数据:', this.selectedDevice);
+      await deviceService.update(this.selectedDevice);
+      this.dispatchEvent(
+        new CustomEvent('updateData', { 
+          detail: this.selectedDevice,
+          bubbles: true, 
+          composed: true 
+        })
+      );
+      this.closeModal();
+    } catch (error) {
+      console.error('保存设备数据失败:', error);
+    }
   }
 
   submitReview() {
@@ -86,58 +97,62 @@ class DeviceParticulars extends LitElement {
         <div class="task-info">
           <h2>设备信息</h2>
           <div class="row-task">
-            <label for="task-name">设备编号:</label>
+            <label for="device-id">设备编号:</label>
             <input
               type="text"
-              id="task-name"
+              id="device-id"
               .value="${this.selectedDevice.id || ''}"
               ?readonly="${!this.isEdit}"
               @input="${(e) => this.handleInputChange(e, 'id')}"
             />
           </div>
-          <div class="row-task-number">
-            <label for="task-number">所属地区:</label>
+          <div class="row-task">
+            <label for="device-region">所属地区:</label>
             <input
               type="text"
-              id="task-number"
+              id="device-region"
               .value="${this.selectedDevice.region || ''}"
               ?readonly="${!this.isEdit}"
               @input="${(e) => this.handleInputChange(e, 'region')}"
             />
           </div>
           <div class="row-start-time">
-            <label for="start-time">设备类型:</label>
+            <label for="device-type">设备类型:</label>
             <input
               type="text"
-              id="start-time"
+              id="device-type"
               .value="${this.selectedDevice.deviceType || ''}"
-              readonly
+              ?readonly="${!this.isEdit}"
+              @input="${(e) => this.handleInputChange(e, 'deviceType')}"
             />
           </div>
           <div class="row-location">
-            <label for="location">偏磁角度:</label>
+            <label for="cpj">偏磁角度:</label>
             <input
-              id="location"
+              id="cpj"
               .value="${this.selectedDevice.cpj || ''}"
-              readonly
+              ?readonly="${!this.isEdit}"
+              @input="${(e) => this.handleInputChange(e, 'cpj')}"
             />
           </div>
           <div class="row-end-time">
-            <label for="end-time">安装方位角度:</label>
+            <label for="currentAzimuth">安装方位角度:</label>
             <input
               type="text"
-              id="end-time"
+              id="currentAzimuth"
               .value="${this.selectedDevice.currentAzimuth || ''}"
-              readonly
+              ?readonly="${!this.isEdit}"
+              @input="${(e) => this.handleInputChange(e, 'currentAzimuth')}"
             />
           </div>
           <div class="row-execution-time">
-            <label for="execution-time-1">安装俯仰角度:</label>
+            <label for="currentElevation">安装俯仰角度:</label>
             <input
               type="text"
-              id="execution-time-1"
+              id="currentElevation"
               .value="${this.selectedDevice.currentElevation || ''}"
-              readonly
+              ?readonly="${!this.isEdit}"
+              @input="${(e) => this.handleInputChange(e, 'currentElevation')}"
             />
           </div>
           <div class="row-device-longitude">
@@ -146,7 +161,8 @@ class DeviceParticulars extends LitElement {
               type="text"
               id="device-longitude"
               .value="${this.selectedDevice.lon || ''}"
-              readonly
+              ?readonly="${!this.isEdit}"
+              @input="${(e) => this.handleInputChange(e, 'lon')}"
             />
           </div>
           <div class="row-device-latitude">

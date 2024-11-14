@@ -116,6 +116,9 @@ class DeviceManagement extends LitElement {
         this.shadowRoot.querySelector('device-particulars');
       if (particularsElement) {
         particularsElement.setDeviceData(e.detail);
+        particularsElement.addEventListener('updateData', () => {
+          this.handleDeviceUpdate();
+        });
       }
     });
   }
@@ -123,6 +126,15 @@ class DeviceManagement extends LitElement {
   closeDeviceParticulars() {
     this.isDeviceParticularsOpen = false;
     this.deviceParticularsData = null;
+  }
+
+  handleDeviceUpdate() {
+    const activeComponent = this.shadowRoot.querySelector(
+      'device-edit, device-search, device-approve'
+    );
+    if (activeComponent) {
+      activeComponent.fetchDevices();
+    }
   }
 }
 

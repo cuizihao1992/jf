@@ -161,7 +161,7 @@ class DeviceEdit extends LitElement {
     this.dispatchEvent(
       new CustomEvent('open-device-particulars', {
         detail: {
-          device,
+          device: { ...device },
           mode: {
             isEdit: type === 'edit',
             isReview: false,
