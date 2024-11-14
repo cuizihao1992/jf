@@ -1,11 +1,18 @@
 .container {
-  width: 467px;
-  padding: 15px;
-  background-color: rgba(13, 31, 51, 0.9);
+  width: 400px;
+  min-height: 400px;
+  max-height: 700px;
+  height: auto;
+  padding: 20px;
+  background: rgba(0, 9, 36, 0.8);
   color: white;
   font-family: Arial, sans-serif;
   border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(42, 130, 228, 1);
+  opacity: 1;
+  background-size: cover;
+  background-position: center;
 }
 
 .header {
@@ -17,35 +24,30 @@
 
 .header h1 {
   margin: 1px;
-  font-size: 24px;
+  font-size: 20px;
 }
 
 .task-info {
   grid-column: 1;
   display: grid;
-  gap: 5px;
+  gap: 3px;
   border: 1px solid #58a6ff;
-  padding: 10px;
+  padding: 12px;
   border-radius: 5px;
   background-color: rgba(20, 30, 50, 0.8);
-  width: 445px;
-  margin-bottom: 15px;
+  width: calc(100% - 16px);
+  margin-bottom: 8px;
+  transform: scale(0.98);
+  transform-origin: top center;
 }
 
 .task-info h2 {
   margin-top: 2px;
-  padding-bottom: 10px;
-  text-align: left;
-  border-bottom: 1px solid #58a6ff;
-  font-size: 20px;
+  padding-bottom: 8px;
+  font-size: 18px;
 }
 
-.task-info .row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
+.task-info .row,
 .row-task,
 .row-task-number,
 .row-start-time,
@@ -54,26 +56,37 @@
 .row-execution-time,
 .row-device-longitude,
 .row-device-latitude {
-  display: flex;
+  display: grid;
+  grid-template-columns: 120px 1fr;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
+  transform: scale(0.98);
+  transform-origin: left center;
+  gap: 12px;
 }
 
 label {
   width: 120px;
   text-align: right;
-  margin-right: 10px;
   color: white;
+  font-size: 14px;
+  margin-right: 0;
 }
 
-input,
-select,
-textarea {
-  padding: 5px 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+.task-info input,
+.task-info select,
+.task-info textarea,
+.review-info input,
+.review-info select,
+.review-info textarea {
   width: 200px;
-  background-color: #fff;
+  padding: 5px 8px;
+  border: none;
+  border-radius: 4px;
+  background-color: #1b2a41;
+  color: white;
+  font-size: 14px;
+  justify-self: start;
 }
 
 input[readonly],
@@ -86,17 +99,21 @@ textarea[readonly] {
 .review-info {
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  padding: 12px;
   border: 1px solid #58a6ff;
   border-radius: 5px;
   background-color: rgba(20, 30, 50, 0.8);
-  margin-bottom: 15px;
+  margin-bottom: 12px;
+  transform: scale(0.98);
+  transform-origin: top center;
 }
 
 .review-info .row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 120px 1fr;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
+  gap: 12px;
 }
 .close-button {
   cursor: pointer;
@@ -109,20 +126,23 @@ textarea[readonly] {
 }
 .review-info textarea {
   width: 200px;
-  height: 100px;
+  height: 70px;
   resize: vertical;
 }
 
 .button-group {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 8px;
+  transform: scale(0.98);
+  transform-origin: right center;
+  margin-top: 12px;
 }
 
 .cancel-button,
 .save-button,
 .submit-button {
-  padding: 8px 20px;
+  padding: 6px 16px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -141,7 +161,7 @@ textarea[readonly] {
 }
 
 .submit-button {
-  background-color: rgba(42, 130, 228, 1);
+  background-color: #58a6ff;
   color: white;
 }
 
@@ -159,8 +179,8 @@ textarea[readonly] {
 
 /* 滚动条样式 */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -185,6 +205,7 @@ textarea:disabled {
   cursor: not-allowed;
   color: #999;
   width: 200px;
+  font-size: 14px;
 }
 
 /* 表单组样式 */
@@ -239,10 +260,11 @@ textarea:disabled {
   input,
   select,
   textarea {
-    width: 100%;
+    width: 180px;
+    font-size: 14px;
   }
 
   .review-info textarea {
-    width: 100%;
+    width: 180px;
   }
 }
