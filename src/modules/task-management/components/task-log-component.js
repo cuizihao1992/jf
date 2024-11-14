@@ -3,7 +3,9 @@ import styles from './css/task-log-component.css?inline';
 import { deviceLogsService } from '@/api/fetch.js'; // 引入设备日志服务
 
 class TaskLog extends LitElement {
-  static styles = css`${unsafeCSS(styles)}`;
+  static styles = css`
+    ${unsafeCSS(styles)}
+  `;
 
   static get properties() {
     return {

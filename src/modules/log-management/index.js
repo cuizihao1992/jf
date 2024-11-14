@@ -42,28 +42,30 @@ class LogManagement extends LitElement {
           @button-click=${() => this.setActiveComponent('deviceLog')}
         ></custom-button>
       </div>
-      <div class="panel">${this.renderActiveComponent()}
-      <div style="position:absolute;top:0;left:100%;">
-        <!-- 任务详情弹窗 -->
-        ${this.isTaskDetailsOpen
-          ? html`<task-details
-              @close-modal=${this.closeTaskDetails}
-            ></task-details>`
-          : ''}
+      <div class="panel">
+        ${this.renderActiveComponent()}
+        <div style="position:absolute;top:0;left:100%;">
+          <!-- 任务详情弹窗 -->
+          ${this.isTaskDetailsOpen
+            ? html`<task-details
+                @close-modal=${this.closeTaskDetails}
+              ></task-details>`
+            : ''}
 
-        <!-- 故障详情弹窗 -->
-        ${this.isFaultDetailsOpen
-          ? html`<fault-details
-              @close-modal=${this.closeFaultDetails}
-            ></fault-details>`
-          : ''}
+          <!-- 故障详情弹窗 -->
+          ${this.isFaultDetailsOpen
+            ? html`<fault-details
+                @close-modal=${this.closeFaultDetails}
+              ></fault-details>`
+            : ''}
 
-        <!-- 设备日志弹窗 -->
-        ${this.isTaskLogOpen
-          ? html`<task-log-component
-              @close-modal=${this.closeTaskLog}
-            ></task-log-component>`
-          : ''}
+          <!-- 设备日志弹窗 -->
+          ${this.isTaskLogOpen
+            ? html`<task-log-component
+                @close-modal=${this.closeTaskLog}
+              ></task-log-component>`
+            : ''}
+        </div>
       </div>
     `;
   }

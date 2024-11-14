@@ -3,7 +3,9 @@ import styles from './css/task-query-component.css?inline';
 import { taskService } from '@/api/fetch.js';
 
 class TaskQueryComponent extends LitElement {
-  static styles = css`${unsafeCSS(styles)}`;
+  static styles = css`
+    ${unsafeCSS(styles)}
+  `;
   static get properties() {
     return {
       tasks: { type: Array }, // 添加设备审核属性

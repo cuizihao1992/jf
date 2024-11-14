@@ -2,7 +2,9 @@ import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/task-create-component.css?inline';
 
 class TaskCreateComponent extends LitElement {
-  static styles = css`${unsafeCSS(styles)}`;
+  static styles = css`
+    ${unsafeCSS(styles)}
+  `;
 
   render() {
     const deviceRows = [
@@ -253,10 +255,16 @@ class TaskCreateComponent extends LitElement {
           </div>
         </div>
         <div class="footer-buttons">
-          <button class="config-button" @click="${() => this.openParameterConfig()}">
+          <button
+            class="config-button"
+            @click="${() => this.openParameterConfig()}"
+          >
             配置参数
           </button>
-          <button class="select-button" @click="${() => this.openScopeSelection()}">
+          <button
+            class="select-button"
+            @click="${() => this.openScopeSelection()}"
+          >
             范围选择
           </button>
           <button class="submit-button">提交</button>

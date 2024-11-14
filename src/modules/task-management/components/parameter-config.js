@@ -2,7 +2,9 @@ import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/parameter-config.css?inline';
 
 class ParameterConfig extends LitElement {
-  static styles = css`${unsafeCSS(styles)}`;
+  static styles = css`
+    ${unsafeCSS(styles)}
+  `;
 
   static properties = {
     selectedTab: { type: String },

@@ -77,7 +77,8 @@ class HomePage extends LitElement {
   }
 
   initMap() {
-    mapboxgl.accessToken = 'pk.eyJ1IjoiaG9uZ2xpbmdqaW4xOTk0IiwiYSI6ImNrczhvZTNmbDN0ZnEycHM3aTkyanp3NmsifQ.iCdeT5IE9GlGKmExl0U6zA';
+    mapboxgl.accessToken =
+      'pk.eyJ1IjoiaG9uZ2xpbmdqaW4xOTk0IiwiYSI6ImNrczhvZTNmbDN0ZnEycHM3aTkyanp3NmsifQ.iCdeT5IE9GlGKmExl0U6zA';
 
     const map = new mapboxgl.Map({
       container: this.shadowRoot.getElementById('map'),
@@ -105,7 +106,7 @@ class HomePage extends LitElement {
     map.on('load', () => {
       this.points = [
         { lng: 116.397, lat: 39.909, properties: { id: 1 } },
-        { lng: 116.398, lat: 39.910, properties: { id: 2 } },
+        { lng: 116.398, lat: 39.91, properties: { id: 2 } },
         { lng: 116.396, lat: 39.908, properties: { id: 3 } },
         { lng: 116.399, lat: 39.911, properties: { id: 4 } },
         { lng: 116.395, lat: 39.907, properties: { id: 5 } },
@@ -115,15 +116,15 @@ class HomePage extends LitElement {
         type: 'geojson',
         data: {
           type: 'FeatureCollection',
-          features: this.points.map(point => ({
+          features: this.points.map((point) => ({
             type: 'Feature',
             geometry: {
               type: 'Point',
-              coordinates: [point.lng, point.lat]
+              coordinates: [point.lng, point.lat],
             },
-            properties: point.properties
-          }))
-        }
+            properties: point.properties,
+          })),
+        },
       });
 
       map.addLayer({
@@ -133,16 +134,16 @@ class HomePage extends LitElement {
         paint: {
           'circle-radius': 6,
           'circle-color': '#4CAF50',
-          'circle-opacity': 0.8
-        }
+          'circle-opacity': 0.8,
+        },
       });
 
       map.addSource('selected-points', {
         type: 'geojson',
         data: {
           type: 'FeatureCollection',
-          features: []
-        }
+          features: [],
+        },
       });
 
       map.addLayer({
@@ -152,8 +153,8 @@ class HomePage extends LitElement {
         paint: {
           'circle-radius': 6,
           'circle-color': '#FF0000',
-          'circle-opacity': 0.7
-        }
+          'circle-opacity': 0.7,
+        },
       });
 
       this.setMapStyle(map);
@@ -162,24 +163,24 @@ class HomePage extends LitElement {
 
     window.addEventListener('polygon-created', (e) => {
       const polygon = e.detail.polygon;
-      
+
       const points = {
         type: 'FeatureCollection',
-        features: this.points.map(point => ({
+        features: this.points.map((point) => ({
           type: 'Feature',
           geometry: {
             type: 'Point',
-            coordinates: [point.lng, point.lat]
+            coordinates: [point.lng, point.lat],
           },
-          properties: point.properties
-        }))
+          properties: point.properties,
+        })),
       };
 
       const selectedPoints = {
         type: 'FeatureCollection',
-        features: points.features.filter(point => {
+        features: points.features.filter((point) => {
           return turf.booleanPointInPolygon(point, polygon);
-        })
+        }),
       };
 
       map.getSource('selected-points').setData(selectedPoints);
@@ -202,44 +203,44 @@ class HomePage extends LitElement {
         },
       });
       window.dispatchEvent(event);
-    
+
       event.detail.position = '右上';
       window.dispatchEvent(event);
-    
+
       event.detail.position = '左下';
       window.dispatchEvent(event);
-    
+
       event.detail.position = '右下';
       window.dispatchEvent(event);
-    
+
       // 清除选中点图层
       map.getSource('selected-points').setData({
         type: 'FeatureCollection',
-        features: []
+        features: [],
       });
     });
-     // 添加绘制多边形完成事件监听
-     map.on('draw.create', (e) => {
+    // 添加绘制多边形完成事件监听
+    map.on('draw.create', (e) => {
       if (e.features[0].geometry.type === 'Polygon') {
         const polygon = e.features[0];
-        
+
         const points = {
           type: 'FeatureCollection',
-          features: this.points.map(point => ({
+          features: this.points.map((point) => ({
             type: 'Feature',
             geometry: {
               type: 'Point',
-              coordinates: [point.lng, point.lat]
+              coordinates: [point.lng, point.lat],
             },
-            properties: point.properties
-          }))
+            properties: point.properties,
+          })),
         };
 
         const selectedPoints = {
           type: 'FeatureCollection',
-          features: points.features.filter(point => {
+          features: points.features.filter((point) => {
             return turf.booleanPointInPolygon(point, polygon);
-          })
+          }),
         };
 
         map.getSource('selected-points').setData(selectedPoints);
@@ -304,14 +305,17 @@ class HomePage extends LitElement {
   }
 
   setChineseLabels(map) {
-    const labelLayers = map.getStyle().layers.filter(
-      layer => layer.id.includes('label') || 
-               layer.id.includes('place') || 
-               layer.id.includes('poi') || 
-               layer.id.includes('text')
-    );
+    const labelLayers = map
+      .getStyle()
+      .layers.filter(
+        (layer) =>
+          layer.id.includes('label') ||
+          layer.id.includes('place') ||
+          layer.id.includes('poi') ||
+          layer.id.includes('text')
+      );
 
-    labelLayers.forEach(layer => {
+    labelLayers.forEach((layer) => {
       if (map.getLayoutProperty(layer.id, 'text-field')) {
         map.setLayoutProperty(layer.id, 'text-field', [
           'coalesce',
@@ -335,9 +339,10 @@ class HomePage extends LitElement {
   drawPolygon(points) {
     const positions = ['左上', '右上', '右下', '左下'];
     const orderedPoints = positions.map(
-      (pos) => points.find((p) => p.properties.position === pos).geometry.coordinates
+      (pos) =>
+        points.find((p) => p.properties.position === pos).geometry.coordinates
     );
-  
+
     const polygon = {
       type: 'Feature',
       geometry: {
@@ -345,12 +350,12 @@ class HomePage extends LitElement {
         coordinates: [[...orderedPoints, orderedPoints[0]]],
       },
     };
-  
+
     this.draw.deleteAll();
     this.draw.add(polygon);
-  
+
     const event = new CustomEvent('polygon-created', {
-      detail: { polygon }
+      detail: { polygon },
     });
     window.dispatchEvent(event);
   }
@@ -358,7 +363,7 @@ class HomePage extends LitElement {
   fitDiagonalPoints() {
     const features = this.draw.getAll().features;
     const points = features.filter((f) => f.geometry.type === 'Point');
-    
+
     if (points.length !== 2) {
       console.warn('需要恰好两个对角点才能进行拟合');
       return;
@@ -388,7 +393,9 @@ class HomePage extends LitElement {
       rightBottom = [leftTop[0] + width, leftTop[1] - height];
       leftBottom = [leftTop[0], leftTop[1] - height];
     } else {
-      const rightTopPoint = points.find((p) => p.properties.position === '右上');
+      const rightTopPoint = points.find(
+        (p) => p.properties.position === '右上'
+      );
       rightTop = rightTopPoint.geometry.coordinates;
       leftTop = [rightTop[0] - width, rightTop[1]];
       leftBottom = [rightTop[0] - width, rightTop[1] - height];
@@ -467,14 +474,34 @@ class HomePage extends LitElement {
             <div class="nav">
               <div class="nav-left">
                 <a href="/" class="${this.isActive('/')}">系统首页</a>
-                <a href="/device-control" class="${this.isActive('/device-control')}">设备控制</a>
-                <a href="/task-management" class="${this.isActive('/task-management')}">任务管理</a>
+                <a
+                  href="/device-control"
+                  class="${this.isActive('/device-control')}"
+                  >设备控制</a
+                >
+                <a
+                  href="/task-management"
+                  class="${this.isActive('/task-management')}"
+                  >任务管理</a
+                >
               </div>
 
               <div class="nav-right">
-                <a href="/device-management" class="${this.isActive('/device-management')}">设备管理</a>
-                <a href="/user-management" class="${this.isActive('/user-management')}">用户管理</a>
-                <a href="/log-management" class="${this.isActive('/log-management')}">日志管理</a>
+                <a
+                  href="/device-management"
+                  class="${this.isActive('/device-management')}"
+                  >设备管理</a
+                >
+                <a
+                  href="/user-management"
+                  class="${this.isActive('/user-management')}"
+                  >用户管理</a
+                >
+                <a
+                  href="/log-management"
+                  class="${this.isActive('/log-management')}"
+                  >日志管理</a
+                >
               </div>
             </div>
             <div id="map"></div>

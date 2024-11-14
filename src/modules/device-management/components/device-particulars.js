@@ -3,8 +3,10 @@ import styles from './css/device-particulars.css?inline';
 import { deviceService } from '@/api/fetch.js';
 
 class DeviceParticulars extends LitElement {
-  static styles = css`${unsafeCSS(styles)}`;
-  
+  static styles = css`
+    ${unsafeCSS(styles)}
+  `;
+
   static get properties() {
     return {
       devices: { type: Array },
@@ -27,7 +29,7 @@ class DeviceParticulars extends LitElement {
       reviewer: '',
       reviewTime: '',
       reviewOpinion: '',
-      notes: ''
+      notes: '',
     };
   }
 
@@ -68,7 +70,7 @@ class DeviceParticulars extends LitElement {
   submitReview() {
     console.log('提交审核数据:', {
       device: this.selectedDevice,
-      review: this.data
+      review: this.data,
     });
     // 这里添加提交审核的逻辑
     this.closeModal();
@@ -159,58 +161,73 @@ class DeviceParticulars extends LitElement {
           </div>
         </div>
 
-        ${this.isReview ? html`
-          <div class="review-info">
-            <div class="row">
-              <label for="reviewer">审核人:</label>
-              <input 
-                type="text" 
-                id="reviewer"
-                .value="${this.data.reviewer}"
-                ?readonly="${!this.isReviewEdit}"
-                @input="${(e) => this.handleReviewInputChange(e, 'reviewer')}"
-              />
-            </div>
-            <div class="row">
-              <label for="review-time">审核时间:</label>
-              <input 
-                type="datetime-local" 
-                id="review-time"
-                .value="${this.data.reviewTime}"
-                ?readonly="${!this.isReviewEdit}"
-                @input="${(e) => this.handleReviewInputChange(e, 'reviewTime')}"
-              />
-            </div>
-            <div class="row">
-              <label for="review-opinion">审核意见:</label>
-              <input 
-                type="text" 
-                id="review-opinion"
-                .value="${this.data.reviewOpinion}"
-                ?readonly="${!this.isReviewEdit}"
-                @input="${(e) => this.handleReviewInputChange(e, 'reviewOpinion')}"
-              />
-            </div>
-            <div class="row">
-              <label for="notes">备注:</label>
-              <textarea 
-                id="notes"
-                .value="${this.data.notes}"
-                ?readonly="${!this.isReviewEdit}"
-                @input="${(e) => this.handleReviewInputChange(e, 'notes')}"
-              ></textarea>
-            </div>
-          </div>
-        ` : ''}
+        ${this.isReview
+          ? html`
+              <div class="review-info">
+                <div class="row">
+                  <label for="reviewer">审核人:</label>
+                  <input
+                    type="text"
+                    id="reviewer"
+                    .value="${this.data.reviewer}"
+                    ?readonly="${!this.isReviewEdit}"
+                    @input="${(e) =>
+                      this.handleReviewInputChange(e, 'reviewer')}"
+                  />
+                </div>
+                <div class="row">
+                  <label for="review-time">审核时间:</label>
+                  <input
+                    type="datetime-local"
+                    id="review-time"
+                    .value="${this.data.reviewTime}"
+                    ?readonly="${!this.isReviewEdit}"
+                    @input="${(e) =>
+                      this.handleReviewInputChange(e, 'reviewTime')}"
+                  />
+                </div>
+                <div class="row">
+                  <label for="review-opinion">审核意见:</label>
+                  <input
+                    type="text"
+                    id="review-opinion"
+                    .value="${this.data.reviewOpinion}"
+                    ?readonly="${!this.isReviewEdit}"
+                    @input="${(e) =>
+                      this.handleReviewInputChange(e, 'reviewOpinion')}"
+                  />
+                </div>
+                <div class="row">
+                  <label for="notes">备注:</label>
+                  <textarea
+                    id="notes"
+                    .value="${this.data.notes}"
+                    ?readonly="${!this.isReviewEdit}"
+                    @input="${(e) => this.handleReviewInputChange(e, 'notes')}"
+                  ></textarea>
+                </div>
+              </div>
+            `
+          : ''}
 
         <div class="button-group">
-          <button class="cancel-button" @click="${this.closeModal}">取消</button>
-          ${this.isEdit ? html`
-            <button class="save-button" @click="${this.saveDevice}">保存</button>
-          ` : ''}
-          ${this.isReviewEdit ? html`
-            <button class="submit-button" @click="${this.submitReview}">提交审核</button>
-          ` : ''}
+          <button class="cancel-button" @click="${this.closeModal}">
+            取消
+          </button>
+          ${this.isEdit
+            ? html`
+                <button class="save-button" @click="${this.saveDevice}">
+                  保存
+                </button>
+              `
+            : ''}
+          ${this.isReviewEdit
+            ? html`
+                <button class="submit-button" @click="${this.submitReview}">
+                  提交审核
+                </button>
+              `
+            : ''}
         </div>
       </div>
     `;
@@ -221,4 +238,4 @@ class DeviceParticulars extends LitElement {
   }
 }
 
-customElements.define('device-particulars', DeviceParticulars); 
+customElements.define('device-particulars', DeviceParticulars);

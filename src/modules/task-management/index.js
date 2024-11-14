@@ -73,55 +73,55 @@ class TaskManagement extends LitElement {
         ></custom-button>
       </div>
 
-      <div class="panel" >
+      <div class="panel">
         ${this.renderActiveComponent()}
-         <div style="position:absolute;top:0;left:100%;">
-        ${this.isTaskDetailsOpen
-          ? html`<task-details
-              .data=${this.currentTask}
-              @updateData=${this.updateData}
-              @close-modal=${this.closeTaskDetails}
-            ></task-details>`
-          : ''}
-        ${this.isFaultDetailsOpen
-          ? html`<fault-details
-              @close-modal=${this.closeFaultDetails}
-            ></fault-details>`
-          : ''}
-        ${this.isTaskLogOpen
-          ? html`<task-log-component
-              @close-modal=${this.closeTaskLog}
-            ></task-log-component>`
-          : ''}
-        ${this.isTaskReviewDetailOpen
-          ? html`<task-review-detail
-              @close-modal=${this.closeTaskReviewDetail}
-            ></task-review-detail>`
-          : ''}
-        ${this.isTaskReviewReviewOpen
-          ? html`<task-review-review
-              @close-modal=${this.closeTaskReviewReview}
-            ></task-review-review>`
-          : ''}
-        ${this.isStatusMissionOpen
-          ? html`<status-mission
-              @close-modal=${this.closeStatusMission}
-            ></status-mission>`
-          : ''}
-        ${this.isScopeSelectionOpen
-          ? html`<scope-selection
-              @close-modal=${this.closeScopeSelection}
-            ></scope-selection>`
-          : ''}
-        ${this.isParameterConfigOpen
-          ? html`<parameter-config
-              @close-modal=${this.closeParameterConfig}
-            ></parameter-config>`
-          : ''}
-        ${this.isTaskEditOpen
-          ? html`<task-edit @close-modal=${this.closeTaskEdit}></task-edit>`
-          : ''}
-        
+        <div style="position:absolute;top:0;left:100%;">
+          ${this.isTaskDetailsOpen
+            ? html`<task-details
+                .data=${this.currentTask}
+                @updateData=${this.updateData}
+                @close-modal=${this.closeTaskDetails}
+              ></task-details>`
+            : ''}
+          ${this.isFaultDetailsOpen
+            ? html`<fault-details
+                @close-modal=${this.closeFaultDetails}
+              ></fault-details>`
+            : ''}
+          ${this.isTaskLogOpen
+            ? html`<task-log-component
+                @close-modal=${this.closeTaskLog}
+              ></task-log-component>`
+            : ''}
+          ${this.isTaskReviewDetailOpen
+            ? html`<task-review-detail
+                @close-modal=${this.closeTaskReviewDetail}
+              ></task-review-detail>`
+            : ''}
+          ${this.isTaskReviewReviewOpen
+            ? html`<task-review-review
+                @close-modal=${this.closeTaskReviewReview}
+              ></task-review-review>`
+            : ''}
+          ${this.isStatusMissionOpen
+            ? html`<status-mission
+                @close-modal=${this.closeStatusMission}
+              ></status-mission>`
+            : ''}
+          ${this.isScopeSelectionOpen
+            ? html`<scope-selection
+                @close-modal=${this.closeScopeSelection}
+              ></scope-selection>`
+            : ''}
+          ${this.isParameterConfigOpen
+            ? html`<parameter-config
+                @close-modal=${this.closeParameterConfig}
+              ></parameter-config>`
+            : ''}
+          ${this.isTaskEditOpen
+            ? html`<task-edit @close-modal=${this.closeTaskEdit}></task-edit>`
+            : ''}
+        </div>
       </div>
     `;
   }

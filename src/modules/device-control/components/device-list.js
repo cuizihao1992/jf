@@ -2,7 +2,9 @@ import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/device-list.css?inline';
 
 class DeviceList extends LitElement {
-  static styles = css`${unsafeCSS(styles)}`;
+  static styles = css`
+    ${unsafeCSS(styles)}
+  `;
 
   render() {
     return html`

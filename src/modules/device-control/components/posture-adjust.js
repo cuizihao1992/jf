@@ -2,11 +2,13 @@ import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/posture-adjust.css?inline';
 
 class PostureAdjust extends LitElement {
-  static styles = css`${unsafeCSS(styles)}`;
+  static styles = css`
+    ${unsafeCSS(styles)}
+  `;
 
   static properties = {
     horizontalAngle: { type: String },
-    pitchAngle: { type: String }
+    pitchAngle: { type: String },
   };
 
   constructor() {
@@ -85,7 +87,11 @@ class PostureAdjust extends LitElement {
               <div class="angle-container">
                 <div class="angle-row">
                   <label>水平角：</label>
-                  <input type="text" value="${this.horizontalAngle}°" readonly />
+                  <input
+                    type="text"
+                    value="${this.horizontalAngle}°"
+                    readonly
+                  />
                   <button class="command-btn">下达指令</button>
                 </div>
                 <div class="angle-row">

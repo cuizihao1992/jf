@@ -3,7 +3,9 @@ import styles from './css/device-approve.css?inline';
 import { deviceReviewService } from '@/api/fetch.js';
 
 class DeviceApprove extends LitElement {
-  static styles = css`${unsafeCSS(styles)}`;
+  static styles = css`
+    ${unsafeCSS(styles)}
+  `;
 
   static get properties() {
     return {
@@ -115,8 +117,13 @@ class DeviceApprove extends LitElement {
           <td>${review.reviewStatus}</td>
           <td>${review.createdTime}</td>
           <td>
-            <a @click="${() => this.openDeviceParticulars(review, 'view')}">查看</a> /
-            <a @click="${() => this.openDeviceParticulars(review, 'review')}">审核</a>
+            <a @click="${() => this.openDeviceParticulars(review, 'view')}"
+              >查看</a
+            >
+            /
+            <a @click="${() => this.openDeviceParticulars(review, 'review')}"
+              >审核</a
+            >
           </td>
         </tr>
       `
@@ -135,15 +142,15 @@ class DeviceApprove extends LitElement {
           mode: {
             isEdit: false,
             isReview: true,
-            isReviewEdit: type === 'review'
+            isReviewEdit: type === 'review',
           },
           reviewData: {
             reviewer: review.reviewer || '',
             reviewTime: review.reviewTime || '',
             reviewOpinion: review.reviewOpinion || '',
-            notes: review.notes || ''
-          }
-        }
+            notes: review.notes || '',
+          },
+        },
       })
     );
   }

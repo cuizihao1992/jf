@@ -2,7 +2,9 @@ import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/scope-selection.css?inline';
 
 class ScopeSelection extends LitElement {
-  static styles = css`${unsafeCSS(styles)}`;
+  static styles = css`
+    ${unsafeCSS(styles)}
+  `;
 
   static properties = {
     coordinates: { state: true },
@@ -94,13 +96,14 @@ class ScopeSelection extends LitElement {
   handleConfirmClick() {
     const event = new CustomEvent('draw-polygon', {
       bubbles: true,
-      composed: true
+      composed: true,
     });
     this.dispatchEvent(event);
-  
+
     // 使用全局 map 实例
     if (window.mapInstance) {
-      const count = window.mapInstance.querySourceFeatures('selected-points').length;
+      const count =
+        window.mapInstance.querySourceFeatures('selected-points').length;
       alert(`选中点位数量: ${count}`);
     }
   }

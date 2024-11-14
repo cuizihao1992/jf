@@ -3,7 +3,9 @@ import styles from './css/device-edit.css?inline';
 import { deviceService } from '@/api/fetch.js';
 
 class DeviceEdit extends LitElement {
-  static styles = css`${unsafeCSS(styles)}`;
+  static styles = css`
+    ${unsafeCSS(styles)}
+  `;
   static get properties() {
     return {
       devices: { type: Array },
@@ -120,21 +122,29 @@ class DeviceEdit extends LitElement {
   renderRows() {
     return this.devices.map(
       (device) => html`
-      <tr class="table-row">
-        <td>${device.id}</td>
-        <td>${device.lastSyncTime}</td>
-        <td>${device.deviceType}</td>
-        <td>${device.region}</td>
-        <td>${device.connectionStatus}</td>
-        <td><span class="status-icon status-online">${device.powerStatus}</span></td>
-        <td>${device.deviceStatus}</td>
-        <td>
-          <a @click="${() => this.openDeviceParticulars(device, 'view')}">查看</a> /
-          <a @click="${() => this.openDeviceParticulars(device, 'edit')}">编辑</a> /
-          <a @click="${() => this.openRevokeConfirmation(device)}">删除</a>
-        </td>
-      </tr>
-    `
+        <tr class="table-row">
+          <td>${device.id}</td>
+          <td>${device.lastSyncTime}</td>
+          <td>${device.deviceType}</td>
+          <td>${device.region}</td>
+          <td>${device.connectionStatus}</td>
+          <td>
+            <span class="status-icon status-online">${device.powerStatus}</span>
+          </td>
+          <td>${device.deviceStatus}</td>
+          <td>
+            <a @click="${() => this.openDeviceParticulars(device, 'view')}"
+              >查看</a
+            >
+            /
+            <a @click="${() => this.openDeviceParticulars(device, 'edit')}"
+              >编辑</a
+            >
+            /
+            <a @click="${() => this.openRevokeConfirmation(device)}">删除</a>
+          </td>
+        </tr>
+      `
     );
   }
 
@@ -155,9 +165,9 @@ class DeviceEdit extends LitElement {
           mode: {
             isEdit: type === 'edit',
             isReview: false,
-            isReviewEdit: false
-          }
-        }
+            isReviewEdit: false,
+          },
+        },
       })
     );
   }

@@ -4,7 +4,7 @@
   position: fixed;
   display: block;
   width: 490px;
-  font-family: "Arial", sans-serif;
+  font-family: 'Arial', sans-serif;
   background: linear-gradient(135deg, #003366, #005599);
   color: white;
   border-radius: 10px;
@@ -35,4 +35,4 @@
   width: 450px;
   height: 300px;
   border: 1px solid rgba(42, 130, 228, 1);
-} 
+}

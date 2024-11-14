@@ -3,8 +3,10 @@ import styles from './css/device-log.css?inline';
 import { deviceLogsService } from '@/api/fetch.js';
 
 class DeviceLog extends LitElement {
-  static styles = css`${unsafeCSS(styles)}`;
-  
+  static styles = css`
+    ${unsafeCSS(styles)}
+  `;
+
   static get properties() {
     return {
       deviceLogs: { type: Array }, // 添加设备日志属性

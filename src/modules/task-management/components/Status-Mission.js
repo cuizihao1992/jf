@@ -2,7 +2,9 @@ import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/status-mission.css?inline';
 
 class StatusMission extends LitElement {
-  static styles = css`${unsafeCSS(styles)}`;
+  static styles = css`
+    ${unsafeCSS(styles)}
+  `;
 
   static properties = {
     tasks: { type: Array },

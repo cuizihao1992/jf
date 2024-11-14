@@ -3,10 +3,12 @@ import styles from './css/device-search.css?inline';
 import { deviceService } from '@/api/fetch.js';
 
 class DeviceSearch extends LitElement {
-  static styles = css`${unsafeCSS(styles)}`;
+  static styles = css`
+    ${unsafeCSS(styles)}
+  `;
   static get properties() {
     return {
-      devices: { type: Array  },
+      devices: { type: Array },
     };
   }
 
@@ -104,19 +106,21 @@ class DeviceSearch extends LitElement {
   renderRows() {
     return this.devices.map(
       (device) => html`
-      <tr class="table-row">
-        <td>${device.id}</td>
-        <td>${device.lastSyncTime}</td>
-        <td>${device.deviceType}</td>
-        <td>${device.region}</td>
-        <td>${device.connectionStatus}</td>
-        <td><span class="status-icon status-online">${device.powerStatus}</span></td>
-        <td>${device.deviceStatus}</td>
-        <td>
-          <a @click="${() => this.openDeviceParticulars(device)}">查看</a>
-        </td>
-      </tr>
-    `
+        <tr class="table-row">
+          <td>${device.id}</td>
+          <td>${device.lastSyncTime}</td>
+          <td>${device.deviceType}</td>
+          <td>${device.region}</td>
+          <td>${device.connectionStatus}</td>
+          <td>
+            <span class="status-icon status-online">${device.powerStatus}</span>
+          </td>
+          <td>${device.deviceStatus}</td>
+          <td>
+            <a @click="${() => this.openDeviceParticulars(device)}">查看</a>
+          </td>
+        </tr>
+      `
     );
   }
   closeModal() {
@@ -130,9 +134,9 @@ class DeviceSearch extends LitElement {
           mode: {
             isEdit: false,
             isReview: false,
-            isReviewEdit: false
-          }
-        }
+            isReviewEdit: false,
+          },
+        },
       })
     );
   }

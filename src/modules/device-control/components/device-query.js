@@ -17,7 +17,9 @@ class DeviceQuery extends LitElement {
     this.fetchDevices();
   }
 
-  static styles = css`${unsafeCSS(styles)}`;
+  static styles = css`
+    ${unsafeCSS(styles)}
+  `;
 
   async fetchDevices() {
     try {

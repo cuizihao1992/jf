@@ -3,7 +3,9 @@ import styles from './css/fault-details.css?inline';
 import { errorService } from '@/api/fetch.js';
 
 class FaultDetails extends LitElement {
-  static styles = css`${unsafeCSS(styles)}`;
+  static styles = css`
+    ${unsafeCSS(styles)}
+  `;
   static get properties() {
     return {
       faults: { type: Array }, // 添加 faults 属性
