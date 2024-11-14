@@ -9,13 +9,17 @@ class DeviceEdit extends LitElement {
   static get properties() {
     return {
       devices: { type: Array },
+      showConfirmation: { type: Boolean },
+      currentDevice: { type: Object },
     };
   }
 
   constructor() {
     super();
     this.devices = [];
-    this.fetchDevices(); // 初始化时获取设备审核数据
+    this.showConfirmation = false;
+    this.currentDevice = null;
+    this.fetchDevices();
   }
 
   async fetchDevices() {
@@ -99,23 +103,23 @@ class DeviceEdit extends LitElement {
             </tbody>
           </table>
         </div>
-      </div>
-      ${this.showConfirmation
-        ? html`
-            <div class="confirmation-modal">
-              <div>提示:</div>
-              <div>是否删除此任务!!</div>
-              <div class="confirmation-buttons">
-                <button class="confirm-button" @click="${this.confirmRevoke}">
-                  确定
-                </button>
-                <button class="cancel-button" @click="${this.cancelRevoke}">
-                  取消
-                </button>
+        ${this.showConfirmation
+          ? html`
+              <div class="confirmation-modal">
+                <div style="font-size: 16px; font-weight: bold;">提示</div>
+                <div style="margin: 20px 0;">是否删除此设备?</div>
+                <div class="confirmation-buttons">
+                  <button class="confirm-button" @click="${this.confirmDelete}">
+                    确定
+                  </button>
+                  <button class="cancel-button" @click="${this.cancelDelete}">
+                    取消
+                  </button>
+                </div>
               </div>
-            </div>
-          `
-        : ''}
+            `
+          : ''}
+      </div>
     `;
   }
 
@@ -133,13 +137,9 @@ class DeviceEdit extends LitElement {
           </td>
           <td>${device.deviceStatus}</td>
           <td>
-            <a @click="${() => this.openDeviceParticulars(device, 'view')}"
-              >查看</a
-            >
+            <a @click="${() => this.openDeviceParticulars(device, 'view')}">查看</a>
             /
-            <a @click="${() => this.openDeviceParticulars(device, 'edit')}"
-              >编辑</a
-            >
+            <a @click="${() => this.openDeviceParticulars(device, 'edit')}">编辑</a>
             /
             <a @click="${() => this.openRevokeConfirmation(device)}">删除</a>
           </td>
@@ -179,20 +179,22 @@ class DeviceEdit extends LitElement {
   }
   openRevokeConfirmation(device) {
     this.showConfirmation = true;
-    this.showTaskDetails = false;
-    this.deviceToRevoke = device;
+    this.currentDevice = device;
   }
 
-  // Handle confirm action
-  confirmRevoke() {
-    this.showConfirmation = false;
-    this.showTaskDetails = false;
-    console.log('任务撤回 confirmed');
-    // Add your revoke logic here
+  async confirmDelete() {
+    try {
+      await deviceService.delete(this.currentDevice.id);
+      this.fetchDevices();
+      this.showConfirmation = false;
+    } catch (error) {
+      console.error('删除设备失败:', error);
+    }
   }
-  // Handle cancel action
-  cancelRevoke() {
+
+  cancelDelete() {
     this.showConfirmation = false;
+    this.currentDevice = null;
   }
 }
 

@@ -168,4 +168,34 @@ a {
   text-align: center;
   font-family: Arial, sans-serif;
   z-index: 1000;
+  color: #808080;
+}
+
+.confirm-button,
+.cancel-button {
+  background-color: #337ab7;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 25px;
+  margin-right: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.confirm-button:hover,
+.cancel-button:hover {
+  background-color: #285e8e;
+}
+
+.cancel-button {
+  background-color: #337ab7;
+  margin-left: 20px;
+}
+
+.cancel-button:hover {
+  background-color: #555;
 }
