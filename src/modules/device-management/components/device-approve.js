@@ -115,8 +115,8 @@ class DeviceApprove extends LitElement {
           <td>${review.reviewStatus}</td>
           <td>${review.createdTime}</td>
           <td>
-            <a @click="${() => this.openDeviceReview(review)}">查看</a> /
-            <a @click="${() => this.openDeviceshenpi(review)}">审核</a>
+            <a @click="${() => this.openDeviceParticulars(review, 'view')}">查看</a> /
+            <a @click="${() => this.openDeviceParticulars(review, 'review')}">审核</a>
           </td>
         </tr>
       `
@@ -127,15 +127,24 @@ class DeviceApprove extends LitElement {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
 
-  openDeviceReview(review) {
+  openDeviceParticulars(review, type) {
     this.dispatchEvent(
-      new CustomEvent('open-device-review', { detail: review })
-    );
-  }
-
-  openDeviceshenpi(review) {
-    this.dispatchEvent(
-      new CustomEvent('open-device-shenpi', { detail: review })
+      new CustomEvent('open-device-particulars', {
+        detail: {
+          device: review,
+          mode: {
+            isEdit: false,
+            isReview: true,
+            isReviewEdit: type === 'review'
+          },
+          reviewData: {
+            reviewer: review.reviewer || '',
+            reviewTime: review.reviewTime || '',
+            reviewOpinion: review.reviewOpinion || '',
+            notes: review.notes || ''
+          }
+        }
+      })
     );
   }
 }

@@ -121,16 +121,18 @@ class DeviceEdit extends LitElement {
     return this.devices.map(
       (device) => html`
       <tr class="table-row">
-        <td>${device.id}</a></td>
+        <td>${device.id}</td>
         <td>${device.lastSyncTime}</td>
         <td>${device.deviceType}</td>
         <td>${device.region}</td>
         <td>${device.connectionStatus}</td>
         <td><span class="status-icon status-online">${device.powerStatus}</span></td>
         <td>${device.deviceStatus}</td>
-         <td><a @click="${() => this.openDeviceParticulars()}">查看</a>
-        /<a @click="${() => this.openDevicexiangqing()}">编辑</a>
-        /<a @click="${() => this.openRevokeConfirmation()}">删除</a></td>
+        <td>
+          <a @click="${() => this.openDeviceParticulars(device, 'view')}">查看</a> /
+          <a @click="${() => this.openDeviceParticulars(device, 'edit')}">编辑</a> /
+          <a @click="${() => this.openRevokeConfirmation(device)}">删除</a>
+        </td>
       </tr>
     `
     );
@@ -145,11 +147,19 @@ class DeviceEdit extends LitElement {
     ); /*this.showConfirmation=false;
     this.dispatchEvent(new CustomEvent('open-task-details'));*/
   }
-  openDeviceParticulars() {
+  openDeviceParticulars(device, type) {
     this.dispatchEvent(
-      new CustomEvent('open-device-particulars')
-    ); /*this.showConfirmation=false;
-    this.dispatchEvent(new CustomEvent('open-task-details'));*/
+      new CustomEvent('open-device-particulars', {
+        detail: {
+          device,
+          mode: {
+            isEdit: type === 'edit',
+            isReview: false,
+            isReviewEdit: false
+          }
+        }
+      })
+    );
   }
   handleClose() {
     // 这里可以添加关闭窗口的逻辑
@@ -157,9 +167,10 @@ class DeviceEdit extends LitElement {
     this.remove();
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
-  openRevokeConfirmation() {
+  openRevokeConfirmation(device) {
     this.showConfirmation = true;
     this.showTaskDetails = false;
+    this.deviceToRevoke = device;
   }
 
   // Handle confirm action

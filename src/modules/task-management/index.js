@@ -4,16 +4,12 @@ import { sharedStyles } from '../../components/shared-styles.js'; // 引入共�
 import './components/task-info-component.js';
 import './components/task-create-component.js'; // 假设有创建任务组件
 import './components/task-query-component.js'; // 假设有任务查询组件
-import './components/task-review-component.js'; // 假设有任务审核组件
 import './components/Fault-details.js'; // 引入故障详情组件
 import './components/task-details.js'; // 引入任务详情组件
 import './components/task-log-component.js';
-import './components/task-review-detail.js';
-import './components/task-review-review.js';
 import './components/Status-Mission.js'; // 引入任务状态组件
 import './components/Scope-selection.js'; // 引入范围选择组件
 import './components/parameter-config.js'; // 引入范围选择组件
-import './components/task-edit.js';
 class TaskManagement extends LitElement {
   static styles = [sharedStyles];
   static properties = {

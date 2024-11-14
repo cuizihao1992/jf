@@ -1,38 +1,28 @@
 import { LitElement, html, css } from 'lit';
-import '../../components/custom-button.js'; // Import the reusable button component
-import { sharedStyles } from '../../components/shared-styles.js'; // 引入共享样式
+import '../../components/custom-button.js';
+import { sharedStyles } from '../../components/shared-styles.js';
 import './components/device-add.js';
-import './components/device-approve.js'; // 假设有创建任务组件
-import './components/device-edit.js'; // 假设有任务查询组件
-import './components/device-xiangqing.js'; // 假设有任务查询组件
-import './components/device-review.js'; // 假设有任务查询组件
-import './components/device-shenpi.js'; // 假设有任务查询组件
-import './components/device-search.js'; // 假设有任务查询组件
-import './components/device-particulars.js'; // 假设有任务查询组件
+import './components/device-approve.js';
+import './components/device-edit.js';
+import './components/device-search.js';
+import './components/device-particulars.js';
 
 class DeviceManagement extends LitElement {
   static styles = [sharedStyles];
 
   static properties = {
-    selectedButton: { type: String }, // 记录选中的按钮
+    selectedButton: { type: String },
     activeComponent: { type: String },
-    isDevicexiangqingOpen: { type: Boolean },
-    isDeviceReviewOpen: { type: Boolean },
-    isDeviceShenpiOpen: { type: Boolean }, // 记录当前显示的组件
-    isDeviceSearchOpen: { type: Boolean },
     isDeviceParticularsOpen: { type: Boolean },
+    deviceParticularsData: { type: Object },
   };
 
   constructor() {
     super();
-    this.selectedButton = ''; // 初始状态没有选中按钮
+    this.selectedButton = '';
     this.activeComponent = '';
-    this.isTaskDetailsOpen = false;
-    this.isDevicexiangqingOpen = false;
-    this.isDeviceReviewOpen = false;
-    this.isDeviceShenpiOpen = false;
-    this.isDeviceSearchOpen = false;
-    this.isDeviceParticularsOpen = false; // 初始状态不显示任何组件
+    this.isDeviceParticularsOpen = false;
+    this.deviceParticularsData = null;
   }
 
   render() {
@@ -64,44 +54,27 @@ class DeviceManagement extends LitElement {
       </div>
 
       <div class="panel">
-      ${this.renderActiveComponent()}
-      <div style="position:absolute;top:0;left:100%;">
-      ${this.isDevicexiangqingOpen
-        ? html`<device-xiangqing
-            @close-modal=${this.closeDevicexiangqing}
-          ></device-xiangqing>`
-        : ''}
-      ${this.isDeviceReviewOpen
-        ? html`<device-review
-            @close-modal=${this.closeDeviceReview}
-          ></device-review>`
-        : ''}
-      ${this.isDeviceShenpiOpen
-        ? html`<device-shenpi
-            @close-modal=${this.closeDeviceShenpi}
-          ></device-shenpi>`
-        : ''}
-      ${this.isDeviceParticularsOpen
-        ? html`<device-particulars
-            @close-modal=${this.closeDeviceParticulars}
-          ></device-particulars>`
-        : ''}
+        ${this.renderActiveComponent()}
+        <div style="position:absolute;top:0;left:100%;">
+          ${this.isDeviceParticularsOpen
+            ? html`<device-particulars
+                .deviceData=${this.deviceParticularsData}
+                @close-modal=${this.closeDeviceParticulars}
+              ></device-particulars>`
+            : ''}
+        </div>
       </div>
     `;
   }
 
   setActiveComponent(componentName) {
-    // 如果点击的按钮已经选中，取消选中并关闭组件
     if (this.activeComponent === componentName) {
-      this.activeComponent = ''; // 关闭组件
-      this.selectedButton = ''; // 清除选中状态
+      this.activeComponent = '';
+      this.selectedButton = '';
     } else {
-      this.activeComponent = componentName; // 切换到新组件
+      this.activeComponent = componentName;
       this.selectedButton = componentName;
-      this.isDevicexiangqingOpen = false;
-      this.isDeviceReviewOpen = false;
-      this.isDeviceShenpiOpen = false;
-      this.isDeviceParticularsOpen = false; // 设置当前选中的按钮
+      this.isDeviceParticularsOpen = false;
     }
   }
 
@@ -117,55 +90,38 @@ class DeviceManagement extends LitElement {
       case 'editDevice':
         return html`<device-edit
           @close-modal=${this.closeTasks}
-          @open-device-xiangqing=${this.openDevicexiangqing}
           @open-device-particulars=${this.openDeviceParticulars}
         ></device-edit>`;
       case 'approveDevice':
         return html`<device-approve
           @close-modal=${this.closeTasks}
-          @open-device-review=${this.openDevicereview}
-          @open-device-shenpi=${this.openDeviceshenpi}
+          @open-device-particulars=${this.openDeviceParticulars}
         ></device-approve>`;
       default:
-        return ''; // 不显示任何组件
+        return '';
     }
   }
+
   closeTasks() {
-    this.activeComponent = ''; // 隐藏当前组件
-    this.selectedButton = ''; // 清除选中状态
-  }
-  openDevicexiangqing() {
-    this.isDevicexiangqingOpen = true;
-    this.isDeviceParticularsOpen = false;
-  }
-  closeDevicexiangqing() {
-    this.isDevicexiangqingOpen = false;
-  }
-  openDeviceParticulars() {
-    this.isDeviceParticularsOpen = true;
-    this.isDevicexiangqingOpen = false;
-    //this.isFaultDetailsOpen = false;
-    //this.isTaskLogOpen = false// 打开故障详情弹窗
-    // 打开任务详情弹窗
-    //this.activeComponent = "taskDetails"; // 设置为任务详情组件
-  }
-  closeDeviceParticulars() {
-    this.isDeviceParticularsOpen = false;
+    this.activeComponent = '';
+    this.selectedButton = '';
   }
 
-  openDevicereview() {
-    this.isDeviceReviewOpen = true;
-    this.isDeviceShenpiOpen = false;
+  openDeviceParticulars(e) {
+    this.deviceParticularsData = e.detail;
+    this.isDeviceParticularsOpen = true;
+    
+    requestAnimationFrame(() => {
+      const particularsElement = this.shadowRoot.querySelector('device-particulars');
+      if (particularsElement) {
+        particularsElement.setDeviceData(e.detail);
+      }
+    });
   }
-  closeDeviceReview() {
-    this.isDeviceReviewOpen = false;
-  }
-  openDeviceshenpi() {
-    this.isDeviceShenpiOpen = true;
-    this.isDeviceReviewOpen = false;
-  }
-  closeDeviceShenpi() {
-    this.isDeviceShenpiOpen = false;
+
+  closeDeviceParticulars() {
+    this.isDeviceParticularsOpen = false;
+    this.deviceParticularsData = null;
   }
 }
 

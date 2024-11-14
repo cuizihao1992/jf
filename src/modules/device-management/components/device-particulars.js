@@ -9,6 +9,10 @@ class DeviceParticulars extends LitElement {
     return {
       devices: { type: Array },
       selectedDevice: { type: Object },
+      isEdit: { type: Boolean },
+      isReview: { type: Boolean },
+      isReviewEdit: { type: Boolean },
+      data: { type: Object },
     };
   }
 
@@ -16,30 +20,65 @@ class DeviceParticulars extends LitElement {
     super();
     this.devices = [];
     this.selectedDevice = {};
-    this.fetchDevices();
+    this.isEdit = false;
+    this.isReview = false;
+    this.isReviewEdit = false;
+    this.data = {
+      reviewer: '',
+      reviewTime: '',
+      reviewOpinion: '',
+      notes: ''
+    };
   }
 
-  async fetchDevices() {
-    try {
-      const params = {
-        pageNum: 1,
-        pageSize: 100000,
-      };
-      const data = await deviceService.list(params);
-      this.devices = data.rows;
-      if (this.devices.length > 0) {
-        this.selectedDevice = this.devices[0];
+  setDeviceData(detail) {
+    if (detail) {
+      this.selectedDevice = detail.device || {};
+      if (detail.mode) {
+        this.isEdit = detail.mode.isEdit;
+        this.isReview = detail.mode.isReview;
+        this.isReviewEdit = detail.mode.isReviewEdit;
       }
-    } catch (error) {
-      console.error('获取设备数据失败:', error);
+      if (detail.reviewData) {
+        this.data = { ...detail.reviewData };
+      }
+      this.requestUpdate();
     }
+  }
+
+  handleInputChange(event, field) {
+    this.selectedDevice[field] = event.target.value;
+    this.requestUpdate();
+  }
+
+  handleReviewInputChange(event, field) {
+    this.data[field] = event.target.value;
+    this.requestUpdate();
+  }
+
+  saveDevice() {
+    console.log('保存设备数据:', this.selectedDevice);
+    deviceService.update(this.selectedDevice);
+    this.dispatchEvent(
+      new CustomEvent('updateData', { bubbles: true, composed: true })
+    );
+    this.closeModal();
+  }
+
+  submitReview() {
+    console.log('提交审核数据:', {
+      device: this.selectedDevice,
+      review: this.data
+    });
+    // 这里添加提交审核的逻辑
+    this.closeModal();
   }
 
   render() {
     return html`
       <div class="modal">
         <div class="header">
-          设备详情
+          ${this.isReview ? '设备审批' : '设备详情'}
           <button class="close-button" @click="${this.closeModal}">×</button>
         </div>
         <div class="task-info">
@@ -50,7 +89,8 @@ class DeviceParticulars extends LitElement {
               type="text"
               id="task-name"
               .value="${this.selectedDevice.id || ''}"
-              readonly
+              ?readonly="${!this.isEdit}"
+              @input="${(e) => this.handleInputChange(e, 'id')}"
             />
           </div>
           <div class="row-task-number">
@@ -59,7 +99,8 @@ class DeviceParticulars extends LitElement {
               type="text"
               id="task-number"
               .value="${this.selectedDevice.region || ''}"
-              readonly
+              ?readonly="${!this.isEdit}"
+              @input="${(e) => this.handleInputChange(e, 'region')}"
             />
           </div>
           <div class="row-start-time">
@@ -112,9 +153,64 @@ class DeviceParticulars extends LitElement {
               type="text"
               id="device-latitude"
               .value="${this.selectedDevice.lat || ''}"
-              readonly
+              ?readonly="${!this.isEdit}"
+              @input="${(e) => this.handleInputChange(e, 'lat')}"
             />
           </div>
+        </div>
+
+        ${this.isReview ? html`
+          <div class="review-info">
+            <div class="row">
+              <label for="reviewer">审核人:</label>
+              <input 
+                type="text" 
+                id="reviewer"
+                .value="${this.data.reviewer}"
+                ?readonly="${!this.isReviewEdit}"
+                @input="${(e) => this.handleReviewInputChange(e, 'reviewer')}"
+              />
+            </div>
+            <div class="row">
+              <label for="review-time">审核时间:</label>
+              <input 
+                type="datetime-local" 
+                id="review-time"
+                .value="${this.data.reviewTime}"
+                ?readonly="${!this.isReviewEdit}"
+                @input="${(e) => this.handleReviewInputChange(e, 'reviewTime')}"
+              />
+            </div>
+            <div class="row">
+              <label for="review-opinion">审核意见:</label>
+              <input 
+                type="text" 
+                id="review-opinion"
+                .value="${this.data.reviewOpinion}"
+                ?readonly="${!this.isReviewEdit}"
+                @input="${(e) => this.handleReviewInputChange(e, 'reviewOpinion')}"
+              />
+            </div>
+            <div class="row">
+              <label for="notes">备注:</label>
+              <textarea 
+                id="notes"
+                .value="${this.data.notes}"
+                ?readonly="${!this.isReviewEdit}"
+                @input="${(e) => this.handleReviewInputChange(e, 'notes')}"
+              ></textarea>
+            </div>
+          </div>
+        ` : ''}
+
+        <div class="button-group">
+          <button class="cancel-button" @click="${this.closeModal}">取消</button>
+          ${this.isEdit ? html`
+            <button class="save-button" @click="${this.saveDevice}">保存</button>
+          ` : ''}
+          ${this.isReviewEdit ? html`
+            <button class="submit-button" @click="${this.submitReview}">提交审核</button>
+          ` : ''}
         </div>
       </div>
     `;

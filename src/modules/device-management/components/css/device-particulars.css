@@ -1,106 +1,234 @@
 .modal {
+  position: fixed;
+  background: white;
   padding: 20px;
-  background: rgba(0, 9, 36, 0.8);
-  color: white;
-  border-radius: 10px;
-  width: 425px;
-  height: 500px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  opacity: 1;
-  border: 1px solid rgba(42, 130, 228, 1);
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .header {
-  font-size: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 18px;
   font-weight: bold;
-  margin-bottom: 10px;
-  text-align: left;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
 }
 
-.form-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+
+.close-button:hover {
+  color: #000;
+}
+
+.task-info {
   margin-bottom: 20px;
 }
 
-.form-group {
+.task-info h2 {
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 16px;
+}
+
+.row-task,
+.row-task-number,
+.row-start-time,
+.row-location,
+.row-end-time,
+.row-execution-time,
+.row-device-longitude,
+.row-device-latitude {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 10px;
+  align-items: center;
+  margin-bottom: 15px;
 }
 
-.form-group label {
+label {
+  width: 120px;
+  text-align: right;
   margin-right: 10px;
-  white-space: nowrap;
+  color: #666;
 }
 
-.form-group select,
-.form-group input {
-  padding: 5px;
-  background-color: #1b2a41;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  flex-grow: 1;
+input,
+select,
+textarea {
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 200px;
+  background-color: #fff;
+}
+
+input[readonly],
+select[readonly],
+textarea[readonly] {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.review-info {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.review-info .row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.review-info textarea {
+  width: 400px;
+  height: 100px;
+  resize: vertical;
 }
 
 .button-group {
   display: flex;
-  justify-content: space-around;
-  width: 100%;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
 }
 
-.action-button {
-  padding: 10px 20px;
-  background-color: #58a6ff;
-  color: white;
+.cancel-button,
+.save-button,
+.submit-button {
+  padding: 8px 20px;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
-  width: 150px;
-  text-align: center;
-}
-
-.task-info {
-  grid-column: 1;
-  display: grid;
-  gap: 5px;
-  border: 1px solid #58a6ff;
-  padding: 10px;
-  border-radius: 5px;
-  background-color: rgba(20, 30, 50, 0.8);
-  width: 400px;
-  height: 420px;
-}
-
-.task-info h2 {
-  margin: 0;
-  padding-bottom: 1px;
-  text-align: left;
-  font-size: 20px;
-}
-
-.task-info .row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0px;
-}
-
-.task-info label {
-  color: white;
-  width: 100px;
   font-size: 14px;
+  transition: background-color 0.3s;
 }
 
-.close-button {
-  cursor: pointer;
+.cancel-button {
+  background-color: #f5f5f5;
+  color: #666;
+}
+
+.save-button {
+  background-color: #1890ff;
   color: white;
-  background: none;
-  border: none;
-  font-size: 25px;
-  font-weight: bold;
-  float: right;
+}
+
+.submit-button {
+  background-color: #52c41a;
+  color: white;
+}
+
+.cancel-button:hover {
+  background-color: #e8e8e8;
+}
+
+.save-button:hover {
+  background-color: #40a9ff;
+}
+
+.submit-button:hover {
+  background-color: #73d13d;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* 输入框禁用状态样式 */
+input:disabled,
+select:disabled,
+textarea:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  color: #999;
+}
+
+/* 表单组样式 */
+.form-group {
+  margin-bottom: 15px;
+}
+
+/* 错误状态样式 */
+.error {
+  border-color: #ff4d4f;
+}
+
+.error-message {
+  color: #ff4d4f;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* 必填项标记 */
+.required::before {
+  content: '*';
+  color: #ff4d4f;
+  margin-right: 4px;
+}
+
+/* 响应式布局 */
+@media (max-width: 900px) {
+  .modal {
+    width: 95%;
+    margin: 0 auto;
+  }
+
+  .row-task,
+  .row-task-number,
+  .row-start-time,
+  .row-location,
+  .row-end-time,
+  .row-execution-time,
+  .row-device-longitude,
+  .row-device-latitude,
+  .review-info .row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  label {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 5px;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+  }
+
+  .review-info textarea {
+    width: 100%;
+  }
 } 
