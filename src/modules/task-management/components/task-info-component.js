@@ -14,6 +14,7 @@ class TaskInfoComponent extends LitElement {
       searchType: { type: String },
       searchCondition: { type: String },
       reviewStatus: { type: String },
+      currentTask: { type: Object }, // 保存当前操作的任务
     };
   }
 
@@ -24,6 +25,7 @@ class TaskInfoComponent extends LitElement {
     this.searchType = 'taskNumber'; // 默认查询类型为任务编号
     this.searchCondition = ''; // 查询条件初始化为空
     this.reviewStatus = ''; // 审批状态初始化为空
+    this.currentTask = null; // 初始化当前任务为空
     this.fetchTasks();
   }
 
@@ -145,10 +147,10 @@ class TaskInfoComponent extends LitElement {
               <div>提示:</div>
               <div>是否撤回此任务!!</div>
               <div class="confirmation-buttons">
-                <button class="confirm-button" @click="${this.confirmRevoke}">
+                <button class="confirm-button" @click="${this.confirmDelete}">
                   确定
                 </button>
-                <button class="cancel-button" @click="${this.cancelRevoke}">
+                <button class="cancel-button" @click="${this.cancelDelete}">
                   取消
                 </button>
               </div>
@@ -179,11 +181,31 @@ class TaskInfoComponent extends LitElement {
           <td>
             <a @click="${() => this.openTaskDetails(task)}">查看</a> /
             <a @click="${() => this.openTaskEdit(task)}">编辑</a> /
-            <a @click="${() => this.openRevokeConfirmation(task)}">撤回</a>
+            <a @click="${() => this.openDeleteConfirmation(task)}">撤回</a>
+            <!-- 修改为删除逻辑 -->
           </td>
         </tr>
       `
     );
+  }
+
+  openDeleteConfirmation(task) {
+    this.showConfirmation = true;
+    this.currentTask = task; // 保存当前操作的任务
+  }
+
+  async confirmDelete() {
+    try {
+      await taskService.delete(this.currentTask.taskId); // 使用 taskId 调用删除 API
+      this.fetchTasks(); // 重新获取任务列表以刷新表格
+      this.showConfirmation = false;
+    } catch (error) {
+      console.error('删除任务失败:', error);
+    }
+  }
+
+  cancelDelete() {
+    this.showConfirmation = false;
   }
 
   closeModal() {
@@ -200,21 +222,6 @@ class TaskInfoComponent extends LitElement {
     this.dispatchEvent(
       new CustomEvent('open-task-details', { detail: { task, isEdit: true } })
     );
-  }
-
-  openRevokeConfirmation(task) {
-    this.showConfirmation = true;
-    this.currentTask = task; // 保存当前操作的任务
-  }
-
-  confirmRevoke() {
-    this.showConfirmation = false;
-    console.log('任务撤回确认:', this.currentTask);
-    // 撤回逻辑可在此添加
-  }
-
-  cancelRevoke() {
-    this.showConfirmation = false;
   }
 }
 
