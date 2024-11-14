@@ -1,270 +1,207 @@
 .container {
-  width: 400px;
-  min-height: 400px;
-  max-height: 700px;
-  height: auto;
-  padding: 20px;
-  background: rgba(0, 9, 36, 0.8);
+  width: 350px;
+  padding: 15px;
+  background-color: rgba(13, 31, 51, 0.9);
   color: white;
   font-family: Arial, sans-serif;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(42, 130, 228, 1);
-  opacity: 1;
-  background-size: cover;
-  background-position: center;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 10px;
 }
 
 .header h1 {
   margin: 1px;
-  font-size: 20px;
+  font-size: 24px;
+}
+
+.close-button {
+  cursor: pointer;
+  font-size: 30px;
+  background: none;
+  border: none;
+  color: white;
+  font-weight: bold;
 }
 
 .task-info {
   grid-column: 1;
   display: grid;
-  gap: 3px;
+  gap: 5px;
   border: 1px solid #58a6ff;
-  padding: 12px;
+  padding: 10px;
   border-radius: 5px;
   background-color: rgba(20, 30, 50, 0.8);
-  width: calc(100% - 16px);
-  margin-bottom: 8px;
-  transform: scale(0.98);
-  transform-origin: top center;
+  width: 327px;
+  height: auto;
+  min-height: 180px;
 }
 
 .task-info h2 {
-  margin-top: 2px;
-  padding-bottom: 8px;
-  font-size: 18px;
+  margin: 0 0 5px 0;
+  padding-bottom: 5px;
+  text-align: left;
+  border-bottom: 1px solid #58a6ff;
+  font-size: 20px;
+  color: #fff;
 }
 
-.task-info .row,
-.row-task,
-.row-task-number,
+.row,
 .row-start-time,
 .row-location,
 .row-end-time,
 .row-execution-time,
 .row-device-longitude,
 .row-device-latitude {
-  display: grid;
-  grid-template-columns: 120px 1fr;
+  display: flex;
   align-items: center;
-  margin-bottom: 8px;
-  transform: scale(0.98);
-  transform-origin: left center;
-  gap: 12px;
+  gap: 10px;
+  margin-bottom: 3px;
+  padding-left: 20px;
 }
 
-label {
-  width: 120px;
-  text-align: right;
-  color: white;
+.task-info label {
+  min-width: 100px;
+  text-align: left;
+  color: #fff;
   font-size: 14px;
-  margin-right: 0;
 }
 
 .task-info input,
-.task-info select,
-.task-info textarea,
-.review-info input,
-.review-info select,
-.review-info textarea {
-  width: 200px;
-  padding: 5px 8px;
-  border: none;
+.task-info select {
+  width: 130px;
+  height: 24px;
+  line-height: 24px;
+  border: 1px solid #2d5c88;
   border-radius: 4px;
-  background-color: #1b2a41;
-  color: white;
-  font-size: 14px;
-  justify-self: start;
+  background-color: rgba(30, 40, 60, 0.8);
+  color: #fff;
+  padding: 0 8px;
+  font-size: 13px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  margin-left: 5px;
 }
 
-input[readonly],
-select[readonly],
-textarea[readonly] {
-  background-color: #f5f5f5;
+.task-info input:hover,
+.task-info select:hover {
+  border-color: #58a6ff;
+}
+
+.task-info input:focus,
+.task-info select:focus {
+  outline: none;
+  border-color: #58a6ff;
+  box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
+}
+
+.task-info input:disabled,
+.task-info select:disabled {
+  background-color: rgba(20, 30, 50, 0.8);
+  color: #8e8e8e;
+  border-color: #2d5c88;
   cursor: not-allowed;
 }
 
 .review-info {
   display: flex;
   flex-direction: column;
-  padding: 12px;
+  padding: 10px;
   border: 1px solid #58a6ff;
   border-radius: 5px;
   background-color: rgba(20, 30, 50, 0.8);
-  margin-bottom: 12px;
-  transform: scale(0.98);
-  transform-origin: top center;
+  height: auto;
+  min-height: 180px;
+  margin-top: 10px;
+  width: 327px;
 }
 
 .review-info .row {
-  display: grid;
-  grid-template-columns: 120px 1fr;
+  display: flex;
   align-items: center;
-  margin-bottom: 12px;
-  gap: 12px;
+  gap: 10px;
+  margin-bottom: 3px;
+  padding-left: 20px;
 }
-.close-button {
-  cursor: pointer;
-  color: white;
-  background: none;
-  border: none;
-  font-size: 25px;
-  font-weight: bold;
-  float: right;
+
+.review-info label {
+  min-width: 70px;
+  text-align: left;
+  color: #fff;
+  font-size: 14px;
 }
+
+.review-info input {
+  width: 130px;
+  height: 24px;
+  line-height: 24px;
+  border: 1px solid #2d5c88;
+  border-radius: 4px;
+  background-color: rgba(30, 40, 60, 0.8);
+  color: #fff;
+  padding: 0 8px;
+  font-size: 13px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
 .review-info textarea {
-  width: 200px;
-  height: 70px;
-  resize: vertical;
+  width: 130px;
+  height: 82px;
+  border: 1px solid #2d5c88;
+  border-radius: 4px;
+  background-color: rgba(30, 40, 60, 0.8);
+  color: #fff;
+  padding: 8px;
+  font-size: 13px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  resize: none;
+}
+
+.review-info input:hover,
+.review-info textarea:hover {
+  border-color: #58a6ff;
+}
+
+.review-info input:focus,
+.review-info textarea:focus {
+  outline: none;
+  border-color: #58a6ff;
+  box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
 }
 
 .button-group {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
-  transform: scale(0.98);
-  transform-origin: right center;
-  margin-top: 12px;
+  gap: 10px;
+  margin-top: 15px;
 }
 
-.cancel-button,
-.save-button,
-.submit-button {
-  padding: 6px 16px;
+.button-group button {
+  padding: 8px 16px;
   border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  border-radius: 5px;
   font-size: 14px;
-  transition: background-color 0.3s;
+  cursor: pointer;
 }
 
 .cancel-button {
-  background-color: #f5f5f5;
-  color: #666;
-}
-
-.save-button {
-  background-color: #1890ff;
+  background-color: #f43636;
   color: white;
 }
 
+.save-button,
 .submit-button {
-  background-color: #58a6ff;
+  background-color: #0b91ff;
   color: white;
 }
 
-.cancel-button:hover {
-  background-color: #e8e8e8;
-}
-
-.save-button:hover {
-  background-color: #40a9ff;
-}
-
-.submit-button:hover {
-  background-color: #73d13d;
-}
-
-/* 滚动条样式 */
-::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/* 输入框禁用状态样式 */
-input:disabled,
-select:disabled,
-textarea:disabled {
-  background-color: #f5f5f5;
-  cursor: not-allowed;
-  color: #999;
-  width: 200px;
-  font-size: 14px;
-}
-
-/* 表单组样式 */
-.form-group {
-  margin-bottom: 15px;
-}
-
-/* 错误状态样式 */
-.error {
-  border-color: #ff4d4f;
-}
-
-.error-message {
-  color: #ff4d4f;
-  font-size: 12px;
-  margin-top: 4px;
-}
-
-/* 必填项标记 */
+/* 移除不需要的样式 */
+.form-group,
+.error,
+.error-message,
 .required::before {
-  content: '*';
-  color: #ff4d4f;
-  margin-right: 4px;
-}
-
-/* 响应式布局 */
-@media (max-width: 900px) {
-  .modal {
-    width: 95%;
-    margin: 0 auto;
-  }
-
-  .row-task,
-  .row-task-number,
-  .row-start-time,
-  .row-location,
-  .row-end-time,
-  .row-execution-time,
-  .row-device-longitude,
-  .row-device-latitude,
-  .review-info .row {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  label {
-    width: 100%;
-    text-align: left;
-    margin-bottom: 5px;
-  }
-
-  input,
-  select,
-  textarea {
-    width: 180px;
-    font-size: 14px;
-  }
-
-  .review-info textarea {
-    width: 180px;
-  }
+  display: none;
 }

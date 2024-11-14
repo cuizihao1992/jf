@@ -10,12 +10,14 @@ class TaskCreateComponent extends LitElement {
   static get properties() {
     return {
       devices: { type: Array },
+      selectedDevices: { type: Array },
     };
   }
 
   constructor() {
     super();
     this.devices = [];
+    this.selectedDevices = [];
     this.fetchDevices();
   }
 
@@ -32,12 +34,67 @@ class TaskCreateComponent extends LitElement {
     }
   }
 
+  addSelectedDevices() {
+    const checkboxes = this.shadowRoot.querySelectorAll(
+      '.device-status-table input[type="checkbox"]:checked'
+    );
+    console.log('选中的复选框数量:', checkboxes.length);
+
+    checkboxes.forEach((checkbox) => {
+      const deviceId = checkbox.getAttribute('id').replace('device-', '');
+      console.log('正在处理设备ID:', deviceId);
+
+      const device = this.devices.find(
+        (d) => String(d.id) === String(deviceId)
+      );
+      console.log('找到的设备:', device);
+
+      if (
+        device &&
+        !this.selectedDevices.some((d) => String(d.id) === String(deviceId))
+      ) {
+        this.selectedDevices = [
+          ...this.selectedDevices,
+          {
+            id: deviceId,
+            angle: {
+              horizontal: '0',
+              elevation: '0',
+            },
+          },
+        ];
+        console.log('更新后的selectedDevices:', this.selectedDevices);
+      }
+      checkbox.checked = false;
+    });
+
+    this.requestUpdate();
+  }
+
+  removeSelectedDevices() {
+    const checkboxes = this.shadowRoot.querySelectorAll(
+      '.device-list-table input[type="checkbox"]:checked'
+    );
+    const deviceIdsToRemove = Array.from(checkboxes).map((checkbox) =>
+      checkbox.id.replace('device-', '')
+    );
+    this.selectedDevices = this.selectedDevices.filter(
+      (device) => !deviceIdsToRemove.includes(device.id)
+    );
+    checkboxes.forEach((checkbox) => (checkbox.checked = false));
+  }
+
   render() {
     const deviceStatusRows = this.devices.map(
       (device) => html`
         <tr>
           <td>
-            <input type="checkbox" id="device-${device.id}" /> ${device.id}
+            <input
+              type="checkbox"
+              id="device-${device.id}"
+              .value="${device.id}"
+            />
+            ${device.id}
           </td>
           <td>${device.region}</td>
           <td>${device.deviceType}</td>
@@ -56,21 +113,15 @@ class TaskCreateComponent extends LitElement {
       `
     );
 
-    const deviceListRows = [
-      { id: 201, angle: { horizontal: 0, elevation: 0 } },
-      { id: 202, angle: { horizontal: 10, elevation: 5 } },
-      { id: 203, angle: { horizontal: -5, elevation: 10 } },
-      { id: 203, angle: { horizontal: -5, elevation: 10 } },
-      { id: 203, angle: { horizontal: -5, elevation: 10 } },
-      { id: 203, angle: { horizontal: -5, elevation: 10 } },
-      { id: 203, angle: { horizontal: -5, elevation: 10 } },
-    ];
-
-    const deviceListTableRows = deviceListRows.map(
+    const deviceListTableRows = this.selectedDevices.map(
       (device) => html`
         <tr>
           <td>
-            <input type="checkbox" id="device-${device.id}" />
+            <input
+              type="checkbox"
+              id="device-${device.id}"
+              .value="${device.id}"
+            />
             ${device.id}
           </td>
           <td>
@@ -79,9 +130,23 @@ class TaskCreateComponent extends LitElement {
           </td>
           <td>
             水平角:
-            <input type="text" placeholder="输入角度" style="width: 50px;" />
+            <input
+              type="text"
+              placeholder="输入角度"
+              style="width: 50px;"
+              .value=${device.angle.horizontal}
+              @input=${(e) =>
+                this.updateAngle(device.id, 'horizontal', e.target.value)}
+            />
             俯仰角:
-            <input type="text" placeholder="输入角度" style="width: 50px;" />
+            <input
+              type="text"
+              placeholder="输入角度"
+              style="width: 50px;"
+              .value=${device.angle.elevation}
+              @input=${(e) =>
+                this.updateAngle(device.id, 'elevation', e.target.value)}
+            />
           </td>
         </tr>
       `
@@ -101,60 +166,47 @@ class TaskCreateComponent extends LitElement {
               <input
                 type="text"
                 id="task-name"
-                placeholder="中卫101"
-                style="margin-left:19px;width:100px;padding:1px; height:22px;/* 圆角 */"
+                placeholder="请输入任务名"
               />
-              <label for="task-number" style="margin-left:69px"
-                >任务编号:</label
-              >
+              <label for="task-number">任务编号:</label>
               <input
                 type="text"
                 id="task-number"
-                placeholder="w101"
-                style="margin-left:5px;width:100px;height:24px;/* 圆角 */"
+                placeholder="请输入任务编号"
               />
             </div>
             <div class="row-location">
               <label for="location">所属地区:</label>
-              <select
-                id="location"
-                style="margin-left:5px;width:106px;padding:1px; height:22px;"
-              >
-                <option>中卫</option>
+              <select id="location">
+                <option value="zhongwei">中卫</option>
               </select>
-              <label for="device-type" style="margin-left:68px"
-                >设备类型:</label
-              >
-              <select
-                id="device-type"
-                style="margin-left:5px;width:109px;padding:1px; height:25px;/* 圆角 */"
-              >
-                <option>自动角反射器</option>
+              <label for="device-type">设备类型:</label>
+              <select id="device-type">
+                <option value="reflector">自动角反射器</option>
               </select>
             </div>
             <div class="form-group">
               <label for="start-time">设备开启时间/(年-月-日时-分-秒):</label>
               <input
-                type="text"
+                type="datetime-local"
                 id="start-time"
-                placeholder="2024-09-24 16:21:45"
+                placeholder="请输入设备开启时间"
               />
             </div>
             <div class="form-group">
               <label for="end-time">设备关闭时间/(年-月-日时-分-秒):</label>
               <input
-                type="text"
+                type="datetime-local"
                 id="end-time"
-                placeholder="2024-09-24 16:21:45"
+                placeholder="请输入设备关闭时间"
               />
             </div>
             <div class="form-group">
-              <label for="execution-time">任务执行时间/分钟(整数):</label>
+              <label for="execution-time">任务执行时间/秒(整数):</label>
               <input
                 type="text"
                 id="execution-time"
-                placeholder="40"
-                style="margin-left:67px"
+                placeholder="请输入任务执行时间"
               />
             </div>
           </div>
@@ -177,8 +229,8 @@ class TaskCreateComponent extends LitElement {
           </div>
         </div>
         <div class="plus-minus">
-          <button>+</button>
-          <button>-</button>
+          <button @click="${() => this.addSelectedDevices()}">+</button>
+          <button @click="${() => this.removeSelectedDevices()}">-</button>
         </div>
 
         <div class="device-status">
@@ -235,6 +287,21 @@ class TaskCreateComponent extends LitElement {
 
   openScopeSelection() {
     this.dispatchEvent(new CustomEvent('open-scope-selection'));
+  }
+
+  updateAngle(deviceId, angleType, value) {
+    this.selectedDevices = this.selectedDevices.map((device) => {
+      if (device.id === deviceId) {
+        return {
+          ...device,
+          angle: {
+            ...device.angle,
+            [angleType]: value,
+          },
+        };
+      }
+      return device;
+    });
   }
 }
 

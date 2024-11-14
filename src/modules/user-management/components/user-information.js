@@ -6,16 +6,37 @@ class UserInformation extends LitElement {
     ${unsafeCSS(styles)}
   `;
 
+  static get properties() {
+    return {
+      devices: { type: Array },
+      allSelected: { type: Boolean }
+    };
+  }
+
+  constructor() {
+    super();
+    this.devices = [];
+    this.allSelected = false;
+  }
+
+  // 处理全选
+  handleSelectAll(e) {
+    this.allSelected = e.target.checked;
+    const checkboxes = this.shadowRoot.querySelectorAll('.device-checkbox');
+    checkboxes.forEach(checkbox => {
+      checkbox.checked = this.allSelected;
+    });
+  }
+
   render() {
     return html`
       <div class="container">
-        <!-- Header section with close button -->
         <div class="header">
           <h1>用户信息</h1>
           <span class="close-button" @click="${this.handleClose}">×</span>
         </div>
 
-        <!-- Registration Information Section -->
+        <!-- 注册信息部分 -->
         <div class="section">
           <div class="section-title">注册信息</div>
 
@@ -51,16 +72,23 @@ class UserInformation extends LitElement {
             </select>
           </div>
         </div>
-        <!-- User Permissions Section -->
+
+        <!-- 用户权限部分 -->
         <div class="section">
-          <h3>用户权限</h3>
+          <div class="section-title">用户权限</div>
           <h4>用户所属地区的设备使用权限：</h4>
 
           <div class="table-container">
             <table class="device-table">
               <thead>
                 <tr>
-                  <th><input type="checkbox" /></th>
+                  <th>
+                    <input 
+                      type="checkbox" 
+                      @change="${this.handleSelectAll}"
+                      .checked="${this.allSelected}"
+                    />
+                  </th>
                   <th>设备编号</th>
                   <th>所属地区</th>
                   <th>设备类型</th>
@@ -68,14 +96,10 @@ class UserInformation extends LitElement {
               </thead>
               <tbody>
                 <tr>
-                  <td><input type="checkbox" class="device-checkbox" /></td>
+                  <td>
+                    <input type="checkbox" class="device-checkbox" />
+                  </td>
                   <td>101</td>
-                  <td>中卫</td>
-                  <td>自动角反射器</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="device-checkbox" /></td>
-                  <td>102</td>
                   <td>中卫</td>
                   <td>自动角反射器</td>
                 </tr>
@@ -203,18 +227,16 @@ class UserInformation extends LitElement {
             </table>
           </div>
         </div>
-        <!-- Submit button -->
+
         <button class="submit-button">确定</button>
       </div>
     `;
   }
 
-  // Method to handle modal close
   handleClose() {
     this.remove();
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
 }
 
-// Register the custom element
 customElements.define('user-information', UserInformation);

@@ -127,11 +127,8 @@ class TaskDetails extends LitElement {
                 .value="${this.data?.task?.taskName}"
                 ?disabled="${!isEdit}"
                 @input="${(e) => this.handleInputChange(e, 'taskName')}"
-                style="margin-left:19px;width:100px;padding:1px; height:22px;"
               />
-              <label for="task-number" style="margin-left:69px"
-                >任务编号:</label
-              >
+              <label for="task-number">任务编号:</label>
               <input
                 type="text"
                 id="task-number"
@@ -139,14 +136,12 @@ class TaskDetails extends LitElement {
                 .value="${this.data?.task?.taskNumber}"
                 ?disabled="${!isEdit}"
                 @input="${(e) => this.handleInputChange(e, 'taskNumber')}"
-                style="margin-left:4px;width:108px;height:22px;"
               />
             </div>
             <div class="row-location">
               <label for="location">审核状态:</label>
               <select
                 id="location"
-                style="margin-left:5px;width:106px;padding:1px; height:22px;"
                 .value="${this.data?.task?.reviewStatus}"
                 ?disabled="${!isEdit}"
                 @change="${(e) => this.handleInputChange(e, 'reviewStatus')}"
@@ -170,14 +165,8 @@ class TaskDetails extends LitElement {
                   驳回
                 </option>
               </select>
-              <label for="device-type" style="margin-left:68px"
-                >设备类型:</label
-              >
-              <select
-                id="device-type"
-                style="margin-left:5px;width:116px;padding:1px; height:25px;"
-                ?disabled="${!isEdit}"
-              >
+              <label for="device-type">设备类型:</label>
+              <select id="device-type" ?disabled="${!isEdit}">
                 <option>自动角反射器</option>
               </select>
             </div>
@@ -212,7 +201,6 @@ class TaskDetails extends LitElement {
                 .value="${this.data?.task?.duration}"
                 ?disabled="${!isEdit}"
                 @input="${(e) => this.handleInputChange(e, 'duration')}"
-                style="margin-left:66px"
               />
             </div>
           </div>
