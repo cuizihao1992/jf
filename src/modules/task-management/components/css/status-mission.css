@@ -1,0 +1,79 @@
+.modal {
+  top: 19%;
+  left: calc(50% + 200px);
+  position: fixed;
+  padding: 20px;
+  background: rgba(0, 9, 36, 0.8);
+  color: white;
+  border-radius: 10px;
+  width: 700px;
+  height: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(42, 130, 228, 1);
+  background-size: cover;
+  background-position: center;
+  z-index: 2;
+}
+
+.sort-container {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+  margin-left: 145px;
+  position: relative;
+  margin-top: -24px;
+}
+
+.header {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+.close-button {
+  cursor: pointer;
+  color: white;
+  background: none;
+  border: none;
+  font-size: 25px;
+  font-weight: bold;
+  float: right;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  color: white;
+}
+
+th,
+td {
+  padding: 8px;
+  text-align: center;
+  border-bottom: 1px solid #444;
+}
+
+th {
+  background-color: #1a2b4c;
+  cursor: pointer;
+}
+
+tr:nth-child(even) {
+  background-color: #0d1f33;
+}
+
+.sort-arrow {
+  font-size: 14px;
+  margin-left: 5px;
+  color: #888;
+}
+
+.sort-arrow.active {
+  color: #fff;
+}
+
+.table-container {
+  max-height: 470px;
+  overflow-y: auto;
+} 

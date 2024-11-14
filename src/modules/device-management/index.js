@@ -8,7 +8,7 @@ import './components/device-xiangqing.js'; // 假设有任务查询组件
 import './components/device-review.js'; // 假设有任务查询组件
 import './components/device-shenpi.js'; // 假设有任务查询组件
 import './components/device-search.js'; // 假设有任务查询组件
-import './components/device- particulars.js'; // 假设有任务查询组件
+import './components/device-particulars.js'; // 假设有任务查询组件
 
 class DeviceManagement extends LitElement {
   static styles = [sharedStyles];

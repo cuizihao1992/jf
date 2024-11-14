@@ -1,0 +1,251 @@
+.modal {
+  padding: 20px;
+  background: rgba(0, 9, 36, 0.8);
+  color: white;
+  border-radius: 8px;
+  width: 400px;
+  height: 700px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid #00ffff;
+  background-size: cover;
+  background-position: center;
+  position: absolute;
+}
+
+.header {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #00ffff;
+}
+
+.controls,
+.status-controls,
+.log-section {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.controls button,
+.status-controls button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 9px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: 5px;
+}
+
+.controls button.active,
+.status-controls button.active {
+  background-color: #ff00ff;
+}
+
+input[type='text'] {
+  width: 225px;
+  text-align: center;
+  margin: 0 5px;
+  background-color: #273d66;
+  border: 1px solid #00ffff;
+  color: white;
+}
+
+.close-button {
+  cursor: pointer;
+  color: white;
+  background: none;
+  border: none;
+  font-size: 25px;
+  font-weight: bold;
+  float: right;
+}
+
+.control-section {
+  display: flex;
+  justify-content: space-between;
+}
+
+.switch-group {
+  border: 1px solid #00ffff;
+  padding: 10px;
+  border-radius: 5px;
+  margin-right: 25px;
+  position: relative;
+}
+
+.switch-group:last-child {
+  margin-right: 0;
+}
+
+.switch-group button {
+  width: 40px;
+}
+
+.switch-label {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background-color: rgb(8 15 37);
+}
+
+.device-time {
+  border: 1px solid #00ffff;
+  padding: 10px;
+  border-radius: 5px;
+  width: 409px;
+  position: relative;
+}
+
+.time-label {
+  position: absolute;
+  top: -15px;
+  left: 15.8%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background-color: rgb(8 15 37);
+}
+
+.time-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.posture-control {
+  border: 1px solid #00ffff;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  width: 378px;
+  position: relative;
+  flex-direction: column;
+}
+
+.posture-label {
+  position: absolute;
+  top: -15px;
+  left: 16%;
+  transform: translateX(-50%);
+  background-color: rgb(8 15 37);
+}
+
+.posture-calc-btn {
+  margin-top: 5px;
+  width: 75px;
+  height: 32px;
+  margin-bottom: 10px;
+  margin-left: 302px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.posture-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.install-posture {
+  border: 1px solid #00ffff;
+  padding: 10px;
+  border-radius: 5px;
+  width: 120px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-right: 5px;
+}
+
+.adjust-posture {
+  border: 1px solid #00ffff;
+  padding: 10px;
+  border-radius: 5px;
+  width: 200px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.angle-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.angle-row:last-child {
+  margin-bottom: 0;
+}
+
+.angle-row input {
+  width: 40px;
+}
+
+.command-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 9px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: 3px;
+}
+
+.angle-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.function-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.control-btn {
+  width: 65px;
+  height: 32px;
+  font-size: 11px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.table-container {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.log-table {
+  width: 100%;
+  font-size: 14px;
+  border-collapse: collapse;
+}
+
+.log-table th,
+.log-table td {
+  border: 1px solid #444;
+  padding: 8px;
+  text-align: center;
+}
+
+.log-table th {
+  background-color: #1a2b4c;
+}
+
+.log-table td {
+  background-color: #273d66;
+} 
