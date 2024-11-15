@@ -1,13 +1,12 @@
 .modal {
   top: 19%;
   left: calc(50% + 200px);
-  position: fixed;
   padding: 20px;
   background: rgba(0, 9, 36, 0.8);
   color: white;
   border-radius: 10px;
   width: 700px;
-  height: 500px;
+  height: 577px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(42, 130, 228, 1);
   background-size: cover;

@@ -156,18 +156,14 @@ class TaskCreateComponent extends LitElement {
       <div class="container">
         <div class="header">
           <h1>新建任务</h1>
-          <span class="close-button" @click="${this.handleClose}">×</span>
+          <span class="close-button" @click="${this.closeModal}">×</span>
         </div>
         <div>
           <div class="task-info">
             <h2>任务信息</h2>
             <div class="row-task">
               <label for="task-name">任务名:</label>
-              <input
-                type="text"
-                id="task-name"
-                placeholder="请输入任务名"
-              />
+              <input type="text" id="task-name" placeholder="请输入任务名" />
               <label for="task-number">任务编号:</label>
               <input
                 type="text"
@@ -273,10 +269,9 @@ class TaskCreateComponent extends LitElement {
     `;
   }
 
-  handleClose() {
-    this.remove();
+  closeModal() {
+    this.dispatchEvent(new CustomEvent('close-modal'));
   }
-
   openStatusMission() {
     this.dispatchEvent(new CustomEvent('open-status-mission'));
   }

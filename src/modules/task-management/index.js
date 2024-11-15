@@ -12,7 +12,25 @@ import './components/Scope-selection.js'; // 引入范围选择组件
 import './components/parameter-config.js'; // 引入范围选择组件
 import './components/task-review-component.js'; // 引入任务审核组件
 class TaskManagement extends LitElement {
-  static styles = [sharedStyles];
+  static styles = [
+    sharedStyles,
+    css`
+      .parameter-config-modal {
+        position: absolute;
+        left: 0px;
+        top: 134px;
+      }
+      .scope-selection-modal {
+        position: absolute;
+        left: 0px;
+        top: 331px;
+      }
+      .status-mission-modal {
+        position: absolute;
+        left: 0px;
+      }
+    `,
+  ];
   static properties = {
     activeComponent: { type: String }, // 通过字符串控制当前显示的组件
     selectedButton: { type: String }, // 添加状态属性用于记录选中的按钮
@@ -44,6 +62,20 @@ class TaskManagement extends LitElement {
     this.isParameterConfigOpen = false;
     this.isTaskEditOpen = false;
     this.currentTask = {};
+  }
+  // Add new method to clear all windows
+  clearAllWindows() {
+    this.isTaskDetailsOpen = false;
+    this.isFaultDetailsOpen = false;
+    this.isTaskLogOpen = false;
+    this.isTaskReviewDetailOpen = false;
+    this.isTaskReviewReviewOpen = false;
+    this.isStatusMissionOpen = false;
+    this.isScopeSelectionOpen = false;
+    this.isParameterConfigOpen = false;
+    this.isTaskEditOpen = false;
+    this.activeComponent = '';
+    this.selectedButton = '';
   }
 
   render() {
@@ -106,16 +138,19 @@ class TaskManagement extends LitElement {
             : ''}
           ${this.isStatusMissionOpen
             ? html`<status-mission
+                class="status-mission-modal"
                 @close-modal=${this.closeStatusMission}
               ></status-mission>`
             : ''}
           ${this.isScopeSelectionOpen
             ? html`<scope-selection
+                class="scope-selection-modal"
                 @close-modal=${this.closeScopeSelection}
               ></scope-selection>`
             : ''}
           ${this.isParameterConfigOpen
             ? html`<parameter-config
+                class="parameter-config-modal"
                 @close-modal=${this.closeParameterConfig}
               ></parameter-config>`
             : ''}
@@ -130,8 +165,7 @@ class TaskManagement extends LitElement {
   setActiveComponent(componentName) {
     // 如果点击的按钮已经选中，取消选中并关闭组件
     if (this.activeComponent === componentName) {
-      this.activeComponent = ''; // 关闭组件
-      this.selectedButton = ''; // 清除选中状态
+      this.clearAllWindows();
     } else {
       this.activeComponent = componentName; // 切换到新组件
       this.selectedButton = componentName;
@@ -154,6 +188,7 @@ class TaskManagement extends LitElement {
           @open-status-mission=${this.openStatusMission}
           @open-scope-selection=${this.openScopeSelection}
           @open-parameter-config=${this.openParameterConfig}
+          @close-modal=${this.closeTasks}
         ></task-create-component>`;
       case 'myTasks':
         return html`<task-info-component
@@ -179,6 +214,7 @@ class TaskManagement extends LitElement {
   }
 
   closeTasks() {
+    this.clearAllWindows();
     this.activeComponent = ''; // 隐藏当前组件
     this.selectedButton = ''; // 清除选中状态
   }
