@@ -1,6 +1,6 @@
 {
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   },
   "eslint.validate": ["javascript", "html", "typescript"],
   "editor.defaultFormatter": "esbenp.prettier-vscode", // 使用 Prettier 作为默认格式化工具

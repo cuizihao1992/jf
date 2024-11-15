@@ -1,3 +1,9 @@
 /node_modules
 dist
 screen
+# 忽略所有子项目的 node_modules
+**/node_modules/
+
+# 忽略特定子项目的构建目录
+server/dist/
+client/dist/

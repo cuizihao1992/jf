@@ -1,0 +1,23 @@
+{
+  "name": "tcp-server",
+  "version": "1.0.0",
+  "description": "A TCP server for managing devices and power modules",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "keywords": ["tcp", "server", "device-management"],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "knex": "^2.3.0",
+    "mysql2": "^3.3.0",
+    "net": "^1.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.45.0"
+  }
+}
