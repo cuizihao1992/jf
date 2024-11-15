@@ -68,14 +68,20 @@ class DeviceManagement extends LitElement {
   }
 
   setActiveComponent(componentName) {
-    if (this.activeComponent === componentName) {
-      this.activeComponent = '';
-      this.selectedButton = '';
+    if (this.selectedButton === componentName) {
+      this.clearAllComponents();
     } else {
+      this.clearAllComponents();
       this.activeComponent = componentName;
       this.selectedButton = componentName;
-      this.isDeviceParticularsOpen = false;
     }
+  }
+
+  clearAllComponents() {
+    this.activeComponent = '';
+    this.selectedButton = '';
+    this.isDeviceParticularsOpen = false;
+    this.deviceParticularsData = null;
   }
 
   renderActiveComponent() {
@@ -103,8 +109,7 @@ class DeviceManagement extends LitElement {
   }
 
   closeTasks() {
-    this.activeComponent = '';
-    this.selectedButton = '';
+    this.clearAllComponents();
   }
 
   openDeviceParticulars(e) {
