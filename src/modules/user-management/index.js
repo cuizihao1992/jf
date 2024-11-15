@@ -1,33 +1,31 @@
 import { LitElement, html, css } from 'lit';
-import '../../components/custom-button.js'; // Import the reusable button component
-import { sharedStyles } from '../../components/shared-styles.js'; // 引入共享样式
+import '../../components/custom-button.js';
+import { sharedStyles } from '../../components/shared-styles.js';
 import './components/audit-user-component.js';
-import './components/user-permissions-component.js'; // 假设有创建任务组件
-import './components/user-review.js'; // 用户信息组件
-import './components/user-view.js'; // 用户信息组件
-import './components/user-information.js'; // 用户信息组件
-import './components/view-information.js'; // 用户信息组件
+import './components/user-permissions-component.js';
+import './components/user-view.js';
+import './components/user-information.js';
 
 class UserManagement extends LitElement {
   static styles = [sharedStyles];
 
   static properties = {
-    selectedButton: { type: String }, // 记录选中的按钮
-    activeComponent: { type: String }, // 记录当前显示的组件
-    isUserReviewOpen: { type: Boolean },
+    selectedButton: { type: String },
+    activeComponent: { type: String },
     isUserViewOpen: { type: Boolean },
     isUserInformationOpen: { type: Boolean },
-    isViewInformationOpen: { type: Boolean },
+    userViewMode: { type: String },
+    userInformationMode: { type: String },
   };
 
   constructor() {
     super();
-    this.selectedButton = ''; // 初始状态没有选中按钮
-    this.activeComponent = ''; // 初始状态不显示任何组件
-    this.isUserReviewOpen = false;
+    this.selectedButton = '';
+    this.activeComponent = '';
     this.isUserViewOpen = false;
     this.isUserInformationOpen = false;
-    this.isViewInformationOpen = false;
+    this.userViewMode = 'view';
+    this.userInformationMode = 'view';
   }
 
   render() {
@@ -47,25 +45,20 @@ class UserManagement extends LitElement {
       </div>
       <div class="panel">
         ${this.renderActiveComponent()}
-        <!-- 用户信息弹窗 -->
         <div style="position:absolute;top:0;left:100%;">
-          ${this.isUserReviewOpen
-            ? html`<user-review
-                @close-modal=${this.closeUserReview}
-              ></user-review>`
-            : ''}
           ${this.isUserViewOpen
-            ? html`<user-view @close-modal=${this.closeUserView}></user-view>`
+            ? html`<user-view
+                mode=${this.userViewMode}
+                @close-modal=${this.closeUserView}
+                @submit=${this.handleUserViewSubmit}
+              ></user-view>`
             : ''}
           ${this.isUserInformationOpen
             ? html`<user-information
+                mode=${this.userInformationMode}
                 @close-modal=${this.closeUserInformation}
+                @submit=${this.handleUserInformationSubmit}
               ></user-information>`
-            : ''}
-          ${this.isViewInformationOpen
-            ? html`<view-information
-                @close-modal=${this.closeViewInformation}
-              ></view-information>`
             : ''}
         </div>
       </div>
@@ -73,18 +66,15 @@ class UserManagement extends LitElement {
   }
 
   setActiveComponent(componentName) {
-    // 如果点击的按钮已经选中，取消选中并关闭组件
-    if (this.activeComponent === componentName) {
-      this.activeComponent = ''; // 关闭组件
-      this.selectedButton = ''; // 清除选中状态
+    if (this.selectedButton === componentName) {
+      this.selectedButton = '';
+      this.activeComponent = '';
     } else {
-      this.activeComponent = componentName; // 切换到新组件
-      this.selectedButton = componentName; // 设置当前选中的按钮
-      this.isUserReviewOpen = false;
-      this.isUserViewOpen = false;
-      this.isUserInformationOpen = false;
-      this.isViewInformationOpen = false;
+      this.selectedButton = componentName;
+      this.activeComponent = componentName;
     }
+    this.isUserViewOpen = false;
+    this.isUserInformationOpen = false;
   }
 
   renderActiveComponent() {
@@ -92,58 +82,51 @@ class UserManagement extends LitElement {
       case 'auditUser':
         return html`<audit-user-component
           @close-modal=${this.closeTasks}
-          @open-user-review=${this.openUserReview}
           @open-user-view=${this.openUserView}
-        ></audit-user-component>`; // 替换为实际的用户审核组件
+        ></audit-user-component>`;
       case 'userPermissions':
         return html`<user-permissions-component
           @close-modal=${this.closeTasks}
           @open-user-information=${this.openUserInformation}
-          @open-view-information=${this.openViewInformation}
-        ></user-permissions-component>`; // 替换为实际的用户权限组件
+        ></user-permissions-component>`;
       default:
-        return ''; // 不显示任何组件
+        return '';
     }
   }
-  closeTasks() {
-    this.activeComponent = ''; // 隐藏当前组件
-    this.selectedButton = ''; // 清除选中状态
-  }
-  openUserReview() {
-    this.isUserReviewOpen = true;
-    this.isUserViewOpen = false;
-    this.isUserInformationOpen = false;
-    this.isViewInformationOpen = false;
-  }
-  openUserView() {
+
+  openUserView(e) {
+    this.userViewMode = e.detail.mode;
     this.isUserViewOpen = true;
-    this.isUserReviewOpen = false;
     this.isUserInformationOpen = false;
-    this.isViewInformationOpen = false;
   }
-  closeUserReview() {
-    this.isUserReviewOpen = false;
-  }
+
   closeUserView() {
     this.isUserViewOpen = false;
   }
-  openUserInformation() {
+
+  handleUserViewSubmit(e) {
+    console.log('User view submitted:', e.detail);
+    this.closeUserView();
+  }
+
+  openUserInformation(e) {
+    this.userInformationMode = e.detail.mode;
     this.isUserInformationOpen = true;
-    this.isUserReviewOpen = false;
     this.isUserViewOpen = false;
-    this.isViewInformationOpen = false;
   }
-  openViewInformation() {
-    this.isViewInformationOpen = true;
-    this.isUserReviewOpen = false;
-    this.isUserViewOpen = false;
-    this.isUserInformationOpen = false;
-  }
+
   closeUserInformation() {
     this.isUserInformationOpen = false;
   }
-  closeViewInformation() {
-    this.isViewInformationOpen = false;
+
+  handleUserInformationSubmit(e) {
+    console.log('User information submitted:', e.detail);
+    this.closeUserInformation();
+  }
+
+  closeTasks() {
+    this.activeComponent = '';
+    this.selectedButton = '';
   }
 }
 

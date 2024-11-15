@@ -6,6 +6,92 @@ class UserView extends LitElement {
     ${unsafeCSS(styles)}
   `;
 
+  static get properties() {
+    return {
+      mode: { type: String },
+      userData: { type: Object }
+    };
+  }
+
+  constructor() {
+    super();
+    this.mode = 'view';
+    this.userData = {
+      username: 'admin',
+      password: 'yz147258369',
+      phone: '13894417612',
+      applyDate: '2024-10-9',
+      country: '中国',
+      region: '中卫',
+      userType: '用户',
+      reviewer: '',
+      reviewTime: '',
+      reviewOpinion: '同意',
+      notes: ''
+    };
+  }
+
+  // 渲染表单字段
+  renderFormField(label, type, value, fieldName, placeholder = '', isReviewField = false) {
+    const isDisabled = !isReviewField || this.mode === 'view';
+    
+    // 为审核意见字段特殊处理
+    if (fieldName === 'reviewOpinion') {
+      return html`
+        <div class="row">
+          <label>${label}: </label>
+          <select
+            class="review-select"
+            ?disabled=${isDisabled}
+            .value=${value}
+            @change=${e => this.handleInputChange(e, fieldName)}
+          >
+            <option value="同意" ?selected=${value === '同意'}>同意</option>
+            <option value="不同意" ?selected=${value === '不同意'}>不同意</option>
+          </select>
+        </div>
+      `;
+    }
+
+    return html`
+      <div class="row">
+        <label>${label}: </label>
+        ${type === 'textarea' 
+          ? html`
+              <textarea
+                id=${fieldName}
+                ?disabled=${isDisabled}
+                .value=${value || ''}
+                @input=${e => this.handleInputChange(e, fieldName)}
+                placeholder=${placeholder}
+              ></textarea>
+            `
+          : html`
+              <input
+                type="text"
+                class="userInput"
+                ?disabled=${isDisabled}
+                .value=${value || ''}
+                @input=${e => this.handleInputChange(e, fieldName)}
+                placeholder=${placeholder}
+              />
+            `}
+      </div>
+    `;
+  }
+
+  handleInputChange(e, fieldName) {
+    if (this.mode === 'view' || 
+        ['username', 'password', 'phone', 'applyDate', 'country', 'region', 'userType'].includes(fieldName)) {
+      return;
+    }
+    
+    this.userData = {
+      ...this.userData,
+      [fieldName]: e.target.value
+    };
+  }
+
   render() {
     return html`
       <div class="container">
@@ -16,87 +102,24 @@ class UserView extends LitElement {
         <div>
           <div class="user-info">
             <h3>用户信息</h3>
-            <div class="row">
-              <label>用户名: </label>
-              <input
-                type="text"
-                class="userInput"
-                id="task-name"
-                placeholder="admin"
-              />
-            </div>
-            <div class="row">
-              <label>密码: </label>
-              <input
-                type="text"
-                class="userInput"
-                id="task-name"
-                placeholder="yz147258369"
-              />
-            </div>
-            <div class="row">
-              <label>手机号: </label>
-              <input
-                type="text"
-                class="userInput"
-                id="task-name"
-                placeholder="13894417612"
-              />
-            </div>
-            <div class="row">
-              <label>申请日期: </label>
-              <input
-                type="text"
-                class="userInput"
-                id="task-name"
-                placeholder="2024-10-9"
-              />
-            </div>
-            <div class="row">
-              <label>国家: </label>
-              <input
-                type="text"
-                class="userInput"
-                id="task-name"
-                placeholder="中国"
-              />
-            </div>
-            <div class="row">
-              <label>所属地区: </label>
-              <input
-                type="text"
-                class="userInput"
-                id="task-name"
-                placeholder="中卫"
-              />
-            </div>
-            <div class="row">
-              <label>用户类型: </label>
-              <input
-                type="text"
-                class="userInput"
-                id="task-name"
-                placeholder="用户"
-              />
-            </div>
+            ${this.renderFormField('用户名', 'text', this.userData.username, 'username')}
+            ${this.renderFormField('密码', 'text', this.userData.password, 'password')}
+            ${this.renderFormField('手机号', 'text', this.userData.phone, 'phone')}
+            ${this.renderFormField('申请日期', 'text', this.userData.applyDate, 'applyDate')}
+            ${this.renderFormField('国家', 'text', this.userData.country, 'country')}
+            ${this.renderFormField('所属地区', 'text', this.userData.region, 'region')}
+            ${this.renderFormField('用户类型', 'text', this.userData.userType, 'userType')}
           </div>
+          
           <div class="review-info">
-            <div class="row">
-              <label for="reviewer">审核人:</label>
-              <input type="text" id="reviewer" />
-            </div>
-            <div class="row">
-              <label for="review-time">审核时间:</label>
-              <input type="text" id="review-time" />
-            </div>
-            <div class="row">
-              <label for="review-opinion">审核意见:</label>
-              <input type="text" id="review-opinion" />
-            </div>
-            <div class="row">
-              <label for="notes">备注:</label>
-              <textarea id="notes" placeholder=""></textarea>
-            </div>
+            ${this.renderFormField('审核人', 'text', this.userData.reviewer, 'reviewer', '', true)}
+            ${this.renderFormField('审核时间', 'text', this.userData.reviewTime, 'reviewTime', '', true)}
+            ${this.renderFormField('审核意见', 'select', this.userData.reviewOpinion, 'reviewOpinion', '', true)}
+            ${this.renderFormField('备注', 'textarea', this.userData.notes, 'notes', '', true)}
+            
+            ${this.mode === 'review' 
+              ? html`<button class="submit-button" @click=${this.handleSubmit}>确定</button>` 
+              : ''}
           </div>
         </div>
       </div>
@@ -104,10 +127,24 @@ class UserView extends LitElement {
   }
 
   handleClose() {
-    // 这里可以添加关闭窗口的逻辑
-    // 例如，隐藏组件或销毁组件
     this.remove();
     this.dispatchEvent(new CustomEvent('close-modal'));
+  }
+
+  handleSubmit() {
+    const reviewData = {
+      reviewer: this.userData.reviewer,
+      reviewTime: this.userData.reviewTime,
+      reviewOpinion: this.userData.reviewOpinion,
+      notes: this.userData.notes
+    };
+
+    this.dispatchEvent(new CustomEvent('submit', {
+      detail: {
+        userData: this.userData,
+        reviewData
+      }
+    }));
   }
 }
 
