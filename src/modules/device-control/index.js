@@ -18,7 +18,31 @@ class DeviceControl extends LitElement {
         position: absolute;
       }
       .posture-adjust-modal {
-        margin-left: 945px; /* 姿态调整弹窗与设备查询弹窗的距离 */
+        position: absolute;
+        transition: all 0.3s ease-in-out;
+      }
+      .posture-adjust-modal.with-query {
+        margin-left: 945px;
+      }
+      .posture-adjust-modal.without-query {
+        left: 20px;
+        top: 20px;
+      }
+      .realtime-imagery-modal {
+        position: absolute;
+      }
+      .angle-detection-modal {
+        position: absolute;
+      }
+      .single-device-log-modal {
+        position: absolute;
+        left: 460px;
+        top: 20px;
+      }
+      .parameter-config-modal {
+        position: absolute;
+        left: 462px;
+        top: 279px;
       }
     `,
   ];
@@ -36,6 +60,7 @@ class DeviceControl extends LitElement {
   constructor() {
     super();
     this.selectedButton = '';
+    this.activeComponent = '';
     this.isModalOpen = false;
     this.isPostureAdjustModalOpen = false;
     this.isRealtimeImageryOpen = false;
@@ -77,7 +102,9 @@ class DeviceControl extends LitElement {
           ${this.isPostureAdjustModalOpen
             ? html`
                 <posture-adjust
-                  class="posture-adjust-modal"
+                  class="posture-adjust-modal ${this.isModalOpen
+                    ? 'with-query'
+                    : 'without-query'}"
                   @close-modal=${this.closePostureAdjustModal}
                   @open-realtime-imagery=${this.openRealtimeImagery}
                   @open-angle-detection=${this.openAngleDetection}
@@ -88,22 +115,25 @@ class DeviceControl extends LitElement {
             : ''}
           ${this.isRealtimeImageryOpen
             ? html`<realtime-imagery
+                class="realtime-imagery-modal"
                 @close-modal=${this.closeRealtimeImagery}
               ></realtime-imagery>`
             : ''}
           ${this.isAngleDetectionOpen
             ? html`<angle-detection
+                class="angle-detection-modal"
                 @close-modal=${this.closeAngleDetection}
               ></angle-detection>`
             : ''}
           ${this.isSingleDeviceLogOpen
             ? html`<single-device-log
+                class="single-device-log-modal"
                 @close-modal=${this.closeSingleDeviceLog}
               ></single-device-log>`
             : ''}
-          <!-- 参数配置弹窗 -->
           ${this.isParameterConfigOpen
             ? html`<parameter-config
+                class="parameter-config-modal"
                 @close-modal=${this.closeParameterConfig}
                 @angles-calculated=${this.handleAnglesCalculated}
               ></parameter-config>`
@@ -115,32 +145,35 @@ class DeviceControl extends LitElement {
 
   toggleModal(buttonName) {
     if (this.selectedButton === buttonName) {
-      this.isModalOpen = !this.isModalOpen;
+      this.clearAllComponents();
     } else {
+      this.clearAllComponents();
       this.selectedButton = buttonName;
       this.isModalOpen = buttonName === 'query';
     }
   }
 
-  selectButton(buttonName) {
-    if (buttonName === 'list') {
-      this.isModalOpen = false;
-      this.selectedButton = this.selectedButton === 'list' ? '' : 'list';
-    } else {
-      this.selectedButton = buttonName;
-      this.isModalOpen = false;
-      this.isPostureAdjustModalOpen = false;
-    }
+  clearAllComponents() {
+    this.isModalOpen = false;
+    this.isPostureAdjustModalOpen = false;
+    this.isRealtimeImageryOpen = false;
+    this.isAngleDetectionOpen = false;
+    this.isSingleDeviceLogOpen = false;
+    this.isParameterConfigOpen = false;
+    this.selectedButton = '';
   }
 
   setActiveComponent(componentName) {
-    if (this.activeComponent === componentName) {
-      this.activeComponent = '';
-      this.selectedButton = '';
+    if (this.selectedButton === componentName) {
+      this.selectedButton = ''; // Deselect if already active
     } else {
-      this.activeComponent = componentName;
       this.selectedButton = componentName;
+      this.isModalOpen = false; // Ensure no modal is opened when switching to the list
       this.isPostureAdjustModalOpen = false;
+      this.isRealtimeImageryOpen = false;
+      this.isAngleDetectionOpen = false;
+      this.isSingleDeviceLogOpen = false;
+      this.isParameterConfigOpen = false;
     }
   }
 
@@ -150,44 +183,79 @@ class DeviceControl extends LitElement {
 
   openRealtimeImagery() {
     this.isRealtimeImageryOpen = true;
+    this.isAngleDetectionOpen = false;
+    this.isSingleDeviceLogOpen = false;
+    this.isParameterConfigOpen = false;
+    this.isModalOpen = false;
+    this.selectedButton = '';
   }
 
   openAngleDetection() {
     this.isAngleDetectionOpen = true;
+    this.isRealtimeImageryOpen = false;
+    this.isSingleDeviceLogOpen = false;
+    this.isParameterConfigOpen = false;
+    this.isModalOpen = false;
+    this.selectedButton = '';
   }
 
   openSingleDeviceLog() {
     this.isSingleDeviceLogOpen = true;
+    this.isRealtimeImageryOpen = false;
+    this.isAngleDetectionOpen = false;
+    this.isParameterConfigOpen = false;
+    this.isModalOpen = false;
+    this.selectedButton = '';
   }
 
   openParameterConfig() {
     this.isParameterConfigOpen = true;
-  }
-
-  closeParameterConfig() {
-    this.isParameterConfigOpen = false;
-  }
-
-  closeAngleDetection() {
-    this.isAngleDetectionOpen = false;
-  }
-
-  closeSingleDeviceLog() {
-    this.isSingleDeviceLogOpen = false;
-  }
-
-  closePostureAdjustModal() {
-    this.isPostureAdjustModalOpen = false;
-  }
-
-  closeRealtimeImagery() {
     this.isRealtimeImageryOpen = false;
+    this.isAngleDetectionOpen = false;
+    this.isSingleDeviceLogOpen = false;
+    this.isModalOpen = false;
+    this.selectedButton = '';
   }
 
   closeModal() {
     this.isModalOpen = false;
+    this.isPostureAdjustModalOpen = false;
   }
-  // 添加处理计算角度的方法
+
+  closeParameterConfig() {
+    this.isParameterConfigOpen = false;
+    this.selectedButton = 'query';
+    this.isModalOpen = true;
+  }
+
+  closeAngleDetection() {
+    this.isAngleDetectionOpen = false;
+    this.selectedButton = 'query';
+    this.isModalOpen = true;
+  }
+
+  closeSingleDeviceLog() {
+    this.isSingleDeviceLogOpen = false;
+    this.selectedButton = 'query';
+    this.isModalOpen = true;
+  }
+
+  closePostureAdjustModal() {
+    this.isPostureAdjustModalOpen = false;
+    this.selectedButton = 'query';
+    this.isModalOpen = true;
+    this.isRealtimeImageryOpen = false;
+    this.isAngleDetectionOpen = false;
+    this.isSingleDeviceLogOpen = false;
+    this.isParameterConfigOpen = false;
+  }
+
+  closeRealtimeImagery() {
+    this.isRealtimeImageryOpen = false;
+    this.selectedButton = 'query';
+    this.isModalOpen = true;
+  }
+
   handleAnglesCalculated(event) {
     const { azimuth, elevation } = event.detail;
     const postureAdjust = this.shadowRoot.querySelector('posture-adjust');
