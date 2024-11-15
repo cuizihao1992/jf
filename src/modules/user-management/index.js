@@ -45,27 +45,29 @@ class UserManagement extends LitElement {
           @button-click=${() => this.setActiveComponent('userPermissions')}
         ></custom-button>
       </div>
-      <div class="panel">${this.renderActiveComponent()}</div>
-      <!-- 用户信息弹窗 -->
-      <div class="panel-right">
-        ${this.isUserReviewOpen
-          ? html`<user-review
-              @close-modal=${this.closeUserReview}
-            ></user-review>`
-          : ''}
-        ${this.isUserViewOpen
-          ? html`<user-view @close-modal=${this.closeUserView}></user-view>`
-          : ''}
-        ${this.isUserInformationOpen
-          ? html`<user-information
-              @close-modal=${this.closeUserInformation}
-            ></user-information>`
-          : ''}
-        ${this.isViewInformationOpen
-          ? html`<view-information
-              @close-modal=${this.closeViewInformation}
-            ></view-information>`
-          : ''}
+      <div class="panel">
+        ${this.renderActiveComponent()}
+        <!-- 用户信息弹窗 -->
+        <div style="position:absolute;top:0;left:100%;">
+          ${this.isUserReviewOpen
+            ? html`<user-review
+                @close-modal=${this.closeUserReview}
+              ></user-review>`
+            : ''}
+          ${this.isUserViewOpen
+            ? html`<user-view @close-modal=${this.closeUserView}></user-view>`
+            : ''}
+          ${this.isUserInformationOpen
+            ? html`<user-information
+                @close-modal=${this.closeUserInformation}
+              ></user-information>`
+            : ''}
+          ${this.isViewInformationOpen
+            ? html`<view-information
+                @close-modal=${this.closeViewInformation}
+              ></view-information>`
+            : ''}
+        </div>
       </div>
     `;
   }

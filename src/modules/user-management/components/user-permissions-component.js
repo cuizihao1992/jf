@@ -1,130 +1,9 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, unsafeCSS } from 'lit';
+import styles from './css/user-permissions.css?inline';
 
 class UserPermissionsComponent extends LitElement {
   static styles = css`
-    /* 样式代码保持不变 */
-    .modal {
-      padding: 20px;
-      background: rgba(0, 9, 36, 0.8);
-      color: white;
-      border-radius: 10px;
-      width: 770px;
-      height: 610px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      opacity: 1;
-      border: 1px solid rgba(42, 130, 228, 1);
-      background-size: cover;
-      background-position: center;
-    }
-    .header {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 10px;
-      text-align: left;
-    }
-    .form-container {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    .form-group {
-      display: flex;
-      align-items: center;
-      margin-right: 20px;
-    }
-    .form-group label {
-      margin-right: 10px;
-      white-space: nowrap;
-    }
-    .form-group select,
-    .form-group input {
-      padding: 5px;
-      background-color: #1b2a41;
-      color: white;
-      border: none;
-      border-radius: 5px;
-    }
-    .query-button {
-      padding: 8px 15px;
-      background-color: #58a6ff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-left: 10px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      color: white;
-    }
-    th {
-      background-color: #1a2b4c;
-      padding: 8px;
-      text-align: center;
-      border-bottom: 2px solid #444;
-    }
-    .table-row {
-      border-bottom: 1px solid #444;
-    }
-    .table-row:last-child {
-      border-bottom: none;
-    }
-    td {
-      padding: 8px;
-      text-align: center;
-    }
-    .close-button {
-      cursor: pointer;
-      color: white;
-      background: none;
-      border: none;
-      font-size: 25px;
-      font-weight: bold;
-      float: right;
-    }
-    /* 弹窗样式 */
-    .confirm-dialog {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: white;
-      color: black;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      z-index: 10;
-      text-align: center;
-      font-size: 16px;
-      width: 260px;
-    }
-    .dialog-button {
-      padding: 5px 15px;
-      margin: 10px 5px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    .confirm-button {
-      background-color: #58a6ff;
-      color: white;
-    }
-    .cancel-button {
-      background-color: #ccc;
-      color: black;
-    }
-    a {
-      color: #1e90ff;
-      cursor: pointer;
-      text-decoration: none;
-    }
-    .table-container {
-      max-height: 475px; /* 限制表格的最大高度 */
-      overflow-y: auto; /* 仅表格内容滚动 */
-    }
+    ${unsafeCSS(styles)}
   `;
 
   static properties = {
@@ -203,6 +82,13 @@ class UserPermissionsComponent extends LitElement {
 
   renderRows() {
     const powerUsers = [
+      {
+        userName: '张三',
+        userType: '管理员',
+        registerTime: '2024-9-24 16:21:45',
+        region: '中卫',
+        userStatus: this.selectedUserStatus,
+      },
       {
         userName: '张三',
         userType: '管理员',

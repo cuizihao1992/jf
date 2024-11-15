@@ -1,5 +1,5 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
-import styles from './css/task-create-component.css?inline'; // 导入 CSS 文件
+import styles from './css/task-create-component.css?inline';
 import { deviceService } from '@/api/fetch.js';
 
 class TaskCreateComponent extends LitElement {
@@ -7,54 +7,33 @@ class TaskCreateComponent extends LitElement {
     ${unsafeCSS(styles)}
   `;
 
+  static get properties() {
+    return {
+      devices: { type: Array },
+    };
+  }
+
   constructor() {
     super();
-    this.selectedDeviceList = [];
-    this.deviceRows = [];
-    this.fetchDeviceList();
+    this.devices = [];
+    this.fetchDevices();
   }
 
-  async fetchDeviceList() {
-    const res = await deviceService.list();
-    this.deviceRows = res.rows;
-    this.requestUpdate();
-  }
-
-  // 将右侧选中的设备添加到左侧
-  addToSelectedDeviceList() {
-    const selectedDevices = this.deviceRows.filter(
-      (device) =>
-        this.shadowRoot.querySelector(`#device-status-${device.id}`).checked
-    );
-    // 过滤掉已在 selectedDeviceList 中的设备，避免重复添加
-    const newDevices = selectedDevices.filter(
-      (device) => !this.selectedDeviceList.some((d) => d.id === device.id)
-    );
-    this.selectedDeviceList = [...this.selectedDeviceList, ...newDevices];
-    // 从右侧列表中移除添加的设备
-    this.deviceRows = this.deviceRows.filter(
-      (device) => !newDevices.some((d) => d.id === device.id)
-    );
-    this.requestUpdate();
-  }
-
-  // 将左侧选中的设备从 selectedDeviceList 中移除
-  removeFromSelectedDeviceList() {
-    const devicesToRemove = this.selectedDeviceList.filter(
-      (device) =>
-        this.shadowRoot.querySelector(`#selected-device-${device.id}`).checked
-    );
-    // 将移除的设备重新添加到右侧设备列表中
-    this.deviceRows = [...this.deviceRows, ...devicesToRemove];
-    // 更新 selectedDeviceList 以移除选中的设备
-    this.selectedDeviceList = this.selectedDeviceList.filter(
-      (device) => !devicesToRemove.some((d) => d.id === device.id)
-    );
-    this.requestUpdate();
+  async fetchDevices() {
+    try {
+      const params = {
+        pageNum: 1,
+        pageSize: 100000,
+      };
+      const data = await deviceService.list(params);
+      this.devices = data.rows;
+    } catch (error) {
+      console.error('获取设备数据失败:', error);
+    }
   }
 
   render() {
-    const deviceStatusRows = this.deviceRows.map(
+    const deviceStatusRows = this.devices.map(
       (device) => html`
         <tr>
           <td>
@@ -62,10 +41,10 @@ class TaskCreateComponent extends LitElement {
             ${device.id}
           </td>
           <td>${device.region}</td>
-          <td>${device.type}</td>
-          <td><button class="power-status">⚡</button></td>
-          <td>${device.status}</td>
-          <td>${device.time}</td>
+          <td>${device.deviceType}</td>
+          <td><button class="power-status">${device.powerStatus}</button></td>
+          <td>${device.deviceStatus}</td>
+          <td>${device.lastSyncTime}</td>
           <td>
             <button
               class="view-button colored-button"
@@ -78,7 +57,17 @@ class TaskCreateComponent extends LitElement {
       `
     );
 
-    const deviceListTableRows = this.selectedDeviceList.map(
+    const deviceListRows = [
+      { id: 201, angle: { horizontal: 0, elevation: 0 } },
+      { id: 202, angle: { horizontal: 10, elevation: 5 } },
+      { id: 203, angle: { horizontal: -5, elevation: 10 } },
+      { id: 203, angle: { horizontal: -5, elevation: 10 } },
+      { id: 203, angle: { horizontal: -5, elevation: 10 } },
+      { id: 203, angle: { horizontal: -5, elevation: 10 } },
+      { id: 203, angle: { horizontal: -5, elevation: 10 } },
+    ];
+
+    const deviceListTableRows = deviceListRows.map(
       (device) => html`
         <tr>
           <td>
@@ -91,7 +80,6 @@ class TaskCreateComponent extends LitElement {
             <input type="text" placeholder="输入角度" style="width: 50px;" />
             俯仰角:
             <input type="text" placeholder="输入角度" style="width: 50px;" />
-            <button class="nav-button">姿态计算</button>
           </td>
         </tr>
       `
@@ -218,39 +206,33 @@ class TaskCreateComponent extends LitElement {
           <button
             class="config-button"
             @click="${() => this.openParameterConfig()}"
-            style="background-color: #58a6ff;border-radius:4px; width: 90px; height: 30px; margin-right: 10px;font-size: 14px;margin-top: 50px;color: white;"
           >
             配置参数
           </button>
           <button
             class="select-button"
             @click="${() => this.openScopeSelection()}"
-            style="background-color: #58a6ff;border-radius:4px;width: 90px; height: 30px;  font-size: 14px;margin-top: 50px;color: white;"
           >
             范围选择
           </button>
-          <button
-            class="submit-button"
-            style="border-radius:4px;width: 60px; height: 30px;font-size: 14px;margin-top: 50px;"
-          >
-            提交
-          </button>
+          <button class="submit-button">提交</button>
         </div>
       </div>
     `;
   }
 
   handleClose() {
-    // 这里可以添加关闭窗口的逻辑
-    // 例如，隐藏组件或销毁组件
     this.remove();
   }
+
   openStatusMission() {
     this.dispatchEvent(new CustomEvent('open-status-mission'));
   }
+
   openParameterConfig() {
     this.dispatchEvent(new CustomEvent('open-parameter-config'));
   }
+
   openScopeSelection() {
     this.dispatchEvent(new CustomEvent('open-scope-selection'));
   }

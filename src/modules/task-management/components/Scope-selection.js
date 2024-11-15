@@ -1,174 +1,9 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, unsafeCSS } from 'lit';
+import styles from './css/scope-selection.css?inline';
 
 class ScopeSelection extends LitElement {
   static styles = css`
-    :host {
-      position: fixed;
-      top: 23.7%;
-      left: calc(50% + 315px);
-      width: fit-content;
-      background: rgba(13, 31, 51, 0.9);
-      color: white;
-      border-radius: 10px;
-      padding: 20px;
-      z-index: 2;
-    }
-
-    .parameter-config {
-      border: 1px solid rgb(42, 130, 228);
-      border-radius: 8px;
-      padding: 15px;
-    }
-
-    .header {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: -29px;
-      text-align: left;
-    }
-
-    .tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .tab {
-      padding: 8px 16px;
-      background: #4d8fdb;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .tab[selected] {
-      background: #2a5a8a;
-    }
-
-    .form-group {
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-      gap: 5px;
-      justify-content: end;
-    }
-    .coordinates-group {
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-      gap: 25px;
-      justify-content: center;
-    }
-
-    label {
-      margin-left: 0;
-      text-align: right;
-      white-space: nowrap;
-    }
-
-    input[type='orbit-text'] {
-      width: 115px;
-      padding: 4px;
-      border-radius: 5px;
-    }
-    input[type='text'] {
-      width: 200px;
-      padding: 4px;
-      border-radius: 5px;
-    }
-
-    button {
-      padding: 5px 10px;
-      background: #4d8fdb;
-      border: none;
-      border-radius: 4px;
-      color: white;
-      cursor: pointer;
-      width: auto;
-      white-space: nowrap;
-    }
-
-    .button-container {
-      display: flex;
-      justify-content: flex-end;
-      gap: 82px; /* Adds spacing between buttons */
-      margin-top: 10px;
-    }
-
-    .coordinates-container {
-      border: 1px solid #ccc;
-      padding: 15px;
-      border-radius: 4px;
-    }
-    .direction-options {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      margin-bottom: 24px;
-      margin-right: 72px;
-      margin-left: 45px;
-    }
-    .orbit-container,
-    .attitude-container {
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 16px;
-      position: relative;
-    }
-    .orbit-title,
-    .attitude-title {
-      position: absolute;
-      top: -12px;
-      left: 10px;
-      background-color: #31384f;
-      padding: 0 4px;
-      font-weight: bold;
-    }
-    .orbit-parameters {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 5px;
-    }
-    .close-button {
-      position: relative;
-      margin-left: 480px;
-      font-size: 30px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    button.active {
-      background: #2a5a8a;
-    }
-
-    button[disabled] {
-      opacity: 0.5;
-      cursor: not-allowed;
-      background: #666;
-    }
-
-    button[disabled]:hover {
-      opacity: 0.5;
-    }
-
-    button:not([disabled]):hover {
-      background: #2a5a8a;
-    }
-    [title] {
-      position: relative;
-    }
-    [title]:hover::after {
-      content: attr(title);
-      position: absolute;
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 5px;
-      background: rgba(0, 0, 0, 0.8);
-      border-radius: 4px;
-      font-size: 12px;
-      white-space: nowrap;
-      z-index: 1000;
-    }
+    ${unsafeCSS(styles)}
   `;
 
   static properties = {
@@ -190,7 +25,13 @@ class ScopeSelection extends LitElement {
     this.drawMode = 'pick';
     this.hasDrawnPolygon = false;
   }
-
+  handleFitClick() {
+    const event = new CustomEvent('fit-diagonal-points', {
+      bubbles: true,
+      composed: true,
+    });
+    this.dispatchEvent(event);
+  }
   firstUpdated() {
     window.addEventListener('update-coordinates', (e) => {
       console.log('Received coordinates:', e.detail);
@@ -258,6 +99,13 @@ class ScopeSelection extends LitElement {
       composed: true,
     });
     this.dispatchEvent(event);
+
+    // 使用全局 map 实例
+    if (window.mapInstance) {
+      const count =
+        window.mapInstance.querySourceFeatures('selected-points').length;
+      alert(`选中点位数量: ${count}`);
+    }
   }
   render() {
     console.log('Current coordinates:', this.coordinates);
@@ -374,7 +222,7 @@ class ScopeSelection extends LitElement {
                 >
                   拾取模式
                 </button>
-                <button>拟合</button>
+                <button @click=${this.handleFitClick}>拟合</button>
                 <button
                   @click=${this.handleConfirmClick}
                   ?disabled=${this.drawMode === 'draw' && !this.hasDrawnPolygon}

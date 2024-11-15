@@ -1,178 +1,25 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, unsafeCSS } from 'lit';
+import styles from './css/device-edit.css?inline';
 import { deviceService } from '@/api/fetch.js';
 
 class DeviceEdit extends LitElement {
   static styles = css`
-    .modal {
-      padding: 20px;
-      background: rgba(0, 9, 36, 0.8);
-      color: white;
-      border-radius: 10px;
-      width: 900px;
-      height: 700px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      opacity: 1;
-      border: 1px solid rgba(42, 130, 228, 1);
-      background-size: cover;
-      background-position: center;
-    }
-
-    .header {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 10px;
-      text-align: left;
-    }
-
-    .form-container {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    .form-group {
-      display: flex;
-      align-items: center;
-      margin-right: 20px;
-    }
-    .form-group label {
-      margin-right: 10px;
-      white-space: nowrap;
-    }
-    .form-group select,
-    .form-group input {
-      padding: 5px;
-      background-color: #1b2a41;
-      color: white;
-      border: none;
-      border-radius: 5px;
-    }
-    .query-button {
-      padding: 8px 15px;
-      background-color: #58a6ff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-left: 10px;
-    }
-
-    .table-container {
-      max-height: 565px; /* 限制表格的最大高度 */
-      overflow-y: auto; /* 仅表格内容滚动 */
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      color: white;
-    }
-
-    th {
-      background-color: #1a2b4c;
-      padding: 8px;
-      text-align: center;
-      border-bottom: 2px solid #444;
-    }
-
-    .table-row {
-      border-bottom: 1px solid #444;
-    }
-
-    .table-row:last-child {
-      border-bottom: none;
-    }
-
-    td {
-      padding: 8px;
-      text-align: center;
-    }
-    .close-button {
-      cursor: pointer;
-      color: white;
-      background: none;
-      border: none;
-      font-size: 25px;
-      font-weight: bold;
-      float: right;
-    }
-    .status-icon {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      width: 81px;
-      height: 20px;
-      border-radius: 5px;
-      margin-right: 5px;
-    }
-
-    .status-online {
-      background-color: green;
-    }
-    .status-warning {
-      background-color: orange;
-    }
-    .status-offline {
-      background-color: red;
-    }
-
-    a {
-      color: #1e90ff;
-      cursor: pointer;
-      text-decoration: none;
-    }
-    .confirm-button,
-    .cancel-button {
-      background-color: #337ab7;
-      border: none;
-      color: white;
-      padding: 10px 20px;
-      font-size: 0.9rem;
-      border-radius: 14px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      margin-top: 25px;
-      margin-right: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 添加阴影效果 */
-    }
-
-    .confirm-button:hover,
-    .cancel-button:hover {
-      background-color: #285e8e;
-    }
-
-    .cancel-button {
-      background-color: #337ab7;
-      margin-left: 20px;
-    }
-    .cancel-button:hover {
-      background-color: #555;
-    }
-    .confirmation-modal {
-      position: fixed;
-      top: 50%;
-      left: 80%;
-      transform: translate(-50%, -50%);
-      background-color: white;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-      border-radius: 10px;
-      padding: 20px;
-      width: 300px; /* Adjust width as needed */
-      max-width: 90%;
-      text-align: center;
-      font-family: Arial, sans-serif;
-      z-index: 1000;
-    }
+    ${unsafeCSS(styles)}
   `;
   static get properties() {
     return {
       devices: { type: Array },
+      showConfirmation: { type: Boolean },
+      currentDevice: { type: Object },
     };
   }
 
   constructor() {
     super();
     this.devices = [];
-    this.fetchDevices(); // 初始化时获取设备审核数据
+    this.showConfirmation = false;
+    this.currentDevice = null;
+    this.fetchDevices();
   }
 
   async fetchDevices() {
@@ -256,42 +103,48 @@ class DeviceEdit extends LitElement {
             </tbody>
           </table>
         </div>
-      </div>
-      ${this.showConfirmation
-        ? html`
-            <div class="confirmation-modal">
-              <div>提示:</div>
-              <div>是否删除此任务!!</div>
-              <div class="confirmation-buttons">
-                <button class="confirm-button" @click="${this.confirmRevoke}">
-                  确定
-                </button>
-                <button class="cancel-button" @click="${this.cancelRevoke}">
-                  取消
-                </button>
+        ${this.showConfirmation
+          ? html`
+              <div class="confirmation-modal">
+                <div style="font-size: 16px; font-weight: bold;">提示</div>
+                <div style="margin: 20px 0;">是否删除此设备?</div>
+                <div class="confirmation-buttons">
+                  <button class="confirm-button" @click="${this.confirmDelete}">
+                    确定
+                  </button>
+                  <button class="cancel-button" @click="${this.cancelDelete}">
+                    取消
+                  </button>
+                </div>
               </div>
-            </div>
-          `
-        : ''}
+            `
+          : ''}
+      </div>
     `;
   }
 
   renderRows() {
     return this.devices.map(
       (device) => html`
-      <tr class="table-row">
-        <td>${device.id}</a></td>
-        <td>${device.lastSyncTime}</td>
-        <td>${device.deviceType}</td>
-        <td>${device.region}</td>
-        <td>${device.connectionStatus}</td>
-        <td><span class="status-icon status-online">${device.powerStatus}</span></td>
-        <td>${device.deviceStatus}</td>
-         <td><a @click="${() => this.openDeviceParticulars()}">查看</a>
-        /<a @click="${() => this.openDevicexiangqing()}">编辑</a>
-        /<a @click="${() => this.openRevokeConfirmation()}">删除</a></td>
-      </tr>
-    `
+        <tr class="table-row">
+          <td>${device.id}</td>
+          <td>${device.lastSyncTime}</td>
+          <td>${device.deviceType}</td>
+          <td>${device.region}</td>
+          <td>${device.connectionStatus}</td>
+          <td>
+            <span class="status-icon status-online">${device.powerStatus}</span>
+          </td>
+          <td>${device.deviceStatus}</td>
+          <td>
+            <a @click="${() => this.openDeviceParticulars(device, 'view')}">查看</a>
+            /
+            <a @click="${() => this.openDeviceParticulars(device, 'edit')}">编辑</a>
+            /
+            <a @click="${() => this.openRevokeConfirmation(device)}">删除</a>
+          </td>
+        </tr>
+      `
     );
   }
 
@@ -304,11 +157,19 @@ class DeviceEdit extends LitElement {
     ); /*this.showConfirmation=false;
     this.dispatchEvent(new CustomEvent('open-task-details'));*/
   }
-  openDeviceParticulars() {
+  openDeviceParticulars(device, type) {
     this.dispatchEvent(
-      new CustomEvent('open-device-particulars')
-    ); /*this.showConfirmation=false;
-    this.dispatchEvent(new CustomEvent('open-task-details'));*/
+      new CustomEvent('open-device-particulars', {
+        detail: {
+          device: { ...device },
+          mode: {
+            isEdit: type === 'edit',
+            isReview: false,
+            isReviewEdit: false,
+          },
+        },
+      })
+    );
   }
   handleClose() {
     // 这里可以添加关闭窗口的逻辑
@@ -316,21 +177,24 @@ class DeviceEdit extends LitElement {
     this.remove();
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
-  openRevokeConfirmation() {
+  openRevokeConfirmation(device) {
     this.showConfirmation = true;
-    this.showTaskDetails = false;
+    this.currentDevice = device;
   }
 
-  // Handle confirm action
-  confirmRevoke() {
-    this.showConfirmation = false;
-    this.showTaskDetails = false;
-    console.log('任务撤回 confirmed');
-    // Add your revoke logic here
+  async confirmDelete() {
+    try {
+      await deviceService.delete(this.currentDevice.id);
+      this.fetchDevices();
+      this.showConfirmation = false;
+    } catch (error) {
+      console.error('删除设备失败:', error);
+    }
   }
-  // Handle cancel action
-  cancelRevoke() {
+
+  cancelDelete() {
     this.showConfirmation = false;
+    this.currentDevice = null;
   }
 }
 

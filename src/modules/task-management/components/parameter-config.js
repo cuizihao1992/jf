@@ -1,134 +1,9 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, unsafeCSS } from 'lit';
+import styles from './css/parameter-config.css?inline';
 
 class ParameterConfig extends LitElement {
   static styles = css`
-    :host {
-      top: 39%;
-      left: calc(50% + 550px);
-      position: fixed;
-      display: block;
-      width: 540px;
-      font-family: 'Arial', sans-serif;
-      background: rgba(13, 31, 51, 0.9);
-      color: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-      padding: 20px;
-      box-sizing: border-box;
-      z-index: 2;
-    }
-    .parameter-config {
-      width: 465px;
-      margin: 0 auto;
-      padding: 15px;
-      border: 1px solid rgb(42, 130, 228);
-      border-radius: 8px;
-    }
-    .header {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 10px;
-      text-align: left;
-      margin-top: -40px;
-    }
-    .container {
-      width: 450px;
-      border: white solid 0.5px;
-      overflow: hidden;
-    }
-    .tabs {
-      display: flex;
-      width: 200px;
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
-    }
-    .tab {
-      flex: 1;
-      text-align: center;
-      padding: 10px;
-      cursor: pointer;
-      background-color: #e0e8ef;
-      color: #000;
-      font-weight: bold;
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
-    }
-    .tab[selected] {
-      background-color: #4d8fdb;
-      color: white;
-    }
-    .content {
-      padding: 16px;
-      display: none;
-    }
-    .content[active] {
-      display: block;
-    }
-    .form-group {
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-    }
-    label {
-      margin-left: 4px;
-    }
-    input[type='text'] {
-      width: 80px;
-      padding: 4px;
-      border-radius: 5px;
-    }
-    .button-container {
-      text-align: right;
-      margin-top: 10px;
-    }
-    button {
-      padding: 5px 10px;
-      background-color: #4d8fdb;
-      color: white;
-      border: none;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-    button:hover {
-      background-color: #3c72b4;
-    }
-    .direction-container,
-    .orbit-container,
-    .attitude-container {
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 16px;
-      position: relative;
-    }
-    .direction-title,
-    .orbit-title,
-    .attitude-title {
-      position: absolute;
-      top: -12px;
-      left: 10px;
-      background-color: #31384f;
-      padding: 0 4px;
-      font-weight: bold;
-    }
-    .direction-options,
-    .orbit-parameters {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-    }
-    .direction-options label,
-    .orbit-parameters .form-group {
-      flex: -1 1 50%;
-    }
-    .close-button {
-      position: relative;
-      top: -13px;
-      left: 450px;
-      font-size: 30px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+    ${unsafeCSS(styles)}
   `;
 
   static properties = {
@@ -153,7 +28,13 @@ class ParameterConfig extends LitElement {
         'input[name="elevation"]'
       ).value;
 
-      alert(`方位角: ${azimuth}°\n俯仰角: ${elevation}°`);
+      // 发送计算结果事件
+      this.dispatchEvent(
+        new CustomEvent('angles-calculated', {
+          detail: { azimuth, elevation },
+        })
+      );
+      this.handleClose();
       return;
     }
 
@@ -211,7 +92,16 @@ class ParameterConfig extends LitElement {
 
     const elevation = fixedAngle - incidenceRad;
 
-    alert(`方位角: ${azimuth.toFixed(2)}°\n俯仰角: ${elevation.toFixed(2)}°`);
+    // 发送计算结果事件
+    this.dispatchEvent(
+      new CustomEvent('angles-calculated', {
+        detail: {
+          azimuth: azimuth.toFixed(2),
+          elevation: elevation.toFixed(2),
+        },
+      })
+    );
+    this.handleClose();
   }
 
   render() {

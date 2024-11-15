@@ -1,50 +1,9 @@
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, unsafeCSS } from 'lit';
+import styles from './css/device-details.css?inline';
 
 class DeviceDetails extends LitElement {
   static styles = css`
-    :host {
-      position: absolute;
-      top: 0px;
-      left: calc(100% + 30px);
-      display: block;
-      width: 400px;
-      font-family: 'Arial', sans-serif;
-      background: linear-gradient(135deg, #003366, #005599);
-      color: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-      padding: 20px;
-      box-sizing: border-box;
-    }
-
-    .header {
-      font-size: 24px;
-      font-weight: bold;
-      text-align: center;
-      margin-bottom: 20px;
-      border-bottom: 2px solid rgba(255, 255, 255, 0.3);
-      padding-bottom: 10px;
-    }
-
-    .info-section {
-      margin-top: 10px;
-    }
-
-    .info-title {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-
-    .info-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 5px 0;
-      font-size: 16px;
-    }
-
-    .info-item span {
-      color: #ffffff; /* 类似图片中的黄色 */
-    }
+    ${unsafeCSS(styles)}
   `;
 
   render() {
