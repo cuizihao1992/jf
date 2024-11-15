@@ -179,8 +179,8 @@ class TaskInfoComponent extends LitElement {
           <td>${task.region}</td>
           <td>${statusMap[task.reviewStatus] || '未知状态'}</td>
           <td>
-            <a @click="${() => this.openTaskDetails(task)}">查看</a> /
-            <a @click="${() => this.openTaskEdit(task)}">编辑</a> /
+            <a @click="${() => this.openTaskDetails(task, 'view')}">查看</a> /
+            <a @click="${() => this.openTaskDetails(task, 'edit')}">编辑</a> /
             <a @click="${() => this.openDeleteConfirmation(task)}">撤回</a>
             <!-- 修改为删除逻辑 -->
           </td>
@@ -212,15 +212,20 @@ class TaskInfoComponent extends LitElement {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
 
-  openTaskDetails(task) {
+  openTaskDetails(task, type) {
     this.dispatchEvent(
-      new CustomEvent('open-task-details', { detail: { task, isEdit: false } })
-    );
-  }
-
-  openTaskEdit(task) {
-    this.dispatchEvent(
-      new CustomEvent('open-task-details', { detail: { task, isEdit: true } })
+      new CustomEvent('open-task-details', {
+        detail: {
+          task: { ...task },
+          mode: {
+            isEdit: type === 'edit',
+            isReview: false,
+            isReviewEdit: false
+          }
+        },
+        bubbles: true,
+        composed: true
+      })
     );
   }
 }

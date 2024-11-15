@@ -205,8 +205,7 @@ class TaskManagement extends LitElement {
       case 'reviewTasks':
         return html`<task-review-component
           @close-modal=${this.closeTasks}
-          @open-task-review-detail=${this.openTaskDetails}
-          @open-task-review-review=${this.openTaskDetails}
+          @open-task-details=${this.openTaskDetails}
         ></task-review-component>`;
       default:
         return ''; // 不显示任何组件
@@ -226,13 +225,33 @@ class TaskManagement extends LitElement {
       this.leftPanel = true;
     }, 0); // 使用微小的延时来确保状态更新
   }
-  openTaskDetails(event) {
+  openTaskDetails(e) {
+    const detail = e.detail;
+    this.currentTask = detail;
     this.isTaskDetailsOpen = true;
     this.isFaultDetailsOpen = false;
     this.isTaskLogOpen = false;
     this.isTaskEditOpen = false;
-    this.currentTask = event.detail;
-    console.log('接收到的任务详情:', event.detail);
+
+    // 确保在下一帧更新组件
+    requestAnimationFrame(() => {
+      const detailsElement = this.shadowRoot.querySelector('task-details');
+      if (detailsElement) {
+        detailsElement.setTaskData(detail);
+        detailsElement.addEventListener('updateData', () => {
+          this.handleTaskUpdate();
+        });
+      }
+    });
+  }
+
+  handleTaskUpdate() {
+    const activeComponent = this.shadowRoot.querySelector(
+      'task-info-component, task-review-component'
+    );
+    if (activeComponent) {
+      activeComponent.fetchTasks();
+    }
   }
 
   openFaultDetails() {
