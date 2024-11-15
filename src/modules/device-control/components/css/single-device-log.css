@@ -1,13 +1,12 @@
 .modal {
-  top: 21%;
-  left: calc(50% + 550px);
-  position: fixed;
+  top: 50px;
+  left: calc(30.5%);
   padding: 20px;
   background: rgba(0, 9, 36, 0.8);
   color: white;
   border-radius: 10px;
   min-width: 650px;
-  height: 600px;
+  height: 701px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   opacity: 1;
   border: 1px solid rgba(42, 130, 228, 1);
@@ -126,6 +125,6 @@ a {
 }
 
 .table-container {
-  max-height: 510px;
+  max-height: 610px;
   overflow-y: auto;
 }
