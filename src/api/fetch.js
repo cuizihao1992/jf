@@ -38,7 +38,7 @@ class ApiService {
   }
 
   // 获取列表（list）
-  list(params = { pageNum: 1, pageSize: 10 }) {
+  list(params = { pageNum: 1, pageSize: 10000 }) {
     return this.fetchData(`${this.resource}/list`, 'GET', params);
   }
 

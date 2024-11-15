@@ -8,7 +8,9 @@
     "dev": "vite",
     "build": "vite build",
     "build:screen": "vite build --mode screen",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx src",
+    "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx src --fix"
   },
   "dependencies": {
     "@mapbox/mapbox-gl-draw": "^1.4.3",
@@ -21,6 +23,12 @@
     "mapbox-gl": "^3.7.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.0",
+    "eslint": "^9.14.0",
+    "eslint-plugin-html": "^8.1.2",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-lit": "^1.15.0",
+    "globals": "^15.12.0",
     "prettier": "^3.3.3",
     "vite": "^5.4.9"
   },

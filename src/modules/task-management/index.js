@@ -2,7 +2,7 @@ import { LitElement, html, css } from 'lit';
 import '../../components/custom-button.js'; // Import the reusable button component
 import { sharedStyles } from '../../components/shared-styles.js'; // 引入共享样式
 import './components/task-info-component.js';
-import './components/task-create-component.js'; // 假设有创建任务组件
+import './components/task-create-component/index.js'; // 假设有创建任务组件
 import './components/task-query-component.js'; // 假设有任务查询组件
 import './components/task-review-component.js'; // 假设有任务审核组件
 import './components/Fault-details.js'; // 引入故障详情组件
