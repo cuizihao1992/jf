@@ -145,15 +145,22 @@ class DeviceControl extends LitElement {
 
   toggleModal(buttonName) {
     if (this.selectedButton === buttonName) {
-      if (this.activeComponent === 'list') {
-        this.isModalOpen = false;
-      } else {
-        this.isModalOpen = !this.isModalOpen;
-      }
+      this.clearAllComponents();
     } else {
+      this.clearAllComponents();
       this.selectedButton = buttonName;
       this.isModalOpen = buttonName === 'query';
     }
+  }
+
+  clearAllComponents() {
+    this.isModalOpen = false;
+    this.isPostureAdjustModalOpen = false;
+    this.isRealtimeImageryOpen = false;
+    this.isAngleDetectionOpen = false;
+    this.isSingleDeviceLogOpen = false;
+    this.isParameterConfigOpen = false;
+    this.selectedButton = '';
   }
 
   setActiveComponent(componentName) {
