@@ -67,14 +67,21 @@ class UserManagement extends LitElement {
 
   setActiveComponent(componentName) {
     if (this.selectedButton === componentName) {
-      this.selectedButton = '';
-      this.activeComponent = '';
+      this.clearAllComponents();
     } else {
-      this.selectedButton = componentName;
+      this.clearAllComponents();
       this.activeComponent = componentName;
+      this.selectedButton = componentName;
     }
+  }
+
+  clearAllComponents() {
+    this.activeComponent = '';
+    this.selectedButton = '';
     this.isUserViewOpen = false;
     this.isUserInformationOpen = false;
+    this.userViewMode = 'view';
+    this.userInformationMode = 'view';
   }
 
   renderActiveComponent() {
@@ -125,8 +132,7 @@ class UserManagement extends LitElement {
   }
 
   closeTasks() {
-    this.activeComponent = '';
-    this.selectedButton = '';
+    this.clearAllComponents();
   }
 }
 
