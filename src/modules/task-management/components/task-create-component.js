@@ -203,10 +203,6 @@ class TaskCreateComponent extends LitElement {
               />
             </div>
           </div>
-          <div class="plus-minus">
-            <button @click="${this.addToSelectedDeviceList}">+</button>
-            <button @click="${this.removeFromSelectedDeviceList}">-</button>
-          </div>
 
           <div class="device-status">
             <h3>设备状态列表</h3>
