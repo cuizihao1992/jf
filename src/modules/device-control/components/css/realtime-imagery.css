@@ -1,6 +1,6 @@
 :host {
-  top: 44.1%;
-  left: calc(50% + 550px);
+  top: 375px;
+  left: calc(50% + 464px);
   position: fixed;
   display: block;
   width: 490px;

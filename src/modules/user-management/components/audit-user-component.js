@@ -282,15 +282,17 @@ class AuditUserComponent extends LitElement {
     return applications.map(
       (application) => html`
       <tr class="table-row">
-        <td>${application.userName}</a></td>
+        <td>${application.userName}</td>
         <td>${application.applicationType}</td>
         <td>${application.region}</td>
         <td>${application.phone}</td>
         <td>${application.userType}</td>
         <td>${application.applicationTime}</td>
         <td>${application.approveStatus}</td>
-        <td><a @click="${() => this.openUserView()}">查看</a>/<a 
-       @click="${() => this.openUserReview()}">审核</a></td>
+        <td>
+          <a @click="${() => this.openUserView('view')}">查看</a>/
+          <a @click="${() => this.openUserView('review')}">审核</a>
+        </td>
       </tr>
     `
     );
@@ -299,11 +301,10 @@ class AuditUserComponent extends LitElement {
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
-  openUserView() {
-    this.dispatchEvent(new CustomEvent('open-user-view'));
-  }
-  openUserReview() {
-    this.dispatchEvent(new CustomEvent('open-user-review'));
+  openUserView(mode) {
+    this.dispatchEvent(new CustomEvent('open-user-view', {
+      detail: { mode }
+    }));
   }
 }
 

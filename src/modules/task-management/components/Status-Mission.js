@@ -63,28 +63,7 @@ class StatusMission extends LitElement {
               <tr>
                 <th>任务名</th>
                 <th>任务编号</th>
-                <th>
-                  设备开启时间
-                  <div class="sort-container">
-                    <span
-                      @click="${this.sortByStartTime}"
-                      style="display: flex; flex-direction: column; align-items: center; margin-left: 5px;"
-                    >
-                      <span
-                        class="sort-arrow ${this.sortDirection === 'asc'
-                          ? 'active'
-                          : ''}"
-                        >▲</span
-                      >
-                      <span
-                        class="sort-arrow ${this.sortDirection === 'desc'
-                          ? 'active'
-                          : ''}"
-                        >▼</span
-                      >
-                    </span>
-                  </div>
-                </th>
+                <th>设备开启时间</th>
                 <th>设备关闭时间</th>
                 <th>任务状态</th>
               </tr>
