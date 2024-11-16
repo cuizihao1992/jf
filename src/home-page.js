@@ -14,6 +14,32 @@ import '@/modules/log-management/index.js';
 import '@/components/login-page.js';
 import styles from './home-page.css?inline';
 
+// 地图基础配置常量
+const MAP_CONFIG = {
+  accessToken:
+    'pk.eyJ1IjoiaG9uZ2xpbmdqaW4xOTk0IiwiYSI6ImNrczhvZTNmbDN0ZnEycHM3aTkyanp3NmsifQ.iCdeT5IE9GlGKmExl0U6zA',  // Mapbox访问令牌
+  style: 'mapbox://styles/mapbox/dark-v11',  // 地图样式
+  center: [116.397428, 39.90923],  // 初始中心点坐标（北京）
+  zoom: 12,  // 初始缩放级别
+  attributionControl: false,  // 关闭属性控制
+  language: 'zh-Hans',  // 使用简体中文
+  localIdeographFontFamily: "'Microsoft YaHei', 'SimHei', sans-serif"  // 中文字体设置
+};
+
+// 地图样式配置常量
+const MAP_STYLE_CONFIG = {
+  background: '#000924',  // 背景色
+  water: '#000f3c',      // 水域颜色
+  building: {
+    color: '#000c2d',    // 建筑物颜色
+    opacity: 0.8         // 建筑物透明度
+  },
+  overlay: {
+    color: '#000924',    // 覆盖层颜色
+    opacity: 0.3         // 覆盖层透明度
+  }
+};
+
 class HomePage extends LitElement {
   static styles = css`
     ${unsafeCSS(styles)}
@@ -76,91 +102,63 @@ class HomePage extends LitElement {
     setTimeout(() => this.updateTime(), 1000);
   }
 
+  // 初始化地图
   initMap() {
-    mapboxgl.accessToken =
-      'pk.eyJ1IjoiaG9uZ2xpbmdqaW4xOTk0IiwiYSI6ImNrczhvZTNmbDN0ZnEycHM3aTkyanp3NmsifQ.iCdeT5IE9GlGKmExl0U6zA';
+    try {
+      mapboxgl.accessToken = MAP_CONFIG.accessToken;
 
-    const map = new mapboxgl.Map({
-      container: this.shadowRoot.getElementById('map'),
-      style: 'mapbox://styles/mapbox/dark-v11',
-      center: [116.397428, 39.90923],
-      zoom: 12,
-      attributionControl: false,
-      language: 'zh-Hans',
-      localIdeographFontFamily: "'Microsoft YaHei', 'SimHei', sans-serif",
-    });
+      const map = new mapboxgl.Map({
+        container: this.shadowRoot.getElementById('map'),
+        style: MAP_CONFIG.style,
+        center: MAP_CONFIG.center,
+        zoom: MAP_CONFIG.zoom,
+        attributionControl: MAP_CONFIG.attributionControl,
+        localIdeographFontFamily: MAP_CONFIG.localIdeographFontFamily
+      });
 
-    window.mapInstance = map;
+      // 添加错误处理
+      map.on('error', (e) => {
+        console.error('地图加载错误:', e.error);
+      });
 
+      // 确保地图加载完成后再进行操作
+      map.on('load', () => {
+        window.mapInstance = map;
+        this.initMapDraw(map);
+        this.initMapLayers(map);
+        this.setMapStyle(map);
+        
+        // 延迟设置中文标签，确保样式加载完成
+        setTimeout(() => {
+          this.setChineseLabels(map);
+        }, 1000);
+      });
+
+      // 添加地图事件监听
+      this.initMapEventListeners(map);
+
+    } catch (err) {
+      console.error('初始化地图失败:', err);
+    }
+  }
+
+  // 初始化地图绘图工具
+  initMapDraw(map) {
     this.draw = new MapboxDraw({
       displayControlsDefault: false,
       controls: {
-        point: true,
-        polygon: true,
-        trash: true,
+        point: true,      // 启用点标记工具
+        polygon: true,    // 启用多边形工具
+        trash: true,      // 启用删除工具
       },
     });
 
     map.addControl(this.draw);
+  }
 
-    map.on('load', () => {
-      this.points = [
-        { lng: 116.397, lat: 39.909, properties: { id: 1 } },
-        { lng: 116.398, lat: 39.91, properties: { id: 2 } },
-        { lng: 116.396, lat: 39.908, properties: { id: 3 } },
-        { lng: 116.399, lat: 39.911, properties: { id: 4 } },
-        { lng: 116.395, lat: 39.907, properties: { id: 5 } },
-      ];
-
-      map.addSource('test-points', {
-        type: 'geojson',
-        data: {
-          type: 'FeatureCollection',
-          features: this.points.map((point) => ({
-            type: 'Feature',
-            geometry: {
-              type: 'Point',
-              coordinates: [point.lng, point.lat],
-            },
-            properties: point.properties,
-          })),
-        },
-      });
-
-      map.addLayer({
-        id: 'test-points-layer',
-        type: 'circle',
-        source: 'test-points',
-        paint: {
-          'circle-radius': 6,
-          'circle-color': '#4CAF50',
-          'circle-opacity': 0.8,
-        },
-      });
-
-      map.addSource('selected-points', {
-        type: 'geojson',
-        data: {
-          type: 'FeatureCollection',
-          features: [],
-        },
-      });
-
-      map.addLayer({
-        id: 'selected-points-layer',
-        type: 'circle',
-        source: 'selected-points',
-        paint: {
-          'circle-radius': 6,
-          'circle-color': '#FF0000',
-          'circle-opacity': 0.7,
-        },
-      });
-
-      this.setMapStyle(map);
-      this.setChineseLabels(map);
-    });
-
+  // 初始化地图事件监听器
+  initMapEventListeners(map) {
+    // 监听多边形创建事件
     window.addEventListener('polygon-created', (e) => {
       const polygon = e.detail.polygon;
 
@@ -190,10 +188,12 @@ class HomePage extends LitElement {
       alert(`选中点位数量: ${count}`);
     });
 
+    // 监听开始拾取点位事件
     window.addEventListener('start-picking', (e) => {
       this.currentPickingPosition = e.detail.position;
     });
 
+    // 监听删除要素事件
     map.on('draw.delete', () => {
       // 清除坐标输入框
       const event = new CustomEvent('update-coordinates', {
@@ -219,7 +219,8 @@ class HomePage extends LitElement {
         features: [],
       });
     });
-    // 添加绘制多边形完成事件监听
+
+    // 监听创建要素事件
     map.on('draw.create', (e) => {
       if (e.features[0].geometry.type === 'Polygon') {
         const polygon = e.features[0];
@@ -250,6 +251,8 @@ class HomePage extends LitElement {
         alert(`选中点位数量: ${count}`);
       }
     });
+
+    // 监听地图点击事件
     map.on('click', (e) => {
       if (this.drawMode !== 'pick' || !this.currentPickingPosition) return;
       const coords = [e.lngLat.lng, e.lngLat.lat];
@@ -278,54 +281,155 @@ class HomePage extends LitElement {
     });
   }
 
+  // 初始化地图图层
+  initMapLayers(map) {
+    // 初始化测试点位数据
+    this.points = [
+      { lng: 116.397, lat: 39.909, properties: { id: 1 } },
+      { lng: 116.398, lat: 39.91, properties: { id: 2 } },
+      { lng: 116.396, lat: 39.908, properties: { id: 3 } },
+      { lng: 116.399, lat: 39.911, properties: { id: 4 } },
+      { lng: 116.395, lat: 39.907, properties: { id: 5 } },
+    ];
+
+    // 添加测试点位图层
+    map.addSource('test-points', {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: this.points.map((point) => ({
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [point.lng, point.lat],
+          },
+          properties: point.properties,
+        })),
+      },
+    });
+
+    // 添加选中点位图层
+    map.addSource('selected-points', {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: [],
+      },
+    });
+
+    map.addLayer({
+      id: 'test-points-layer',
+      type: 'circle',
+      source: 'test-points',
+      paint: {
+        'circle-radius': 6,
+        'circle-color': '#4CAF50',
+        'circle-opacity': 0.8,
+      },
+    });
+
+    map.addLayer({
+      id: 'selected-points-layer',
+      type: 'circle',
+      source: 'selected-points',
+      paint: {
+        'circle-radius': 6,
+        'circle-color': '#FF0000',
+        'circle-opacity': 0.7,
+      },
+    });
+  }
+
+  // 设置地图样式
   setMapStyle(map) {
-    if (map.getLayer('background')) {
-      map.setPaintProperty('background', 'background-color', '#000924');
-    }
-
-    if (map.getLayer('water')) {
-      map.setPaintProperty('water', 'fill-color', '#000f3c');
-    }
-
-    if (map.getLayer('building')) {
-      map.setPaintProperty('building', 'fill-color', '#000c2d');
-      map.setPaintProperty('building', 'fill-opacity', 0.8);
-    }
-
-    if (!map.getLayer('color-overlay')) {
-      map.addLayer({
-        id: 'color-overlay',
-        type: 'background',
-        paint: {
-          'background-color': '#000924',
-          'background-opacity': 0.3,
+    try {
+      const layers = {
+        background: {
+          property: 'background-color',
+          value: MAP_STYLE_CONFIG.background
         },
+        water: {
+          property: 'fill-color',
+          value: MAP_STYLE_CONFIG.water
+        },
+        building: [
+          {
+            property: 'fill-color',
+            value: MAP_STYLE_CONFIG.building.color
+          },
+          {
+            property: 'fill-opacity',
+            value: MAP_STYLE_CONFIG.building.opacity
+          }
+        ]
+      };
+
+      Object.entries(layers).forEach(([layerId, config]) => {
+        if (!map.getLayer(layerId)) return;
+
+        try {
+          if (Array.isArray(config)) {
+            config.forEach(({ property, value }) => {
+              map.setPaintProperty(layerId, property, value);
+            });
+          } else {
+            map.setPaintProperty(layerId, config.property, config.value);
+          }
+        } catch (err) {
+          console.warn(`设置图层 ${layerId} 样式失败:`, err);
+        }
       });
+
+      // 添加颜色覆盖层
+      if (!map.getLayer('color-overlay')) {
+        map.addLayer({
+          id: 'color-overlay',
+          type: 'background',
+          paint: {
+            'background-color': MAP_STYLE_CONFIG.overlay.color,
+            'background-opacity': MAP_STYLE_CONFIG.overlay.opacity
+          }
+        });
+      }
+    } catch (err) {
+      console.warn('设置地图样式失败:', err);
     }
   }
 
+  // 设置中文标签
   setChineseLabels(map) {
-    const labelLayers = map
-      .getStyle()
-      .layers.filter(
-        (layer) =>
+    try {
+      const layers = map.getStyle().layers;
+      const labelLayers = layers.filter(layer => {
+        return layer.type === 'symbol' && (
           layer.id.includes('label') ||
           layer.id.includes('place') ||
           layer.id.includes('poi') ||
           layer.id.includes('text')
-      );
+        );
+      });
 
-    labelLayers.forEach((layer) => {
-      if (map.getLayoutProperty(layer.id, 'text-field')) {
-        map.setLayoutProperty(layer.id, 'text-field', [
-          'coalesce',
-          ['get', 'name_zh'],
-          ['get', 'name'],
-        ]);
-      }
-    });
+      labelLayers.forEach(layer => {
+        try {
+          const textField = map.getLayoutProperty(layer.id, 'text-field');
+          if (textField) {
+            map.setLayoutProperty(layer.id, 'text-field', [
+              'coalesce',
+              ['get', 'name_zh-Hans'],
+              ['get', 'name_zh'],
+              ['get', 'name']
+            ]);
+          }
+        } catch (err) {
+          console.warn(`设置图层 ${layer.id} 的中文标签失败:`, err);
+        }
+      });
+    } catch (err) {
+      console.warn('设置中文标签失败:', err);
+    }
   }
 
+  // 更新坐标输入框
   updateInputField(position, coords) {
     const event = new CustomEvent('update-coordinates', {
       detail: {
@@ -336,6 +440,7 @@ class HomePage extends LitElement {
     window.dispatchEvent(event);
   }
 
+  // 绘制多边形
   drawPolygon(points) {
     const positions = ['左上', '右上', '右下', '左下'];
     const orderedPoints = positions.map(
@@ -360,10 +465,13 @@ class HomePage extends LitElement {
     window.dispatchEvent(event);
   }
 
+  // 拟合对角点
   fitDiagonalPoints() {
+    // 获取当前绘制的点位
     const features = this.draw.getAll().features;
     const points = features.filter((f) => f.geometry.type === 'Point');
 
+    // 验证点位数量
     if (points.length !== 2) {
       console.warn('需要恰好两个对角点才能进行拟合');
       return;
@@ -509,6 +617,52 @@ class HomePage extends LitElement {
         : ''}
       <div class="content"></div>
     `;
+  }
+
+  // 更新点位数据
+  updatePoints(map, polygon = null) {
+    const points = this.createPointsFeatureCollection();
+    const selectedPoints = polygon 
+      ? this.filterPointsInPolygon(points, polygon)
+      : { type: 'FeatureCollection', features: [] };
+
+    map.getSource('selected-points').setData(selectedPoints);
+    
+    if (polygon) {
+      alert(`选中点位数量: ${selectedPoints.features.length}`);
+    }
+  }
+
+  // 创建点位要素集合
+  createPointsFeatureCollection() {
+    return {
+      type: 'FeatureCollection',
+      features: this.points.map((point) => ({
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [point.lng, point.lat],
+        },
+        properties: point.properties,
+      })),
+    };
+  }
+
+  // 过滤多边形内的点位
+  filterPointsInPolygon(points, polygon) {
+    return {
+      type: 'FeatureCollection',
+      features: points.features.filter((point) =>
+        turf.booleanPointInPolygon(point, polygon)
+      ),
+    };
+  }
+
+  // 清除坐标输入框
+  clearCoordinateInputs() {
+    ['左上', '右上', '左下', '右下'].forEach(position => {
+      this.updateInputField(position, '');
+    });
   }
 }
 
