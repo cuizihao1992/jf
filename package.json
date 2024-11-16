@@ -13,12 +13,13 @@
     "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx src --fix"
   },
   "dependencies": {
+    "@lit/reactive-element": "^2.0.4",
     "@mapbox/mapbox-gl-draw": "^1.4.3",
     "@turf/turf": "^7.1.0",
     "@vaadin/router": "^2.0.0",
     "axios": "^1.7.7",
     "js-cookie": "^3.0.5",
-    "lit": "^2.7.5",
+    "lit": "^2.8.0",
     "lit-deployment-example": "file:",
     "mapbox-gl": "^3.7.0"
   },
