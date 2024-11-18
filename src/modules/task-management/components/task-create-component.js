@@ -124,7 +124,10 @@ class TaskCreateComponent extends LitElement {
             />
             ${device.id}
           </td>
-          <td>方位角: ${device.horizontal}° 仰俯角: ${device.elevation}°</td>
+          <td>
+            方位角: ${device.angle.horizontal}° 仰俯角:
+            ${device.angle.elevation}°
+          </td>
           <td>
             水平角:
             <input
@@ -203,24 +206,19 @@ class TaskCreateComponent extends LitElement {
               />
             </div>
           </div>
-
-          <div class="device-status">
-            <h3>设备状态列表</h3>
-            <div class="tbody-new-wrapper">
-              <table class="device-status-table">
+          <div class="device-list">
+            <h3>执行设备列表</h3>
+            <div class="tbody-wrapper">
+              <table class="device-list-table">
                 <thead>
                   <tr>
                     <th>设备编号</th>
-                    <th>所属地区</th>
-                    <th>设备类型</th>
-                    <th>电源状态</th>
-                    <th>设备状态</th>
-                    <th>设备时间</th>
-                    <th>任务状态</th>
+                    <th>设备地理角度</th>
+                    <th>设备调整角度</th>
                   </tr>
                 </thead>
                 <tbody>
-                  ${deviceStatusRows}
+                  ${deviceListTableRows}
                 </tbody>
               </table>
             </div>
