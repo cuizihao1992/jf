@@ -1,8 +1,10 @@
 const net = require('net');
-
+// asdfcc.a1.luyouxia.net:28402
+// asdfcc.a1.luyouxia.net:27343
 // 配置服务器信息
-const SERVER_HOST = '127.0.0.1'; // 服务器地址
-const SERVER_PORT = 1050; // 服务器端口
+// const SERVER_HOST = '124.248.70.245'; // 服务器地址
+const SERVER_HOST = 'asdfcc.a1.luyouxia.net'; // 服务器地址
+const SERVER_PORT = 28402; // 服务器端口
 
 // 模拟设备 ID 和心跳包数据
 const DEVICE_ID = 1;
