@@ -12,6 +12,9 @@ import '@/modules/device-management/index.js';
 import '@/modules/user-management/index.js';
 import '@/modules/log-management/index.js';
 import '@/components/login-page.js';
+import '@/modules/device-management/components/device-add.js';
+import '@/modules/task-management/components/task-create-component.js';
+import '@/modules/device-control/components/device-query.js';
 import styles from './home-page.css?inline';
 
 // 地图基础配置常量
@@ -50,6 +53,8 @@ class HomePage extends LitElement {
     currentLocation: { type: String },
     points: { type: Array },
     draw: { type: Object },
+    selectedDevices: { type: Array },
+    tempMarkers: { type: Array },
   };
 
   constructor() {
@@ -61,7 +66,9 @@ class HomePage extends LitElement {
     this.draw = null;
     this.currentPickingPosition = null;
     this.drawMode = 'pick';
-
+    this.selectedDevices = [];
+    this.tempMarkers = [];
+    
     window.addEventListener('fit-diagonal-points', () => {
       this.fitDiagonalPoints();
     });
@@ -85,6 +92,32 @@ class HomePage extends LitElement {
 
     window.addEventListener('clear-all-features', () => {
       this.draw.deleteAll();
+    });
+
+    window.addEventListener('location-selected', (e) => {
+      this.handleLocationSelect(e.detail.location, e.detail.coordinates);
+    });
+
+    window.addEventListener('add-map-point', (e) => {
+      this.addMapPoint(e.detail.point);
+    });
+
+    window.addEventListener('convert-temp-marker', (e) => {
+      this.convertTempMarker(e.detail.tempId, e.detail.permanentPoint);
+    });
+
+    window.addEventListener('clear-temp-marker', (e) => {
+      this.clearTempMarker(e.detail.id);
+    });
+
+    window.addEventListener('reset-map-view', (e) => {
+      this.resetMapView(e.detail.center, e.detail.zoom);
+    });
+
+    // 添加设备提交事件监听
+    window.addEventListener('device-submit', (e) => {
+      const deviceData = e.detail;
+      this.convertDeviceMarker(deviceData);
     });
   }
 
@@ -283,61 +316,156 @@ class HomePage extends LitElement {
 
   // 初始化地图图层
   initMapLayers(map) {
-    // 初始化测试点位数据
-    this.points = [
-      { lng: 116.397, lat: 39.909, properties: { id: 1 } },
-      { lng: 116.398, lat: 39.91, properties: { id: 2 } },
-      { lng: 116.396, lat: 39.908, properties: { id: 3 } },
-      { lng: 116.399, lat: 39.911, properties: { id: 4 } },
-      { lng: 116.395, lat: 39.907, properties: { id: 5 } },
-    ];
+    try {
+      // 尝试从 localStorage 获取保存的点位
+      let savedPoints = [];
+      try {
+        const storedPoints = localStorage.getItem('mapPoints');
+        if (storedPoints) {
+          savedPoints = JSON.parse(storedPoints);
+        }
+      } catch (err) {
+        console.warn('从 localStorage 加载点位失败:', err);
+      }
 
-    // 添加测试点位图层
-    map.addSource('test-points', {
-      type: 'geojson',
-      data: {
-        type: 'FeatureCollection',
-        features: this.points.map((point) => ({
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: [point.lng, point.lat],
-          },
-          properties: point.properties,
-        })),
-      },
-    });
+      // 合并初始点位和保存的点位
+      this.points = [
+        // 初始的5个点位
+        { lng: 116.397, lat: 39.909, properties: { id: 1 } },
+        { lng: 116.398, lat: 39.91, properties: { id: 2 } },
+        { lng: 116.396, lat: 39.908, properties: { id: 3 } },
+        { lng: 116.399, lat: 39.911, properties: { id: 4 } },
+        { lng: 116.395, lat: 39.907, properties: { id: 5 } },
+        // 添加保存的点位
+        ...savedPoints
+      ];
 
-    // 添加选中点位图层
-    map.addSource('selected-points', {
-      type: 'geojson',
-      data: {
-        type: 'FeatureCollection',
-        features: [],
-      },
-    });
+      // 加载地图图标
+      map.loadImage('/public/images/marker-icon.png', (error, image) => {
+        if (error) throw error;
+        
+        map.addImage('marker-icon', image);
+        
+        map.loadImage('/public/images/marker-icon.png', (error, selectedImage) => {
+          if (error) throw error;
+          
+          map.addImage('marker-icon-selected', selectedImage);
+          
+          // 使用合并后的点位创建数据源
+          map.addSource('test-points', {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: this.points.map((point) => ({
+                type: 'Feature',
+                geometry: {
+                  type: 'Point',
+                  coordinates: [point.lng, point.lat],
+                },
+                properties: point.properties,
+              })),
+            },
+          });
 
-    map.addLayer({
-      id: 'test-points-layer',
-      type: 'circle',
-      source: 'test-points',
-      paint: {
-        'circle-radius': 6,
-        'circle-color': '#4CAF50',
-        'circle-opacity': 0.8,
-      },
-    });
+          // 添加选中点位图层
+          map.addSource('selected-points', {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: [],
+            },
+          });
 
-    map.addLayer({
-      id: 'selected-points-layer',
-      type: 'circle',
-      source: 'selected-points',
-      paint: {
-        'circle-radius': 6,
-        'circle-color': '#FF0000',
-        'circle-opacity': 0.7,
-      },
-    });
+          // 使用 symbol 图层替换原来的 circle 图层
+          map.addLayer({
+            id: 'test-points-layer',
+            type: 'symbol',
+            source: 'test-points',
+            layout: {
+              'icon-image': 'marker-icon',
+              'icon-size': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                8, 0.2,    // 缩放级别 8 时图标大小为 0.2
+                16, 0.1    // 缩放级别 16 时图标大小为 0.1
+              ],
+              'icon-allow-overlap': true,
+              'icon-anchor': 'bottom',
+              // 可选：添加文本标签
+              'text-field': ['get', 'id'],
+              'text-size': 12,
+              'text-offset': [0, -1.5],
+              'text-anchor': 'top'
+            },
+            paint: {
+              // 文本样式
+              'text-color': '#ffffff',
+              'text-halo-color': '#000000',
+              'text-halo-width': 1
+            }
+          });
+          
+          map.addLayer({
+            id: 'selected-points-layer',
+            type: 'symbol',
+            source: 'selected-points',
+            layout: {
+              'icon-image': 'marker-icon-selected',
+              'icon-size': [
+                'interpolate',
+                ['linear'],
+                ['zoom'],
+                8, 0.6,    // 选中状态略大一些
+                16, 1.2
+              ],
+              'icon-allow-overlap': true,
+              'icon-anchor': 'bottom',
+              // 可选：添加文本标签
+              'text-field': ['get', 'id'],
+              'text-size': 14,
+              'text-offset': [0, -1.5],
+              'text-anchor': 'top'
+            },
+            paint: {
+              // 文本样式
+              'text-color': '#ff0000',
+              'text-halo-color': '#000000',
+              'text-halo-width': 1
+            }
+          });
+          
+          // 添加鼠标交互效果
+          map.on('mouseenter', 'test-points-layer', () => {
+            map.getCanvas().style.cursor = 'pointer';
+          });
+          
+          map.on('mouseleave', 'test-points-layer', () => {
+            map.getCanvas().style.cursor = '';
+          });
+
+          // 添加点击事件显示设备信息
+          map.on('click', 'test-points-layer', (e) => {
+            const features = e.features;
+            if (!features.length) return;
+
+            const props = features[0].properties;
+            new mapboxgl.Popup()
+              .setLngLat(e.lngLat)
+              .setHTML(`
+                <div>
+                  <h4>${props.name}</h4>
+                  <p>类型: ${props.type}</p>
+                  <p>ID: ${props.id}</p>
+                </div>
+              `)
+              .addTo(map);
+          });
+        });
+      });
+    } catch (err) {
+      console.warn('初始化图层失败:', err);
+    }
   }
 
   // 设置地图样式
@@ -473,7 +601,7 @@ class HomePage extends LitElement {
 
     // 验证点位数量
     if (points.length !== 2) {
-      console.warn('需要恰好两个对角点才能进行拟合');
+      console.warn('需要恰两个对角点才能进拟合');
       return;
     }
 
@@ -563,6 +691,19 @@ class HomePage extends LitElement {
   isActive(path) {
     return window.location.pathname === path ? 'active' : '';
   }
+  handleLocationSelect(location, coordinates) {
+    if (window.mapInstance) {
+      window.mapInstance.flyTo({
+        center: coordinates,
+        zoom: 12,
+        duration: 2000,  // Smooth transition over 2 seconds
+        essential: true  // Ensures the camera will move if the user has not interacted with the map
+      });
+
+      // Optional: Update current location display
+      this.currentLocation = location;
+    }
+  }
 
   render() {
     return html`
@@ -582,37 +723,21 @@ class HomePage extends LitElement {
             <div class="nav">
               <div class="nav-left">
                 <a href="/" class="${this.isActive('/')}">系统首页</a>
-                <a
-                  href="/device-control"
-                  class="${this.isActive('/device-control')}"
-                  >设备控制</a
-                >
-                <a
-                  href="/task-management"
-                  class="${this.isActive('/task-management')}"
-                  >任务管理</a
-                >
+                <a href="/device-control" class="${this.isActive('/device-control')}">设备控制</a>
+                <a href="/task-management" class="${this.isActive('/task-management')}">任务管理</a>
               </div>
 
               <div class="nav-right">
-                <a
-                  href="/device-management"
-                  class="${this.isActive('/device-management')}"
-                  >设备管理</a
-                >
-                <a
-                  href="/user-management"
-                  class="${this.isActive('/user-management')}"
-                  >用户管理</a
-                >
-                <a
-                  href="/log-management"
-                  class="${this.isActive('/log-management')}"
-                  >日志管理</a
-                >
+                <a href="/device-management" class="${this.isActive('/device-management')}">设备管理</a>
+                <a href="/user-management" class="${this.isActive('/user-management')}">用户管理</a>
+                <a href="/log-management" class="${this.isActive('/log-management')}">日志管理</a>
               </div>
             </div>
             <div id="map"></div>
+            <div class="location-selector">
+              <a @click="${() => this.handleLocationSelect('中卫定标场', [105.18, 37.51	])}">中卫定标场</a>
+              <a @click="${() => this.handleLocationSelect('嵩山定标场', [113.004052, 34.519664])}">嵩山定标场</a>
+            </div>
           `
         : ''}
       <div class="content"></div>
@@ -663,6 +788,110 @@ class HomePage extends LitElement {
     ['左上', '右上', '左下', '右下'].forEach(position => {
       this.updateInputField(position, '');
     });
+  }
+
+  // 添加新的方法
+  addMapPoint(point) {
+    if (this.draw) {
+      // 先清除同ID的临时点位
+      this.clearTempMarker(point.properties.id);
+      
+      // 添加新的临时点位
+      const pointId = this.draw.add(point)[0];
+      this.tempMarkers.push({
+        id: point.properties.id,
+        drawId: pointId
+      });
+    }
+  }
+
+  convertTempMarker(tempId, permanentPoint) {
+    if (window.mapInstance) {
+      // 清除临时点位
+      this.clearTempMarker(tempId);
+      
+      // 更新点位数据源
+      const source = window.mapInstance.getSource('test-points');
+      if (source) {
+        const currentData = source.getData();
+        currentData.features.push(permanentPoint);
+        source.setData(currentData);
+      }
+    }
+  }
+
+  clearTempMarker(id) {
+    const markerIndex = this.tempMarkers.findIndex(m => m.id === id);
+    if (markerIndex !== -1) {
+      const marker = this.tempMarkers[markerIndex];
+      this.draw.delete(marker.drawId);
+      this.tempMarkers.splice(markerIndex, 1);
+    }
+  }
+
+  resetMapView(center, zoom) {
+    if (window.mapInstance) {
+      window.mapInstance.flyTo({
+        center: center,
+        zoom: zoom,
+        duration: 2000
+      });
+    }
+  }
+
+  // 添加设备点位转换方法
+  convertDeviceMarker(deviceData) {
+    if (!window.mapInstance) return;
+
+    // 创建永久点位特征
+    const permanentPoint = {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [deviceData.lon, deviceData.lat]
+      },
+      properties: {
+        id: deviceData.id,
+        name: deviceData.deviceName,
+        type: deviceData.deviceType,
+        ...deviceData.properties
+      }
+    };
+
+    // 更新地图数据源
+    const source = window.mapInstance.getSource('test-points');
+    if (source) {
+      const currentData = source._data || { type: 'FeatureCollection', features: [] };
+      currentData.features.push(permanentPoint);
+      source.setData(currentData);
+
+      // 将新点位添加到 this.points 数组
+      const newPoint = {
+        lng: deviceData.lon,
+        lat: deviceData.lat,
+        properties: {
+          id: deviceData.id,
+          name: deviceData.deviceName,
+          type: deviceData.deviceType,
+          ...deviceData.properties
+        }
+      };
+      
+      // 添加到 points 数组
+      this.points.push(newPoint);
+      
+      // 保存到 localStorage
+      try {
+        const existingPoints = JSON.parse(localStorage.getItem('mapPoints') || '[]');
+        existingPoints.push(newPoint);
+        localStorage.setItem('mapPoints', JSON.stringify(existingPoints));
+      } catch (err) {
+        console.warn('保存点位到 localStorage 失败:', err);
+      }
+    }
+
+    // 清除对应的临时点位
+    this.clearTempMarker('new-device');
   }
 }
 

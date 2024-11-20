@@ -96,13 +96,13 @@ class TaskInfoComponent extends LitElement {
         <div class="form-container">
           <div class="form-group">
             <label for="device-type">设备类型:</label>
-            <select id="device-type" style="background-color: gray;">
+            <select id="device-type">
               <option>自动角反射器</option>
             </select>
           </div>
           <div class="form-group">
             <label for="location">所属地区:</label>
-            <select id="location" style="background-color: gray;">
+            <select id="location">
               <option>中卫</option>
             </select>
           </div>
@@ -220,11 +220,11 @@ class TaskInfoComponent extends LitElement {
           mode: {
             isEdit: type === 'edit',
             isReview: false,
-            isReviewEdit: false
-          }
+            isReviewEdit: false,
+          },
         },
         bubbles: true,
-        composed: true
+        composed: true,
       })
     );
   }

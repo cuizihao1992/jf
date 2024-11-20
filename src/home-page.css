@@ -103,3 +103,40 @@
   margin: 0;
   z-index: 0; /* 改为0，而不是-1 */
 }
+.location-selector {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1;
+  transform: translateY(-50%);
+}
+
+.location-selector a {
+  background-image: url('/images/left-btn-bg.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  border: 2px solid rgb(15, 99, 255);
+  height: 116px;
+  width: 13px;
+  color: white;
+  padding: 3px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+  text-align: center;
+}
+
+.location-selector a:hover {
+  color: #ffeb3b;
+}
+
+.location-selector a.active {
+  color: #ffeb3b;
+}

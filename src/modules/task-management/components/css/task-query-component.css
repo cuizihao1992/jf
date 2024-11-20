@@ -101,3 +101,12 @@ a {
   cursor: pointer;
   text-decoration: none;
 }
+.clear-button {
+  margin-left: 5px;
+  padding: 5px 10px;
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}

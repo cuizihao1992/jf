@@ -84,6 +84,23 @@ class TaskCreateComponent extends LitElement {
     checkboxes.forEach((checkbox) => (checkbox.checked = false));
   }
 
+  handleLocation(location) {
+    const coordinates = {
+      中卫: [106.2, 37.5],
+      嵩山: [112.5, 34.8],
+    };
+
+    // 触发位置选择事件
+    this.dispatchEvent(new CustomEvent('location-selected', {
+      detail: {
+        location,
+        coordinates: coordinates[location],
+      },
+      bubbles: true,
+      composed: true,
+    }));
+  }
+
   render() {
     const deviceStatusRows = this.devices.map(
       (device) => html`
@@ -173,8 +190,9 @@ class TaskCreateComponent extends LitElement {
             </div>
             <div class="row-location">
               <label for="location">所属地区:</label>
-              <select id="location">
-                <option value="zhongwei">中卫</option>
+              <select id="location" @change="${(e) => this.handleLocation(e.target.value)}">
+                <option value="中卫">中卫</option>
+                <option value="嵩山">嵩山</option>
               </select>
               <label for="device-type">设备类型:</label>
               <select id="device-type">
