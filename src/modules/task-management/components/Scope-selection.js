@@ -38,7 +38,7 @@ class ScopeSelection extends LitElement {
       const { position, coordinates } = e.detail;
       this.coordinates = {
         ...this.coordinates,
-        [position]: coordinates || ''
+        [position]: coordinates || '',
       };
       this.requestUpdate();
     });
@@ -104,7 +104,7 @@ class ScopeSelection extends LitElement {
     if (window.mapInstance) {
       const count =
         window.mapInstance.querySourceFeatures('selected-points').length;
-      alert(`选中点位数量: ${count}`);
+      // alert(`选中点位数量: ${count}`);
     }
   }
   render() {
