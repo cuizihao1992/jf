@@ -1,6 +1,6 @@
 module.exports = {
   server: {
-    tcpPorts: [1050, 1051],
+    tcpPorts: [1051],
     heartbeatInterval: 30000, // 心跳检测间隔（毫秒）
   },
   database: {

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Control API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .status {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        .status.success {
+            color: green;
+        }
+
+        .status.error {
+            color: red;
+        }
+
+        .response-container {
+            margin-top: 20px;
+            font-size: 14px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            max-width: 600px;
+            background-color: #f9f9f9;
+        }
+
+        .response-container pre {
+            margin: 0;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 30px;
+            border-collapse: collapse;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .status-cell {
+            color: green;
+        }
+
+        img {
+            width: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Device Control API</h1>
+    <div class="button-container"></div>
+
+    <div id="status" class="status"></div>
+
+    <div id="response" class="response-container">
+        <strong>Response:</strong>
+        <pre id="response-text">Click a button to see the response here.</pre>
+    </div>
+
+    <h2>Device Status</h2>
+    <table id="device-status-table">
+        <thead>
+            <tr>
+                <th>Device ID</th>
+                <th>Angle</th>
+                <th>GPS</th>
+                <th>Power</th>
+                <th>Online</th>
+                <th>Image</th>
+                <th>Last Updated</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Device statuses will be dynamically populated here -->
+        </tbody>
+    </table>
+
+    <script>
+        // WebSocket connection
+        const socket = new WebSocket('ws://localhost:3000'); // Replace with your WebSocket URL
+
+        socket.onopen = () => {
+            console.log('WebSocket connection established.');
+        };
+
+        socket.onmessage = (event) => {
+            try {
+                const statusData = JSON.parse(event.data);
+                updateDeviceStatusTable(statusData);
+            } catch (err) {
+                console.error('Invalid WebSocket message:', err);
+            }
+        };
+
+        socket.onerror = (error) => {
+            console.log('WebSocket Error:', error);
+        };
+
+        socket.onclose = () => {
+            console.log('WebSocket connection closed.');
+        };
+
+        // Function to send API requests
+        async function sendRequest(endpoint) {
+            try {
+                const response = await fetch(endpoint);
+                const result = await response.json();
+                const responseTextElement = document.getElementById('response-text');
+
+                if (response.ok) {
+                    document.getElementById('status').innerText = 'Request was successful!';
+                    document.getElementById('status').className = 'status success';
+                    responseTextElement.innerText = JSON.stringify(result, null, 2);
+                } else {
+                    document.getElementById('status').innerText = 'Error occurred during the request.';
+                    document.getElementById('status').className = 'status error';
+                    responseTextElement.innerText = JSON.stringify(result, null, 2);
+                }
+            } catch (error) {
+                document.getElementById('status').innerText = 'An unexpected error occurred.';
+                document.getElementById('status').className = 'status error';
+                document.getElementById('response-text').innerText = error.message;
+            }
+        }
+
+        // Sample device IDs and endpoints
+        const deviceIds = [66];
+        const endpoints = [
+            { name: 'Power On', path: '/devices/{id}/power-on' },
+            { name: 'Power Off', path: '/devices/{id}/power-off' },
+            { name: 'Pan-Tilt Angle', path: '/devices/{id}/angle' },
+            { name: 'GPS Info', path: '/devices/{id}/gps' },
+            { name: 'Power Module', path: '/devices/{id}/powermodule' },
+            { name: 'History', path: '/devices/{id}/history' },
+            { name: 'Logs', path: '/devices/{id}/logs' },
+            { name: 'Images', path: '/devices/{id}/images' },
+            { name: 'Sync Time', path: '/devices/{id}/sync-time' },
+            { name: 'Horizontal Angle', path: '/devices/{id}/horizontal-angle' },
+            { name: 'Vertical Angle', path: '/devices/{id}/vertical-angle' }
+        ];
+
+        // Create buttons dynamically
+        const buttonContainer = document.querySelector('.button-container');
+
+        deviceIds.forEach(id => {
+            endpoints.forEach(endpoint => {
+                const button = document.createElement('button');
+                button.innerText = `${endpoint.name} (Device ${id})`;
+                button.onclick = () => sendRequest(endpoint.path.replace('{id}', id));
+                buttonContainer.appendChild(button);
+            });
+        });
+
+        // Maintain a device status list
+        const deviceStatusList = {};
+
+        // Update device status table
+        function updateDeviceStatusTable(statusData) {
+            const { deviceId, angle, gps, power, isOnline, imageUrl, timestamp } = statusData;
+
+            // Update the device status list
+            deviceStatusList[deviceId] = {
+                angle,
+                gps,
+                power,
+                isOnline,
+                imageUrl,
+                timestamp
+            };
+
+            // Get table body
+            const tableBody = document.querySelector('#device-status-table tbody');
+
+            // Check if the row for the device exists
+            let existingRow = document.querySelector(`tr[data-device-id="${deviceId}"]`);
+
+            if (existingRow) {
+                // Update existing row
+                existingRow.innerHTML = `
+                    <td>${deviceId}</td>
+                    <td>${angle}°</td>
+                    <td>${gps}</td>
+                    <td>${power}V</td>
+                    <td>${isOnline ? '在线' : '离线'}</td>
+                    <td><img src="${imageUrl}" alt="实时图像"></td>
+                    <td>${timestamp}</td>
+                `;
+            } else {
+                // Create new row if it doesn't exist
+                const newRow = document.createElement('tr');
+                newRow.setAttribute('data-device-id', deviceId);
+                newRow.innerHTML = `
+                    <td>${deviceId}</td>
+                    <td>${angle}°</td>
+                    <td>${gps}</td>
+                    <td>${power}V</td>
+                    <td>${isOnline ? '在线' : '离线'}</td>
+                    <td><img src="${imageUrl}" alt="实时图像"></td>
+                    <td>${timestamp}</td>
+                `;
+                tableBody.appendChild(newRow);
+            }
+        }
+    </script>
+
+</body>
+
+</html>
