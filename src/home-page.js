@@ -26,7 +26,7 @@ const MAP_CONFIG = {
   zoom: 12, // 初始缩放级别
   attributionControl: false, // 关闭属性控制
   language: 'zh-Hans', // 使用简体中文
-  localIdeographFontFamily: "'Microsoft YaHei', 'SimHei', sans-serif", // 中文字体设置
+  localIdeographFontFamily: "'Microsoft YaHei', 'SimHei', sans-serif", // 中文字体设
 };
 
 // 地图样式配置常量
@@ -77,8 +77,19 @@ class HomePage extends LitElement {
 
     window.addEventListener('draw-polygon', (e) => {
       const allPoints = this.draw.getAll();
-      if (allPoints.features.length === 4) {
-        this.drawPolygon(allPoints.features);
+      const points = allPoints.features.filter(
+        (f) => f.geometry.type === 'Point'
+      );
+
+      if (points.length === 4) {
+        const polygon = this.drawPolygon(points);
+        if (polygon) {
+          if (this.drawMode === 'pick') {
+            this.checkPointsInPolygon(polygon);
+          }
+        }
+      } else {
+        console.warn('需要四个点才能创建多边形');
       }
     });
 
@@ -128,7 +139,9 @@ class HomePage extends LitElement {
       if (e.detail.devices.length === 1) {
         const newDevice = e.detail.devices[0];
         // 检查设备是否已存在
-        const existingIndex = this.deviceList.findIndex(device => device.id === newDevice.id);
+        const existingIndex = this.deviceList.findIndex(
+          (device) => device.id === newDevice.id
+        );
         if (existingIndex === -1) {
           // 如果是新设备，添加到列表
           this.deviceList.push(newDevice);
@@ -140,7 +153,7 @@ class HomePage extends LitElement {
         // 如果是完整的设备列表更新，直接替换
         this.deviceList = e.detail.devices;
       }
-      
+
       // 同步到地图显示
       this.syncDevicesWithMap();
     });
@@ -149,14 +162,14 @@ class HomePage extends LitElement {
     window.addEventListener('locate-device', (event) => {
       try {
         const { lat, lon, deviceId, deviceName } = event.detail;
-        
+
         // 验证坐标
         if (!this.validateCoordinates(lat, lon)) {
           console.error('无效的设备坐标:', {
             设备ID: deviceId,
             设备名称: deviceName,
             纬度: lat,
-            经度: lon
+            经度: lon,
           });
           return;
         }
@@ -166,7 +179,7 @@ class HomePage extends LitElement {
             设备ID: deviceId,
             设备名称: deviceName,
             纬度: lat,
-            经度: lon
+            经度: lon,
           });
 
           // 飞行到目标位置
@@ -174,7 +187,7 @@ class HomePage extends LitElement {
             center: [lon, lat],
             zoom: 17,
             duration: 1000,
-            essential: true
+            essential: true,
           });
         }
       } catch (error) {
@@ -240,7 +253,7 @@ class HomePage extends LitElement {
         }
       });
     } catch (err) {
-      console.error('初始化地图失败:', err);
+      console.error('初地图失败:', err);
     }
   }
 
@@ -249,114 +262,114 @@ class HomePage extends LitElement {
     this.draw = new MapboxDraw({
       displayControlsDefault: false,
       controls: {
-        point: true, // 启用点标记工具
-        polygon: true, // 启用多边形工具
-        trash: true, // 启用删除工具
+        point: true,
+        polygon: true,
+        trash: true,
       },
+      // 添加自定义样式
+      styles: [
+        {
+          id: 'gl-draw-polygon-fill',
+          type: 'fill',
+          filter: ['all', ['==', '$type', 'Polygon']],
+          paint: {
+            'fill-color': '#00ffff',
+            'fill-outline-color': '#00ffff',
+            'fill-opacity': 0.1,
+          },
+        },
+        {
+          id: 'gl-draw-polygon-stroke',
+          type: 'line',
+          filter: ['all', ['==', '$type', 'Polygon']],
+          paint: {
+            'line-color': '#00ffff',
+            'line-width': 2,
+          },
+        },
+        {
+          id: 'gl-draw-point',
+          type: 'circle',
+          filter: ['all', ['==', '$type', 'Point']],
+          paint: {
+            'circle-radius': 6,
+            'circle-color': '#00ffff',
+          },
+        },
+      ],
     });
 
     map.addControl(this.draw);
+
+    // 添加选中点数据源
+    map.addSource('selected-points', {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: [],
+      },
+    });
+
+    // 添加选中点的光晕效果（外圈）
+    map.addLayer({
+      id: 'selected-points-halo',
+      type: 'circle',
+      source: 'selected-points',
+      paint: {
+        'circle-radius': 35,
+        'circle-color': '#00ffff',
+        'circle-opacity': 0.15,
+        'circle-blur': 1
+      }
+    });
+
+    // 添加选中点的发光效果（中圈）
+    map.addLayer({
+      id: 'selected-points-glow',
+      type: 'circle',
+      source: 'selected-points',
+      paint: {
+        'circle-radius': 25,
+        'circle-color': '#00ffff',
+        'circle-opacity': 0.3,
+        'circle-blur': 0.5
+      }
+    });
+
+    // 添加选中点的核心图层（内圈）
+    map.addLayer({
+      id: 'selected-points-core',
+      type: 'circle',
+      source: 'selected-points',
+      paint: {
+        'circle-radius': 15,
+        'circle-color': '#00ffff',
+        'circle-stroke-width': 2,
+        'circle-stroke-color': '#ffffff'
+      }
+    });
+
+    // 初始化地图事件监听器
+    this.initMapEventListeners(map);
   }
 
   // 初始化地图事件监听器
   initMapEventListeners(map) {
     // 监听多边形创建事件
-    window.addEventListener('polygon-created', (e) => {
-      const polygon = e.detail.polygon;
-
-      const points = {
-        type: 'FeatureCollection',
-        features: this.points.map((point) => ({
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: [point.lng, point.lat],
-          },
-          properties: point.properties,
-        })),
-      };
-
-      const selectedPoints = {
-        type: 'FeatureCollection',
-        features: points.features.filter((point) => {
-          return turf.booleanPointInPolygon(point, polygon);
-        }),
-      };
-
-      map.getSource('selected-points').setData(selectedPoints);
-
-      // 添加选中点数量的提示
-      const count = selectedPoints.features.length;
-      alert(`选中点位数量: ${count}`);
-    });
-
-    // 监听开始拾取点位事件
-    window.addEventListener('start-picking', (e) => {
-      this.currentPickingPosition = e.detail.position;
-    });
-
-    // 监听删除要素事件
-    map.on('draw.delete', () => {
-      // 清除坐输入框
-      const event = new CustomEvent('update-coordinates', {
-        detail: {
-          position: '左上',
-          coordinates: '',
-        },
-      });
-      window.dispatchEvent(event);
-
-      event.detail.position = '右上';
-      window.dispatchEvent(event);
-
-      event.detail.position = '左下';
-      window.dispatchEvent(event);
-
-      event.detail.position = '右下';
-      window.dispatchEvent(event);
-
-      // 清除选中点图层
-      map.getSource('selected-points').setData({
-        type: 'FeatureCollection',
-        features: [],
-      });
-    });
-
-    // 监听创建要素事件
     map.on('draw.create', (e) => {
       if (e.features[0].geometry.type === 'Polygon') {
-        const polygon = e.features[0];
-
-        const points = {
-          type: 'FeatureCollection',
-          features: this.points.map((point) => ({
-            type: 'Feature',
-            geometry: {
-              type: 'Point',
-              coordinates: [point.lng, point.lat],
-            },
-            properties: point.properties,
-          })),
-        };
-
-        const selectedPoints = {
-          type: 'FeatureCollection',
-          features: points.features.filter((point) => {
-            return turf.booleanPointInPolygon(point, polygon);
-          }),
-        };
-
-        map.getSource('selected-points').setData(selectedPoints);
-
-        // 添加选中点数量的提示
-        const count = selectedPoints.features.length;
-        alert(`选中点位数量: ${count}`);
+        // 只在绘制模式下执行点位检测
+        if (this.drawMode === 'draw') {
+          const polygon = e.features[0];
+          this.checkPointsInPolygon(polygon);
+        }
       }
     });
 
-    // 监听地图点击事件
+    // 监听点击事件，用于拾取坐标
     map.on('click', (e) => {
       if (this.drawMode !== 'pick' || !this.currentPickingPosition) return;
+
       const coords = [e.lngLat.lng, e.lngLat.lat];
       const point = {
         type: 'Feature',
@@ -364,8 +377,12 @@ class HomePage extends LitElement {
           type: 'Point',
           coordinates: coords,
         },
+        properties: {
+          position: this.currentPickingPosition,
+        },
       };
 
+      // 删除同位置的已有点位
       const existingPoints = this.draw.getAll();
       existingPoints.features.forEach((feature) => {
         if (feature.properties.position === this.currentPickingPosition) {
@@ -373,13 +390,40 @@ class HomePage extends LitElement {
         }
       });
 
-      const pointId = this.draw.add(point)[0];
-      const addedFeature = this.draw.get(pointId);
-      addedFeature.properties = { position: this.currentPickingPosition };
-      this.draw.add(addedFeature);
+      // 添加新点位
+      this.draw.add(point);
 
+      // 更新坐标输入框
       this.updateInputField(this.currentPickingPosition, coords);
       this.currentPickingPosition = null;
+    });
+
+    // 监听删除事件
+    map.on('draw.delete', () => {
+      // 清除选中点
+      map.getSource('selected-points').setData({
+        type: 'FeatureCollection',
+        features: [],
+      });
+
+      // 清除坐标输入框，使用空字符串
+      this.clearCoordinateInputs();
+    });
+
+    // 监听绘制模式变事件
+    window.addEventListener('change-draw-mode', (e) => {
+      this.drawMode = e.detail.mode;
+      if (this.drawMode === 'draw') {
+        this.draw.changeMode('draw_polygon');
+      } else {
+        this.draw.changeMode('simple_select');
+        this.draw.deleteAll();
+      }
+    });
+
+    // 监听开始拾取事件
+    window.addEventListener('start-picking', (e) => {
+      this.currentPickingPosition = e.detail.position;
     });
   }
 
@@ -404,8 +448,8 @@ class HomePage extends LitElement {
           type: 'geojson',
           data: {
             type: 'FeatureCollection',
-            features: []
-          }
+            features: [],
+          },
         });
 
         // 修改图层配置
@@ -422,13 +466,13 @@ class HomePage extends LitElement {
             'text-font': ['Open Sans Regular'],
             'text-offset': [0, 1.5], // 调整文本偏移
             'text-anchor': 'top',
-            'text-size': 12
+            'text-size': 12,
           },
           paint: {
             'text-color': '#ffffff',
             'text-halo-color': '#000000',
-            'text-halo-width': 1
-          }
+            'text-halo-width': 1,
+          },
         });
 
         // 添加鼠标交互
@@ -443,7 +487,6 @@ class HomePage extends LitElement {
 
       // 设置图片源
       img.src = svgUrl;
-
     } catch (err) {
       console.error('初始化图层失败:', err);
     }
@@ -552,27 +595,153 @@ class HomePage extends LitElement {
 
   // 绘制多边形
   drawPolygon(points) {
-    const positions = ['左上', '右上', '右下', '左下'];
-    const orderedPoints = positions.map(
-      (pos) =>
-        points.find((p) => p.properties.position === pos).geometry.coordinates
-    );
+    try {
+      const positions = ['左上', '右上', '右下', '左下'];
+      const orderedPoints = positions.map((pos) => {
+        const point = points.find((p) => p.properties.position === pos);
+        if (!point) {
+          throw new Error(`未找到位置 ${pos} 的点位`);
+        }
+        return point.geometry.coordinates;
+      });
 
-    const polygon = {
-      type: 'Feature',
-      geometry: {
-        type: 'Polygon',
-        coordinates: [[...orderedPoints, orderedPoints[0]]],
-      },
-    };
+      // 确保多边形闭合
+      const polygon = {
+        type: 'Feature',
+        geometry: {
+          type: 'Polygon',
+          coordinates: [[...orderedPoints, orderedPoints[0]]],
+        },
+      };
 
-    this.draw.deleteAll();
-    this.draw.add(polygon);
+      console.log('创建的多边形:', polygon);
 
-    const event = new CustomEvent('polygon-created', {
-      detail: { polygon },
-    });
-    window.dispatchEvent(event);
+      // 先删除现有的所有要素
+      this.draw.deleteAll();
+
+      // 添加新的多边形
+      this.draw.add(polygon);
+
+      return polygon;
+    } catch (error) {
+      console.error('创建多边形失败:', error);
+      return null;
+    }
+  }
+
+  // 添加点位检测方法
+  checkPointsInPolygon(polygon) {
+    if (!window.mapInstance || !this.deviceList) return;
+
+    try {
+      // 获取当前所有设备点位
+      const points = {
+        type: 'FeatureCollection',
+        features: this.deviceList.map((device) => ({
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [parseFloat(device.lon), parseFloat(device.lat)],
+          },
+          properties: {
+            id: device.id,
+            name: device.deviceName,
+          },
+        })),
+      };
+
+      console.log('检查的多边形坐标:', polygon.geometry.coordinates);
+      console.log('检查的设备点位:', points);
+
+      // 筛选在多边形内的点位
+      const selectedPoints = {
+        type: 'FeatureCollection',
+        features: points.features.filter((point) => {
+          try {
+            const isInside = turf.booleanPointInPolygon(point, polygon);
+            console.log('点位检查:', {
+              设备ID: point.properties.id,
+              设备名称: point.properties.name,
+              坐标: point.geometry.coordinates,
+              是否在多边形内: isInside,
+            });
+            return isInside;
+          } catch (error) {
+            console.error('点位检查失败:', error);
+            return false;
+          }
+        }),
+      };
+
+      // 更新选中点图层
+      const source = window.mapInstance.getSource('selected-points');
+      if (source) {
+        source.setData(selectedPoints);
+        console.log('已更新选中点图层:', selectedPoints);
+
+        // 修改动画效果的范围和颜色
+        let time = 0;
+        const animate = () => {
+          // 计算动态半径 - 增大范围
+          const haloRadius = 35 + Math.sin(time * 0.05) * 7;   // 外圈呼吸效果
+          const glowRadius = 25 + Math.sin(time * 0.1) * 5;    // 中圈呼吸效果
+          const coreRadius = 15 + Math.sin(time * 0.15) * 2;   // 内圈呼吸效果
+
+          // 计算动态透明度
+          const haloOpacity = 0.15 + Math.sin(time * 0.03) * 0.05;
+          const glowOpacity = 0.3 + Math.sin(time * 0.06) * 0.1;
+
+          // 更新各层样式
+          window.mapInstance.setPaintProperty(
+            'selected-points-halo',
+            'circle-radius',
+            haloRadius
+          );
+          window.mapInstance.setPaintProperty(
+            'selected-points-halo',
+            'circle-opacity',
+            haloOpacity
+          );
+
+          window.mapInstance.setPaintProperty(
+            'selected-points-glow',
+            'circle-radius',
+            glowRadius
+          );
+          window.mapInstance.setPaintProperty(
+            'selected-points-glow',
+            'circle-opacity',
+            glowOpacity
+          );
+
+          window.mapInstance.setPaintProperty(
+            'selected-points-core',
+            'circle-radius',
+            coreRadius
+          );
+
+          // 更新文本效果
+          window.mapInstance.setPaintProperty(
+            'selected-points-label',
+            'text-halo-width',
+            1.5 + Math.sin(time * 0.1) * 0.5
+          );
+
+          time += 1;
+          requestAnimationFrame(animate);
+        };
+
+        // 启动动画
+        animate();
+      }
+
+      // 显示选中点数量
+      const count = selectedPoints.features.length;
+      console.log('选中的点位数量:', count);
+      alert(`选中点位数量: ${count}`);
+    } catch (error) {
+      console.error('点位检测失败:', error);
+    }
   }
 
   // 拟合对角点
@@ -683,7 +852,7 @@ class HomePage extends LitElement {
     if (window.mapInstance) {
       window.mapInstance.flyTo({
         center: coordinates,
-        zoom:8,
+        zoom: 8,
         duration: 2000, // Smooth transition over 2 seconds
         essential: true, // Ensures the camera will move if the user has not interacted with the map
       });
@@ -805,7 +974,13 @@ class HomePage extends LitElement {
   // 清除坐标输入框
   clearCoordinateInputs() {
     ['左上', '右上', '左下', '右下'].forEach((position) => {
-      this.updateInputField(position, '');
+      const event = new CustomEvent('update-coordinates', {
+        detail: {
+          position: position,
+          coordinates: '', // 直接使用空字符串而不是 undefined
+        },
+      });
+      window.dispatchEvent(event);
     });
   }
 
@@ -926,7 +1101,8 @@ class HomePage extends LitElement {
 
       if (!isValid) {
         console.warn('坐标验证失败: 坐标值为空', {
-          lat, lon
+          lat,
+          lon,
         });
       }
 
@@ -941,21 +1117,21 @@ class HomePage extends LitElement {
   async syncDevicesWithMap() {
     try {
       const features = this.deviceList
-        .filter(device => this.validateCoordinates(device.lat, device.lon))
-        .map(device => this.createFeature(device));
+        .filter((device) => this.validateCoordinates(device.lat, device.lon))
+        .map((device) => this.createFeature(device));
 
       // 记录设备坐标
-      features.forEach(feature => {
+      features.forEach((feature) => {
         const [lon, lat] = feature.geometry.coordinates;
         console.log(`设备 ${feature.properties.id} 坐标:`, {
           经度: lon,
-          纬度: lat
+          纬度: lat,
         });
       });
 
       const featureCollection = {
         type: 'FeatureCollection',
-        features: features
+        features: features,
       };
 
       const source = window.mapInstance.getSource('test-points');
@@ -1023,19 +1199,19 @@ class HomePage extends LitElement {
 
   // 修改特征创建逻辑
   createFeature(device) {
-    // 直接使用原始坐标���，不进行转换
+    // 直接使用原始坐标，不进行转换
     const coordinates = [device.lon, device.lat];
 
     console.log(`设备 ${device.id} 的坐标:`, {
       设备名称: device.deviceName,
-      坐标: coordinates
+      坐标: coordinates,
     });
 
     return {
       type: 'Feature',
       geometry: {
         type: 'Point',
-        coordinates: coordinates
+        coordinates: coordinates,
       },
       properties: {
         id: device.id,
@@ -1044,8 +1220,8 @@ class HomePage extends LitElement {
         region: device.region || '',
         status: device.deviceStatus || '',
         connectionStatus: device.connectionStatus || '',
-        powerStatus: device.powerStatus || ''
-      }
+        powerStatus: device.powerStatus || '',
+      },
     };
   }
 
@@ -1070,7 +1246,7 @@ class HomePage extends LitElement {
       console.log('获取到的设备数据:', data);
 
       if (data.code === 200) {
-        // 更新设备列表
+        // 更新备列表
         this.deviceList = data.rows || [];
 
         // 触发设备更新事件
@@ -1094,6 +1270,40 @@ class HomePage extends LitElement {
         // 如果是认证失败，跳转到登录页
         window.location.href = '/login';
       }
+    }
+  }
+
+  // 添加验证多边形方法
+  validatePolygon(polygon) {
+    try {
+      if (!polygon || !polygon.geometry || !polygon.geometry.coordinates) {
+        console.error('无效的多边形数据');
+        return false;
+      }
+
+      const coords = polygon.geometry.coordinates[0];
+      if (!coords || coords.length < 4) {
+        console.error('多边形坐标点数不足');
+        return false;
+      }
+
+      // 检查坐标值是否有效
+      return coords.every((coord) => {
+        const [lon, lat] = coord;
+        return (
+          typeof lon === 'number' &&
+          typeof lat === 'number' &&
+          !isNaN(lon) &&
+          !isNaN(lat) &&
+          lon >= -180 &&
+          lon <= 180 &&
+          lat >= -90 &&
+          lat <= 90
+        );
+      });
+    } catch (error) {
+      console.error('验证多边形失败:', error);
+      return false;
     }
   }
 }
