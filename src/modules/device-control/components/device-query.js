@@ -29,9 +29,31 @@ class DeviceQuery extends LitElement {
       };
       const data = await deviceService.list(params);
       this.devices = data.rows;
+      
+      window.dispatchEvent(new CustomEvent('devices-updated', {
+        detail: {
+          devices: this.devices.map(device => ({
+            ...device,
+            id: device.id,
+            deviceName: device.deviceName,
+            deviceType: device.deviceType,
+            region: device.region,
+            lat: device.lat,
+            lon: device.lon,
+            deviceStatus: device.deviceStatus,
+            connectionStatus: device.connectionStatus,
+            powerStatus: device.powerStatus
+          }))
+        }
+      }));
     } catch (error) {
       console.error('获取设备信息失败:', error);
     }
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.fetchDevices();
   }
 
   render() {
@@ -124,9 +146,9 @@ class DeviceQuery extends LitElement {
           ${this.showActions
             ? html`
                 <td>
-                  <a class="action-button" @click="${this.adjustPosture}"
-                    >姿态调整</a
-                  >
+                  <a class="action-button" @click="${() => this.adjustPosture(device)}">姿态调整</a>
+                  <span class="button-separator">|</span>
+                  <a class="action-button" @click="${() => this.locateDevice(device)}">定位</a>
                 </td>
               `
             : html`
@@ -153,8 +175,40 @@ class DeviceQuery extends LitElement {
     }
   }
 
-  adjustPosture() {
+  adjustPosture(device) {
     this.dispatchEvent(new CustomEvent('open-posture-adjust'));
+  }
+
+  locateDevice(device) {
+    // 打印完整的设备信息以检查坐标
+    console.log('设备定位信息:', {
+      完整设备信息: device,
+      坐标信息: {
+        lat: device.lat,
+        lon: device.lon,
+        lat类型: typeof device.lat,
+        lon类型: typeof device.lon
+      }
+    });
+
+    // 验证坐标
+    if (!device.lat || !device.lon) {
+      console.warn('设备缺少坐标信息:', device);
+      return;
+    }
+
+    // 确保发送数值类型的坐标
+    const locationEvent = new CustomEvent('locate-device', {
+      detail: {
+        deviceId: device.id,
+        deviceName: device.deviceName,
+        lat: parseFloat(device.lat),
+        lon: parseFloat(device.lon)
+      }
+    });
+
+    console.log('发送定位事件:', locationEvent.detail);
+    window.dispatchEvent(locationEvent);
   }
 }
 

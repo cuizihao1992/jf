@@ -464,14 +464,7 @@ class DeviceAdd extends LitElement {
       lon: longitude,
       installTime: this.installTime,
       currentAzimuth: this.currentAzimuth,
-      currentElevation: this.currentElevation,
-      // 添加与初始点位一致的属性结构
-      properties: {
-        id: Date.now(),  // 临时ID
-        name: this.deviceName,
-        type: this.deviceType,
-        region: this.region
-      }
+      currentElevation: this.currentElevation
     };
 
     deviceService
@@ -479,10 +472,6 @@ class DeviceAdd extends LitElement {
       .then((response) => {
         console.log('设备添加成功:', response);
         
-        // 更新ID为后端返回的ID
-        param.id = response.id;
-        param.properties.id = response.id;
-
         // 清除临时点位
         this.dispatchEvent(
           new CustomEvent('clear-temp-marker', {
@@ -492,39 +481,11 @@ class DeviceAdd extends LitElement {
           })
         );
 
-        // 添加永久点位
-        const point = {
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: [longitude, latitude]
-          },
-          properties: {
-            id: response.id,
-            name: this.deviceName,
-            type: this.deviceType,
-            region: this.region
-          }
-        };
-
-        // 更新地图上的点位
-        if (window.mapInstance) {
-          const source = window.mapInstance.getSource('test-points');
-          if (source) {
-            const currentData = source._data || { type: 'FeatureCollection', features: [] };
-            currentData.features.push(point);
-            source.setData(currentData);
-          }
+        // 重新获取设备列表
+        const deviceQuery = document.querySelector('device-query');
+        if (deviceQuery) {
+          deviceQuery.fetchDevices();
         }
-
-        // 触发设备提交事件
-        this.dispatchEvent(
-          new CustomEvent('device-submit', {
-            detail: param,
-            bubbles: true,
-            composed: true,
-          })
-        );
 
         this.dispatchEvent(new CustomEvent('close-modal'));
       })

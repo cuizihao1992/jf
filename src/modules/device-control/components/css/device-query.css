@@ -119,6 +119,8 @@ td {
   cursor: pointer;
   color: #1e90ff;
   text-decoration: underline;
+  display: inline-block;
+  margin: 0 2px;
 }
 
 .table-container {
@@ -130,4 +132,13 @@ a {
   color: #1e90ff;
   cursor: pointer;
   text-decoration: none;
+}
+
+.button-separator {
+  margin: 0 5px;
+  color: #666;
+}
+
+td:last-child {
+  min-width: 150px;
 }

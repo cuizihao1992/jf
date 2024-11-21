@@ -140,3 +140,35 @@
 .location-selector a.active {
   color: #ffeb3b;
 }
+
+.device-popup {
+  padding: 10px;
+  font-family: Arial, sans-serif;
+}
+
+.device-popup h4 {
+  margin: 0 0 10px 0;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+}
+
+.device-popup table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.device-popup td {
+  padding: 3px 5px;
+  font-size: 12px;
+}
+
+.device-popup td:first-child {
+  color: #666;
+  white-space: nowrap;
+}
+
+.device-popup td:last-child {
+  color: #333;
+  font-weight: 500;
+}
