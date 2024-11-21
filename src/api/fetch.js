@@ -15,13 +15,17 @@ class ApiService {
         ? `${baseUrl}/${endpoint}?${new URLSearchParams(params).toString()}`
         : `${baseUrl}/${endpoint}`;
 
+    const token = localStorage.getItem('token');
+    
     const options = {
       method,
       headers: {
-        Accept: 'application/json, text/plain, */*',
-        Authorization: 'Bearer ' + getToken(),
+        'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json;charset=UTF-8',
+        'Authorization': token // token 已经包含 "Bearer" 前缀
       },
+      mode: 'cors',
+      credentials: 'include'
     };
 
     // 如果不是 GET 请求并且有请求体，则添加请求体
@@ -30,7 +34,16 @@ class ApiService {
     }
 
     return fetch(url, options)
-      .then((response) => response.json())
+      .then(async response => {
+        const data = await response.json();
+        if (data.code === 401) {
+          // 如果返回 401，清除 token 并跳转到登录页
+          localStorage.removeItem('token');
+          window.location.href = '/login';
+          throw new Error('认证失败');
+        }
+        return data;
+      })
       .catch((error) => {
         console.error(`请求 ${method} ${endpoint} 时出错:`, error);
         throw error;

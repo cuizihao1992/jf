@@ -449,9 +449,6 @@ class DeviceAdd extends LitElement {
 
   // 提交表单
   submit() {
-    const latitude = this.convertDMSToDecimal(this.latDegrees, this.latMinutes, this.latSeconds);
-    const longitude = this.convertDMSToDecimal(this.lonDegrees, this.lonMinutes, this.lonSeconds);
-
     const param = {
       userId: this.userId,
       deviceName: this.deviceName,
@@ -460,8 +457,8 @@ class DeviceAdd extends LitElement {
       ytsbh: this.ytsbh,
       gkmkh: this.gkmkh,
       cpj: this.cpj,
-      lat: latitude,
-      lon: longitude,
+      lat: this.lat,
+      lon: this.lon,
       installTime: this.installTime,
       currentAzimuth: this.currentAzimuth,
       currentElevation: this.currentElevation
@@ -470,24 +467,58 @@ class DeviceAdd extends LitElement {
     deviceService
       .add(param)
       .then((response) => {
-        console.log('设备添加成功:', response);
+        console.log('设备添加响应:', response);
         
-        // 清除临时点位
-        this.dispatchEvent(
-          new CustomEvent('clear-temp-marker', {
-            detail: { id: 'new-device' },
+        if (response.code === 200) {
+          // 清除临时点位
+          this.dispatchEvent(
+            new CustomEvent('clear-temp-marker', {
+              detail: { id: 'new-device' },
+              bubbles: true,
+              composed: true,
+            })
+          );
+
+          // 创建新设备的点位数据
+          const newDevice = {
+            ...param,
+            id: response.data?.id || response.id || Date.now().toString(), // 添加后备ID生成
+            deviceStatus: '正常',
+            connectionStatus: '已连接',
+            powerStatus: '开机'
+          };
+
+          console.log('新增设备数据:', newDevice);
+
+          // 触发设备更新事件，将新设备添加到地图
+          window.dispatchEvent(new CustomEvent('devices-updated', {
+            detail: {
+              devices: [newDevice]
+            },
             bubbles: true,
-            composed: true,
-          })
-        );
+            composed: true
+          }));
 
-        // 重新获取设备列表
-        const deviceQuery = document.querySelector('device-query');
-        if (deviceQuery) {
-          deviceQuery.fetchDevices();
+          // 定位到新添加的设备位置
+          window.dispatchEvent(new CustomEvent('locate-device', {
+            detail: {
+              deviceId: newDevice.id,
+              deviceName: newDevice.deviceName,
+              lat: newDevice.lat,
+              lon: newDevice.lon
+            },
+            bubbles: true,
+            composed: true
+          }));
+
+          // 关闭弹窗
+          this.dispatchEvent(new CustomEvent('close-modal'));
+          
+          // 显示成功提示
+          alert('设备添加成功');
+        } else {
+          throw new Error(response.msg || '设备添加失败');
         }
-
-        this.dispatchEvent(new CustomEvent('close-modal'));
       })
       .catch((error) => {
         console.error('设备添加失败:', error);

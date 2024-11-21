@@ -180,35 +180,51 @@ class DeviceQuery extends LitElement {
   }
 
   locateDevice(device) {
-    // 打印完整的设备信息以检查坐标
-    console.log('设备定位信息:', {
-      完整设备信息: device,
-      坐标信息: {
-        lat: device.lat,
-        lon: device.lon,
-        lat类型: typeof device.lat,
-        lon类型: typeof device.lon
-      }
-    });
+    try {
+      // 确保经纬度值是有效的数值
+      const lat = parseFloat(device.lat);
+      const lon = parseFloat(device.lon);
 
-    // 验证坐标
-    if (!device.lat || !device.lon) {
-      console.warn('设备缺少坐标信息:', device);
-      return;
+      // 验证坐标是否在有效范围内
+      if (isNaN(lat) || isNaN(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+        console.error('设备坐标无效:', {
+          设备ID: device.id,
+          设备名称: device.deviceName,
+          纬度: lat,
+          经度: lon
+        });
+        return;
+      }
+
+      // 打印完整的设备信息以检查坐标
+      console.log('设备定位信息:', {
+        设备ID: device.id,
+        设备名称: device.deviceName,
+        原始坐标: {
+          lat: device.lat,
+          lon: device.lon
+        },
+        转换后坐标: {
+          lat: lat,
+          lon: lon
+        }
+      });
+
+      // 发送定位事件
+      const locationEvent = new CustomEvent('locate-device', {
+        detail: {
+          deviceId: device.id,
+          deviceName: device.deviceName,
+          lat: lat,
+          lon: lon
+        }
+      });
+
+      console.log('发送定位事件:', locationEvent.detail);
+      window.dispatchEvent(locationEvent);
+    } catch (error) {
+      console.error('定位设备时出错:', error);
     }
-
-    // 确保发送数值类型的坐标
-    const locationEvent = new CustomEvent('locate-device', {
-      detail: {
-        deviceId: device.id,
-        deviceName: device.deviceName,
-        lat: parseFloat(device.lat),
-        lon: parseFloat(device.lon)
-      }
-    });
-
-    console.log('发送定位事件:', locationEvent.detail);
-    window.dispatchEvent(locationEvent);
   }
 }
 
