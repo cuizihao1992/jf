@@ -4,7 +4,7 @@ const { clients, statusList } = require('./global.js');
 
 const pendingRequests = new Map();
 
-function processData(socket, data) {
+function processData(socket, data, wsCallback) {
   const hexData = data.toString('hex');
   const clientInfo = `${socket.remoteAddress}:${socket.remotePort}`;
   const localPort = socket.localPort;
@@ -13,6 +13,16 @@ function processData(socket, data) {
     const idHex = hexData.substring(2, 4); // 第二个字节的十六进制值
     const addrID = parseInt(idHex, 16); // 转换为十进制整数
     console.log(`Extracted ID: ${addrID}`);
+
+    wsCallback({
+      deviceId: addrID,
+      angle: 45,
+      gps: '30.6586, 104.0648',
+      power: 12.5,
+      isOnline: true,
+      imageUrl: '/images/66_image.jpg',
+      timestamp: new Date().toLocaleString(),
+    });
     if (hexData == '68420f16') {
       console.log('心跳from', addrID);
     }

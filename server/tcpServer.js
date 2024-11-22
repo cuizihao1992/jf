@@ -9,17 +9,7 @@ function startTCPServer(port, wsCallback) {
 
     // processData2(socket);
     socket.on('data', async (data) => {
-      processData(socket, data);
-
-      wsCallback({
-        deviceId: 66,
-        angle: 45,
-        gps: '30.6586, 104.0648',
-        power: 12.5,
-        isOnline: true,
-        imageUrl: 'https://example.com/image.jpg',
-        timestamp: new Date().toLocaleString(),
-      });
+      processData(socket, data, wsCallback);
     });
 
     socket.on('end', () => {

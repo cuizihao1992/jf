@@ -11,6 +11,21 @@
             padding: 20px;
         }
 
+        .device-selector {
+            margin-bottom: 20px;
+        }
+
+        .device-selector select {
+            font-size: 16px;
+            padding: 5px;
+        }
+
+        .current-device {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #555;
+        }
+
         .button-container {
             display: flex;
             flex-wrap: wrap;
@@ -98,6 +113,13 @@
 <body>
 
     <h1>Device Control API</h1>
+
+    <div class="device-selector">
+        <label for="device-select">Select Device:</label>
+        <select id="device-select"></select>
+        <div class="current-device">Current Device ID: <span id="current-device-id">66</span></div>
+    </div>
+
     <div class="button-container"></div>
 
     <div id="status" class="status"></div>
@@ -149,58 +171,6 @@
         socket.onclose = () => {
             console.log('WebSocket connection closed.');
         };
-
-        // Function to send API requests
-        async function sendRequest(endpoint) {
-            try {
-                const response = await fetch(endpoint);
-                const result = await response.json();
-                const responseTextElement = document.getElementById('response-text');
-
-                if (response.ok) {
-                    document.getElementById('status').innerText = 'Request was successful!';
-                    document.getElementById('status').className = 'status success';
-                    responseTextElement.innerText = JSON.stringify(result, null, 2);
-                } else {
-                    document.getElementById('status').innerText = 'Error occurred during the request.';
-                    document.getElementById('status').className = 'status error';
-                    responseTextElement.innerText = JSON.stringify(result, null, 2);
-                }
-            } catch (error) {
-                document.getElementById('status').innerText = 'An unexpected error occurred.';
-                document.getElementById('status').className = 'status error';
-                document.getElementById('response-text').innerText = error.message;
-            }
-        }
-
-        // Sample device IDs and endpoints
-        const deviceIds = [66];
-        const endpoints = [
-            { name: 'Power On', path: '/devices/{id}/power-on' },
-            { name: 'Power Off', path: '/devices/{id}/power-off' },
-            { name: 'Pan-Tilt Angle', path: '/devices/{id}/angle' },
-            { name: 'GPS Info', path: '/devices/{id}/gps' },
-            { name: 'Power Module', path: '/devices/{id}/powermodule' },
-            { name: 'History', path: '/devices/{id}/history' },
-            { name: 'Logs', path: '/devices/{id}/logs' },
-            { name: 'Images', path: '/devices/{id}/images' },
-            { name: 'Sync Time', path: '/devices/{id}/sync-time' },
-            { name: 'Horizontal Angle', path: '/devices/{id}/horizontal-angle' },
-            { name: 'Vertical Angle', path: '/devices/{id}/vertical-angle' }
-        ];
-
-        // Create buttons dynamically
-        const buttonContainer = document.querySelector('.button-container');
-
-        deviceIds.forEach(id => {
-            endpoints.forEach(endpoint => {
-                const button = document.createElement('button');
-                button.innerText = `${endpoint.name} (Device ${id})`;
-                button.onclick = () => sendRequest(endpoint.path.replace('{id}', id));
-                buttonContainer.appendChild(button);
-            });
-        });
-
         // Maintain a device status list
         const deviceStatusList = {};
 
@@ -217,6 +187,7 @@
                 imageUrl,
                 timestamp
             };
+            addNewDevice(deviceId)
 
             // Get table body
             const tableBody = document.querySelector('#device-status-table tbody');
@@ -251,6 +222,92 @@
                 tableBody.appendChild(newRow);
             }
         }
+        const defaultDeviceId = 66;
+        let currentDeviceId = defaultDeviceId;
+
+        // 初始化设备列表
+        const deviceIds = [defaultDeviceId];
+        const endpoints = [
+            { name: 'Power On', path: '/devices/{id}/power-on' },
+            { name: 'Power Off', path: '/devices/{id}/power-off' },
+            { name: 'Pan-Tilt Angle', path: '/devices/{id}/angle' },
+            { name: 'GPS Info', path: '/devices/{id}/gps' },
+            { name: 'Power Module', path: '/devices/{id}/powermodule' },
+            { name: 'History', path: '/devices/{id}/history' },
+            { name: 'Logs', path: '/devices/{id}/logs' },
+            { name: 'Images', path: '/devices/{id}/images' },
+            { name: 'Sync Time', path: '/devices/{id}/sync-time' },
+            { name: 'Horizontal Angle', path: '/devices/{id}/horizontal-angle' },
+            { name: 'Vertical Angle', path: '/devices/{id}/vertical-angle' }
+        ];
+
+        // 初始化选择设备的下拉菜单
+        const deviceSelect = document.getElementById('device-select');
+        const currentDeviceIdSpan = document.getElementById('current-device-id');
+        const buttonContainer = document.querySelector('.button-container');
+
+        function populateDeviceSelect() {
+            deviceSelect.innerHTML = '';
+            deviceIds.forEach(id => {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = `Device ${id}`;
+                deviceSelect.appendChild(option);
+            });
+        }
+
+        // 切换当前设备
+        deviceSelect.addEventListener('change', () => {
+            currentDeviceId = deviceSelect.value;
+            currentDeviceIdSpan.textContent = currentDeviceId;
+        });
+
+        // 创建 API 按钮
+        function createButtons() {
+            buttonContainer.innerHTML = '';
+            endpoints.forEach(endpoint => {
+                const button = document.createElement('button');
+                button.textContent = endpoint.name;
+                button.onclick = () => sendRequest(endpoint.path.replace('{id}', currentDeviceId));
+                buttonContainer.appendChild(button);
+            });
+        }
+
+        // 模拟新设备连接
+        function addNewDevice(deviceId) {
+            if (!deviceIds.includes(deviceId)) {
+                deviceIds.push(deviceId);
+                populateDeviceSelect();
+            }
+        }
+
+        // 发送请求
+        async function sendRequest(endpoint) {
+            try {
+                const response = await fetch(endpoint);
+                const result = await response.json();
+                const responseTextElement = document.getElementById('response-text');
+
+                if (response.ok) {
+                    document.getElementById('status').innerText = 'Request was successful!';
+                    document.getElementById('status').className = 'status success';
+                    responseTextElement.innerText = JSON.stringify(result, null, 2);
+                } else {
+                    document.getElementById('status').innerText = 'Error occurred during the request.';
+                    document.getElementById('status').className = 'status error';
+                    responseTextElement.innerText = JSON.stringify(result, null, 2);
+                }
+            } catch (error) {
+                document.getElementById('status').innerText = 'An unexpected error occurred.';
+                document.getElementById('status').className = 'status error';
+                document.getElementById('response-text').innerText = error.message;
+            }
+        }
+
+        // 初始化页面
+        populateDeviceSelect();
+        createButtons();
+
     </script>
 
 </body>
