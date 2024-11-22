@@ -41,9 +41,9 @@
   align-items: flex-start;
   font-size: 16px;
   color: white;
-  margin-top: -25px;
+  margin-top: -40px;
   font-weight: bold;
-  width: 300px; /* 固定宽度 */
+  width: 400px; /* 增加宽度 */
 }
 
 /* 修改 header-center 样式 */
@@ -99,29 +99,32 @@
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
   overflow: hidden;
-  
+
   /* 背景渐变效果 */
-  background: 
-    linear-gradient(90deg, 
+  background: linear-gradient(
+      90deg,
       rgba(15, 25, 50, 0.9),
       rgba(15, 25, 50, 0.9)
     ),
-    linear-gradient(180deg,
+    linear-gradient(
+      180deg,
       transparent 45%,
       rgba(0, 150, 255, 0.3) 50%,
       transparent 55%
     );
-  background-size: 100% 100%, 100% 200%;
-  
+  background-size:
+    100% 100%,
+    100% 200%;
+
   /* 边框和阴影效果 */
   border: 1px solid rgba(0, 150, 255, 0.3);
   border-right: none;
   box-shadow:
     0 0 10px rgba(0, 150, 255, 0.2),
     inset 0 0 15px rgba(0, 150, 255, 0.2);
-    
+
   /* 动画效果 */
-  animation: 
+  animation:
     scanLine 4s linear infinite,
     glowingBorder 3s ease-in-out infinite;
 }
@@ -148,12 +151,13 @@
 }
 
 .location-selector:hover::before {
-  background: 
-    linear-gradient(90deg, 
+  background: linear-gradient(
+      90deg,
       rgba(20, 30, 60, 0.9),
       rgba(20, 30, 60, 0.9)
     ),
-    linear-gradient(180deg,
+    linear-gradient(
+      180deg,
       transparent 45%,
       rgba(0, 150, 255, 0.4) 50%,
       transparent 55%
@@ -173,16 +177,21 @@
 /* 扫描线动画 */
 @keyframes scanLine {
   0% {
-    background-position: 0 0, 0 -100%;
+    background-position:
+      0 0,
+      0 -100%;
   }
   100% {
-    background-position: 0 0, 0 100%;
+    background-position:
+      0 0,
+      0 100%;
   }
 }
 
 /* 箭头脉冲动画 */
 @keyframes arrowPulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.4;
     transform: translateY(-50%) rotate(45deg) scale(1);
   }
@@ -194,7 +203,8 @@
 
 /* 发光边框动画 */
 @keyframes glowingBorder {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow:
       0 0 10px rgba(0, 150, 255, 0.2),
       inset 0 0 15px rgba(0, 150, 255, 0.2),
@@ -249,7 +259,7 @@
 .location-selector a:hover {
   background: rgba(20, 30, 60, 0.9);
   transform: translateX(-5px);
-  box-shadow: 
+  box-shadow:
     0 5px 15px rgba(0, 100, 255, 0.2),
     0 0 20px rgba(0, 150, 255, 0.3);
   border-color: rgba(0, 150, 255, 0.6);
@@ -331,4 +341,24 @@
 /* 当前激活的导航按钮样式 */
 .nav a.active {
   color: #ffeb3b;
+}
+
+/* 添加授时按钮样式 */
+.timing-btn {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 2px 8px;
+  font-size: 14px;
+  color: #fff;
+  background: rgba(0, 150, 255, 0.3);
+  border: 1px solid rgba(0, 150, 255, 0.5);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.timing-btn:hover {
+  background: rgba(0, 150, 255, 0.5);
+  border-color: rgba(0, 150, 255, 0.8);
+  box-shadow: 0 0 10px rgba(0, 150, 255, 0.3);
 }

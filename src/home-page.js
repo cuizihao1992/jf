@@ -759,7 +759,7 @@ class HomePage extends LitElement {
     const positions = points.map((p) => p.properties.position);
     const isDiagonal =
       (positions.includes('左上') && positions.includes('右下')) ||
-      (positions.includes('右上') && positions.includes('左下'));
+      (positions.includes('右��') && positions.includes('左下'));
 
     if (!isDiagonal) {
       console.warn('需要选择对角点才能进行拟合');
@@ -871,6 +871,7 @@ class HomePage extends LitElement {
                 <div>
                   ${this.currentLocation} &nbsp;&nbsp;&nbsp;
                   时间：${this.currentTime}
+                  <button class="timing-btn" @click="${this.handleTiming}">授时</button>
                 </div>
               </div>
               <div class="header-center">自动角反射器系统</div>
@@ -1305,6 +1306,13 @@ class HomePage extends LitElement {
       console.error('验证多边形失败:', error);
       return false;
     }
+  }
+
+  // 添加授时处理方法
+  handleTiming() {
+    // 这里添加授时逻辑
+    console.log('执行授时操作');
+    alert('授时功能待实现');
   }
 }
 
