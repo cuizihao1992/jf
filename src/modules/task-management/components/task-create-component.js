@@ -11,6 +11,8 @@ class TaskCreateComponent extends LitElement {
     return {
       devices: { type: Array },
       selectedDevices: { type: Array },
+      azimuth: { type: String },
+      elevation: { type: String }
     };
   }
 
@@ -19,6 +21,10 @@ class TaskCreateComponent extends LitElement {
     this.devices = [];
     this.selectedDevices = [];
     this.fetchDevices();
+    this.addEventListener('angles-update', this.handleAnglesUpdate);
+    this.azimuth = '0';
+    this.elevation = '0';
+    this.addEventListener('update-device-angles', this.handleUpdateDeviceAngles);
   }
 
   async fetchDevices() {
@@ -91,14 +97,16 @@ class TaskCreateComponent extends LitElement {
     };
 
     // 触发位置选择事件
-    this.dispatchEvent(new CustomEvent('location-selected', {
-      detail: {
-        location,
-        coordinates: coordinates[location],
-      },
-      bubbles: true,
-      composed: true,
-    }));
+    this.dispatchEvent(
+      new CustomEvent('location-selected', {
+        detail: {
+          location,
+          coordinates: coordinates[location],
+        },
+        bubbles: true,
+        composed: true,
+      })
+    );
   }
 
   render() {
@@ -142,8 +150,8 @@ class TaskCreateComponent extends LitElement {
             ${device.id}
           </td>
           <td>
-            方位角: ${device.angle.horizontal}° 仰俯角:
-            ${device.angle.elevation}°
+            方位角: ${device.horizontal}° 俯仰角:
+            ${device.elevation}°
           </td>
           <td>
             水平角:
@@ -190,7 +198,10 @@ class TaskCreateComponent extends LitElement {
             </div>
             <div class="row-location">
               <label for="location">所属地区:</label>
-              <select id="location" @change="${(e) => this.handleLocation(e.target.value)}">
+              <select
+                id="location"
+                @change="${(e) => this.handleLocation(e.target.value)}"
+              >
                 <option value="中卫">中卫</option>
                 <option value="嵩山">嵩山</option>
               </select>
@@ -295,7 +306,24 @@ class TaskCreateComponent extends LitElement {
   }
 
   openParameterConfig() {
-    this.dispatchEvent(new CustomEvent('open-parameter-config'));
+    const parameterConfig = document.createElement('parameter-config');
+    // 添加事件监听器来接收计算的角度
+    parameterConfig.addEventListener('angles-calculated', (event) => {
+      const { azimuth, elevation } = event.detail;
+      // 更新所有选中设备的角度
+      this.selectedDevices = this.selectedDevices.map(device => ({
+        ...device,
+        angle: {
+          horizontal: azimuth,
+          elevation: elevation
+        }
+      }));
+      this.requestUpdate();
+    });
+    
+    this.dispatchEvent(new CustomEvent('open-parameter-config', {
+      detail: { parameterConfig }
+    }));
   }
 
   openScopeSelection() {
@@ -315,6 +343,52 @@ class TaskCreateComponent extends LitElement {
       }
       return device;
     });
+  }
+
+  handleAnglesUpdate(e) {
+    const { azimuth, elevation } = e.detail;
+    // 只更新调整角度的输入框值，不更新地理角度显示
+    this.selectedDevices = this.selectedDevices.map(device => ({
+      ...device,
+      angle: {
+        ...device.angle,
+        horizontal: azimuth,    // 更新水平角输入框
+        elevation: elevation    // 更新俯仰角输入框
+      }
+    }));
+    this.requestUpdate();
+  }
+
+  firstUpdated() {
+    const parameterConfig = this.shadowRoot.querySelector('parameter-config');
+    if (parameterConfig) {
+        parameterConfig.addEventListener('update-device-angles', (e) => {
+            this.azimuth = e.detail.azimuth;
+            this.elevation = e.detail.elevation;
+            this.requestUpdate();
+        });
+    }
+  }
+
+  handleUpdateDeviceAngles(e) {
+    console.log('任务创建 - 收到角度更新:', e.detail);
+    this.updateAngles(e.detail);
+  }
+
+  updateAngles(angles) {
+    console.log('更新角度值:', angles);
+    const { azimuth, elevation } = angles;
+    
+    // 更新所有选中设备的角度
+    this.selectedDevices = this.selectedDevices.map(device => ({
+      ...device,
+      angle: {
+        horizontal: azimuth,
+        elevation: elevation
+      }
+    }));
+    
+    this.requestUpdate();
   }
 }
 

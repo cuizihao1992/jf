@@ -21,19 +21,20 @@ class ParameterConfig extends LitElement {
 
   calculateAngles() {
     if (this.selectedTab === 'inputParams') {
-      const azimuth = this.shadowRoot.querySelector(
-        'input[name="azimuth"]'
-      ).value;
-      const elevation = this.shadowRoot.querySelector(
-        'input[name="elevation"]'
-      ).value;
+      const azimuth = this.shadowRoot.querySelector('input[name="azimuth"]').value;
+      const elevation = this.shadowRoot.querySelector('input[name="elevation"]').value;
 
-      // 发送计算结果事件
-      this.dispatchEvent(
-        new CustomEvent('angles-calculated', {
-          detail: { azimuth, elevation },
-        })
-      );
+      console.log('参数配置 - 发送角度:', { azimuth, elevation });
+
+      this.dispatchEvent(new CustomEvent('update-device-angles', {
+        detail: { 
+          azimuth: azimuth,
+          elevation: elevation 
+        },
+        bubbles: true,
+        composed: true
+      }));
+      
       this.handleClose();
       return;
     }
@@ -92,15 +93,16 @@ class ParameterConfig extends LitElement {
 
     const elevation = fixedAngle - incidenceRad;
 
-    // 发送计算结果事件
-    this.dispatchEvent(
-      new CustomEvent('angles-calculated', {
-        detail: {
-          azimuth: azimuth.toFixed(2),
-          elevation: elevation.toFixed(2),
-        },
-      })
-    );
+    console.log('参数配置 - 发送轨道计算角度:', { azimuth, elevation });
+
+    this.dispatchEvent(new CustomEvent('update-device-angles', {
+      detail: {
+        azimuth: String(azimuth),
+        elevation: String(elevation)
+      },
+      bubbles: true,
+      composed: true
+    }));
     this.handleClose();
   }
 
