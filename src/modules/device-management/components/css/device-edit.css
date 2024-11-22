@@ -125,39 +125,10 @@ a {
   text-decoration: none;
 }
 
-.confirm-button,
-.cancel-button {
-  background-color: #337ab7;
-  border: none;
-  color: white;
-  padding: 10px 20px;
-  font-size: 0.9rem;
-  border-radius: 14px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  margin-top: 25px;
-  margin-right: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.confirm-button:hover,
-.cancel-button:hover {
-  background-color: #285e8e;
-}
-
-.cancel-button {
-  background-color: #337ab7;
-  margin-left: 20px;
-}
-
-.cancel-button:hover {
-  background-color: #555;
-}
-
 .confirmation-modal {
   position: fixed;
   top: 50%;
-  left: 80%;
+  left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -171,6 +142,13 @@ a {
   color: #808080;
 }
 
+.confirmation-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 20px;
+}
+
 .confirm-button,
 .cancel-button {
   background-color: #337ab7;
@@ -181,9 +159,8 @@ a {
   border-radius: 14px;
   cursor: pointer;
   transition: background-color 0.3s;
-  margin-top: 25px;
-  margin-right: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin: 0;
 }
 
 .confirm-button:hover,
@@ -193,7 +170,6 @@ a {
 
 .cancel-button {
   background-color: #337ab7;
-  margin-left: 20px;
 }
 
 .cancel-button:hover {

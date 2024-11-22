@@ -319,8 +319,8 @@ class HomePage extends LitElement {
         'circle-radius': 35,
         'circle-color': '#00ffff',
         'circle-opacity': 0.15,
-        'circle-blur': 1
-      }
+        'circle-blur': 1,
+      },
     });
 
     // 添加选中点的发光效果（中圈）
@@ -332,8 +332,8 @@ class HomePage extends LitElement {
         'circle-radius': 25,
         'circle-color': '#00ffff',
         'circle-opacity': 0.3,
-        'circle-blur': 0.5
-      }
+        'circle-blur': 0.5,
+      },
     });
 
     // 添加选中点的核心图层（内圈）
@@ -345,8 +345,8 @@ class HomePage extends LitElement {
         'circle-radius': 15,
         'circle-color': '#00ffff',
         'circle-stroke-width': 2,
-        'circle-stroke-color': '#ffffff'
-      }
+        'circle-stroke-color': '#ffffff',
+      },
     });
 
     // 初始化地图事件监听器
@@ -683,9 +683,9 @@ class HomePage extends LitElement {
         let time = 0;
         const animate = () => {
           // 计算动态半径 - 增大范围
-          const haloRadius = 35 + Math.sin(time * 0.05) * 7;   // 外圈呼吸效果
-          const glowRadius = 25 + Math.sin(time * 0.1) * 5;    // 中圈呼吸效果
-          const coreRadius = 15 + Math.sin(time * 0.15) * 2;   // 内圈呼吸效果
+          const haloRadius = 35 + Math.sin(time * 0.05) * 7; // 外圈呼吸效果
+          const glowRadius = 25 + Math.sin(time * 0.1) * 5; // 中圈呼吸效果
+          const coreRadius = 15 + Math.sin(time * 0.15) * 2; // 内圈呼吸效果
 
           // 计算动态透明度
           const haloOpacity = 0.15 + Math.sin(time * 0.03) * 0.05;
@@ -873,7 +873,7 @@ class HomePage extends LitElement {
                   时间：${this.currentTime}
                 </div>
               </div>
-              <div class="header-center">测试</div>
+              <div class="header-center">自动角反射器系统</div>
               <div style="width: 200px"></div>
             </div>
 

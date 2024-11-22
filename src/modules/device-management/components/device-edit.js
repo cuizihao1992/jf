@@ -185,10 +185,26 @@ class DeviceEdit extends LitElement {
   async confirmDelete() {
     try {
       await deviceService.delete(this.currentDevice.id);
-      this.fetchDevices();
+      
+      // 重新获取设备列表
+      await this.fetchDevices();
+      
+      // 触发设备更新事件，更新地图上的点位
+      window.dispatchEvent(new CustomEvent('devices-updated', {
+        detail: {
+          devices: this.devices
+        }
+      }));
+
+      // 关闭确认对话框
       this.showConfirmation = false;
+      this.currentDevice = null;
+
+      // 可以添加一个删除成功的提示
+      alert('设备删除成功');
     } catch (error) {
       console.error('删除设备失败:', error);
+      alert('删除设备失败，请重试');
     }
   }
 

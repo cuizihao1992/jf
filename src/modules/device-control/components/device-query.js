@@ -147,7 +147,7 @@ class DeviceQuery extends LitElement {
             ? html`
                 <td>
                   <a class="action-button" @click="${() => this.adjustPosture(device)}">姿态调整</a>
-                  <span class="button-separator">|</span>
+                  <span class="button-separator">/</span>
                   <a class="action-button" @click="${() => this.locateDevice(device)}">定位</a>
                 </td>
               `
