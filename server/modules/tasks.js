@@ -2,7 +2,7 @@ const db = require('./mysql.js');
 
 module.exports = {
   async query(filter) {
-    const baseQuery = 'SELECT * FROM jf_device_task';
+    const baseQuery = 'SELECT * FROM jf_tasks';
     const conditions = [];
     const values = [];
 
@@ -23,54 +23,69 @@ module.exports = {
 
   async add(taskData) {
     const {
-      task_id,
+      task_number,
+      task_name,
       user_id,
-      device_id,
-      install_azimuth,
-      install_elevation,
-      target_azimuth,
-      target_elevation,
-      adjustment_azimuth,
-      adjustment_elevation,
+      device_ids,
+      is_scheduled,
+      is_retracted,
+      created_time,
       start_time,
       end_time,
+      review_status,
+      reviewer,
+      review_time,
+      review_comments,
+      event_type,
+      event_description,
       is_success,
-      failure_reason,
+      error_id,
+      duration,
       region,
+      device_type,
+      task_status,
     } = taskData;
 
     const query = `
-      INSERT INTO jf_device_task 
+      INSERT INTO jf_tasks 
       (
-        task_id, user_id, device_id, install_azimuth, install_elevation, 
-        target_azimuth, target_elevation, adjustment_azimuth, adjustment_elevation, 
-        start_time, end_time, is_success, failure_reason, region
+        task_number, task_name, user_id, device_ids, is_scheduled, is_retracted,
+        created_time, start_time, end_time, review_status, reviewer,
+        review_time, review_comments, event_type, event_description, 
+        is_success, error_id, duration, region, device_type, task_status
       ) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const [result] = await db.query(query, [
-      task_id,
+      task_number,
+      task_name,
       user_id,
-      device_id,
-      install_azimuth,
-      install_elevation,
-      target_azimuth,
-      target_elevation,
-      adjustment_azimuth,
-      adjustment_elevation,
+      device_ids,
+      is_scheduled,
+      is_retracted,
+      created_time,
       start_time,
       end_time,
+      review_status,
+      reviewer,
+      review_time,
+      review_comments,
+      event_type,
+      event_description,
       is_success,
-      failure_reason,
+      error_id,
+      duration,
       region,
+      device_type,
+      task_status,
     ]);
 
     return result.insertId;
   },
 
   async delete(taskId) {
-    const query = 'DELETE FROM jf_device_task WHERE device_task_id = ?';
+    const query = 'DELETE FROM jf_tasks WHERE task_id = ?';
     const [result] = await db.query(query, [taskId]);
     return result.affectedRows;
   },
@@ -90,7 +105,7 @@ module.exports = {
       throw new Error('No data provided for update');
     }
 
-    const query = `UPDATE jf_device_task SET ${fields.join(', ')} WHERE device_task_id = ?`;
+    const query = `UPDATE jf_tasks SET ${fields.join(', ')} WHERE task_id = ?`;
     values.push(taskId);
 
     const [result] = await db.query(query, values);

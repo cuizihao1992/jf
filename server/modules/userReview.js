@@ -1,9 +1,9 @@
 const db = require('./mysql.js');
 
 module.exports = {
-  // 查询设备审核记录
+  // 查询用户审核记录
   async query(filter) {
-    const baseQuery = 'SELECT * FROM jf_device_reviews';
+    const baseQuery = 'SELECT * FROM jf_user_review';
     const conditions = [];
     const values = [];
 
@@ -22,45 +22,70 @@ module.exports = {
     return rows;
   },
 
-  // 新增审核记录
+  // 新增用户审核记录
   async add(reviewData) {
     const {
-      device_id,
+      username,
+      password,
+      phone,
+      application_date,
+      country,
+      region,
+      user_type,
+      application_type,
       review_status,
       reviewer,
       review_time,
-      review_comments,
-      review_type,
-      user_id,
+      review_opinion,
+      remarks,
+      registration_time,
+      user_status,
+      user_permissions,
+      data_permissions,
     } = reviewData;
 
     const query = `
-      INSERT INTO jf_device_reviews 
-      (device_id, review_status, reviewer, review_time, review_comments, review_type, user_id) 
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO jf_user_review 
+      (
+        username, password, phone, application_date, country, region, 
+        user_type, application_type, review_status, reviewer, review_time, 
+        review_opinion, remarks, registration_time, user_status, 
+        user_permissions, data_permissions
+      ) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const [result] = await db.query(query, [
-      device_id,
+      username,
+      password,
+      phone,
+      application_date,
+      country,
+      region,
+      user_type,
+      application_type,
       review_status,
       reviewer,
       review_time,
-      review_comments,
-      review_type,
-      user_id,
+      review_opinion,
+      remarks,
+      registration_time,
+      user_status,
+      user_permissions,
+      data_permissions,
     ]);
 
     return result.insertId;
   },
 
-  // 删除审核记录
+  // 删除用户审核记录
   async delete(reviewId) {
-    const query = 'DELETE FROM jf_device_reviews WHERE review_id = ?';
+    const query = 'DELETE FROM jf_user_review WHERE id = ?';
     const [result] = await db.query(query, [reviewId]);
     return result.affectedRows;
   },
 
-  // 更新审核记录
+  // 更新用户审核记录
   async update(reviewId, reviewData) {
     const fields = [];
     const values = [];
@@ -76,7 +101,7 @@ module.exports = {
       throw new Error('No data provided for update');
     }
 
-    const query = `UPDATE jf_device_reviews SET ${fields.join(', ')} WHERE review_id = ?`;
+    const query = `UPDATE jf_user_review SET ${fields.join(', ')} WHERE id = ?`;
     values.push(reviewId);
 
     const [result] = await db.query(query, values);

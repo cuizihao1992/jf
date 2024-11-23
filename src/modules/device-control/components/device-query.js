@@ -1,7 +1,7 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/device-query.css?inline';
 import { deviceService } from '@/api/fetch.js';
-
+import api from './api';
 class DeviceQuery extends LitElement {
   static properties = {
     showActions: { type: Boolean },
@@ -23,12 +23,11 @@ class DeviceQuery extends LitElement {
 
   async fetchDevices() {
     try {
-      const params = {
-        pageNum: 1,
-        pageSize: 100000,
-      };
-      const data = await deviceService.list(params);
-      this.devices = data.rows;
+      const filters = {};
+      const data = await api.queryDevices(filters);
+      // const data = await deviceService.list(params);
+      // this.devices = data.rows;
+      this.devices = data;
     } catch (error) {
       console.error('获取设备信息失败:', error);
     }

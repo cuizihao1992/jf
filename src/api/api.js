@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 
 // 创建 axios 实例
 const instance = axios.create({
-  baseURL: '/api', // 你的 API 基础 URL
+  baseURL: 'http://localhost:3000', // 你的 API 基础 URL
   timeout: 5000, // 请求超时时间
 });
 
@@ -36,18 +36,4 @@ instance.interceptors.response.use(
   }
 );
 
-// 导出 API 调用方法
-export const api = {
-  queryDevice: () => {
-    return instance.get('/device-query'); // 设备查询
-  },
-
-  postureAdjust: () => {
-    return instance.post('/posture-adjust', { posture: 'new posture data' }); // 姿态调整
-  },
-
-  // 登录 API 示例
-  login: (username, password, role) => {
-    return instance.post('/login', { username, password, role });
-  },
-};
+export default instance;
