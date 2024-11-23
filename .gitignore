@@ -7,3 +7,6 @@ screen
 # 忽略特定子项目的构建目录
 server/dist/
 client/dist/
+
+# 忽略所有 .log 文件
+*.log

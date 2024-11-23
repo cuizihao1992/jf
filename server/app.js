@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const verifyToken = require('./middlewares/authMiddleware'); // Token 验证中间件
 const responseFormatter = require('./middlewares/responseFormatter'); // 引入格式化中间件
+const loggerMiddleware = require('./middlewares/loggerMiddleware'); // 引入日志中间件
 const { createRouter } = require('./global');
 const authRouter = require('./modules/auth.js');
 
@@ -32,7 +33,9 @@ const isVerify = false;
 // 中间件
 app.use(cors());
 app.use(bodyParser.json());
+app.use(loggerMiddleware); // 使用日志中间件
 app.use(responseFormatter);
+
 // 登录和注册接口不需要验证
 app.use('/auth', authRouter);
 
