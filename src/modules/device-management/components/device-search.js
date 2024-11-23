@@ -1,6 +1,6 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/device-search.css?inline';
-import { deviceService } from '@/api/fetch.js';
+import api from '@/apis/api.js';
 
 class DeviceSearch extends LitElement {
   static styles = css`
@@ -20,14 +20,10 @@ class DeviceSearch extends LitElement {
 
   async fetchDevices() {
     try {
-      const params = {
-        pageNum: 1,
-        pageSize: 100000,
-        // 可以根据需要添加其他查询参数
-      };
-      const data = await deviceService.list(params);
-      this.devices = data.rows;
+      const data = await api.devicesApi.query({});
+      this.devices = data;
     } catch (error) {
+      showToast({ message: '获取设备数据失败', type: 'error', duration: 3000 });
       console.error('获取设备审核数据失败:', error);
     }
   }

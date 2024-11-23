@@ -1,39 +1,35 @@
-import axios from 'axios';
-import Cookies from 'js-cookie';
+import request from '@/api/request';
 
-// 创建 axios 实例
-const instance = axios.create({
-  baseURL: 'http://localhost:3000', // 你的 API 基础 URL
-  timeout: 5000, // 请求超时时间
-});
-
-// 请求拦截器：为每个请求添加 token
-instance.interceptors.request.use(
-  (config) => {
-    const token = Cookies.get('token'); // 从 Cookies 获取 token
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`; // 添加 token 到请求头
-    }
-    return config;
+const api = {
+  // 查询设备
+  queryDevices(filters) {
+    return request('get', '/devices', { params: filters });
   },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
-// 响应拦截器：检查未登录状态并跳转登录页面
-instance.interceptors.response.use(
-  (response) => {
-    return response.data; // 正常响应数据
+  // 添加设备
+  addDevice(data) {
+    return request('post', '/devices', { data });
   },
-  (error) => {
-    if (error.response && error.response.status === 401) {
-      // 如果返回 401 状态码，表示未登录，清除 token 并跳转到登录页面
-      Cookies.remove('token'); // 清除 Cookies 中的 token
-      window.location.href = '/login'; // 跳转到登录页面
-    }
-    return Promise.reject(error);
-  }
-);
 
-export default instance;
+  // 更新设备
+  updateDevice(deviceId, updatedData) {
+    return request('put', `/devices/${deviceId}`, { data: updatedData });
+  },
+
+  // 删除设备
+  deleteDevice(deviceId) {
+    return request('delete', `/devices/${deviceId}`);
+  },
+
+  // 查询任务
+  queryTask(filters) {
+    return request('get', '/tasks', { params: filters });
+  },
+
+  // 更新任务
+  updateTask(taskId, taskData) {
+    return request('put', `/tasks/${taskId}`, { data: taskData });
+  },
+};
+
+export default api;

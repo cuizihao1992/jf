@@ -1,99 +1,49 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors'); // 引入 CORS 中间件
-const verifyToken = require('./middlewares/authMiddleware'); // 导入 Token 验证中间件
-
+const cors = require('cors');
+const verifyToken = require('./middlewares/authMiddleware'); // Token 验证中间件
+const responseFormatter = require('./middlewares/responseFormatter'); // 引入格式化中间件
 const { createRouter } = require('./global');
 const authRouter = require('./modules/auth.js');
 
 // 导入各模块
-const deviceLogs = require('./modules/deviceLogs');
-const deviceTasks = require('./modules/deviceTasks.js');
-const deviceTypes = require('./modules/deviceTypes');
-const devices = require('./modules/devices');
-const regions = require('./modules/regions');
-const scheduledTasks = require('./modules/scheduledTasks');
-const deviceReviews = require('./modules/deviceReviews.js');
-const deviceStatusHistory = require('./modules/deviceStatusHistory');
-const tasks = require('./modules/tasks');
-const taskErrors = require('./modules/taskErrors');
-const userReview = require('./modules/userReview');
-const user = require('./modules/user');
+const modules = {
+  '/device-logs': require('./modules/deviceLogs'),
+  '/device-tasks': require('./modules/deviceTasks.js'),
+  '/device-types': require('./modules/deviceTypes'),
+  '/devices': require('./modules/devices'),
+  '/regions': require('./modules/regions'),
+  '/scheduled-tasks': require('./modules/scheduledTasks'),
+  '/device-reviews': require('./modules/deviceReviews.js'),
+  '/device-status-history': require('./modules/deviceStatusHistory'),
+  '/tasks': require('./modules/tasks'),
+  '/task-errors': require('./modules/taskErrors'),
+  '/user-review': require('./modules/userReview'),
+  '/user': require('./modules/user'),
+};
 
 const app = express();
+
 const PORT = 3000;
 
-app.use(cors());
+// 是否启用验证中间件
+const isVerify = false;
 
 // 中间件
+app.use(cors());
 app.use(bodyParser.json());
-app.use('/auth', authRouter); // 登录和注册接口不需要验证
+app.use(responseFormatter);
+// 登录和注册接口不需要验证
+app.use('/auth', authRouter);
 
-const isVerify = false;
-function conditionalMiddleware(condition, middleware) {
-  return condition ? middleware : (req, res, next) => next();
-}
-// 使用 Token 验证中间件保护以下接口
-app.use(
-  '/device-logs',
-  conditionalMiddleware(isVerify, verifyToken),
-  createRouter(deviceLogs)
-);
-app.use(
-  '/device-tasks',
-  conditionalMiddleware(isVerify, verifyToken),
-  createRouter(deviceTasks)
-);
-app.use(
-  '/device-types',
-  conditionalMiddleware(isVerify, verifyToken),
-  createRouter(deviceTypes)
-);
-app.use(
-  '/devices',
-  conditionalMiddleware(isVerify, verifyToken),
-  createRouter(devices)
-);
-app.use(
-  '/regions',
-  conditionalMiddleware(isVerify, verifyToken),
-  createRouter(regions)
-);
-app.use(
-  '/scheduled-tasks',
-  conditionalMiddleware(isVerify, verifyToken),
-  createRouter(scheduledTasks)
-);
-app.use(
-  '/device-reviews',
-  conditionalMiddleware(isVerify, verifyToken),
-  createRouter(deviceReviews)
-);
-app.use(
-  '/device-status-history',
-  conditionalMiddleware(isVerify, verifyToken),
-  createRouter(deviceStatusHistory)
-);
-app.use(
-  '/tasks',
-  conditionalMiddleware(isVerify, verifyToken),
-  createRouter(tasks)
-);
-app.use(
-  '/task-errors',
-  conditionalMiddleware(isVerify, verifyToken),
-  createRouter(taskErrors)
-);
-app.use(
-  '/user-review',
-  conditionalMiddleware(isVerify, verifyToken),
-  createRouter(userReview)
-);
-app.use(
-  '/user',
-  conditionalMiddleware(isVerify, verifyToken),
-  createRouter(user)
-);
+// 动态注册路由
+Object.entries(modules).forEach(([path, module]) => {
+  app.use(
+    path,
+    isVerify ? verifyToken : (req, res, next) => next(), // 条件中间件
+    createRouter(module)
+  );
+});
 
 // 启动服务器
 app.listen(PORT, () => {

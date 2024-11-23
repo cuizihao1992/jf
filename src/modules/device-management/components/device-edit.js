@@ -1,6 +1,6 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/device-edit.css?inline';
-import { deviceService } from '@/api/fetch.js';
+import api from '@/apis/api.js';
 
 class DeviceEdit extends LitElement {
   static styles = css`
@@ -24,15 +24,11 @@ class DeviceEdit extends LitElement {
 
   async fetchDevices() {
     try {
-      const params = {
-        pageNum: 1,
-        pageSize: 100000,
-        // 可以根据需要添加其他查询参数
-      };
-      const data = await deviceService.list(params);
-      this.devices = data.rows;
+      const data = await api.devicesApi.query({});
+      this.devices = data;
     } catch (error) {
       console.error('获取设备审核数据失败:', error);
+      showToast({ message: '获取设备数据失败', type: 'error', duration: 3000 });
     }
   }
 
@@ -137,9 +133,13 @@ class DeviceEdit extends LitElement {
           </td>
           <td>${device.deviceStatus}</td>
           <td>
-            <a @click="${() => this.openDeviceParticulars(device, 'view')}">查看</a>
+            <a @click="${() => this.openDeviceParticulars(device, 'view')}"
+              >查看</a
+            >
             /
-            <a @click="${() => this.openDeviceParticulars(device, 'edit')}">编辑</a>
+            <a @click="${() => this.openDeviceParticulars(device, 'edit')}"
+              >编辑</a
+            >
             /
             <a @click="${() => this.openRevokeConfirmation(device)}">删除</a>
           </td>
@@ -184,10 +184,12 @@ class DeviceEdit extends LitElement {
 
   async confirmDelete() {
     try {
-      await deviceService.delete(this.currentDevice.id);
+      await api.devicesApi.delete(this.currentDevice.id);
       this.fetchDevices();
       this.showConfirmation = false;
+      showToast({ message: '删除成功', type: 'success', duration: 3000 });
     } catch (error) {
+      showToast({ message: error.message, type: 'error', duration: 3000 });
       console.error('删除设备失败:', error);
     }
   }

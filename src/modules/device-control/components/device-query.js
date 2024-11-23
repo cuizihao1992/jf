@@ -1,7 +1,6 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/device-query.css?inline';
-import { deviceService } from '@/api/fetch.js';
-import api from './api';
+import api from '@/apis/api';
 class DeviceQuery extends LitElement {
   static properties = {
     showActions: { type: Boolean },
@@ -24,7 +23,7 @@ class DeviceQuery extends LitElement {
   async fetchDevices() {
     try {
       const filters = {};
-      const data = await api.queryDevices(filters);
+      const data = await api.devicesApi.query(filters);
       // const data = await deviceService.list(params);
       // this.devices = data.rows;
       this.devices = data;

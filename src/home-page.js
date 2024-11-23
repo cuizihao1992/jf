@@ -3,6 +3,10 @@ import { Router } from '@vaadin/router';
 import mapboxgl from 'mapbox-gl';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import * as turf from '@turf/turf';
+import { showToast } from '@/utils/toast-service';
+
+// 注册为全局变量
+globalThis.showToast = showToast;
 
 // 导入子组件
 import '@/modules/system-home/index.js';
@@ -17,27 +21,27 @@ import styles from './home-page.css?inline';
 // 地图基础配置常量
 const MAP_CONFIG = {
   accessToken:
-    'pk.eyJ1IjoiaG9uZ2xpbmdqaW4xOTk0IiwiYSI6ImNrczhvZTNmbDN0ZnEycHM3aTkyanp3NmsifQ.iCdeT5IE9GlGKmExl0U6zA',  // Mapbox访问令牌
-  style: 'mapbox://styles/mapbox/dark-v11',  // 地图样式
-  center: [116.397428, 39.90923],  // 初始中心点坐标（北京）
-  zoom: 12,  // 初始缩放级别
-  attributionControl: false,  // 关闭属性控制
-  language: 'zh-Hans',  // 使用简体中文
-  localIdeographFontFamily: "'Microsoft YaHei', 'SimHei', sans-serif"  // 中文字体设置
+    'pk.eyJ1IjoiaG9uZ2xpbmdqaW4xOTk0IiwiYSI6ImNrczhvZTNmbDN0ZnEycHM3aTkyanp3NmsifQ.iCdeT5IE9GlGKmExl0U6zA', // Mapbox访问令牌
+  style: 'mapbox://styles/mapbox/dark-v11', // 地图样式
+  center: [116.397428, 39.90923], // 初始中心点坐标（北京）
+  zoom: 12, // 初始缩放级别
+  attributionControl: false, // 关闭属性控制
+  language: 'zh-Hans', // 使用简体中文
+  localIdeographFontFamily: "'Microsoft YaHei', 'SimHei', sans-serif", // 中文字体设置
 };
 
 // 地图样式配置常量
 const MAP_STYLE_CONFIG = {
-  background: '#000924',  // 背景色
-  water: '#000f3c',      // 水域颜色
+  background: '#000924', // 背景色
+  water: '#000f3c', // 水域颜色
   building: {
-    color: '#000c2d',    // 建筑物颜色
-    opacity: 0.8         // 建筑物透明度
+    color: '#000c2d', // 建筑物颜色
+    opacity: 0.8, // 建筑物透明度
   },
   overlay: {
-    color: '#000924',    // 覆盖层颜色
-    opacity: 0.3         // 覆盖层透明度
-  }
+    color: '#000924', // 覆盖层颜色
+    opacity: 0.3, // 覆盖层透明度
+  },
 };
 
 class HomePage extends LitElement {
@@ -113,7 +117,7 @@ class HomePage extends LitElement {
         center: MAP_CONFIG.center,
         zoom: MAP_CONFIG.zoom,
         attributionControl: MAP_CONFIG.attributionControl,
-        localIdeographFontFamily: MAP_CONFIG.localIdeographFontFamily
+        localIdeographFontFamily: MAP_CONFIG.localIdeographFontFamily,
       });
 
       // 添加错误处理
@@ -127,7 +131,7 @@ class HomePage extends LitElement {
         this.initMapDraw(map);
         this.initMapLayers(map);
         this.setMapStyle(map);
-        
+
         // 延迟设置中文标签，确保样式加载完成
         setTimeout(() => {
           this.setChineseLabels(map);
@@ -136,7 +140,6 @@ class HomePage extends LitElement {
 
       // 添加地图事件监听
       this.initMapEventListeners(map);
-
     } catch (err) {
       console.error('初始化地图失败:', err);
     }
@@ -147,9 +150,9 @@ class HomePage extends LitElement {
     this.draw = new MapboxDraw({
       displayControlsDefault: false,
       controls: {
-        point: true,      // 启用点标记工具
-        polygon: true,    // 启用多边形工具
-        trash: true,      // 启用删除工具
+        point: true, // 启用点标记工具
+        polygon: true, // 启用多边形工具
+        trash: true, // 启用删除工具
       },
     });
 
@@ -346,22 +349,22 @@ class HomePage extends LitElement {
       const layers = {
         background: {
           property: 'background-color',
-          value: MAP_STYLE_CONFIG.background
+          value: MAP_STYLE_CONFIG.background,
         },
         water: {
           property: 'fill-color',
-          value: MAP_STYLE_CONFIG.water
+          value: MAP_STYLE_CONFIG.water,
         },
         building: [
           {
             property: 'fill-color',
-            value: MAP_STYLE_CONFIG.building.color
+            value: MAP_STYLE_CONFIG.building.color,
           },
           {
             property: 'fill-opacity',
-            value: MAP_STYLE_CONFIG.building.opacity
-          }
-        ]
+            value: MAP_STYLE_CONFIG.building.opacity,
+          },
+        ],
       };
 
       Object.entries(layers).forEach(([layerId, config]) => {
@@ -387,8 +390,8 @@ class HomePage extends LitElement {
           type: 'background',
           paint: {
             'background-color': MAP_STYLE_CONFIG.overlay.color,
-            'background-opacity': MAP_STYLE_CONFIG.overlay.opacity
-          }
+            'background-opacity': MAP_STYLE_CONFIG.overlay.opacity,
+          },
         });
       }
     } catch (err) {
@@ -400,16 +403,17 @@ class HomePage extends LitElement {
   setChineseLabels(map) {
     try {
       const layers = map.getStyle().layers;
-      const labelLayers = layers.filter(layer => {
-        return layer.type === 'symbol' && (
-          layer.id.includes('label') ||
-          layer.id.includes('place') ||
-          layer.id.includes('poi') ||
-          layer.id.includes('text')
+      const labelLayers = layers.filter((layer) => {
+        return (
+          layer.type === 'symbol' &&
+          (layer.id.includes('label') ||
+            layer.id.includes('place') ||
+            layer.id.includes('poi') ||
+            layer.id.includes('text'))
         );
       });
 
-      labelLayers.forEach(layer => {
+      labelLayers.forEach((layer) => {
         try {
           const textField = map.getLayoutProperty(layer.id, 'text-field');
           if (textField) {
@@ -417,7 +421,7 @@ class HomePage extends LitElement {
               'coalesce',
               ['get', 'name_zh-Hans'],
               ['get', 'name_zh'],
-              ['get', 'name']
+              ['get', 'name'],
             ]);
           }
         } catch (err) {
@@ -622,12 +626,12 @@ class HomePage extends LitElement {
   // 更新点位数据
   updatePoints(map, polygon = null) {
     const points = this.createPointsFeatureCollection();
-    const selectedPoints = polygon 
+    const selectedPoints = polygon
       ? this.filterPointsInPolygon(points, polygon)
       : { type: 'FeatureCollection', features: [] };
 
     map.getSource('selected-points').setData(selectedPoints);
-    
+
     if (polygon) {
       alert(`选中点位数量: ${selectedPoints.features.length}`);
     }
@@ -660,7 +664,7 @@ class HomePage extends LitElement {
 
   // 清除坐标输入框
   clearCoordinateInputs() {
-    ['左上', '右上', '左下', '右下'].forEach(position => {
+    ['左上', '右上', '左下', '右下'].forEach((position) => {
       this.updateInputField(position, '');
     });
   }

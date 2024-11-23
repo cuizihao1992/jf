@@ -1,5 +1,6 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import { taskService } from '@/api/fetch.js';
+import api from '@/apis/api';
 import styles from './css/task-info-component.css?inline'; // 导入 CSS 文件
 
 class TaskInfoComponent extends LitElement {
@@ -32,14 +33,22 @@ class TaskInfoComponent extends LitElement {
   async fetchTasks() {
     try {
       const params = {
-        pageNum: 1,
-        pageSize: 100000,
         [this.searchType]: this.searchCondition, // 动态属性查询
         reviewStatus: this.reviewStatus, // 审批状态过滤
       };
-      const data = await taskService.list(params);
-      this.tasks = data.rows;
+      Object.keys(params).forEach((key) => {
+        if (
+          params[key] === '' ||
+          params[key] === null ||
+          params[key] === undefined
+        ) {
+          delete params[key];
+        }
+      });
+      const data = await api.tasksApi.query(params);
+      this.tasks = data;
     } catch (error) {
+      showToast({ message: '获取任务列表失败', type: 'error', duration: 3000 });
       console.error('获取任务列表失败:', error);
     }
   }
@@ -196,7 +205,7 @@ class TaskInfoComponent extends LitElement {
 
   async confirmDelete() {
     try {
-      await taskService.delete(this.currentTask.taskId); // 使用 taskId 调用删除 API
+      await api.tasksApi.delete(this.currentTask.taskId);
       this.fetchTasks(); // 重新获取任务列表以刷新表格
       this.showConfirmation = false;
     } catch (error) {
@@ -220,11 +229,11 @@ class TaskInfoComponent extends LitElement {
           mode: {
             isEdit: type === 'edit',
             isReview: false,
-            isReviewEdit: false
-          }
+            isReviewEdit: false,
+          },
         },
         bubbles: true,
-        composed: true
+        composed: true,
       })
     );
   }

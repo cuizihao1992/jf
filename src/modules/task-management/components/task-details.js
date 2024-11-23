@@ -1,6 +1,7 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/task-details.css?inline'; // 导入 CSS 文件
 import { deviceTaskService, taskService } from '@/api/fetch.js';
+import api from '@/apis/api';
 
 class TaskDetails extends LitElement {
   static styles = css`
@@ -10,7 +11,7 @@ class TaskDetails extends LitElement {
   static get properties() {
     return {
       data: { type: Object },
-      mode: { type: Object }
+      mode: { type: Object },
     };
   }
 
@@ -20,7 +21,7 @@ class TaskDetails extends LitElement {
     this.mode = {
       isEdit: false,
       isReview: false,
-      isReviewEdit: false
+      isReviewEdit: false,
     };
     this.deviceListRows = [];
   }
@@ -50,12 +51,24 @@ class TaskDetails extends LitElement {
 
   saveTask() {
     console.log('Saving task data:', this.data);
-    taskService.update(this.data.task);
-    this.dispatchEvent(
-      new CustomEvent('updateData', { bubbles: true, composed: true })
-    );
+    api.tasksApi
+      .update(this.data.task.task_id, this.data.task)
+      .then((response) => {
+        console.log('任务更新成功:', response);
+        showToast({
+          message: '任务更新成功！',
+          type: 'success',
+          duration: 3000,
+        });
+        this.dispatchEvent(
+          new CustomEvent('updateData', { bubbles: true, composed: true })
+        );
 
-    this.closeModal();
+        this.closeModal();
+      })
+      .catch((error) => {
+        console.error('任务更新失败:', error);
+      });
   }
 
   cancelEdit() {
@@ -89,10 +102,8 @@ class TaskDetails extends LitElement {
           <h1>${isReview ? '任务审核' : '任务详情'}</h1>
           <button class="close-button" @click="${this.closeModal}">×</button>
         </div>
-        ${this.renderTaskInfo()}
-        ${this.renderDeviceList()}
-        ${isReview ? this.renderReviewInfo() : ''}
-        ${this.renderActionButtons()}
+        ${this.renderTaskInfo()} ${this.renderDeviceList()}
+        ${isReview ? this.renderReviewInfo() : ''} ${this.renderActionButtons()}
       </div>
     `;
   }
@@ -255,7 +266,7 @@ class TaskDetails extends LitElement {
     const { isEdit, isReview, isReviewEdit } = this.mode;
 
     if (isReview) {
-      return isReviewEdit 
+      return isReviewEdit
         ? html`
             <div class="button-group">
               <button class="submit-button" @click="${this.submitReview}">
@@ -274,7 +285,7 @@ class TaskDetails extends LitElement {
 
     return html`
       <div class="button-group">
-        ${isEdit 
+        ${isEdit
           ? html`
               <button class="button save-button" @click="${this.saveTask}">
                 保存
@@ -325,7 +336,7 @@ class TaskDetails extends LitElement {
       this.mode = detail.mode || {
         isEdit: false,
         isReview: false,
-        isReviewEdit: false
+        isReviewEdit: false,
       };
       this.requestUpdate();
     }

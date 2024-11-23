@@ -1,6 +1,6 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/device-particulars.css?inline';
-import { deviceService } from '@/api/fetch.js';
+import api from '@/apis/api';
 
 class DeviceParticulars extends LitElement {
   static styles = css`
@@ -64,7 +64,8 @@ class DeviceParticulars extends LitElement {
   async saveDevice() {
     try {
       console.log('保存设备数据:', this.selectedDevice);
-      await deviceService.update(this.selectedDevice);
+      await api.devicesApi.update(this.selectedDevice.id, this.selectedDevice);
+      showToast({ message: '保存设备数据', type: 'success', duration: 3000 });
       this.dispatchEvent(
         new CustomEvent('updateData', {
           detail: this.selectedDevice,

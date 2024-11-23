@@ -1,6 +1,6 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/device-add.css?inline';
-import { deviceService } from '@/api/fetch.js';
+import api from '@/apis/api.js';
 
 class DeviceAdd extends LitElement {
   static styles = css`
@@ -182,18 +182,23 @@ class DeviceAdd extends LitElement {
       currentElevation: this.currentElevation,
     };
 
-    console.log('提交的数据:', param);
-
-    // 假设 deviceService.add 是接口调用的方法
-    deviceService
+    api.devicesApi
       .add(param)
       .then((response) => {
-        console.log('设备添加成功:', response);
+        console.log('添加设备成功:', response);
         this.dispatchEvent(new CustomEvent('close-modal')); // 关闭弹窗
+        console.log('提交的数据:', param);
+        showToast({
+          message: '设备添加成功！',
+          type: 'success',
+          duration: 3000,
+        });
       })
       .catch((error) => {
-        console.error('设备添加失败:', error);
+        console.error('添加设备失败:', error);
+        showToast({ message: '添加设备失败', type: 'error', duration: 3000 });
       });
+    return;
   }
 
   // 关闭弹窗
