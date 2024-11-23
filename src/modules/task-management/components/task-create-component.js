@@ -1,6 +1,6 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/task-create-component.css?inline';
-import { deviceService } from '@/api/fetch.js';
+import api from '@/apis/api.js';
 
 class TaskCreateComponent extends LitElement {
   static styles = css`
@@ -23,12 +23,9 @@ class TaskCreateComponent extends LitElement {
 
   async fetchDevices() {
     try {
-      const params = {
-        pageNum: 1,
-        pageSize: 100000,
-      };
-      const data = await deviceService.list(params);
-      this.devices = data.rows;
+      const params = {};
+      const data = await api.devicesApi.query(params);
+      this.devices = data;
     } catch (error) {
       console.error('获取设备数据失败:', error);
     }
@@ -265,7 +262,9 @@ class TaskCreateComponent extends LitElement {
           >
             范围选择
           </button>
-          <button class="submit-button">提交</button>
+          <button class="submit-button" @click="${() => this.submit()}">
+            提交
+          </button>
         </div>
       </div>
     `;
@@ -284,6 +283,11 @@ class TaskCreateComponent extends LitElement {
 
   openScopeSelection() {
     this.dispatchEvent(new CustomEvent('open-scope-selection'));
+  }
+  submit() {
+    api.tasksApi.add({}).then((res) => {
+      this.closeModal();
+    });
   }
 
   updateAngle(deviceId, angleType, value) {

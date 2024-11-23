@@ -1,5 +1,4 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
-import { taskService } from '@/api/fetch.js';
 import api from '@/apis/api';
 import styles from './css/task-info-component.css?inline'; // 导入 CSS 文件
 

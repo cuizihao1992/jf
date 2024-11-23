@@ -1,6 +1,6 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/task-query-component.css?inline';
-import { taskService } from '@/api/fetch.js';
+import api from '@/apis/api.js';
 
 class TaskQueryComponent extends LitElement {
   static styles = css`
@@ -24,13 +24,20 @@ class TaskQueryComponent extends LitElement {
   async fetchTasks() {
     try {
       const params = {
-        pageNum: 1,
-        pageSize: 100000,
         [this.searchType]: this.searchCondition, // 动态属性查询
         reviewStatus: this.reviewStatus, // 审批状态过滤
       };
-      const data = await taskService.list(params);
-      this.tasks = data.rows;
+      Object.keys(params).forEach((key) => {
+        if (
+          params[key] === '' ||
+          params[key] === null ||
+          params[key] === undefined
+        ) {
+          delete params[key];
+        }
+      });
+      const data = await api.tasksApi.query(params);
+      this.tasks = data;
     } catch (error) {
       console.error('获取任务列表失败:', error);
     }

@@ -1,9 +1,11 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/task-review-component.css?inline';
-import { taskService } from '@/api/fetch.js';
+import api from '@/apis/api.js';
 
 class TaskReviewComponent extends LitElement {
-  static styles = css`${unsafeCSS(styles)}`;
+  static styles = css`
+    ${unsafeCSS(styles)}
+  `;
   static get properties() {
     return {
       taskReviews: { type: Array }, // 添加任务审核属性
@@ -18,13 +20,8 @@ class TaskReviewComponent extends LitElement {
 
   async fetchTaskReviews() {
     try {
-      const params = {
-        pageNum: 1,
-        pageSize: 100000,
-        // 可以根据需要添加其他查询参数
-      };
-      const data = await taskService.list(params);
-      this.taskReviews = data.rows;
+      const data = await api.tasksApi.query({});
+      this.taskReviews = data;
     } catch (error) {
       console.error('获取任务审核列表失败:', error);
     }
@@ -50,7 +47,9 @@ class TaskReviewComponent extends LitElement {
             <label for="search-condition">查询条件:</label>
             <input type="text" id="search-condition" />
           </div>
-          <button class="query-button" @click="${this.fetchTaskReviews}">查询</button>
+          <button class="query-button" @click="${this.fetchTaskReviews}">
+            查询
+          </button>
         </div>
         <hr />
         <div class="form-container">
@@ -130,11 +129,11 @@ class TaskReviewComponent extends LitElement {
           mode: {
             isEdit: false,
             isReview: true,
-            isReviewEdit: false
-          }
+            isReviewEdit: false,
+          },
         },
         bubbles: true,
-        composed: true
+        composed: true,
       })
     );
   }
@@ -147,11 +146,11 @@ class TaskReviewComponent extends LitElement {
           mode: {
             isEdit: false,
             isReview: true,
-            isReviewEdit: true
-          }
+            isReviewEdit: true,
+          },
         },
         bubbles: true,
-        composed: true
+        composed: true,
       })
     );
   }

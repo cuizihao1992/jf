@@ -1,6 +1,6 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/device-log.css?inline';
-import { deviceLogsService } from '@/api/fetch.js';
+import api from '@/apis/api';
 
 class DeviceLog extends LitElement {
   static styles = css`
@@ -21,13 +21,9 @@ class DeviceLog extends LitElement {
 
   async fetchDeviceLogs() {
     try {
-      const params = {
-        pageNum: 1,
-        pageSize: 100000,
-        // 可以根据需要添加其他查询参数
-      };
-      const data = await deviceLogsService.list(params);
-      this.deviceLogs = data.rows;
+      const params = {};
+      const data = await api.deviceLogsApi.query(params);
+      this.deviceLogs = data;
     } catch (error) {
       console.error('获取设备日志失败:', error);
     }

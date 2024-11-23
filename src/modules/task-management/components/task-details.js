@@ -1,6 +1,5 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/task-details.css?inline'; // 导入 CSS 文件
-import { deviceTaskService, taskService } from '@/api/fetch.js';
 import api from '@/apis/api';
 
 class TaskDetails extends LitElement {
@@ -29,19 +28,6 @@ class TaskDetails extends LitElement {
   // 当组件首次连接到 DOM 时调用该方法，获取设备信息
   async connectedCallback() {
     super.connectedCallback();
-    await this.fetchDeviceData();
-  }
-
-  async fetchDeviceData() {
-    const deviceIds = this.data?.task?.deviceIds?.split(',') || [];
-    const deviceData = await Promise.all(
-      deviceIds.map(async (id) => {
-        const res = await deviceTaskService.get(id);
-        return { id, ...res.data }; // 合并设备ID和从接口获取的数据
-      })
-    );
-    this.deviceListRows = deviceData; // 更新设数据
-    this.requestUpdate(); // 通知 LitElement 重新渲染
   }
 
   handleInputChange(event, field) {
@@ -52,7 +38,7 @@ class TaskDetails extends LitElement {
   saveTask() {
     console.log('Saving task data:', this.data);
     api.tasksApi
-      .update(this.data.task.task_id, this.data.task)
+      .update(this.data.task.taskId, this.data.task)
       .then((response) => {
         console.log('任务更新成功:', response);
         showToast({

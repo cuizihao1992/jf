@@ -1,6 +1,6 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/device-approve.css?inline';
-import { deviceReviewService } from '@/api/fetch.js';
+import api from '@/apis/api.js';
 
 class DeviceApprove extends LitElement {
   static styles = css`
@@ -21,12 +21,8 @@ class DeviceApprove extends LitElement {
 
   async fetchDeviceReviews() {
     try {
-      const params = {
-        pageNum: 1,
-        pageSize: 100000,
-      };
-      const data = await deviceReviewService.list(params);
-      this.deviceReviews = data.rows;
+      const data = await api.deviceReviewsApi.query({});
+      this.deviceReviews = data;
     } catch (error) {
       console.error('获取设备审核数据失败:', error);
     }

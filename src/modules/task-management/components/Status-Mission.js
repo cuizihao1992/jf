@@ -1,6 +1,6 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/status-mission.css?inline';
-import { taskService } from '@/api/fetch.js';
+import api from '@/apis/api';
 
 class StatusMission extends LitElement {
   static styles = css`
@@ -21,13 +21,10 @@ class StatusMission extends LitElement {
 
   async fetchTasks() {
     try {
-      const params = {
-        pageNum: 1,
-        pageSize: 100000, // 获取所有任务
-      };
-      const response = await taskService.list(params);
-      if (response && response.rows) {
-        this.tasks = response.rows.map((task) => ({
+      const params = {};
+      const response = await api.tasksApi.query(params);
+      if (response) {
+        this.tasks = response.map((task) => ({
           name: task.taskName,
           code: task.taskNumber,
           status: task.taskStatus,
