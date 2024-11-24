@@ -20,50 +20,61 @@ class ParameterConfig extends LitElement {
   }
 
   calculateAngles() {
-    // 从 window 对象中获取当前设备的安装姿态
-    const deviceData = window.currentDeviceData;
-    const installedAzimuth = parseFloat(deviceData?.currentAzimuth || 0);
-    const installedElevation = parseFloat(deviceData?.currentElevation || 0);
+    // 确保 currentDeviceData 是数组
+    const selectedDevices = Array.isArray(window.currentDeviceData) 
+        ? window.currentDeviceData 
+        : [window.currentDeviceData];
+    
+    if (!selectedDevices || selectedDevices.length === 0) {
+        alert('没有选中的设备数据');
+        return;
+    }
+    
+    console.log('计算角度的设备:', selectedDevices);
 
     if (this.selectedTab === 'inputParams') {
-      const azimuth = parseFloat(
-        this.shadowRoot.querySelector('input[name="azimuth"]').value
-      );
-      const elevation = parseFloat(
-        this.shadowRoot.querySelector('input[name="elevation"]').value
-      );
+        const azimuth = parseFloat(
+            this.shadowRoot.querySelector('input[name="azimuth"]').value
+        );
+        const elevation = parseFloat(
+            this.shadowRoot.querySelector('input[name="elevation"]').value
+        );
 
-      if (isNaN(azimuth) || isNaN(elevation)) {
-        alert('请输入有效的数值');
-        return;
-      }
+        if (isNaN(azimuth) || isNaN(elevation)) {
+            alert('请输入有效的数值');
+            return;
+        }
 
-      // 计算差值
-      const deltaAzimuth = azimuth - installedAzimuth;
-      const deltaElevation = elevation - installedElevation;
+        // 使用 for...of 循环替代 forEach
+        for (const deviceData of selectedDevices) {
+            const installedAzimuth = parseFloat(deviceData.currentAzimuth || 0);
+            const installedElevation = parseFloat(deviceData.currentElevation || 0);
 
-      console.log('参数配置 - 计算角度差值:', {
-        originalAzimuth: azimuth,
-        originalElevation: elevation,
-        installedAzimuth: installedAzimuth,
-        installedElevation: installedElevation,
-        deltaAzimuth: deltaAzimuth,
-        deltaElevation: deltaElevation,
-      });
+            // 计算差值
+            const deltaAzimuth = azimuth - installedAzimuth;
+            const deltaElevation = elevation - installedElevation;
 
-      this.dispatchEvent(
-        new CustomEvent('angles-calculated', {
-          detail: {
-            azimuth: deltaAzimuth.toFixed(2),
-            elevation: deltaElevation.toFixed(2),
-          },
-          bubbles: true,
-          composed: true,
-        })
-      );
+            console.log('发送计算结果:', {
+                设备ID: deviceData.id,
+                差值方位角: deltaAzimuth,
+                差值俯仰角: deltaElevation
+            });
 
-      this.handleClose();
-      return;
+            // 发送事件
+            this.dispatchEvent(new CustomEvent('angles-calculated', {
+                detail: {
+                    deviceId: deviceData.id,
+                    azimuth: deltaAzimuth.toFixed(2),
+                    elevation: deltaElevation.toFixed(2),
+                    originalAzimuth: azimuth,
+                    originalElevation: elevation
+                },
+                bubbles: true,
+                composed: true
+            }));
+        }
+
+        this.handleClose();
     }
 
     // 轨道拟合计算
@@ -100,7 +111,7 @@ class ParameterConfig extends LitElement {
         fixedAngle,
       ].some(isNaN)
     ) {
-      alert('请输入有效的数值');
+      
       return;
     }
 
@@ -137,11 +148,22 @@ class ParameterConfig extends LitElement {
       deltaElevation,
     });
 
+    // 在发送事件之前打印日志
+    console.log('发送角度计算结果:', {
+      azimuth: deltaAzimuth.toFixed(2),
+      elevation: deltaElevation.toFixed(2)
+    });
+
+    // 发送计算后的角度差值
     this.dispatchEvent(
       new CustomEvent('angles-calculated', {
         detail: {
           azimuth: deltaAzimuth.toFixed(2),
           elevation: deltaElevation.toFixed(2),
+          originalAzimuth: calculatedAzimuth,
+          originalElevation: calculatedElevation,
+          installedAzimuth: installedAzimuth,
+          installedElevation: installedElevation
         },
         bubbles: true,
         composed: true,

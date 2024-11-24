@@ -21,13 +21,11 @@ class TaskCreateComponent extends LitElement {
     this.devices = [];
     this.selectedDevices = [];
     this.fetchDevices();
-    this.addEventListener('angles-update', this.handleAnglesUpdate);
     this.azimuth = '0';
     this.elevation = '0';
-    this.addEventListener('update-device-angles', this.handleUpdateDeviceAngles);
     
-    // 添加时间变化监听
-    this.addEventListener('time-update', this.calculateExecutionTime);
+    // 确保正确绑定事件处理方法
+    this.handleAnglesUpdate = this.handleAnglesUpdate.bind(this);
   }
 
   async fetchDevices() {
@@ -51,16 +49,12 @@ class TaskCreateComponent extends LitElement {
     const checkboxes = this.shadowRoot.querySelectorAll(
       '.device-status-table input[type="checkbox"]:checked'
     );
-    console.log('选中的复选框数量:', checkboxes.length);
 
     checkboxes.forEach((checkbox) => {
       const deviceId = checkbox.getAttribute('id').replace('device-', '');
-      console.log('正在处理设备ID:', deviceId);
-
       const device = this.devices.find(
         (d) => String(d.id) === String(deviceId)
       );
-      console.log('找到的设备:', device);
 
       if (
         device &&
@@ -69,18 +63,19 @@ class TaskCreateComponent extends LitElement {
         this.selectedDevices = [
           ...this.selectedDevices,
           {
-            id: deviceId,
-            currentAzimuth: device.currentAzimuth || '0',
-            currentElevation: device.currentElevation || '0',
+            ...device,
             angle: {
               horizontal: '0',
-              elevation: '0',
+              elevation: '0'
             },
-          },
+            originalAngle: {
+              azimuth: '0',
+              elevation: '0'
+            }
+          }
         ];
-        console.log('更新后的selectedDevices:', this.selectedDevices);
+        checkbox.checked = false;
       }
-      checkbox.checked = false;
     });
 
     this.requestUpdate();
@@ -147,46 +142,41 @@ class TaskCreateComponent extends LitElement {
       `
     );
 
-    const deviceListTableRows = this.selectedDevices.map((device) => {
-      const deviceData =
-        this.devices.find((d) => String(d.id) === String(device.id)) || {};
-
-      return html`
-        <tr>
-          <td>
-            <input
-              type="checkbox"
-              id="device-${device.id}"
-              .value="${device.id}"
-            />
-            ${device.id}
-          </td>
-          <td>
-            方位角: ${deviceData.currentAzimuth || '0'}° 俯仰角:
-            ${deviceData.currentElevation || '0'}°
-          </td>
-          <td>
-            水平角:
-            <input
-              type="text"
-              placeholder="输入角度"
-              style="width: 50px;"
-              .value=${device.angle.horizontal}
-              @input=${(e) =>
-                this.updateAngle(device.id, 'horizontal', e.target.value)}
-            />
-            俯仰角:
-            <input
-              type="text"
-              placeholder="输入角度"
-              style="width: 50px;"
-              .value=${device.angle.elevation}
-              @input=${(e) =>
-                this.updateAngle(device.id, 'elevation', e.target.value)}
-            />
-          </td>
-        </tr>
-      `;
+    const deviceListTableRows = this.selectedDevices.map(device => {
+        const angle = device.angle || { horizontal: '0', elevation: '0' };
+        
+        return html`
+            <tr>
+                <td>
+                    <input 
+                        type="checkbox" 
+                        id="device-${device.id}" 
+                        .value="${device.id}"
+                    />
+                    ${device.id}
+                </td>
+                <td>
+                    方位角: ${device.currentAzimuth || '0'}° 
+                    俯仰角: ${device.currentElevation || '0'}°
+                </td>
+                <td>
+                    水平角:
+                    <input 
+                        type="text"
+                        style="width: 40px;"
+                        .value="${angle.horizontal}"
+                        readonly
+                    />°
+                    俯仰角:
+                    <input 
+                        type="text"
+                        style="width: 40px;"
+                        .value="${angle.elevation}"
+                        readonly
+                    />°
+                </td>
+            </tr>
+        `;
     });
 
     return html`
@@ -245,7 +235,7 @@ class TaskCreateComponent extends LitElement {
               <input
                 type="text"
                 id="execution-time"
-                placeholder="请输入任务执行时间"
+                placeholder="请输入任务执行时"
                 @input="${() => this.calculateTime('execution-time')}"
               />
             </div>
@@ -322,24 +312,40 @@ class TaskCreateComponent extends LitElement {
 
   openParameterConfig() {
     const parameterConfig = document.createElement('parameter-config');
-    // 添加事件监听器来接收计算的角度
-    parameterConfig.addEventListener('angles-calculated', (event) => {
-      const { azimuth, elevation } = event.detail;
-      // 更新所有选中设备的角度
-      this.selectedDevices = this.selectedDevices.map((device) => ({
-        ...device,
-        angle: {
-          horizontal: azimuth,
-          elevation: elevation,
-        },
-      }));
-      this.requestUpdate();
+    
+    // 获取选中的设备
+    const checkedBoxes = this.shadowRoot.querySelectorAll(
+        '.device-list-table input[type="checkbox"]:checked'
+    );
+    
+    if (checkedBoxes.length === 0) {
+        alert('请先选择需要计算的设备');
+        return;
+    }
+    
+    // 获取选中设备的数据
+    const selectedDevicesData = Array.from(checkedBoxes).map(checkbox => {
+        const deviceId = checkbox.getAttribute('id').replace('device-', '');
+        return this.selectedDevices.find(device => String(device.id) === String(deviceId));
+    }).filter(Boolean);
+
+    // 将选中的设备数据传递给参数配置组件
+    window.currentDeviceData = selectedDevicesData.map(device => ({
+        id: device.id,
+        currentAzimuth: device.currentAzimuth || '0',
+        currentElevation: device.currentElevation || '0'
+    }));
+
+    // 监听多个设备的角度计算结果
+    document.addEventListener('angles-calculated', (event) => {
+        console.log('捕获到角度计算事件:', event.detail);
+        this.handleAnglesUpdate(event);
     });
 
     this.dispatchEvent(
-      new CustomEvent('open-parameter-config', {
-        detail: { parameterConfig },
-      })
+        new CustomEvent('open-parameter-config', {
+            detail: { parameterConfig },
+        })
     );
   }
 
@@ -363,16 +369,33 @@ class TaskCreateComponent extends LitElement {
   }
 
   handleAnglesUpdate(e) {
-    const { azimuth, elevation } = e.detail;
-    // 只更新调整角度的输入框值，不更新地理角度显示
-    this.selectedDevices = this.selectedDevices.map((device) => ({
-      ...device,
-      angle: {
-        ...device.angle,
-        horizontal: azimuth, // 更新水平角输入框
-        elevation: elevation, // 更新俯仰角输入框
-      },
-    }));
+    const { deviceId, azimuth, elevation } = e.detail;
+    console.log('任务创建组件收到角度更新:', {
+        设备ID: deviceId,
+        方位角: azimuth,
+        俯仰角: elevation
+    });
+
+    // 更新选中设备的角度
+    this.selectedDevices = this.selectedDevices.map(device => {
+        if (String(device.id) === String(deviceId)) {
+            console.log('更新设备角度:', {
+                设备ID: deviceId,
+                新水平角: azimuth,
+                新俯仰角: elevation
+            });
+            return {
+                ...device,
+                angle: {
+                    horizontal: azimuth,
+                    elevation: elevation
+                }
+            };
+        }
+        return device;
+    });
+
+    // 强制更新视图
     this.requestUpdate();
   }
 
@@ -385,27 +408,6 @@ class TaskCreateComponent extends LitElement {
         this.requestUpdate();
       });
     }
-  }
-
-  handleUpdateDeviceAngles(e) {
-    console.log('任务创建 - 收到角度更新:', e.detail);
-    this.updateAngles(e.detail);
-  }
-
-  updateAngles(angles) {
-    console.log('更新角度值:', angles);
-    const { azimuth, elevation } = angles;
-
-    // 更新所有选中设备的角度
-    this.selectedDevices = this.selectedDevices.map((device) => ({
-      ...device,
-      angle: {
-        horizontal: azimuth,
-        elevation: elevation,
-      },
-    }));
-
-    this.requestUpdate();
   }
 
   calculateTime(changedInputId) {
@@ -494,8 +496,12 @@ class TaskCreateComponent extends LitElement {
       deviceIds: this.selectedDevices.map(device => device.id).join(','),
       devices: this.selectedDevices.map(device => ({
         deviceId: device.id,
+        // 使用计算后的差值角度
         targetAzimuth: device.angle.horizontal,
-        targetElevation: device.angle.elevation
+        targetElevation: device.angle.elevation,
+        // 可以选择性地添加原始角度信息
+        originalAzimuth: device.originalAngle?.azimuth,
+        originalElevation: device.originalAngle?.elevation
       }))
     };
 
@@ -507,7 +513,7 @@ class TaskCreateComponent extends LitElement {
         // 清除临时数据
         this.selectedDevices = [];
         
-        // 触发任务列表更新事件
+        // 触发任务���表更新事件
         window.dispatchEvent(new CustomEvent('tasks-updated', {
           detail: {
             task: response.data
@@ -528,6 +534,11 @@ class TaskCreateComponent extends LitElement {
       console.error('任务创建失败:', error);
       alert('任务创建失败，请重试');
     }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    document.removeEventListener('angles-calculated', this.handleAnglesUpdate);
   }
 }
 

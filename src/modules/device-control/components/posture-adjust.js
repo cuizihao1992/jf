@@ -34,6 +34,9 @@ class PostureAdjust extends LitElement {
       platform: false, // 云台
       controller: false, // 工控机
     };
+
+    this.boundUpdateAngles = this.handleAnglesUpdate.bind(this);
+    window.addEventListener('update-posture-angles', this.boundUpdateAngles);
   }
 
   disconnectedCallback() {
@@ -42,12 +45,29 @@ class PostureAdjust extends LitElement {
       clearInterval(this.timeInterval);
     }
     window.removeEventListener('update-posture-device', this.boundUpdateDevice);
+    window.removeEventListener('update-posture-angles', this.boundUpdateAngles);
   }
 
   handleDeviceUpdate(e) {
     if (e.detail.device) {
       console.log('接收到设备数据:', e.detail.device);
       this.deviceData = e.detail.device;
+      this.requestUpdate();
+    }
+  }
+
+  handleAnglesUpdate(event) {
+    const { deviceId, azimuth, elevation } = event.detail;
+    
+    if (this.deviceData.id === deviceId) {
+      console.log('姿态调整组件收到角度更新:', {
+        设备ID: deviceId,
+        方位角: azimuth,
+        俯仰角: elevation
+      });
+      
+      this.horizontalAngle = azimuth;
+      this.pitchAngle = elevation;
       this.requestUpdate();
     }
   }
