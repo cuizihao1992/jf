@@ -1,6 +1,6 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/task-create-component.css?inline';
-import { deviceService } from '@/api/fetch.js';
+import { deviceService, taskService } from '@/api/fetch.js';
 
 class TaskCreateComponent extends LitElement {
   static styles = css`
@@ -24,10 +24,10 @@ class TaskCreateComponent extends LitElement {
     this.addEventListener('angles-update', this.handleAnglesUpdate);
     this.azimuth = '0';
     this.elevation = '0';
-    this.addEventListener(
-      'update-device-angles',
-      this.handleUpdateDeviceAngles
-    );
+    this.addEventListener('update-device-angles', this.handleUpdateDeviceAngles);
+    
+    // 添加时间变化监听
+    this.addEventListener('time-update', this.calculateExecutionTime);
   }
 
   async fetchDevices() {
@@ -228,6 +228,7 @@ class TaskCreateComponent extends LitElement {
                 type="datetime-local"
                 id="start-time"
                 placeholder="请输入设备开启时间"
+                @change="${() => this.calculateTime('start-time')}"
               />
             </div>
             <div class="form-group">
@@ -236,6 +237,7 @@ class TaskCreateComponent extends LitElement {
                 type="datetime-local"
                 id="end-time"
                 placeholder="请输入设备关闭时间"
+                @change="${() => this.calculateTime('end-time')}"
               />
             </div>
             <div class="form-group">
@@ -244,6 +246,7 @@ class TaskCreateComponent extends LitElement {
                 type="text"
                 id="execution-time"
                 placeholder="请输入任务执行时间"
+                @input="${() => this.calculateTime('execution-time')}"
               />
             </div>
           </div>
@@ -304,7 +307,7 @@ class TaskCreateComponent extends LitElement {
           >
             范围选择
           </button>
-          <button class="submit-button">提交</button>
+          <button class="submit-button" @click="${this.submit}">提交</button>
         </div>
       </div>
     `;
@@ -403,6 +406,128 @@ class TaskCreateComponent extends LitElement {
     }));
 
     this.requestUpdate();
+  }
+
+  calculateTime(changedInputId) {
+    const startTimeInput = this.shadowRoot.querySelector('#start-time');
+    const endTimeInput = this.shadowRoot.querySelector('#end-time');
+    const executionTimeInput = this.shadowRoot.querySelector('#execution-time');
+
+    if (changedInputId === 'execution-time' && startTimeInput.value && executionTimeInput.value) {
+        // 当修改执行时间时
+        const startTime = new Date(startTimeInput.value);
+        const executionSeconds = parseInt(executionTimeInput.value);
+        
+        if (!isNaN(executionSeconds) && executionSeconds > 0) {
+            // 计算结束时间 = 开始时间 + 执行时间
+            const endTime = new Date(startTime.getTime() + (executionSeconds * 1000));
+            // 格式化为datetime-local支持的格式 (YYYY-MM-DDThh:mm:ss)
+            const formattedEndTime = new Date(endTime.getTime() - endTime.getTimezoneOffset() * 60000)
+                .toISOString()
+                .slice(0, 19);
+            endTimeInput.value = formattedEndTime;
+        }
+    } else if (changedInputId === 'start-time' || changedInputId === 'end-time') {
+        // 当修改开始时间或结束时间时
+        if (startTimeInput.value && endTimeInput.value) {
+            const startTime = new Date(startTimeInput.value);
+            const endTime = new Date(endTimeInput.value);
+            
+            // 计算时间差（秒）
+            const timeDifference = Math.floor((endTime - startTime) / 1000);
+            
+            if (timeDifference > 0) {
+                executionTimeInput.value = timeDifference;
+            } else {
+                executionTimeInput.value = '';
+                this.showError('结束时间必须晚于开始时间');
+            }
+        }
+    }
+  }
+
+  showError(message) {
+    console.warn(message);
+    // 可以添加更友好的错误提示，比如使用toast组件
+    const event = new CustomEvent('show-toast', {
+        detail: {
+            message: message,
+            type: 'error'
+        },
+        bubbles: true,
+        composed: true
+    });
+    this.dispatchEvent(event);
+  }
+
+  async submit() {
+    // 获取表单数据
+    const taskName = this.shadowRoot.querySelector('#task-name').value;
+    const taskNumber = this.shadowRoot.querySelector('#task-number').value;
+    const location = this.shadowRoot.querySelector('#location').value;
+    const deviceType = this.shadowRoot.querySelector('#device-type').value;
+    const startTime = this.shadowRoot.querySelector('#start-time').value;
+    const endTime = this.shadowRoot.querySelector('#end-time').value;
+    const executionTime = this.shadowRoot.querySelector('#execution-time').value;
+
+    // 验证必填字段
+    if (!taskName || !taskNumber || !startTime || !endTime || !executionTime) {
+      alert('请填写所有必填字段');
+      return;
+    }
+
+    // 验证是否选择了设备
+    if (this.selectedDevices.length === 0) {
+      alert('请至少选择一个执行设备');
+      return;
+    }
+
+    // 构建提交参数
+    const param = {
+      taskName,
+      taskNumber,
+      region: location,
+      deviceType,
+      startTime,
+      endTime, 
+      executionTime: parseInt(executionTime),
+      deviceIds: this.selectedDevices.map(device => device.id).join(','),
+      devices: this.selectedDevices.map(device => ({
+        deviceId: device.id,
+        targetAzimuth: device.angle.horizontal,
+        targetElevation: device.angle.elevation
+      }))
+    };
+
+    try {
+      // 调用任务创建API
+      const response = await taskService.add(param);
+      
+      if (response.code === 200) {
+        // 清除临时数据
+        this.selectedDevices = [];
+        
+        // 触发任务列表更新事件
+        window.dispatchEvent(new CustomEvent('tasks-updated', {
+          detail: {
+            task: response.data
+          },
+          bubbles: true,
+          composed: true
+        }));
+
+        // 关闭弹窗
+        this.dispatchEvent(new CustomEvent('close-modal'));
+        
+        // 显示成功提示
+        alert('任务创建成功');
+      } else {
+        throw new Error(response.msg || '任务创建失败');
+      }
+    } catch (error) {
+      console.error('任务创建失败:', error);
+      alert('任务创建失败，请重试');
+    }
   }
 }
 

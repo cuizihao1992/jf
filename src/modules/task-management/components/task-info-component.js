@@ -27,6 +27,18 @@ class TaskInfoComponent extends LitElement {
     this.reviewStatus = ''; // 审批状态初始化为空
     this.currentTask = null; // 初始化当前任务为空
     this.fetchTasks();
+
+    // 监听任务更新事件
+    window.addEventListener('tasks-updated', () => {
+      this.fetchTasks();
+    });
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('tasks-updated', () => {
+      this.fetchTasks();
+    });
   }
 
   async fetchTasks() {
