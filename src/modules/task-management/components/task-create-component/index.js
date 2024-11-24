@@ -64,7 +64,6 @@ class TaskCreateComponent extends LitElement {
                 <input
                   type="text"
                   id="task-name"
-                  placeholder="中卫101"
                   style="margin-left:19px;width:100px;padding:1px; height:22px;"
                 />
                 <label for="task-number" style="margin-left:69px"
@@ -73,7 +72,6 @@ class TaskCreateComponent extends LitElement {
                 <input
                   type="text"
                   id="task-number"
-                  placeholder="w101"
                   style="margin-left:5px;width:100px;height:24px;"
                 />
               </div>

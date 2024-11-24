@@ -67,6 +67,11 @@ class DeviceControl extends LitElement {
     this.isAngleDetectionOpen = false;
     this.isSingleDeviceLogOpen = false;
     this.isParameterConfigOpen = false;
+
+    // 添加事件监听器，用于调试
+    window.addEventListener('update-posture-device', (e) => {
+      console.log('设备控制模块监听到设备数据更新事件:', e.detail);
+    });
   }
 
   render() {
@@ -177,8 +182,31 @@ class DeviceControl extends LitElement {
     }
   }
 
-  openPostureAdjustModal() {
+  openPostureAdjustModal(e) {
+    console.log('接收到打开姿态调整事件:', e.detail);
     this.isPostureAdjustModalOpen = true;
+
+    // 确保在组件渲染后再发送数据
+    requestAnimationFrame(() => {
+      const device = e.detail.device;
+      console.log('准备发送设备数据到姿态调整组件:', device);
+
+      // 发送设备数据更新事件
+      window.dispatchEvent(
+        new CustomEvent('update-posture-device', {
+          detail: {
+            device: {
+              id: device.id,
+              deviceName: device.deviceName,
+              currentAzimuth: device.currentAzimuth,
+              currentElevation: device.currentElevation,
+              // 添加其他需要的设备数据
+              ...device,
+            },
+          },
+        })
+      );
+    });
   }
 
   openRealtimeImagery() {
@@ -257,6 +285,7 @@ class DeviceControl extends LitElement {
   }
 
   handleAnglesCalculated(event) {
+    console.log('接收到角度计算事件:', event.detail);
     const { azimuth, elevation } = event.detail;
     const postureAdjust = this.shadowRoot.querySelector('posture-adjust');
     if (postureAdjust) {

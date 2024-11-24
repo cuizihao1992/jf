@@ -28,24 +28,24 @@ class DeviceQuery extends LitElement {
         pageSize: 100000,
       };
       const data = await deviceService.list(params);
-      this.devices = data.rows;
-      
-      window.dispatchEvent(new CustomEvent('devices-updated', {
-        detail: {
-          devices: this.devices.map(device => ({
-            ...device,
-            id: device.id,
-            deviceName: device.deviceName,
-            deviceType: device.deviceType,
-            region: device.region,
-            lat: device.lat,
-            lon: device.lon,
-            deviceStatus: device.deviceStatus,
-            connectionStatus: device.connectionStatus,
-            powerStatus: device.powerStatus
-          }))
-        }
+      console.log('获取到的设备数据:', data);
+
+      this.devices = data.rows.map((device) => ({
+        ...device,
+        id: device.id,
+        deviceName: device.deviceName,
+        deviceType: device.deviceType,
+        region: device.region,
+        lat: device.lat,
+        lon: device.lon,
+        deviceStatus: device.deviceStatus,
+        connectionStatus: device.connectionStatus,
+        powerStatus: device.powerStatus,
+        currentAzimuth: device.currentAzimuth,
+        currentElevation: device.currentElevation,
       }));
+
+      this.requestUpdate();
     } catch (error) {
       console.error('获取设备信息失败:', error);
     }
@@ -146,9 +146,17 @@ class DeviceQuery extends LitElement {
           ${this.showActions
             ? html`
                 <td>
-                  <a class="action-button" @click="${() => this.adjustPosture(device)}">姿态调整</a>
+                  <a
+                    class="action-button"
+                    @click="${() => this.adjustPosture(device)}"
+                    >姿态调整</a
+                  >
                   <span class="button-separator">/</span>
-                  <a class="action-button" @click="${() => this.locateDevice(device)}">定位</a>
+                  <a
+                    class="action-button"
+                    @click="${() => this.locateDevice(device)}"
+                    >定位</a
+                  >
                 </td>
               `
             : html`
@@ -176,7 +184,23 @@ class DeviceQuery extends LitElement {
   }
 
   adjustPosture(device) {
-    this.dispatchEvent(new CustomEvent('open-posture-adjust'));
+    console.log('准备打开姿态调整，完整的设备数据:', device);
+    // 创建一个自定义事件，包含完整的设备数据
+    const event = new CustomEvent('open-posture-adjust', {
+      detail: {
+        device: {
+          id: device.id,
+          deviceName: device.deviceName,
+          currentAzimuth: device.currentAzimuth,
+          currentElevation: device.currentElevation,
+          ...device, // 包含所有设备数据
+        },
+      },
+      bubbles: true,
+      composed: true,
+    });
+    console.log('发送姿态调整事件，事件数据:', event.detail);
+    this.dispatchEvent(event);
   }
 
   locateDevice(device) {
@@ -186,12 +210,19 @@ class DeviceQuery extends LitElement {
       const lon = parseFloat(device.lon);
 
       // 验证坐标是否在有效范围内
-      if (isNaN(lat) || isNaN(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+      if (
+        isNaN(lat) ||
+        isNaN(lon) ||
+        lat < -90 ||
+        lat > 90 ||
+        lon < -180 ||
+        lon > 180
+      ) {
         console.error('设备坐标无效:', {
           设备ID: device.id,
           设备名称: device.deviceName,
           纬度: lat,
-          经度: lon
+          经度: lon,
         });
         return;
       }
@@ -202,12 +233,12 @@ class DeviceQuery extends LitElement {
         设备名称: device.deviceName,
         原始坐标: {
           lat: device.lat,
-          lon: device.lon
+          lon: device.lon,
         },
         转换后坐标: {
           lat: lat,
-          lon: lon
-        }
+          lon: lon,
+        },
       });
 
       // 发送定位事件
@@ -216,8 +247,8 @@ class DeviceQuery extends LitElement {
           deviceId: device.id,
           deviceName: device.deviceName,
           lat: lat,
-          lon: lon
-        }
+          lon: lon,
+        },
       });
 
       console.log('发送定位事件:', locationEvent.detail);
