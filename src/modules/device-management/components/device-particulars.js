@@ -105,14 +105,14 @@ class DeviceParticulars extends LitElement {
     return html`
       <div class="task-info">
         <h2>设备信息</h2>
-        <div class="row">
-          <label for="device-id">设备编号:</label>
+        <div class="row-device-latitude">
+          <label for="device-ytsbh">云台设备号:</label>
           <input
             type="text"
-            id="device-id"
-            .value="${this.selectedDevice.id || ''}"
+            id="device-ytsbh"
+            .value="${this.selectedDevice.ytsbh || ''}"
             ?disabled="${!this.isEdit}"
-            @input="${(e) => this.handleInputChange(e, 'id')}"
+            @input="${(e) => this.handleInputChange(e, 'ytsbh')}"
           />
         </div>
         <div class="row">
