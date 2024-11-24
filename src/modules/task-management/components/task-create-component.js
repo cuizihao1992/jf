@@ -12,7 +12,7 @@ class TaskCreateComponent extends LitElement {
       devices: { type: Array },
       selectedDevices: { type: Array },
       azimuth: { type: String },
-      elevation: { type: String }
+      elevation: { type: String },
     };
   }
 
@@ -24,7 +24,10 @@ class TaskCreateComponent extends LitElement {
     this.addEventListener('angles-update', this.handleAnglesUpdate);
     this.azimuth = '0';
     this.elevation = '0';
-    this.addEventListener('update-device-angles', this.handleUpdateDeviceAngles);
+    this.addEventListener(
+      'update-device-angles',
+      this.handleUpdateDeviceAngles
+    );
   }
 
   async fetchDevices() {
@@ -34,7 +37,11 @@ class TaskCreateComponent extends LitElement {
         pageSize: 100000,
       };
       const data = await deviceService.list(params);
-      this.devices = data.rows;
+      this.devices = data.rows.map((device) => ({
+        ...device,
+        currentAzimuth: device.currentAzimuth || '0',
+        currentElevation: device.currentElevation || '0',
+      }));
     } catch (error) {
       console.error('获取设备数据失败:', error);
     }
@@ -63,6 +70,8 @@ class TaskCreateComponent extends LitElement {
           ...this.selectedDevices,
           {
             id: deviceId,
+            currentAzimuth: device.currentAzimuth || '0',
+            currentElevation: device.currentElevation || '0',
             angle: {
               horizontal: '0',
               elevation: '0',
@@ -138,8 +147,11 @@ class TaskCreateComponent extends LitElement {
       `
     );
 
-    const deviceListTableRows = this.selectedDevices.map(
-      (device) => html`
+    const deviceListTableRows = this.selectedDevices.map((device) => {
+      const deviceData =
+        this.devices.find((d) => String(d.id) === String(device.id)) || {};
+
+      return html`
         <tr>
           <td>
             <input
@@ -150,8 +162,8 @@ class TaskCreateComponent extends LitElement {
             ${device.id}
           </td>
           <td>
-            方位角: ${device.horizontal}° 俯仰角:
-            ${device.elevation}°
+            方位角: ${deviceData.currentAzimuth || '0'}° 俯仰角:
+            ${deviceData.currentElevation || '0'}°
           </td>
           <td>
             水平角:
@@ -174,8 +186,8 @@ class TaskCreateComponent extends LitElement {
             />
           </td>
         </tr>
-      `
-    );
+      `;
+    });
 
     return html`
       <div class="container">
@@ -311,19 +323,21 @@ class TaskCreateComponent extends LitElement {
     parameterConfig.addEventListener('angles-calculated', (event) => {
       const { azimuth, elevation } = event.detail;
       // 更新所有选中设备的角度
-      this.selectedDevices = this.selectedDevices.map(device => ({
+      this.selectedDevices = this.selectedDevices.map((device) => ({
         ...device,
         angle: {
           horizontal: azimuth,
-          elevation: elevation
-        }
+          elevation: elevation,
+        },
       }));
       this.requestUpdate();
     });
-    
-    this.dispatchEvent(new CustomEvent('open-parameter-config', {
-      detail: { parameterConfig }
-    }));
+
+    this.dispatchEvent(
+      new CustomEvent('open-parameter-config', {
+        detail: { parameterConfig },
+      })
+    );
   }
 
   openScopeSelection() {
@@ -348,13 +362,13 @@ class TaskCreateComponent extends LitElement {
   handleAnglesUpdate(e) {
     const { azimuth, elevation } = e.detail;
     // 只更新调整角度的输入框值，不更新地理角度显示
-    this.selectedDevices = this.selectedDevices.map(device => ({
+    this.selectedDevices = this.selectedDevices.map((device) => ({
       ...device,
       angle: {
         ...device.angle,
-        horizontal: azimuth,    // 更新水平角输入框
-        elevation: elevation    // 更新俯仰角输入框
-      }
+        horizontal: azimuth, // 更新水平角输入框
+        elevation: elevation, // 更新俯仰角输入框
+      },
     }));
     this.requestUpdate();
   }
@@ -362,11 +376,11 @@ class TaskCreateComponent extends LitElement {
   firstUpdated() {
     const parameterConfig = this.shadowRoot.querySelector('parameter-config');
     if (parameterConfig) {
-        parameterConfig.addEventListener('update-device-angles', (e) => {
-            this.azimuth = e.detail.azimuth;
-            this.elevation = e.detail.elevation;
-            this.requestUpdate();
-        });
+      parameterConfig.addEventListener('update-device-angles', (e) => {
+        this.azimuth = e.detail.azimuth;
+        this.elevation = e.detail.elevation;
+        this.requestUpdate();
+      });
     }
   }
 
@@ -378,16 +392,16 @@ class TaskCreateComponent extends LitElement {
   updateAngles(angles) {
     console.log('更新角度值:', angles);
     const { azimuth, elevation } = angles;
-    
+
     // 更新所有选中设备的角度
-    this.selectedDevices = this.selectedDevices.map(device => ({
+    this.selectedDevices = this.selectedDevices.map((device) => ({
       ...device,
       angle: {
         horizontal: azimuth,
-        elevation: elevation
-      }
+        elevation: elevation,
+      },
     }));
-    
+
     this.requestUpdate();
   }
 }
