@@ -285,7 +285,7 @@ class TaskCreateComponent extends LitElement {
     this.dispatchEvent(new CustomEvent('open-scope-selection'));
   }
   submit() {
-    api.tasksApi.add({}).then((res) => {
+    api.tasksWithDevicesApi.add({}).then((res) => {
       this.closeModal();
     });
   }

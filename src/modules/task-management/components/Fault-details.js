@@ -1,6 +1,6 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/fault-details.css?inline';
-import { errorService } from '@/api/fetch.js';
+import api from '@/apis/api.js';
 
 class FaultDetails extends LitElement {
   static styles = css`
@@ -20,12 +20,9 @@ class FaultDetails extends LitElement {
 
   async fetchFaults() {
     try {
-      const params = {
-        pageNum: 1,
-        pageSize: 100000,
-      };
-      const data = await errorService.list(params);
-      this.faults = data.rows; // 将获取的数据赋值给 faults
+      const params = {};
+      const data = await api.taskErrorsApi.query(params);
+      this.faults = data; // 将获取的数据赋值给 faults
     } catch (error) {
       console.error('获取故障列表失败:', error);
     }

@@ -37,7 +37,7 @@ class TaskDetails extends LitElement {
 
   saveTask() {
     console.log('Saving task data:', this.data);
-    api.tasksApi
+    api.tasksWithDevicesApi
       .update(this.data.task.taskId, this.data.task)
       .then((response) => {
         console.log('任务更新成功:', response);

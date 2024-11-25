@@ -44,7 +44,7 @@ class TaskInfoComponent extends LitElement {
           delete params[key];
         }
       });
-      const data = await api.tasksApi.query(params);
+      const data = await api.tasksWithDevicesApi.query(params);
       this.tasks = data;
     } catch (error) {
       showToast({ message: '获取任务列表失败', type: 'error', duration: 3000 });
@@ -204,7 +204,7 @@ class TaskInfoComponent extends LitElement {
 
   async confirmDelete() {
     try {
-      await api.tasksApi.delete(this.currentTask.taskId);
+      await api.tasksWithDevicesApi.delete(this.currentTask.taskId);
       this.fetchTasks(); // 重新获取任务列表以刷新表格
       this.showConfirmation = false;
     } catch (error) {

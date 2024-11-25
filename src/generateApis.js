@@ -3,18 +3,19 @@ import path from 'path';
 
 // 模块列表
 const modules = {
-  '/device-logs': 'deviceLogs',
-  '/device-tasks': 'deviceTasks',
-  '/device-types': 'deviceTypes',
-  '/devices': 'devices',
-  '/regions': 'regions',
-  '/scheduled-tasks': 'scheduledTasks',
-  '/device-reviews': 'deviceReviews',
-  '/device-status-history': 'deviceStatusHistory',
-  '/tasks': 'tasks',
-  '/task-errors': 'taskErrors',
-  '/user-review': 'userReview',
-  '/user': 'user',
+  // '/device-logs': 'deviceLogs',
+  // '/device-tasks': 'deviceTasks',
+  // '/device-types': 'deviceTypes',
+  // '/devices': 'devices',
+  // '/regions': 'regions',
+  // '/scheduled-tasks': 'scheduledTasks',
+  // '/device-reviews': 'deviceReviews',
+  // '/device-status-history': 'deviceStatusHistory',
+  // '/tasks': 'tasks',
+  // '/task-errors': 'taskErrors',
+  // '/user-review': 'userReview',
+  // '/user': 'user',
+  '/tasks-with-devices': 'tasksWithDevices',
 };
 
 // API 模板

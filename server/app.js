@@ -21,6 +21,7 @@ const modules = {
   '/task-errors': require('./modules/taskErrors'),
   '/user-review': require('./modules/userReview'),
   '/user': require('./modules/user'),
+  '/tasks-with-devices': require('./modules/tasksWithDevices'),
 };
 
 const app = express();

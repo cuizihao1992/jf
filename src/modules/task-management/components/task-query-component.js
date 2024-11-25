@@ -36,7 +36,7 @@ class TaskQueryComponent extends LitElement {
           delete params[key];
         }
       });
-      const data = await api.tasksApi.query(params);
+      const data = await api.tasksWithDevicesApi.query(params);
       this.tasks = data;
     } catch (error) {
       console.error('获取任务列表失败:', error);

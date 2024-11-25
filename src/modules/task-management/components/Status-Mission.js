@@ -22,7 +22,7 @@ class StatusMission extends LitElement {
   async fetchTasks() {
     try {
       const params = {};
-      const response = await api.tasksApi.query(params);
+      const response = await api.tasksWithDevicesApi.query(params);
       if (response) {
         this.tasks = response.map((task) => ({
           name: task.taskName,

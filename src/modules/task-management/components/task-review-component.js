@@ -20,7 +20,7 @@ class TaskReviewComponent extends LitElement {
 
   async fetchTaskReviews() {
     try {
-      const data = await api.tasksApi.query({});
+      const data = await api.tasksWithDevicesApi.query({});
       this.taskReviews = data;
     } catch (error) {
       console.error('获取任务审核列表失败:', error);
