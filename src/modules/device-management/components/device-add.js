@@ -283,6 +283,14 @@ class DeviceAdd extends LitElement {
               @input="${(e) => (this.deviceName = e.target.value)}"
             />
           </div>
+           <div class="row-task">
+            <label>设备编号:</label>
+            <input
+              type="text"
+              .value="${this.deviceid}"
+              @input="${(e) => (this.deviceid = e.target.value)}"
+            />
+          </div>
           <div>
             <label>设备类型:</label>
             <select

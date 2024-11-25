@@ -19,6 +19,7 @@ import '@/components/login-page.js';
 import '@/modules/device-management/components/device-add.js';
 import '@/modules/task-management/components/task-create-component.js';
 import '@/modules/device-control/components/device-query.js';
+import '@/modules/device-management/components/device-particulars.js';
 import styles from './home-page.css?inline';
 
 // 地图基础配置常量
@@ -74,6 +75,7 @@ class HomePage extends LitElement {
     this.selectedDevices = [];
     this.tempMarkers = [];
     this.deviceList = [];
+    this.dataUpdateInterval = null;
 
     window.addEventListener('fit-diagonal-points', () => {
       this.fitDiagonalPoints();
@@ -261,7 +263,7 @@ class HomePage extends LitElement {
     }
   }
 
-  // 初始化地图绘图工具
+  // 初始化地图绘工具
   initMapDraw(map) {
     this.draw = new MapboxDraw({
       displayControlsDefault: false,
@@ -463,12 +465,12 @@ class HomePage extends LitElement {
           source: 'test-points',
           layout: {
             'icon-image': 'device-icon',
-            'icon-size': 0.5, // 调整图标大小
+            'icon-size': 0.5,
             'icon-allow-overlap': true,
             'icon-ignore-placement': true,
             'text-field': ['get', 'name'],
             'text-font': ['Open Sans Regular'],
-            'text-offset': [0, 1.5], // 调整文本偏移
+            'text-offset': [0, 1.5],
             'text-anchor': 'top',
             'text-size': 12,
           },
@@ -479,7 +481,102 @@ class HomePage extends LitElement {
           },
         });
 
-        // 添加鼠标交互
+        // 移除可能存在的旧事件监听器
+        if (map.listeners && map.listeners['click'] && map.listeners['click']['test-points-layer']) {
+          map.off('click', 'test-points-layer', map.listeners['click']['test-points-layer']);
+        }
+
+        // 添加点击事件监听
+        const clickHandler = async (e) => {
+          console.log('点击事件触发');
+          if (e.features.length > 0) {
+            const feature = e.features[0];
+            const deviceId = feature.properties.id;
+            
+            console.log('点击的设备ID:', deviceId);
+            
+            try {
+              // 先获取最新的设备数据
+              const { deviceService } = await import('@/api/fetch.js');
+              const data = await deviceService.list({
+                pageNum: 1,
+                pageSize: 100000,
+              });
+
+              if (data.code === 200) {
+                // 更新设备列表
+                this.deviceList = data.rows || [];
+                
+                // 更新地图显示
+                await this.syncDevicesWithMap();
+
+                // 查找点击的设备信息
+                const device = this.deviceList.find(d => d.id === deviceId);
+                
+                if (device) {
+                  console.log('找到的设备信息:', device);
+                  
+                  // 创建并触发打开设备详情的事件
+                  const modal = document.createElement('device-particulars');
+                  modal.style.position = 'fixed';
+                  modal.style.top = '50%';
+                  modal.style.left = '50%';
+                  modal.style.transform = 'translate(-50%, -50%)';
+                  modal.style.zIndex = '1000';
+                  
+                  // 设置设备数据
+                  modal.setDeviceData({
+                    device: { ...device },
+                    mode: {
+                      isEdit: false,
+                      isReview: false,
+                      isReviewEdit: false
+                    }
+                  });
+                  
+                  // 添加关闭事件监听
+                  modal.addEventListener('close-modal', () => {
+                    modal.remove();
+                  });
+                  
+                  // 添加到文档中
+                  document.body.appendChild(modal);
+
+                  // 飞行到设备位置
+                  window.mapInstance.flyTo({
+                    center: [parseFloat(device.lon), parseFloat(device.lat)],
+                    zoom: 17,
+                    duration: 1000,
+                    essential: true
+                  });
+                } else {
+                  console.warn('未找到对应的设备信息:', deviceId);
+                }
+              } else {
+                throw new Error(data.msg || '获取设备列表失败');
+              }
+            } catch (error) {
+              console.error('获取设备数据失败:', error);
+              if (error.message.includes('认证失败')) {
+                window.location.href = '/login';
+              }
+            }
+          }
+        };
+
+        // 保存事件监听器引用
+        if (!map.listeners) {
+          map.listeners = {};
+        }
+        if (!map.listeners['click']) {
+          map.listeners['click'] = {};
+        }
+        map.listeners['click']['test-points-layer'] = clickHandler;
+
+        // 绑定点击事件
+        map.on('click', 'test-points-layer', clickHandler);
+
+        // 添加鼠标悬停效果
         map.on('mouseenter', 'test-points-layer', () => {
           map.getCanvas().style.cursor = 'pointer';
         });
@@ -748,7 +845,7 @@ class HomePage extends LitElement {
     }
   }
 
-  // 拟合对角点
+  // 合对角点
   fitDiagonalPoints() {
     // 获取当前绘制的点位
     const features = this.draw.getAll().features;
@@ -763,7 +860,7 @@ class HomePage extends LitElement {
     const positions = points.map((p) => p.properties.position);
     const isDiagonal =
       (positions.includes('左上') && positions.includes('右下')) ||
-      (positions.includes('右��') && positions.includes('左下'));
+      (positions.includes('右') && positions.includes('左下'));
 
     if (!isDiagonal) {
       console.warn('需要选择对角点才能进行拟合');
@@ -785,7 +882,7 @@ class HomePage extends LitElement {
       leftBottom = [leftTop[0], leftTop[1] - height];
     } else {
       const rightTopPoint = points.find(
-        (p) => p.properties.position === '右上'
+        (p) => p.properties.position === '右'
       );
       rightTop = rightTopPoint.geometry.coordinates;
       leftTop = [rightTop[0] - width, rightTop[1]];
@@ -833,16 +930,45 @@ class HomePage extends LitElement {
       this.requestUpdate();
     });
 
+    // 确保导入设备详情组件
+    import('@/modules/device-management/components/device-particulars.js')
+      .then(() => {
+        console.log('设备详情组件加载成功');
+      })
+      .catch(err => {
+        console.error('加载设备详情组件失败:', err);
+      });
+
     const mapDiv = this.shadowRoot.querySelector('#map');
     if (mapDiv) {
       this.initMap();
 
-      // 如果已登录，尝试获取设备数据
+      // 如果已登录，开启实时数据更新
       const token = localStorage.getItem('token');
       if (token) {
-        this.fetchAndDisplayDevices();
+        this.startRealTimeDataUpdate();
       }
     }
+
+    // 监听设备详情相关事件
+    this.addEventListener('open-device-particulars', (e) => {
+      console.log('接收到打开设备详情事件:', e.detail);
+      const modal = this.shadowRoot.querySelector('#device-particulars-modal');
+      if (modal) {
+        modal.style.display = 'block';
+        modal.setDeviceData(e.detail);
+      }
+    });
+
+    // 监听登录成功事件
+    window.addEventListener('login-success', () => {
+      this.startRealTimeDataUpdate();
+    });
+
+    // 监听登出事件
+    window.addEventListener('logout', () => {
+      this.stopRealTimeDataUpdate();
+    });
   }
 
   isLoginPage() {
@@ -933,6 +1059,14 @@ class HomePage extends LitElement {
                 >嵩山定标场</a
               >
             </div>
+            <device-particulars
+              id="device-particulars-modal"
+              style="display: none;"
+              @close-modal="${() => {
+                const modal = this.shadowRoot.querySelector('#device-particulars-modal');
+                if (modal) modal.style.display = 'none';
+              }}"
+            ></device-particulars>
           `
         : ''}
       <div class="content"></div>
@@ -980,11 +1114,11 @@ class HomePage extends LitElement {
 
   // 清除坐标输入框
   clearCoordinateInputs() {
-    ['左上', '右上', '左下', '右下'].forEach((position) => {
+    ['左', '右上', '左下', '右下'].forEach((position) => {
       const event = new CustomEvent('update-coordinates', {
         detail: {
           position: position,
-          coordinates: '', // 直接使用空字符串而不是 undefined
+          coordinates: '', // 直接使用空符串而不是 undefined
         },
       });
       window.dispatchEvent(event);
@@ -1008,7 +1142,7 @@ class HomePage extends LitElement {
 
   convertTempMarker(tempId, permanentPoint) {
     if (window.mapInstance) {
-      // 清除临时点
+      // 清除临点
       this.clearTempMarker(tempId);
 
       // 更新点位数据源
@@ -1040,7 +1174,7 @@ class HomePage extends LitElement {
     }
   }
 
-  // 添加设备点位转换方法
+  // 添加设备点转换方法
   convertDeviceMarker(deviceData) {
     if (!window.mapInstance) return;
 
@@ -1059,7 +1193,7 @@ class HomePage extends LitElement {
       },
     };
 
-    // 更新地图数据源
+    // 更新地图据源
     const source = window.mapInstance.getSource('test-points');
     if (source) {
       const currentData = source._data || {
@@ -1123,34 +1257,38 @@ class HomePage extends LitElement {
   // 修改设备数据处理逻辑
   async syncDevicesWithMap() {
     try {
+      console.log('开始同步设备数据到地图, 设备列表:', this.deviceList);
+      
       const features = this.deviceList
-        .filter((device) => this.validateCoordinates(device.lat, device.lon))
-        .map((device) => this.createFeature(device));
+        .filter(device => {
+          const isValid = this.validateCoordinates(device.lat, device.lon);
+          if (!isValid) {
+            console.warn('设备坐标无效:', device);
+          }
+          return isValid;
+        })
+        .map(device => this.createFeature(device));
 
-      // 记录设备坐标
-      features.forEach((feature) => {
-        const [lon, lat] = feature.geometry.coordinates;
-        console.log(`设备 ${feature.properties.id} 坐标:`, {
-          经度: lon,
-          纬度: lat,
-        });
-      });
+      console.log('创建的特征列表:', features);
 
       const featureCollection = {
         type: 'FeatureCollection',
-        features: features,
+        features: features
       };
 
       const source = window.mapInstance.getSource('test-points');
       if (source) {
         source.setData(featureCollection);
+        console.log('已更新地图数据源');
+      } else {
+        console.error('未找到地图数据源');
       }
     } catch (error) {
       console.error('同步设备数据到地图失败:', error);
     }
   }
 
-  // 优化地图视图调整方法
+  // 优化地图视图整方法
   fitMapToDevices(features) {
     if (!features.length || !window.mapInstance) return;
 
@@ -1206,29 +1344,21 @@ class HomePage extends LitElement {
 
   // 修改特征创建逻辑
   createFeature(device) {
-    // 直接使用原始坐标，不进行转换
-    const coordinates = [device.lon, device.lat];
-
-    console.log(`设备 ${device.id} 的坐标:`, {
-      设备名称: device.deviceName,
-      坐标: coordinates,
-    });
-
+    console.log('创建设备特征:', device);
     return {
       type: 'Feature',
       geometry: {
         type: 'Point',
-        coordinates: coordinates,
+        coordinates: [parseFloat(device.lon), parseFloat(device.lat)]
       },
       properties: {
         id: device.id,
         name: device.deviceName || '',
         type: device.deviceType || '',
-        region: device.region || '',
         status: device.deviceStatus || '',
         connectionStatus: device.connectionStatus || '',
-        powerStatus: device.powerStatus || '',
-      },
+        powerStatus: device.powerStatus || ''
+      }
     };
   }
 
@@ -1238,23 +1368,30 @@ class HomePage extends LitElement {
       const token = localStorage.getItem('token');
       if (!token) {
         console.warn('未找到登录令牌');
+        this.stopRealTimeDataUpdate();
         return;
       }
 
-      // 使用 deviceService 获取设备列表
       const { deviceService } = await import('@/api/fetch.js');
-
-      // 修改请求路径
+      console.log('开始获取设备列表');
+      
       const data = await deviceService.list({
         pageNum: 1,
         pageSize: 100000,
       });
 
-      console.log('获取到的设备数据:', data);
+      console.log('取到的设备数据:', data);
 
       if (data.code === 200) {
-        // 更新备列表
-        this.deviceList = data.rows || [];
+        const newDevices = data.rows || [];
+        console.log('新的设备列表:', newDevices);
+
+        this.deviceList = newDevices;
+
+        // 如果地图已经初始化，立即更新显示
+        if (window.mapInstance) {
+          await this.syncDevicesWithMap();
+        }
 
         // 触发设备更新事件
         const event = new CustomEvent('devices-updated', {
@@ -1263,18 +1400,13 @@ class HomePage extends LitElement {
           },
         });
         window.dispatchEvent(event);
-
-        // 如果地图已经初始化，立即显示设备
-        if (window.mapInstance) {
-          await this.syncDevicesWithMap();
-        }
       } else {
         throw new Error(data.msg || '获取设备列表失败');
       }
     } catch (error) {
       console.error('获取设备数据失败:', error);
       if (error.message.includes('认证失败')) {
-        // 如果是认证失败，跳转到登录页
+        this.stopRealTimeDataUpdate();
         window.location.href = '/login';
       }
     }
@@ -1294,7 +1426,7 @@ class HomePage extends LitElement {
         return false;
       }
 
-      // 检查坐标值是否有效
+      // 检查坐标值是有效
       return coords.every((coord) => {
         const [lon, lat] = coord;
         return (
@@ -1319,6 +1451,52 @@ class HomePage extends LitElement {
     // 这里添加授时逻辑
     console.log('执行授时操作');
     alert('授时功能待实现');
+  }
+
+  // 添加开启实时数据更新的方法
+  startRealTimeDataUpdate() {
+    // 立即获取一次数据
+    this.fetchAndDisplayDevices();
+
+    // 设置定时器，每10秒更新一次数据
+    this.dataUpdateInterval = setInterval(() => {
+      this.fetchAndDisplayDevices();
+    }, 10000); // 10秒更新一次，可以根据需要调整间隔时间
+  }
+
+  // 添加停止实时数据更新的方法
+  stopRealTimeDataUpdate() {
+    if (this.dataUpdateInterval) {
+      clearInterval(this.dataUpdateInterval);
+      this.dataUpdateInterval = null;
+    }
+  }
+
+  // 添加检查设备数据变化的方法
+  checkDeviceChanges(oldDevices, newDevices) {
+    if (oldDevices.length !== newDevices.length) {
+      return true;
+    }
+
+    // 比较每个设备的关键属性
+    return newDevices.some((newDevice, index) => {
+      const oldDevice = oldDevices[index];
+      return (
+        newDevice.id !== oldDevice.id ||
+        newDevice.deviceName !== oldDevice.deviceName ||
+        newDevice.deviceStatus !== oldDevice.deviceStatus ||
+        newDevice.connectionStatus !== oldDevice.connectionStatus ||
+        newDevice.powerStatus !== oldDevice.powerStatus ||
+        newDevice.lat !== oldDevice.lat ||
+        newDevice.lon !== oldDevice.lon
+      );
+    });
+  }
+
+  // 在组件销毁时清理定时器
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.stopRealTimeDataUpdate();
   }
 }
 
