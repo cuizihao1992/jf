@@ -13,7 +13,7 @@ const pool = mysql.createPool({
   port: process.env.DB_PORT || 3306,
   user: 'root',
   password: '123456', // 替换为你的密码
-  database: 'jf', // 替换为你的数据库名
+  database: 'jf2', // 替换为你的数据库名
 });
 
 module.exports = pool;

@@ -74,10 +74,15 @@ module.exports = {
     const affectedRows = await tasks.update(taskId, taskDetails);
 
     // 如果包含设备任务数据，先删除旧的设备任务，再新增
-    if (devices) {
-      for (const deviceTask of devices) {
+    const deviceTaskFilter = { task_id: taskId };
+    const deviceTasksForTask = await deviceTasks.query(deviceTaskFilter); // 获取设备任务
+
+    if (deviceTasksForTask) {
+      for (const deviceTask of deviceTasksForTask) {
         await deviceTasks.delete(deviceTask.device_task_id);
       }
+    }
+    if (devices) {
       for (const deviceTask of devices) {
         await deviceTasks.add({ ...deviceTask, task_id: taskId });
       }
