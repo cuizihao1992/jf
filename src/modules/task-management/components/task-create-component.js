@@ -521,8 +521,11 @@ class TaskCreateComponent extends LitElement {
         targetAzimuth: device.angle.horizontal,
         targetElevation: device.angle.elevation,
         // 可以选择性地添加原始角度信息
-        originalAzimuth: device.originalAngle?.azimuth,
-        originalElevation: device.originalAngle?.elevation,
+        installAzimuth: device.originalAngle?.azimuth,
+        installElevation: device.originalAngle?.elevation,
+        startTime,
+        endTime,
+        region: location,
       })),
     };
 

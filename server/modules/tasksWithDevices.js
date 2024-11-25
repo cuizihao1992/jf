@@ -13,7 +13,7 @@ module.exports = {
     for (const task of taskList) {
       const deviceTaskFilter = { task_id: task.task_id };
       const deviceTasksForTask = await deviceTasks.query(deviceTaskFilter); // 获取设备任务
-      task.device_tasks = deviceTasksForTask; // 将设备任务关联到任务
+      task.devices = deviceTasksForTask; // 将设备任务关联到任务
     }
 
     return taskList;
@@ -25,14 +25,14 @@ module.exports = {
    * @returns {Promise<number>} - 新增任务的 ID
    */
   async add(taskData) {
-    const { device_tasks, ...taskDetails } = taskData; // 分离任务和设备任务数据
+    const { devices, ...taskDetails } = taskData; // 分离任务和设备任务数据
 
     // 插入任务数据
     const taskId = await tasks.add(taskDetails);
 
     // 插入关联的设备任务
-    if (device_tasks && device_tasks.length) {
-      for (const deviceTask of device_tasks) {
+    if (devices && devices.length) {
+      for (const deviceTask of devices) {
         await deviceTasks.add({ ...deviceTask, task_id: taskId });
       }
     }
@@ -68,17 +68,17 @@ module.exports = {
    * @returns {Promise<number>} - 受影响的行数
    */
   async update(taskId, taskData) {
-    const { device_tasks, ...taskDetails } = taskData; // 分离任务和设备任务数据
+    const { devices, ...taskDetails } = taskData; // 分离任务和设备任务数据
 
     // 更新任务信息
     const affectedRows = await tasks.update(taskId, taskDetails);
 
     // 如果包含设备任务数据，先删除旧的设备任务，再新增
-    if (device_tasks) {
-      for (const deviceTask of device_tasks) {
+    if (devices) {
+      for (const deviceTask of devices) {
         await deviceTasks.delete(deviceTask.device_task_id);
       }
-      for (const deviceTask of device_tasks) {
+      for (const deviceTask of devices) {
         await deviceTasks.add({ ...deviceTask, task_id: taskId });
       }
     }

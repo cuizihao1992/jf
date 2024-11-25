@@ -21,159 +21,181 @@ class ParameterConfig extends LitElement {
 
   calculateAngles() {
     // 确保 currentDeviceData 是数组
-    const selectedDevices = Array.isArray(window.currentDeviceData) 
-        ? window.currentDeviceData 
-        : [window.currentDeviceData];
-    
+    const selectedDevices = Array.isArray(window.currentDeviceData)
+      ? window.currentDeviceData
+      : [window.currentDeviceData];
+
     if (!selectedDevices || selectedDevices.length === 0) {
-        alert('没有选中的设备数据');
-        return;
+      alert('没有选中的设备数据');
+      return;
     }
-    
+
     console.log('计算角度的设备:', selectedDevices);
 
     if (this.selectedTab === 'inputParams') {
-        const azimuth = parseFloat(
-            this.shadowRoot.querySelector('input[name="azimuth"]').value
+      const azimuth = parseFloat(
+        this.shadowRoot.querySelector('input[name="azimuth"]').value
+      );
+      const elevation = parseFloat(
+        this.shadowRoot.querySelector('input[name="elevation"]').value
+      );
+
+      if (isNaN(azimuth) || isNaN(elevation)) {
+        alert('请输入有效的数值');
+        return;
+      }
+
+      // 使用 for...of 循环替代 forEach
+      for (const deviceData of selectedDevices) {
+        const installedAzimuth = parseFloat(deviceData.currentAzimuth || 0);
+        const installedElevation = parseFloat(deviceData.currentElevation || 0);
+
+        // 计算差值
+        const deltaAzimuth = azimuth - installedAzimuth;
+        const deltaElevation = elevation - installedElevation;
+
+        console.log('发送计算结果:', {
+          设备ID: deviceData.id,
+          差值方位角: deltaAzimuth,
+          差值俯仰角: deltaElevation,
+        });
+
+        // 发送事件
+        this.dispatchEvent(
+          new CustomEvent('angles-calculated', {
+            detail: {
+              deviceId: deviceData.id,
+              azimuth: deltaAzimuth.toFixed(2),
+              elevation: deltaElevation.toFixed(2),
+              installAzimuth: azimuth,
+              installElevation: elevation,
+            },
+            bubbles: true,
+            composed: true,
+          })
         );
-        const elevation = parseFloat(
-            this.shadowRoot.querySelector('input[name="elevation"]').value
-        );
+      }
 
-        if (isNaN(azimuth) || isNaN(elevation)) {
-            alert('请输入有效的数值');
-            return;
-        }
-
-        // 使用 for...of 循环替代 forEach
-        for (const deviceData of selectedDevices) {
-            const installedAzimuth = parseFloat(deviceData.currentAzimuth || 0);
-            const installedElevation = parseFloat(deviceData.currentElevation || 0);
-
-            // 计算差值
-            const deltaAzimuth = azimuth - installedAzimuth;
-            const deltaElevation = elevation - installedElevation;
-
-            console.log('发送计算结果:', {
-                设备ID: deviceData.id,
-                差值方位角: deltaAzimuth,
-                差值俯仰角: deltaElevation
-            });
-
-            // 发送事件
-            this.dispatchEvent(new CustomEvent('angles-calculated', {
-                detail: {
-                    deviceId: deviceData.id,
-                    azimuth: deltaAzimuth.toFixed(2),
-                    elevation: deltaElevation.toFixed(2),
-                    originalAzimuth: azimuth,
-                    originalElevation: elevation
-                },
-                bubbles: true,
-                composed: true
-            }));
-        }
-
-        this.handleClose();
+      this.handleClose();
     }
 
     // 轨道拟合计算
     if (this.selectedTab === 'orbitMatch') {
-        const semiMajorAxis = parseFloat(
-            this.shadowRoot.querySelector('input[name="semiMajorAxis"]').value
-        );
-        const visualAngle = parseFloat(
-            this.shadowRoot.querySelector('input[name="visualAngle"]').value
-        );
-        const radiusVector = parseFloat(
-            this.shadowRoot.querySelector('input[name="radiusVector"]').value
-        );
-        const orbitInclination = parseFloat(
-            this.shadowRoot.querySelector('input[name="orbitInclination"]').value
-        );
-        const magneticDeclination = parseFloat(
-            this.shadowRoot.querySelector('input[name="magneticDeclination"]').value
-        );
-        const latitude = parseFloat(
-            this.shadowRoot.querySelector('input[name="latitude"]').value
-        );
-        const fixedAngle = parseFloat(
-            this.shadowRoot.querySelector('input[name="fixedAngle"]').value
-        );
+      const semiMajorAxis = parseFloat(
+        this.shadowRoot.querySelector('input[name="semiMajorAxis"]').value
+      );
+      const visualAngle = parseFloat(
+        this.shadowRoot.querySelector('input[name="visualAngle"]').value
+      );
+      const radiusVector = parseFloat(
+        this.shadowRoot.querySelector('input[name="radiusVector"]').value
+      );
+      const orbitInclination = parseFloat(
+        this.shadowRoot.querySelector('input[name="orbitInclination"]').value
+      );
+      const magneticDeclination = parseFloat(
+        this.shadowRoot.querySelector('input[name="magneticDeclination"]').value
+      );
+      const latitude = parseFloat(
+        this.shadowRoot.querySelector('input[name="latitude"]').value
+      );
+      const fixedAngle = parseFloat(
+        this.shadowRoot.querySelector('input[name="fixedAngle"]').value
+      );
 
-        if ([semiMajorAxis, visualAngle, radiusVector, orbitInclination, 
-             magneticDeclination, latitude, fixedAngle].some(isNaN)) {
-            alert('请输入所有必要的参数');
-            return;
+      if (
+        [
+          semiMajorAxis,
+          visualAngle,
+          radiusVector,
+          orbitInclination,
+          magneticDeclination,
+          latitude,
+          fixedAngle,
+        ].some(isNaN)
+      ) {
+        alert('请输入所有必要的参数');
+        return;
+      }
+
+      // 遍历每个选中的设备进行计算
+      for (const deviceData of selectedDevices) {
+        const installedAzimuth = parseFloat(deviceData.currentAzimuth || 0);
+        const installedElevation = parseFloat(deviceData.currentElevation || 0);
+
+        // 计算轨道拟合的结果
+        const incidenceRad =
+          Math.asin(
+            (semiMajorAxis * Math.sin((visualAngle * Math.PI) / 180)) /
+              radiusVector
+          ) *
+          (180 / Math.PI);
+
+        const trajectory = this.shadowRoot.querySelector(
+          'input[name="trajectory"]:checked'
+        )?.value;
+
+        if (!trajectory) {
+          alert('请选择升轨或降轨');
+          return;
         }
 
-        // 遍历每个选中的设备进行计算
-        for (const deviceData of selectedDevices) {
-            const installedAzimuth = parseFloat(deviceData.currentAzimuth || 0);
-            const installedElevation = parseFloat(deviceData.currentElevation || 0);
+        const cosValue =
+          Math.cos((orbitInclination * Math.PI) / 180) /
+          Math.cos((latitude * Math.PI) / 180);
+        const azimuthRad = Math.asin(
+          trajectory === 'ascend' ? cosValue : -cosValue
+        );
+        const calculatedAzimuth =
+          (azimuthRad * 180) / Math.PI + magneticDeclination;
+        const calculatedElevation = fixedAngle - incidenceRad;
 
-            // 计算轨道拟合的结果
-            const incidenceRad = Math.asin(
-                (semiMajorAxis * Math.sin((visualAngle * Math.PI) / 180)) / radiusVector
-            ) * (180 / Math.PI);
+        // 计算差值
+        const deltaAzimuth = calculatedAzimuth - installedAzimuth;
+        const deltaElevation = calculatedElevation - installedElevation;
 
-            const trajectory = this.shadowRoot.querySelector(
-                'input[name="trajectory"]:checked'
-            )?.value;
+        console.log('轨道拟合计算结果:', {
+          设备ID: deviceData.id,
+          计算方位角: calculatedAzimuth,
+          计算俯仰角: calculatedElevation,
+          安装方位角: installedAzimuth,
+          安装俯仰角: installedElevation,
+          差值方位角: deltaAzimuth,
+          差值俯仰角: deltaElevation,
+        });
 
-            if (!trajectory) {
-                alert('请选择升轨或降轨');
-                return;
-            }
+        // 发送计算结果事件
+        this.dispatchEvent(
+          new CustomEvent('angles-calculated', {
+            detail: {
+              deviceId: deviceData.id,
+              azimuth: deltaAzimuth.toFixed(2),
+              elevation: deltaElevation.toFixed(2),
+              installAzimuth: calculatedAzimuth,
+              installElevation: calculatedElevation,
+            },
+            bubbles: true,
+            composed: true,
+          })
+        );
 
-            const cosValue = Math.cos((orbitInclination * Math.PI) / 180) /
-                           Math.cos((latitude * Math.PI) / 180);
-            const azimuthRad = Math.asin(trajectory === 'ascend' ? cosValue : -cosValue);
-            const calculatedAzimuth = (azimuthRad * 180) / Math.PI + magneticDeclination;
-            const calculatedElevation = fixedAngle - incidenceRad;
+        // 发送更新设备角度事件
+        this.dispatchEvent(
+          new CustomEvent('update-device-angles', {
+            detail: {
+              deviceId: deviceData.id,
+              azimuth: calculatedAzimuth,
+              elevation: calculatedElevation,
+              currentAzimuth: deviceData.currentAzimuth || '0',
+              currentElevation: deviceData.currentElevation || '0',
+            },
+            bubbles: true,
+            composed: true,
+          })
+        );
+      }
 
-            // 计算差值
-            const deltaAzimuth = calculatedAzimuth - installedAzimuth;
-            const deltaElevation = calculatedElevation - installedElevation;
-
-            console.log('轨道拟合计算结果:', {
-                设备ID: deviceData.id,
-                计算方位角: calculatedAzimuth,
-                计算俯仰角: calculatedElevation,
-                安装方位角: installedAzimuth,
-                安装俯仰角: installedElevation,
-                差值方位角: deltaAzimuth,
-                差值俯仰角: deltaElevation
-            });
-
-            // 发送计算结果事件
-            this.dispatchEvent(new CustomEvent('angles-calculated', {
-                detail: {
-                    deviceId: deviceData.id,
-                    azimuth: deltaAzimuth.toFixed(2),
-                    elevation: deltaElevation.toFixed(2),
-                    originalAzimuth: calculatedAzimuth,
-                    originalElevation: calculatedElevation
-                },
-                bubbles: true,
-                composed: true
-            }));
-
-            // 发送更新设备角度事件
-            this.dispatchEvent(new CustomEvent('update-device-angles', {
-                detail: {
-                    deviceId: deviceData.id,
-                    azimuth: calculatedAzimuth,
-                    elevation: calculatedElevation,
-                    currentAzimuth: deviceData.currentAzimuth || '0',
-                    currentElevation: deviceData.currentElevation || '0'
-                },
-                bubbles: true,
-                composed: true
-            }));
-        }
-
-        this.handleClose();
+      this.handleClose();
     }
   }
 
