@@ -88,7 +88,7 @@ class DeviceEdit extends LitElement {
           <table>
             <thead>
               <tr>
-                <th>设备编号</th>
+                <th>设备名</th>
                 <th>设备时间</th>
                 <th>设备类型</th>
                 <th>所属地区</th>
@@ -127,7 +127,7 @@ class DeviceEdit extends LitElement {
     return this.devices.map(
       (device) => html`
         <tr class="table-row">
-          <td>${device.id}</td>
+          <td>${device.deviceName}</td>
           <td>${device.lastSyncTime}</td>
           <td>${device.deviceType}</td>
           <td>${device.region}</td>

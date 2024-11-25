@@ -4,7 +4,7 @@
   color: white;
   border-radius: 10px;
   width: 425px;
-  height: 530px;
+  height: 535px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   opacity: 1;
   border: 1px solid rgba(42, 130, 228, 1);
@@ -63,7 +63,8 @@
   border-radius: 5px;
   background-color: rgba(20, 30, 50, 0.8);
   width: 400px;
-  height: 420px;
+  height: 425px;
+  margin-bottom: 10px;
 }
 
 .task-info h2 {
@@ -73,7 +74,7 @@
   font-size: 20px;
 }
 
-.task-info .row {
+.task-info.row {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -185,3 +186,4 @@
 .check-coordinates-btn:hover {
   background-color: #4a8fd9;
 }
+

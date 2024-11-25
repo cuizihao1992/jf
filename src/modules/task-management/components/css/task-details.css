@@ -571,7 +571,7 @@ input {
 .review-info input {
   border: 1px solid #333;
   width: 150px;
-  color: #000;
+  color: white;
   text-align: center;
   margin-left: 5px;
   height: 24px;
@@ -652,10 +652,22 @@ input {
 .task-info input,
 .task-info select {
   margin-left: 0;
+  color:white;
 }
 
 /* 调整标签间距 */
 .row-task label[for='task-number'],
 .row-location label[for='device-type'] {
   margin-left: 30px;
+}
+/* 完全禁用自动填充的样式变化 */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px rgba(30, 40, 60, 1.8) inset !important;
+    -webkit-text-fill-color: #fff !important;
+    caret-color: #fff !important;
+    transition: background-color 5000s ease-in-out 0s;
+    background-clip: content-box !important;
 }

@@ -259,12 +259,13 @@ class DeviceAdd extends LitElement {
         </div>
         <div class="task-info">
           <h2>设备信息</h2>
-          <div>
-            <label>用户名:</label>
+          <hr style="width: 395px; height:0px; border:none; border-top:1px solid #58a6ff; margin: -5px 0 10px 0;" />
+           <div class="row-task">
+            <label>设备名:</label>
             <input
               type="text"
-              .value="${this.userId}"
-              @input="${(e) => (this.userId = e.target.value)}"
+              .value="${this.deviceName}"
+              @input="${(e) => (this.deviceName = e.target.value)}"
             />
           </div>
           <div>
@@ -275,22 +276,6 @@ class DeviceAdd extends LitElement {
             >
               <option value="自动角反射器">自动角射器</option>
             </select>
-          </div>
-          <div>
-            <label>设备名:</label>
-            <input
-              type="text"
-              .value="${this.deviceName}"
-              @input="${(e) => (this.deviceName = e.target.value)}"
-            />
-          </div>
-          <div>
-            <label>磁偏角:</label>
-            <input
-              type="number"
-              .value="${this.cpj}"
-              @input="${(e) => (this.cpj = parseFloat(e.target.value))}"
-            />
           </div>
           <div>
             <label>所属区域:</label>
@@ -305,13 +290,14 @@ class DeviceAdd extends LitElement {
               <option value="嵩山">嵩山</option>
             </select>
           </div>
-
+          <h2>安装信息</h2>
+          <hr style="width: 395px; height:0px; border:none; border-top:1px solid #58a6ff; margin: -5px 0 10px 0;" />
           <div>
-            <label>云台设备号:</label>
+            <label>磁偏角:</label>
             <input
-              type="text"
-              .value="${this.ytsbh}"
-              @input="${(e) => (this.ytsbh = e.target.value)}"
+              type="number"
+              .value="${this.cpj}"
+              @input="${(e) => (this.cpj = parseFloat(e.target.value))}"
             />
           </div>
 
@@ -410,7 +396,7 @@ class DeviceAdd extends LitElement {
           </div>
 
           <div>
-            <label>方位角度:</label>
+            <label>方位向:</label>
             <input
               type="number"
               .value="${this.currentAzimuth}"
@@ -420,7 +406,7 @@ class DeviceAdd extends LitElement {
           </div>
 
           <div>
-            <label>俯仰角度:</label>
+            <label>俯仰向:</label>
             <input
               type="number"
               .value="${this.currentElevation}"
@@ -489,7 +475,7 @@ class DeviceAdd extends LitElement {
           };
 
           console.log('新增设备数据:', newDevice);
-
+          
           // 触发设备更新事件，将新设备添加到地图
           window.dispatchEvent(new CustomEvent('devices-updated', {
             detail: {

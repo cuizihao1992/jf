@@ -180,7 +180,7 @@ class PostureAdjust extends LitElement {
               <div class="switch-label">安装姿态</div>
               <div class="angle-container">
                 <div class="angle-row">
-                  <label>方位角：</label>
+                  <label>方位向:</label>
                   <input
                     type="text"
                     .value="${this.deviceData?.currentAzimuth || '0'}°"
@@ -188,7 +188,7 @@ class PostureAdjust extends LitElement {
                   />
                 </div>
                 <div class="angle-row">
-                  <label>俯仰角：</label>
+                  <label>俯仰向:</label>
                   <input
                     type="text"
                     .value="${this.deviceData?.currentElevation || '0'}°"

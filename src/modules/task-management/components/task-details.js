@@ -1,10 +1,24 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/task-details.css?inline'; // 导入 CSS 文件
-import { deviceTaskService, taskService } from '@/api/fetch.js';
+import { deviceService, taskService } from '@/api/fetch.js';
 
 class TaskDetails extends LitElement {
   static styles = css`
     ${unsafeCSS(styles)}
+    
+    .device-checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .device-checkbox-container input[type="checkbox"] {
+      margin: 0;
+    }
+
+    .device-checkbox-container span {
+      color: #fff;
+    }
   `;
 
   static get properties() {
@@ -28,19 +42,48 @@ class TaskDetails extends LitElement {
   // 当组件首次连接到 DOM 时调用该方法，获取设备信息
   async connectedCallback() {
     super.connectedCallback();
-    await this.fetchDeviceData();
+    if (this.data?.task?.deviceIds) {
+      await this.fetchDeviceData();
+    }
   }
 
   async fetchDeviceData() {
     const deviceIds = this.data?.task?.deviceIds?.split(',') || [];
-    const deviceData = await Promise.all(
-      deviceIds.map(async (id) => {
-        const res = await deviceTaskService.get(id);
-        return { id, ...res.data }; // 合并设备ID和从接口获取的数据
-      })
-    );
-    this.deviceListRows = deviceData; // 更新设数据
-    this.requestUpdate(); // 通知 LitElement 重新渲染
+    
+    try {
+      const params = {
+        pageNum: 1,
+        pageSize: 100000
+      };
+      const data = await deviceService.list(params);
+      
+      console.log('设备接口原始数据:', data);
+      
+      const deviceData = deviceIds.map(id => {
+        const device = data.rows.find(d => String(d.id) === String(id));
+        
+        return {
+          id,
+          deviceName: device?.deviceName || '未知设备',
+          targetAzimuth: device?.currentAzimuth || '0',
+          targetElevation: device?.currentElevation || '0',
+          adjustmentAzimuth: device?.currentAzimuth || '0',
+          adjustmentElevation: device?.currentElevation || '0',
+          deviceType: device?.deviceType || '',
+          deviceStatus: device?.deviceStatus || '',
+          powerStatus: device?.powerStatus || ''
+        };
+      });
+      
+      console.log('处理后的设备数据:', deviceData);
+      this.deviceListRows = deviceData;
+      this.requestUpdate();
+      
+    } catch (error) {
+      console.error('获取设备列表失败:', error);
+      this.deviceListRows = [];
+      this.requestUpdate();
+    }
   }
 
   handleInputChange(event, field) {
@@ -108,7 +151,7 @@ class TaskDetails extends LitElement {
             type="text"
             id="task-name"
             placeholder="请输入任务名"
-            .value="${this.data?.task?.taskName}"
+            .value="${this.data?.task?.taskName || ''}"
             ?disabled="${!isEdit}"
             @input="${(e) => this.handleInputChange(e, 'taskName')}"
           />
@@ -117,7 +160,7 @@ class TaskDetails extends LitElement {
             type="text"
             id="task-number"
             placeholder="请输入任务编号"
-            .value="${this.data?.task?.taskNumber}"
+            .value="${this.data?.task?.taskNumber || ''}"
             ?disabled="${!isEdit}"
             @input="${(e) => this.handleInputChange(e, 'taskNumber')}"
           />
@@ -155,7 +198,7 @@ class TaskDetails extends LitElement {
           </select>
         </div>
         <div class="form-group">
-          <label for="start-time">设备开启时间/(年-月-日时-分-秒):</label>
+          <label for="start-time">设备开启时/(年-月-日时-分-秒):</label>
           <input
             type="datetime-local"
             id="start-time"
@@ -194,41 +237,44 @@ class TaskDetails extends LitElement {
   renderDeviceList() {
     const { isEdit } = this.mode;
 
-    const deviceListTableRows = this.deviceListRows.map(
-      (device) => html`
+    const deviceListTableRows = this.deviceListRows.map(device => html`
         <tr>
-          <td>
-            <input
-              type="checkbox"
-              id="device-${device.deviceId}"
-              ?disabled="${!isEdit}"
-            />
-            ${device.id}
-          </td>
-          <td>
-            方位角: ${device.targetAzimuth}° 仰俯角: ${device.targetElevation}°
-          </td>
-          <td>
+            <td>
+                <div class="device-checkbox-container">
+                    <input 
+                        type="checkbox" 
+                        id="device-${device.id}" 
+                        ?disabled="${!isEdit}"
+                    />
+                    <span>${device.deviceName}</span>
+                </div>
+            </td>
+            <td>
+                方位向: ${device.targetAzimuth}° 
+                俯仰向: ${device.targetElevation}°
+            </td>
+            <td>
             水平角:
             <input
               type="text"
-              placeholder="输入角度"
-              style="width: 50px;"
-              value="${device.adjustmentAzimuth}"
+              placeholder=""
+              style="width: 50px;color: white;background-color:rgba(20, 30, 50, 0.8);
+              border:1px solid rgb(45, 92, 136);border-radius:3px;"
+              value="${this.adjustmentAzimuth}"
               ?disabled="${!isEdit}"
             />
             俯仰角:
             <input
               type="text"
-              placeholder="输入角度"
-              style="width: 50px;"
-              value="${device.adjustmentElevation}"
+              placeholder=""
+              style="width: 50px;color: white;background-color:rgba(20, 30, 50, 0.8);
+              border:1px solid rgb(45, 92, 136);border-radius:3px;"
+              value="${this.adjustmentElevation}"
               ?disabled="${!isEdit}"
             />
           </td>
         </tr>
-      `
-    );
+    `);
 
     return html`
       <div class="device-list">
@@ -237,8 +283,8 @@ class TaskDetails extends LitElement {
           <table class="device-list-table">
             <thead>
               <tr>
-                <th>设备编号</th>
-                <th>设备目标角度</th>
+                <th>设备名</th>
+                <th>安装角度</th>
                 <th>设备调整角度</th>
               </tr>
             </thead>
@@ -293,23 +339,49 @@ class TaskDetails extends LitElement {
   }
 
   renderReviewInfo() {
+    const { isReviewEdit } = this.mode;
+    
     return html`
       <div class="review-info">
         <div class="row">
           <label for="reviewer">审核人:</label>
-          <input type="text" id="reviewer" />
+          <input 
+            type="text" 
+            id="reviewer" 
+            .value="${''}"
+            ?disabled="${!isReviewEdit}"
+            @input="${(e) => this.handleInputChange(e, 'reviewer')}"
+          />
         </div>
         <div class="row">
           <label for="review-time">审核时间:</label>
-          <input type="text" id="review-time" />
+          <input 
+            type="text" 
+            id="review-time"
+            .value="${''}"
+            ?disabled="${!isReviewEdit}"
+            @input="${(e) => this.handleInputChange(e, 'reviewTime')}"
+          />
         </div>
         <div class="row">
           <label for="review-opinion">审核意见:</label>
-          <input type="text" id="review-opinion" />
+          <input 
+            type="text" 
+            id="review-opinion"
+            .value="${''}"
+            ?disabled="${!isReviewEdit}"
+            @input="${(e) => this.handleInputChange(e, 'reviewOpinion')}"
+          />
         </div>
         <div class="row">
           <label for="notes">备注:</label>
-          <textarea id="notes" placeholder=""></textarea>
+          <textarea 
+            id="notes" 
+            placeholder=""
+            .value="${''}"
+            ?disabled="${!isReviewEdit}"
+            @input="${(e) => this.handleInputChange(e, 'notes')}"
+          ></textarea>
         </div>
       </div>
     `;
@@ -327,6 +399,7 @@ class TaskDetails extends LitElement {
         isReview: false,
         isReviewEdit: false
       };
+      this.fetchDeviceData();
       this.requestUpdate();
     }
   }

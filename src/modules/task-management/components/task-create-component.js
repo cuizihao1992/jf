@@ -86,10 +86,10 @@ class TaskCreateComponent extends LitElement {
       '.device-list-table input[type="checkbox"]:checked'
     );
     const deviceIdsToRemove = Array.from(checkboxes).map((checkbox) =>
-      checkbox.id.replace('device-', '')
+      checkbox.getAttribute('id').replace('device-', '')
     );
     this.selectedDevices = this.selectedDevices.filter(
-      (device) => !deviceIdsToRemove.includes(device.id)
+      (device) => !deviceIdsToRemove.includes(String(device.id))
     );
     checkboxes.forEach((checkbox) => (checkbox.checked = false));
   }
@@ -118,12 +118,14 @@ class TaskCreateComponent extends LitElement {
       (device) => html`
         <tr>
           <td>
-            <input
-              type="checkbox"
-              id="device-${device.id}"
-              .value="${device.id}"
-            />
-            ${device.id}
+            <div class="device-checkbox-container">
+              <input
+                type="checkbox"
+                id="device-${device.id}"
+                .value="${device.id}"
+              />
+              <span>${device.deviceName}</span>
+            </div>
           </td>
           <td>${device.region}</td>
           <td>${device.deviceType}</td>
@@ -148,29 +150,31 @@ class TaskCreateComponent extends LitElement {
         return html`
             <tr>
                 <td>
-                    <input 
-                        type="checkbox" 
-                        id="device-${device.id}" 
-                        .value="${device.id}"
-                    />
-                    ${device.id}
+                    <div class="device-checkbox-container">
+                        <input 
+                            type="checkbox" 
+                            id="device-${device.id}" 
+                            .value="${device.id}"
+                        />
+                        <span>${device.deviceName}</span>
+                    </div>
                 </td>
                 <td>
-                    方位角: ${device.currentAzimuth || '0'}° 
-                    俯仰角: ${device.currentElevation || '0'}°
+                    方位向: ${device.currentAzimuth || '0'}° 
+                    俯仰向: ${device.currentElevation || '0'}°
                 </td>
                 <td>
                     水平角:
                     <input 
                         type="text"
-                        style="width: 40px;"
+                        style="width: 30px;"
                         .value="${angle.horizontal}"
                         readonly
                     />°
                     俯仰角:
                     <input 
                         type="text"
-                        style="width: 40px;"
+                        style="width: 30px;"
                         .value="${angle.elevation}"
                         readonly
                     />°
@@ -246,8 +250,8 @@ class TaskCreateComponent extends LitElement {
               <table class="device-list-table">
                 <thead>
                   <tr>
-                    <th>设备编号</th>
-                    <th>设备地理角度</th>
+                    <th>设备名</th>
+                    <th>安装角度</th>
                     <th>设备调整角度</th>
                   </tr>
                 </thead>
@@ -269,7 +273,7 @@ class TaskCreateComponent extends LitElement {
             <table class="device-status-table">
               <thead>
                 <tr>
-                  <th>设备编号</th>
+                  <th>设备名</th>
                   <th>所属地区</th>
                   <th>设备类型</th>
                   <th>电源状态</th>
@@ -513,7 +517,7 @@ class TaskCreateComponent extends LitElement {
         // 清除临时数据
         this.selectedDevices = [];
         
-        // 触发任务���表更新事件
+        // 触发任务表更新事件
         window.dispatchEvent(new CustomEvent('tasks-updated', {
           detail: {
             task: response.data
