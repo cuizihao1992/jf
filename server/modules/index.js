@@ -1,0 +1,15 @@
+module.exports = {
+  '/device-logs': require('./deviceLogs'),
+  '/device-tasks': require('./deviceTasks.js'),
+  '/device-types': require('./deviceTypes'),
+  '/devices': require('./devices'),
+  '/regions': require('./regions'),
+  '/scheduled-tasks': require('./scheduledTasks'),
+  '/device-reviews': require('./deviceReviews.js'),
+  '/device-status-history': require('./deviceStatusHistory'),
+  '/tasks': require('./tasks'),
+  '/task-errors': require('./taskErrors'),
+  '/user-review': require('./userReview'),
+  '/user': require('./user'),
+  '/tasks-with-devices': require('./tasksWithDevices'),
+};
