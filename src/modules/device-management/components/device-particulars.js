@@ -118,6 +118,16 @@ class DeviceParticulars extends LitElement {
             @input="${(e) => this.handleInputChange(e, 'deviceName')}"
           />
         </div>
+         <div class="row">
+          <label for="device-name">设备编号:</label>
+          <input
+            type="text"
+            id="device-name"
+            .value="${this.selectedDevice.id || ''}"
+            ?disabled="${!this.isEdit}"
+            @input="${(e) => this.handleInputChange(e, 'id')}"
+          />
+        </div>
         <div class="row">
           <label for="device-region">所属地区:</label>
           <input

@@ -86,6 +86,7 @@ class DeviceApprove extends LitElement {
           <table>
             <thead>
               <tr>
+                <th>设备编号</th>
                 <th>设备名</th>
                 <th>所属地区</th>
                 <th>提交用户名</th>
