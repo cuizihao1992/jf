@@ -47,47 +47,19 @@ class TaskDetails extends LitElement {
       await this.fetchDeviceData();
     }
   }
-
+  // debugging
   async fetchDeviceData() {
-    const deviceIds = this.data?.task?.deviceIds?.split(',') || [];
-
-    try {
-      const params = {
-        pageNum: 1,
-        pageSize: 100000,
-      };
-      const data = await deviceService.list(params);
-
-      console.log('设备接口原始数据:', data);
-
-      const deviceData = deviceIds.map((id) => {
-        const device = data.rows.find((d) => String(d.id) === String(id));
-
-        return {
-          id,
-          deviceName: device?.deviceName || '未知设备',
-          targetAzimuth: device?.currentAzimuth || '0',
-          targetElevation: device?.currentElevation || '0',
-          adjustmentAzimuth: device?.currentAzimuth || '0',
-          adjustmentElevation: device?.currentElevation || '0',
-          deviceType: device?.deviceType || '',
-          deviceStatus: device?.deviceStatus || '',
-          powerStatus: device?.powerStatus || '',
-        };
-      });
-
-      console.log('处理后的设备数据:', deviceData);
-      this.deviceListRows = deviceData;
-      this.requestUpdate();
-    } catch (error) {
-      console.error('获取设备列表失败:', error);
-      this.deviceListRows = [];
-      this.requestUpdate();
-    }
+    this.deviceListRows = this.data.task.devices;
+    this.requestUpdate();
+    return;
   }
 
   handleInputChange(event, field) {
     this.data.task[field] = event.target.value;
+    this.requestUpdate();
+  }
+  handleInputChange2(event, index, field) {
+    this.data.task.devices[index][field] = event.target.value;
     this.requestUpdate();
   }
 
@@ -248,7 +220,7 @@ class TaskDetails extends LitElement {
     const { isEdit } = this.mode;
 
     const deviceListTableRows = this.deviceListRows.map(
-      (device) => html`
+      (device, index) => html`
         <tr>
           <td>
             <div class="device-checkbox-container">
@@ -261,7 +233,8 @@ class TaskDetails extends LitElement {
             </div>
           </td>
           <td>
-            方位向: ${device.targetAzimuth}° 俯仰向: ${device.targetElevation}°
+            方位向: ${device.installAzimuth}° 俯仰向:
+            ${device.installElevation}°
           </td>
           <td>
             水平角:
@@ -270,8 +243,10 @@ class TaskDetails extends LitElement {
               placeholder=""
               style="width: 50px;color: white;background-color:rgba(20, 30, 50, 0.8);
               border:1px solid rgb(45, 92, 136);border-radius:3px;"
-              value="${this.adjustmentAzimuth}"
               ?disabled="${!isEdit}"
+              .value="${device.adjustmentAzimuth}"
+              @input="${(e) =>
+                this.handleInputChange2(e, index, 'adjustmentAzimuth')}"
             />
             俯仰角:
             <input
@@ -279,8 +254,10 @@ class TaskDetails extends LitElement {
               placeholder=""
               style="width: 50px;color: white;background-color:rgba(20, 30, 50, 0.8);
               border:1px solid rgb(45, 92, 136);border-radius:3px;"
-              value="${this.adjustmentElevation}"
               ?disabled="${!isEdit}"
+              .value="${device.adjustmentElevation}"
+              @input="${(e) =>
+                this.handleInputChange2(e, index, 'adjustmentElevation')}"
             />
           </td>
         </tr>
@@ -289,7 +266,7 @@ class TaskDetails extends LitElement {
 
     return html`
       <div class="device-list">
-        <h3>执行设备列表</h3>
+        <h3>执行设备列表2</h3>
         <div class="tbody-wrapper">
           <table class="device-list-table">
             <thead>
