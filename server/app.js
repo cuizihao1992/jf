@@ -1,55 +1,54 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
-const verifyToken = require('./middlewares/authMiddleware'); // Token 验证中间件
-const responseFormatter = require('./middlewares/responseFormatter'); // 引入格式化中间件
-const loggerMiddleware = require('./middlewares/loggerMiddleware'); // 引入日志中间件
-const { createRouter } = require('./global');
+const verifyToken = require('./middlewares/authMiddleware');
+const responseFormatter = require('./middlewares/responseFormatter');
+const loggerMiddleware = require('./middlewares/loggerMiddleware');
+const snakeCaseMiddleware = require('./middlewares/snakeCaseMiddleware');
+const createRouter = require('./middlewares/createRouter');
 const authRouter = require('./modules/auth.js');
-
-// 导入各模块
-const modules = {
-  '/device-logs': require('./modules/deviceLogs'),
-  '/device-tasks': require('./modules/deviceTasks.js'),
-  '/device-types': require('./modules/deviceTypes'),
-  '/devices': require('./modules/devices'),
-  '/regions': require('./modules/regions'),
-  '/scheduled-tasks': require('./modules/scheduledTasks'),
-  '/device-reviews': require('./modules/deviceReviews.js'),
-  '/device-status-history': require('./modules/deviceStatusHistory'),
-  '/tasks': require('./modules/tasks'),
-  '/task-errors': require('./modules/taskErrors'),
-  '/user-review': require('./modules/userReview'),
-  '/user': require('./modules/user'),
-  '/tasks-with-devices': require('./modules/tasksWithDevices'),
-};
+const modules = require('./modules'); // 模块统一导出
 
 const app = express();
-
 const PORT = 3000;
-
-// 是否启用验证中间件
-const isVerify = false;
+const isVerify = false; // 是否启用验证中间件
 
 // 中间件
+app.use(express.json()); // 替换 body-parser
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use(bodyParser.json());
-app.use(loggerMiddleware); // 使用日志中间件
+app.use(loggerMiddleware);
+app.use(snakeCaseMiddleware);
 app.use(responseFormatter);
 
-// 登录和注册接口不需要验证
+// 登录和注册接口
 app.use('/auth', authRouter);
 
-// 动态注册路由
-Object.entries(modules).forEach(([path, module]) => {
-  app.use(
-    path,
-    isVerify ? verifyToken : (req, res, next) => next(), // 条件中间件
-    createRouter(module)
-  );
+// 动态注册模块路由
+registerRoutes(
+  app,
+  modules,
+  isVerify ? verifyToken : (req, res, next) => next()
+);
+
+// 全局错误处理中间件
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(err.status || 500).json({ error: err.message });
 });
 
 // 启动服务器
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+/**
+ * 注册模块路由
+ * @param {Object} app - Express 实例
+ * @param {Object} modules - 路由模块映射
+ * @param {Function} authMiddleware - 认证中间件
+ */
+function registerRoutes(app, modules, authMiddleware) {
+  Object.entries(modules).forEach(([path, module]) => {
+    app.use(path, authMiddleware, createRouter(module));
+  });
+}

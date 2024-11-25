@@ -5,6 +5,8 @@
   "description": "Lit 应用程序打包与部署示例",
   "main": "index.html",
   "scripts": {
+    "start:dev": "cross-env NODE_ENV=development node ./server/app.js",
+    "start:prod": "cross-env NODE_ENV=production node ./server/app.js",
     "dev": "vite",
     "build": "vite build",
     "build:screen": "vite build --mode screen",
@@ -29,6 +31,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.5",
     "eslint": "^9.14.0",
     "eslint-plugin-html": "^8.1.2",
     "eslint-plugin-import": "^2.31.0",
