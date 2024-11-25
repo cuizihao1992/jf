@@ -6,26 +6,36 @@ class TaskQueryComponent extends LitElement {
   static styles = css`
     ${unsafeCSS(styles)}
   `;
+
   static get properties() {
     return {
-      tasks: { type: Array }, // 添加设备审核属性
+      tasks: { type: Array },
+      searchType: { type: String },
+      searchCondition: { type: String },
+      deviceType: { type: String },
+      region: { type: String },
+      taskStatus: { type: String },
     };
   }
+
   constructor() {
     super();
     this.tasks = [];
-    this.showConfirmation = false;
-    this.searchType = 'taskNumber'; // 默认查询类型为任务编号
-    this.searchCondition = ''; // 查询条件初始化为空
-    this.reviewStatus = ''; // 审批状态初始化为空
+    this.searchType = 'taskNumber';
+    this.searchCondition = '';
+    this.deviceType = '自动角反射器';
+    this.region = '中卫';
+    this.taskStatus = '未完成';
     this.fetchTasks();
   }
 
   async fetchTasks() {
     try {
       const params = {
-        [this.searchType]: this.searchCondition, // 动态属性查询
-        reviewStatus: this.reviewStatus, // 审批状态过滤
+        [this.searchType]: this.searchCondition,
+        deviceType: this.deviceType,
+        region: this.region,
+        taskStatus: this.taskStatus,
       };
       Object.keys(params).forEach((key) => {
         if (
@@ -51,8 +61,16 @@ class TaskQueryComponent extends LitElement {
     this.searchCondition = event.target.value;
   }
 
-  handleReviewStatusChange(event) {
-    this.reviewStatus = event.target.value;
+  handleDeviceTypeChange(event) {
+    this.deviceType = event.target.value;
+  }
+
+  handleRegionChange(event) {
+    this.region = event.target.value;
+  }
+
+  handleTaskStatusChange(event) {
+    this.taskStatus = event.target.value;
   }
 
   clearSearchCondition() {
@@ -71,8 +89,14 @@ class TaskQueryComponent extends LitElement {
         <div class="form-container">
           <div class="form-group">
             <label for="search-type">任务查询方式:</label>
-            <select id="search-type" style="background-color: gray;">
-              <option>任务编号</option>
+            <select
+              id="search-type"
+              @change="${this.handleSearchTypeChange}"
+              .value="${this.searchType}"
+            >
+              <option value="taskNumber">任务编号</option>
+              <option value="taskName">任务名称</option>
+              <option value="userId">用户ID</option>
             </select>
           </div>
           <div class="form-group">
@@ -80,29 +104,46 @@ class TaskQueryComponent extends LitElement {
             <input
               type="text"
               id="search-condition"
-              style="background-color: white; "
+              .value="${this.searchCondition}"
+              @input="${this.handleSearchConditionChange}"
             />
+            <button class="clear-button" @click="${this.clearSearchCondition}">
+              清除
+            </button>
           </div>
-          <button class="query-button">查询</button>
+          <button class="query-button" @click="${this.fetchTasks}">查询</button>
         </div>
         <hr />
         <div class="form-container">
           <div class="form-group">
             <label for="location">所属地区:</label>
-            <select id="location" style="background-color: gray;">
-              <option>中卫</option>
+            <select
+              id="location"
+              @change="${this.handleRegionChange}"
+              .value="${this.region}"
+            >
+              <option value="中卫">中卫</option>
             </select>
           </div>
           <div class="form-group">
             <label for="device-type">设备类型:</label>
-            <select id="device-type" style="background-color: gray;">
-              <option>自动角反射器</option>
+            <select
+              id="device-type"
+              @change="${this.handleDeviceTypeChange}"
+              .value="${this.deviceType}"
+            >
+              <option value="自动角反射器">自动角反射器</option>
             </select>
           </div>
           <div class="form-group">
             <label for="task-status">任务状态:</label>
-            <select id="task-status" style="background-color: gray;">
-              <option>未完成</option>
+            <select
+              id="task-status"
+              @change="${this.handleTaskStatusChange}"
+              .value="${this.taskStatus}"
+            >
+              <option value="未完成">未完成</option>
+              <option value="已完成">已完成</option>
             </select>
           </div>
         </div>
@@ -135,7 +176,7 @@ class TaskQueryComponent extends LitElement {
 
   renderRows() {
     return this.tasks.map(
-      (task, index) => html`
+      (task) => html`
         <tr class="table-row">
           <td>${task.taskName}</td>
           <td>${task.taskNumber}</td>
@@ -145,7 +186,6 @@ class TaskQueryComponent extends LitElement {
           <td>${task.taskStatus}</td>
           <td>${task.startTime}</td>
           <td>${task.endTime}</td>
-
           <td>
             <a @click="${() => this.openTaskDetails(task, false)}">查看</a>
           </td>
@@ -159,9 +199,8 @@ class TaskQueryComponent extends LitElement {
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
-  openTaskDetails(task, isEdit = false) {
-    console.log('open task details');
 
+  openTaskDetails(task, isEdit = false) {
     this.dispatchEvent(
       new CustomEvent('open-task-details', {
         detail: { task, isEdit },
@@ -174,6 +213,7 @@ class TaskQueryComponent extends LitElement {
   openFaultDetails() {
     this.dispatchEvent(new CustomEvent('open-fault-details'));
   }
+
   openTaskLog() {
     this.dispatchEvent(new CustomEvent('open-task-log-component'));
   }

@@ -38,7 +38,7 @@ class ScopeSelection extends LitElement {
       const { position, coordinates } = e.detail;
       this.coordinates = {
         ...this.coordinates,
-        [position]: coordinates,
+        [position]: coordinates || '',
       };
       this.requestUpdate();
     });
@@ -104,7 +104,7 @@ class ScopeSelection extends LitElement {
     if (window.mapInstance) {
       const count =
         window.mapInstance.querySourceFeatures('selected-points').length;
-      alert(`选中点位数量: ${count}`);
+      // alert(`选中点位数量: ${count}`);
     }
   }
   render() {
@@ -139,7 +139,7 @@ class ScopeSelection extends LitElement {
                   <label>左上:</label>
                   <input
                     type="text"
-                    value="${this.coordinates['左上']}"
+                    .value="${this.coordinates['左上'] || ''}"
                     readonly
                   />
                   <button
@@ -156,7 +156,7 @@ class ScopeSelection extends LitElement {
                   <label>右上:</label>
                   <input
                     type="text"
-                    value="${this.coordinates['右上']}"
+                    .value="${this.coordinates['右上'] || ''}"
                     readonly
                   />
                   <button
@@ -173,7 +173,7 @@ class ScopeSelection extends LitElement {
                   <label>左下:</label>
                   <input
                     type="text"
-                    value="${this.coordinates['左下']}"
+                    .value="${this.coordinates['左下'] || ''}"
                     readonly
                   />
                   <button
@@ -190,7 +190,7 @@ class ScopeSelection extends LitElement {
                   <label>右下:</label>
                   <input
                     type="text"
-                    value="${this.coordinates['右下']}"
+                    .value="${this.coordinates['右下'] || ''}"
                     readonly
                   />
                   <button

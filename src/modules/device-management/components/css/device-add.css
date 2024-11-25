@@ -4,7 +4,7 @@
   color: white;
   border-radius: 10px;
   width: 425px;
-  height: 530px;
+  height: 535px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   opacity: 1;
   border: 1px solid rgba(42, 130, 228, 1);
@@ -63,7 +63,8 @@
   border-radius: 5px;
   background-color: rgba(20, 30, 50, 0.8);
   width: 400px;
-  height: 420px;
+  height: 425px;
+  margin-bottom: 10px;
 }
 
 .task-info h2 {
@@ -73,7 +74,7 @@
   font-size: 20px;
 }
 
-.task-info .row {
+.task-info.row {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -96,3 +97,93 @@
   font-weight: bold;
   float: right;
 }
+
+.coordinate-input {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.coordinate-input input[type="text"] {
+  width: 180px;
+  border-radius: 4px;
+  padding: 5px;
+  background-color: #1b2a41;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.coordinate-input span {
+  color: white;
+  margin-left: 5px;
+}
+
+.coordinate-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.coordinate-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.coordinate-input {
+  display: flex;
+  align-items: center;
+}
+
+.coordinate-input label {
+  width: 100px;
+  font-size: 14px;
+  color: white;
+}
+
+.dms-input {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dms-group {
+  display: flex;
+  align-items: center;
+}
+
+.dms-group input {
+  width: 45px;
+  height: 25px;
+  padding: 2px 4px;
+  background-color: #1b2a41;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.dms-group span {
+  margin-left: 2px;
+  font-size: 14px;
+  color: white;
+}
+
+.check-coordinates-btn {
+  margin-left: 10px;
+  padding: 6px 12px;
+  height: 30px;
+  background-color: #58a6ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.check-coordinates-btn:hover {
+  background-color: #4a8fd9;
+}
+

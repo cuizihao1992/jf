@@ -189,6 +189,7 @@ class TaskManagement extends LitElement {
           @open-scope-selection=${this.openScopeSelection}
           @open-parameter-config=${this.openParameterConfig}
           @close-modal=${this.closeTasks}
+          id="taskCreateComponent"
         ></task-create-component>`;
       case 'myTasks':
         return html`<task-info-component
@@ -208,7 +209,7 @@ class TaskManagement extends LitElement {
           @open-task-details=${this.openTaskDetails}
         ></task-review-component>`;
       default:
-        return ''; // 不显示任何组件
+        return ''; // 不显示任何���
     }
   }
 
@@ -284,7 +285,26 @@ class TaskManagement extends LitElement {
   openParameterConfig() {
     this.isParameterConfigOpen = true;
     this.isScopeSelectionOpen = false;
-    this.isStatusMissionOpen = false; // 打开设备日志弹窗
+    this.isStatusMissionOpen = false;
+    
+    console.log('打开参数配置窗口');
+    
+    requestAnimationFrame(() => {
+      const paramConfig = this.shadowRoot.querySelector('parameter-config');
+      const taskCreate = this.shadowRoot.querySelector('#taskCreateComponent');
+      
+      if (paramConfig && taskCreate) {
+        paramConfig.addEventListener('update-device-angles', (e) => {
+          console.log('任务管理 - 转发角度更新:', e.detail);
+          // 确保事件能穿透 Shadow DOM
+          taskCreate.dispatchEvent(new CustomEvent('update-device-angles', {
+            detail: e.detail,
+            bubbles: true,
+            composed: true
+          }));
+        });
+      }
+    });
   }
 
   closeTaskDetails() {

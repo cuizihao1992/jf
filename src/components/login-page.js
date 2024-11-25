@@ -94,6 +94,13 @@ class LoginPage extends LitElement {
     .link-group a:hover {
       text-decoration: underline;
     }
+
+    .error-message {
+      color: red;
+      margin-bottom: 10px;
+      text-align: center;
+      font-size: 14px;
+    }
   `;
 
   static get properties() {
@@ -173,71 +180,128 @@ class LoginPage extends LitElement {
 
   async getCaptcha() {
     try {
-      const response = await fetch(
-        'http://fk3510tn3811.vicp.fun/jf-prod-api/captchaImage'
-      );
-      const data = await response.json();
-      if (data.code === 200) {
-        this.captchaImg = data.img; // 更新 captchaImg 响应式属性
-        this.uuid = data.uuid;
-      } else {
-        console.error('获取验证码失败:', data.msg);
+      // 添加错误重试逻辑
+      let retries = 3;
+      while (retries > 0) {
+        try {
+          const response = await fetch(
+            'http://fk3510tn3811.vicp.fun/jf-prod-api/captchaImage',
+            {
+              method: 'GET',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+              },
+              // 添加这些选项以处理跨域请求
+              mode: 'cors',
+              credentials: 'include'
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          if (data.code === 200) {
+            this.captchaImg = data.img;
+            this.uuid = data.uuid;
+            return; // 成功获取验证码，退出重试循环
+          } else {
+            console.warn('获取验证码返回非200状态:', data.msg);
+          }
+        } catch (error) {
+          retries--;
+          if (retries === 0) throw error;
+          await new Promise(resolve => setTimeout(resolve, 1000)); // 等待1秒后重试
+        }
       }
     } catch (error) {
       console.error('验证码请求出错:', error);
+      // 显示错误提示给用户
+      this.showError('获取验证码失败，请刷新页面重试');
     }
   }
 
   async login() {
-    const username = this.shadowRoot.querySelector('#username').value;
-    const password = this.shadowRoot.querySelector('#password').value;
-    const role = this.shadowRoot.querySelector(
-      'input[name="role"]:checked'
-    ).value;
-    const code = this.shadowRoot.querySelector('#captcha').value;
-
-    console.log('登录信息:', {
-      username,
-      password,
-      role,
-      code,
-      uuid: this.uuid,
-    });
-
     try {
+      const username = this.shadowRoot.querySelector('#username').value;
+      const password = this.shadowRoot.querySelector('#password').value;
+      const code = this.shadowRoot.querySelector('#captcha').value;
+
+      if (!username || !password || !code) {
+        this.showError('请填写完整的登录信息');
+        return;
+      }
+
       const response = await fetch(
         'http://fk3510tn3811.vicp.fun/jf-prod-api/login',
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json;charset=UTF-8',
-            Accept: 'application/json, text/plain, */*',
-            isToken: 'false',
-            repeatSubmit: 'false',
+            'Accept': 'application/json',
+            'isToken': 'false',
+            'repeatSubmit': 'false'
           },
+          mode: 'cors',
+          credentials: 'include',
           body: JSON.stringify({
             username,
             password,
             code,
-            uuid: this.uuid,
-          }),
+            uuid: this.uuid
+          })
         }
       );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
       if (data.code === 200 && data.token) {
         console.log('登录成功:', data);
 
-        // 将 token 存入 cookies
-        document.cookie = `Admin-Token=${data.token}; path=/; max-age=86400`; // 设置有效期为1天
+        // 修改 token 存储方式，添加 "Bearer" 前缀
+        localStorage.setItem('token', `Bearer ${data.token}`);
 
-        // 跳转到路径 "/"
-        window.location.href = '/';
+        // 触发登录成功事件
+        window.dispatchEvent(new CustomEvent('login-success'));
+
+        // 延迟跳转
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 100);
       } else {
-        console.error('登录失败:', data.msg);
+        this.showError(data.msg || '登录失败');
+        this.getCaptcha();
       }
     } catch (error) {
       console.error('登录请求出错:', error);
+      this.showError('登录失败，请稍后重试');
+      this.getCaptcha();
     }
+  }
+
+  // 添加错误提示方法
+  showError(message) {
+    // 可以添加一个错误提示元素到 DOM 中
+    const errorDiv = this.shadowRoot.querySelector('.error-message') || 
+      (() => {
+        const div = document.createElement('div');
+        div.className = 'error-message';
+        this.shadowRoot.querySelector('.login-box').insertBefore(
+          div,
+          this.shadowRoot.querySelector('.login-btn')
+        );
+        return div;
+      })();
+    
+    errorDiv.textContent = message;
+    errorDiv.style.color = 'red';
+    errorDiv.style.marginBottom = '10px';
+    errorDiv.style.textAlign = 'center';
   }
 }
 

@@ -27,6 +27,18 @@ class TaskInfoComponent extends LitElement {
     this.reviewStatus = ''; // 审批状态初始化为空
     this.currentTask = null; // 初始化当前任务为空
     this.fetchTasks();
+
+    // 监听任务更新事件
+    window.addEventListener('tasks-updated', () => {
+      this.fetchTasks();
+    });
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('tasks-updated', () => {
+      this.fetchTasks();
+    });
   }
 
   async fetchTasks() {
@@ -104,13 +116,13 @@ class TaskInfoComponent extends LitElement {
         <div class="form-container">
           <div class="form-group">
             <label for="device-type">设备类型:</label>
-            <select id="device-type" style="background-color: gray;">
+            <select id="device-type">
               <option>自动角反射器</option>
             </select>
           </div>
           <div class="form-group">
             <label for="location">所属地区:</label>
-            <select id="location" style="background-color: gray;">
+            <select id="location">
               <option>中卫</option>
             </select>
           </div>

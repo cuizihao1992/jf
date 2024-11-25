@@ -32,6 +32,7 @@ class DeviceParticulars extends LitElement {
       notes: '',
     };
   }
+  
 
   setDeviceData(detail) {
     if (detail) {
@@ -87,6 +88,7 @@ class DeviceParticulars extends LitElement {
     // 这里添加提交审核的逻辑
     this.closeModal();
   }
+  
 
   render() {
     return html`
@@ -106,14 +108,15 @@ class DeviceParticulars extends LitElement {
     return html`
       <div class="task-info">
         <h2>设备信息</h2>
+        <hr style="width: 325px; height:0px; border:none; border-top:1px solid #58a6ff; margin: -11px 0 10px 0;" />
         <div class="row">
-          <label for="device-id">设备编号:</label>
+          <label for="device-name">设备名:</label>
           <input
             type="text"
-            id="device-id"
-            .value="${this.selectedDevice.id || ''}"
+            id="device-name"
+            .value="${this.selectedDevice.deviceName || ''}"
             ?disabled="${!this.isEdit}"
-            @input="${(e) => this.handleInputChange(e, 'id')}"
+            @input="${(e) => this.handleInputChange(e, 'deviceName')}"
           />
         </div>
         <div class="row">
@@ -136,6 +139,9 @@ class DeviceParticulars extends LitElement {
             @input="${(e) => this.handleInputChange(e, 'deviceType')}"
           />
         </div>
+        
+        <h2>安装信息</h2>
+        <hr style="width: 325px; height:0px; border:none; border-top:1px solid #58a6ff; margin: -11px 0 10px 0;" />
         <div class="row-location">
           <label for="cpj">偏磁角度:</label>
           <input
@@ -252,6 +258,7 @@ class DeviceParticulars extends LitElement {
       </div>
     `;
   }
+  
 
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));

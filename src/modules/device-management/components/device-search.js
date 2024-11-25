@@ -80,7 +80,7 @@ class DeviceSearch extends LitElement {
           <table>
             <thead>
               <tr>
-                <th>设备编号</th>
+                <th>设备名</th>
                 <th>设备时间</th>
                 <th>设备类型</th>
                 <th>所属地区</th>
@@ -103,7 +103,7 @@ class DeviceSearch extends LitElement {
     return this.devices.map(
       (device) => html`
         <tr class="table-row">
-          <td>${device.id}</td>
+          <td>${device.deviceName}</td>
           <td>${device.lastSyncTime}</td>
           <td>${device.deviceType}</td>
           <td>${device.region}</td>
@@ -114,6 +114,8 @@ class DeviceSearch extends LitElement {
           <td>${device.deviceStatus}</td>
           <td>
             <a @click="${() => this.openDeviceParticulars(device)}">查看</a>
+            <span class="button-separator">/</span>
+            <a @click="${() => this.locateDevice(device)}">定位</a>
           </td>
         </tr>
       `
@@ -135,6 +137,38 @@ class DeviceSearch extends LitElement {
         },
       })
     );
+  }
+  locateDevice(device) {
+    try {
+      // 确保经纬度值是有效的数值
+      const lat = parseFloat(device.lat);
+      const lon = parseFloat(device.lon);
+
+      // 验证坐标是否在有效范围内
+      if (isNaN(lat) || isNaN(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+        console.error('设备坐标无效:', {
+          设备ID: device.id,
+          设备名称: device.deviceName,
+          纬度: lat,
+          经度: lon
+        });
+        return;
+      }
+
+      // 发送定位事件
+      const locationEvent = new CustomEvent('locate-device', {
+        detail: {
+          deviceId: device.id,
+          deviceName: device.deviceName,
+          lat: lat,
+          lon: lon
+        }
+      });
+
+      window.dispatchEvent(locationEvent);
+    } catch (error) {
+      console.error('定位设备时出错:', error);
+    }
   }
 }
 

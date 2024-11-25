@@ -38,16 +38,17 @@
 }
 
 .form-group select {
-  background-color: gray;
   padding: 5px;
+  background-color: #1b2a41;
   color: white;
   border: none;
   border-radius: 5px;
 }
 
 .form-group input {
-  background-color: white;
   padding: 5px;
+  background-color: #1b2a41;
+  color: white;
   border: none;
   border-radius: 5px;
 }
@@ -105,4 +106,4 @@ a {
   color: #1e90ff;
   cursor: pointer;
   text-decoration: none;
-} 
+}

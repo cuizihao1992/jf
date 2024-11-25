@@ -37,15 +37,31 @@
   border-radius: 5px;
   background-color: rgba(20, 30, 50, 0.8);
   width: 327px;
-  height: auto;
-  min-height: 180px;
 }
 
 .task-info h2 {
   margin: 0 0 5px 0;
   padding-bottom: 5px;
   text-align: left;
-  border-bottom: 1px solid #58a6ff;
+  font-size: 20px;
+  color: #fff;
+}
+.task-info1 {
+  grid-column: 1;
+  display: grid;
+  gap: 5px;
+  border: 1px solid #58a6ff;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: rgba(20, 30, 50, 0.8);
+  width: 327px;
+  height: 227px;
+}
+
+.task-info1 h2 {
+  margin: 0 0 5px 0;
+  padding-bottom: 5px;
+  text-align: left;
   font-size: 20px;
   color: #fff;
 }
@@ -105,7 +121,6 @@
   border-color: #2d5c88;
   cursor: not-allowed;
 }
-
 .review-info {
   display: flex;
   flex-direction: column;

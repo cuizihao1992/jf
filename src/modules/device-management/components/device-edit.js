@@ -84,7 +84,7 @@ class DeviceEdit extends LitElement {
           <table>
             <thead>
               <tr>
-                <th>设备编号</th>
+                <th>设备名</th>
                 <th>设备时间</th>
                 <th>设备类型</th>
                 <th>所属地区</th>
@@ -123,7 +123,7 @@ class DeviceEdit extends LitElement {
     return this.devices.map(
       (device) => html`
         <tr class="table-row">
-          <td>${device.id}</td>
+          <td>${device.deviceName}</td>
           <td>${device.lastSyncTime}</td>
           <td>${device.deviceType}</td>
           <td>${device.region}</td>
@@ -186,11 +186,21 @@ class DeviceEdit extends LitElement {
     try {
       await api.devicesApi.delete(this.currentDevice.id);
       this.fetchDevices();
+      // 触发设备更新事件，更新地图上的点位
+      window.dispatchEvent(
+        new CustomEvent('devices-updated', {
+          detail: {
+            devices: this.devices,
+          },
+        })
+      );
       this.showConfirmation = false;
+      this.currentDevice = null;
       showToast({ message: '删除成功', type: 'success', duration: 3000 });
     } catch (error) {
       showToast({ message: error.message, type: 'error', duration: 3000 });
       console.error('删除设备失败:', error);
+      alert('删除设备失败，请重试');
     }
   }
 
