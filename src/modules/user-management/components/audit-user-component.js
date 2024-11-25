@@ -1,10 +1,33 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/audit-user.css?inline';
+import api from '@/apis/api.js';
 
 class AuditUserComponent extends LitElement {
   static styles = css`
     ${unsafeCSS(styles)}
   `;
+
+  static properties = {
+    applications: { type: Array }, // 定义应用状态数据
+  };
+
+  constructor() {
+    super();
+    this.applications = []; // 初始化为空数组
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.loadApplications(); // 加载数据
+  }
+
+  async loadApplications() {
+    try {
+      this.applications = await api.userReviewApi.query({});
+    } catch (error) {
+      console.error('Failed to load applications:', error);
+    }
+  }
 
   render() {
     return html`
@@ -17,20 +40,20 @@ class AuditUserComponent extends LitElement {
         <hr />
         <div class="form-container">
           <div class="form-group">
-            <label for="location">审批类型:</label>
-            <select id="location" style="background-color: gray;">
+            <label for="approval-type">审批类型:</label>
+            <select id="approval-type" style="background-color: gray;">
               <option>用户注册</option>
             </select>
           </div>
           <div class="form-group">
-            <label for="device-type">用户类型:</label>
-            <select id="device-type" style="background-color: gray;">
+            <label for="user-type">用户类型:</label>
+            <select id="user-type" style="background-color: gray;">
               <option>用户</option>
             </select>
           </div>
           <div class="form-group">
-            <label for="location">所属地区:</label>
-            <select id="location" style="background-color: gray;">
+            <label for="region">所属地区:</label>
+            <select id="region" style="background-color: gray;">
               <option>中卫</option>
             </select>
           </div>
@@ -57,7 +80,25 @@ class AuditUserComponent extends LitElement {
               </tr>
             </thead>
             <tbody>
-              ${this.renderRows()}
+              ${this.applications.map(
+                (application) => html`
+                  <tr class="table-row">
+                    <td>${application.username}</td>
+                    <td>${application.applicationType}</td>
+                    <td>${application.region}</td>
+                    <td>${application.phone}</td>
+                    <td>${application.userType}</td>
+                    <td>${application.applicationDate}</td>
+                    <td>${application.reviewStatus}</td>
+                    <td>
+                      <a @click="${this.onViewClick}" data-mode="view">查看</a>/
+                      <a @click="${this.onViewClick}" data-mode="review"
+                        >审核</a
+                      >
+                    </td>
+                  </tr>
+                `
+              )}
             </tbody>
           </table>
         </div>
@@ -65,246 +106,17 @@ class AuditUserComponent extends LitElement {
     `;
   }
 
-  renderRows() {
-    const applications = [
-      {
-        id: 101,
-        userName: '张三',
-        applicationType: '添加',
-        region: '中卫',
-        phone: '13800138000',
-        userType: '管理员',
-        applicationTime: '2024-9-24 16:21:45',
-        approveStatus: '已提交',
-      },
-      {
-        id: 101,
-        userName: '张三',
-        applicationType: '添加',
-        region: '中卫',
-        phone: '13800138000',
-        userType: '管理员',
-        applicationTime: '2024-9-24 16:21:45',
-        approveStatus: '已提交',
-      },
-      {
-        id: 101,
-        userName: '张三',
-        applicationType: '添加',
-        region: '中卫',
-        phone: '13800138000',
-        userType: '管理员',
-        applicationTime: '2024-9-24 16:21:45',
-        approveStatus: '已提交',
-      },
-      {
-        id: 101,
-        userName: '张三',
-        applicationType: '添加',
-        region: '中卫',
-        phone: '13800138000',
-        userType: '管理员',
-        applicationTime: '2024-9-24 16:21:45',
-        approveStatus: '已提交',
-      },
-      {
-        id: 101,
-        userName: '张三',
-        applicationType: '添加',
-        region: '中卫',
-        phone: '13800138000',
-        userType: '管理员',
-        applicationTime: '2024-9-24 16:21:45',
-        approveStatus: '已提交',
-      },
-      {
-        id: 101,
-        userName: '张三',
-        applicationType: '添加',
-        region: '中卫',
-        phone: '13800138000',
-        userType: '管理员',
-        applicationTime: '2024-9-24 16:21:45',
-        approveStatus: '已提交',
-      },
-      {
-        id: 101,
-        userName: '张三',
-        applicationType: '添加',
-        region: '中卫',
-        phone: '13800138000',
-        userType: '管理员',
-        applicationTime: '2024-9-24 16:21:45',
-        approveStatus: '已提交',
-      },
-      {
-        id: 101,
-        userName: '张三',
-        applicationType: '添加',
-        region: '中卫',
-        phone: '13800138000',
-        userType: '管理员',
-        applicationTime: '2024-9-24 16:21:45',
-        approveStatus: '已提交',
-      },
-      {
-        id: 101,
-        userName: '张三',
-        applicationType: '添加',
-        region: '中卫',
-        phone: '13800138000',
-        userType: '管理员',
-        applicationTime: '2024-9-24 16:21:45',
-        approveStatus: '已提交',
-      },
-      {
-        id: 101,
-        userName: '张三',
-        applicationType: '添加',
-        region: '中卫',
-        phone: '13800138000',
-        userType: '管理员',
-        applicationTime: '2024-9-24 16:21:45',
-        approveStatus: '已提交',
-      },
-      {
-        id: 101,
-        userName: '张三',
-        applicationType: '添加',
-        region: '中卫',
-        phone: '13800138000',
-        userType: '管理员',
-        applicationTime: '2024-9-24 16:21:45',
-        approveStatus: '已提交',
-      },
-      {
-        id: 101,
-        userName: '张三',
-        applicationType: '添加',
-        region: '中卫',
-        phone: '13800138000',
-        userType: '管理员',
-        applicationTime: '2024-9-24 16:21:45',
-        approveStatus: '已提交',
-      },
-      {
-        id: 101,
-        userName: '张三',
-        applicationType: '添加',
-        region: '中卫',
-        phone: '13800138000',
-        userType: '管理员',
-        applicationTime: '2024-9-24 16:21:45',
-        approveStatus: '已提交',
-      },
-      {
-        id: 101,
-        userName: '张三',
-        applicationType: '添加',
-        region: '中卫',
-        phone: '13800138000',
-        userType: '管理员',
-        applicationTime: '2024-9-24 16:21:45',
-        approveStatus: '已提交',
-      },
-      {
-        id: 101,
-        userName: '张三',
-        applicationType: '添加',
-        region: '中卫',
-        phone: '13800138000',
-        userType: '管理员',
-        applicationTime: '2024-9-24 16:21:45',
-        approveStatus: '已提交',
-      },
-      {
-        id: 101,
-        userName: '张三',
-        applicationType: '添加',
-        region: '中卫',
-        phone: '13800138000',
-        userType: '管理员',
-        applicationTime: '2024-9-24 16:21:45',
-        approveStatus: '已提交',
-      },
-      {
-        id: 101,
-        userName: '张三',
-        applicationType: '添加',
-        region: '中卫',
-        phone: '13800138000',
-        userType: '管理员',
-        applicationTime: '2024-9-24 16:21:45',
-        approveStatus: '已提交',
-      },
-      {
-        id: 101,
-        userName: '张三',
-        applicationType: '添加',
-        region: '中卫',
-        phone: '13800138000',
-        userType: '管理员',
-        applicationTime: '2024-9-24 16:21:45',
-        approveStatus: '已提交',
-      },
-      {
-        id: 101,
-        userName: '张三',
-        applicationType: '添加',
-        region: '中卫',
-        phone: '13800138000',
-        userType: '管理员',
-        applicationTime: '2024-9-24 16:21:45',
-        approveStatus: '已提交',
-      },
-      {
-        id: 101,
-        userName: '张三',
-        applicationType: '添加',
-        region: '中卫',
-        phone: '13800138000',
-        userType: '管理员',
-        applicationTime: '2024-9-24 16:21:45',
-        approveStatus: '已提交',
-      },
-      {
-        id: 101,
-        userName: '张三',
-        applicationType: '添加',
-        region: '中卫',
-        phone: '13800138000',
-        userType: '管理员',
-        applicationTime: '2024-9-24 16:21:45',
-        approveStatus: '已提交',
-      },
-    ];
-
-    return applications.map(
-      (application) => html`
-      <tr class="table-row">
-        <td>${application.userName}</td>
-        <td>${application.applicationType}</td>
-        <td>${application.region}</td>
-        <td>${application.phone}</td>
-        <td>${application.userType}</td>
-        <td>${application.applicationTime}</td>
-        <td>${application.approveStatus}</td>
-        <td>
-          <a @click="${() => this.openUserView('view')}">查看</a>/
-          <a @click="${() => this.openUserView('review')}">审核</a>
-        </td>
-      </tr>
-    `
-    );
-  }
-
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
-  openUserView(mode) {
-    this.dispatchEvent(new CustomEvent('open-user-view', {
-      detail: { mode }
-    }));
+
+  onViewClick(event) {
+    const mode = event.target.getAttribute('data-mode'); // 获取 mode 属性
+    this.dispatchEvent(
+      new CustomEvent('open-user-view', {
+        detail: { mode },
+      })
+    );
   }
 }
 
