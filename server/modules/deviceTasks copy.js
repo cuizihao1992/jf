@@ -34,10 +34,6 @@ module.exports = {
       adjustment_elevation,
       start_time,
       end_time,
-      send_time,
-      completion_time,
-      task_type,
-      task_status,
       is_success,
       failure_reason,
       region,
@@ -48,10 +44,9 @@ module.exports = {
       (
         task_id, user_id, device_id, install_azimuth, install_elevation, 
         target_azimuth, target_elevation, adjustment_azimuth, adjustment_elevation, 
-        start_time, end_time, send_time, completion_time, task_type, 
-        task_status, is_success, failure_reason, region
+        start_time, end_time, is_success, failure_reason, region
       ) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const [result] = await db.query(query, [
@@ -66,10 +61,6 @@ module.exports = {
       adjustment_elevation,
       start_time,
       end_time,
-      send_time,
-      completion_time,
-      task_type,
-      task_status,
       is_success,
       failure_reason,
       region,

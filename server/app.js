@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const { fork } = require('child_process'); // 引入 child_process 模块
 const verifyToken = require('./middlewares/authMiddleware');
 const responseFormatter = require('./middlewares/responseFormatter');
 const loggerMiddleware = require('./middlewares/loggerMiddleware');
@@ -39,6 +40,7 @@ app.use((err, req, res, next) => {
 // 启动服务器
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
+  // startTaskScheduler(); // 启动定时任务子进程
 });
 
 /**
@@ -50,5 +52,27 @@ app.listen(PORT, () => {
 function registerRoutes(app, modules, authMiddleware) {
   Object.entries(modules).forEach(([path, module]) => {
     app.use(path, authMiddleware, createRouter(module));
+  });
+}
+
+/**
+ * 启动定时任务子进程
+ */
+function startTaskScheduler() {
+  const taskScheduler = fork('./modules/taskScheduler.js'); // 启动子进程
+
+  // 接收子进程消息
+  taskScheduler.on('message', (msg) => {
+    console.log('[TaskScheduler]', msg);
+  });
+
+  // 监听子进程退出
+  taskScheduler.on('exit', (code) => {
+    console.log(`[TaskScheduler] exited with code ${code}`);
+  });
+
+  // 处理子进程错误
+  taskScheduler.on('error', (err) => {
+    console.error('[TaskScheduler] Error:', err);
   });
 }
