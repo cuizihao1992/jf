@@ -22,6 +22,10 @@ function formatObject(obj) {
     'install_time',
     'send_time',
     'completion_time',
+    'registration_date',
+    'application_date',
+    'review_time',
+    'lastLogin',
   ]; // 需要格式化为日期的字段
 
   // 创建一个新对象，递归处理键值对
