@@ -1,6 +1,7 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import api from '@/apis/api';
 import styles from './login-page.css?inline';
+import Cookies from 'js-cookie';
 
 class LoginPage extends LitElement {
   static styles = css`
@@ -193,9 +194,11 @@ class LoginPage extends LitElement {
         this.showError('请填写完整的登录信息');
         return;
       }
+      debugger;
       const res = await api.loginApi.login({ username, password });
       const message = res.message;
       console.log(message);
+      Cookies.set('token', `${res.token}`);
       localStorage.setItem('token', `Bearer ${res.token}`);
       window.dispatchEvent(new CustomEvent('login-success'));
       setTimeout(() => {
@@ -236,16 +239,18 @@ class LoginPage extends LitElement {
       const country = '中国';
       const userType = 'user';
       const applicationType = 'registration';
+      const reviewStatus = 'pending'; //'pending','approved','rejected'
 
       const res = await api.userReviewApi.add({
         phone,
         username,
         password,
         country,
-        application_date: applicationDate,
-        registration_time: registrationTime,
-        user_type: userType,
-        application_type: applicationType,
+        applicationDate,
+        registrationTime,
+        userType,
+        applicationType,
+        reviewStatus,
       });
 
       console.log('注册成功:', res);

@@ -3,7 +3,19 @@ const db = require('./mysql.js');
 module.exports = {
   // 动态查询日志
   async query(filter) {
-    const baseQuery = 'SELECT * FROM jf_device_logs';
+    const baseQuery = `
+      SELECT 
+        jf_device_logs.*, 
+        jf_devices.region ,
+        jf_devices.device_type 
+      FROM 
+        jf_device_logs 
+      LEFT JOIN 
+        jf_devices 
+      ON 
+        jf_device_logs.device_id = jf_devices.id
+    `;
+
     const conditions = [];
     const values = [];
 
@@ -20,6 +32,7 @@ module.exports = {
       ? `${baseQuery} WHERE ${conditions.join(' AND ')}`
       : baseQuery;
 
+    // 执行查询
     const [rows] = await db.query(query, values);
     return rows;
   },

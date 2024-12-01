@@ -1,5 +1,7 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/user-view.css?inline';
+import { format } from 'date-fns';
+import api from '@/apis/api'; // 假设 api.userReviewApi.update 可用
 
 class UserView extends LitElement {
   static styles = css`
@@ -16,24 +18,22 @@ class UserView extends LitElement {
   constructor() {
     super();
     this.mode = 'view';
+    this.userData = {};
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.mode === 'review') {
+      this.setCurrentReviewTime();
+    }
+  }
+
+  // 设置当前审核时间为当前时间，格式为 yyyy-MM-dd HH:mm:ss
+  setCurrentReviewTime() {
+    const currentTime = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
     this.userData = {
-      username: 'admin',
-      password: 'yz147258369',
-      phone: '13894417612',
-      applicationDate: '2024-10-9',
-      country: '中国',
-      region: '中卫',
-      userType: '用户',
-      applicationType: '类型A',
-      reviewStatus: '待审核',
-      reviewer: '',
-      reviewTime: '',
-      reviewOpinion: '同意',
-      remarks: '',
-      registrationTime: '2024-10-10 12:00:00',
-      userStatus: 'active',
-      userPermissions: '',
-      dataPermissions: '',
+      ...this.userData,
+      reviewTime: currentTime,
     };
   }
 
@@ -120,6 +120,31 @@ class UserView extends LitElement {
     };
   }
 
+  async handleSubmit() {
+    const reviewStatus =
+      this.userData.reviewOpinion === '同意' ? 'approved' : 'rejected';
+    const reviewData = {
+      ...this.userData,
+      reviewer: this.userData.reviewer,
+      reviewStatus: reviewStatus,
+    };
+
+    try {
+      // 调用更新接口
+      await api.userReviewApi.update(reviewData.id, reviewData);
+      this.dispatchEvent(
+        new CustomEvent('submit', {
+          detail: {
+            userData: this.userData,
+            reviewData,
+          },
+        })
+      );
+    } catch (error) {
+      console.error('Error updating review:', error);
+    }
+  }
+
   render() {
     return html`
       <div class="container">
@@ -176,6 +201,14 @@ class UserView extends LitElement {
 
           <div class="review-info">
             ${this.renderFormField(
+              '审核状态',
+              'text',
+              this.userData.reviewStatus,
+              'reviewStatus',
+              '',
+              true
+            )}
+            ${this.renderFormField(
               '审核人',
               'text',
               this.userData.reviewer,
@@ -221,24 +254,6 @@ class UserView extends LitElement {
   handleClose() {
     this.remove();
     this.dispatchEvent(new CustomEvent('close-modal'));
-  }
-
-  handleSubmit() {
-    const reviewData = {
-      reviewer: this.userData.reviewer,
-      reviewTime: this.userData.reviewTime,
-      reviewOpinion: this.userData.reviewOpinion,
-      remarks: this.userData.remarks,
-    };
-
-    this.dispatchEvent(
-      new CustomEvent('submit', {
-        detail: {
-          userData: this.userData,
-          reviewData,
-        },
-      })
-    );
   }
 }
 

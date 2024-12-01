@@ -1,5 +1,5 @@
 const db = require('./mysql.js');
-
+const user = require('./user.js');
 module.exports = {
   // 查询用户审核记录
   async query(filter) {
@@ -105,6 +105,44 @@ module.exports = {
     values.push(reviewId);
 
     const [result] = await db.query(query, values);
+    if (result.affectedRows === 0) {
+      throw new Error('No user review found with the given ID');
+    }
+
+    // 如果审核状态为 "通过"，则创建用户
+    if (reviewData.review_status === 'approved') {
+      // 获取需要创建用户的信息，假设可以从 `reviewData` 中获取
+      const userData = {
+        username: reviewData.username,
+        password: reviewData.password, // 假设密码已经存在于 reviewData 中
+        nick_name: reviewData.nick_name || '', // 可能需要默认值
+        avatar: reviewData.avatar || '',
+        email: reviewData.email || '',
+        phone: reviewData.phone,
+        country: reviewData.country,
+        region: reviewData.region,
+        user_type: reviewData.user_type,
+        registration_date: new Date(), // 设置为当前时间
+        last_login: null, // 初次创建，没有登录信息
+        login_ip: null,
+        created_time: new Date(), // 设置为当前时间
+        status: 'active', // 初始状态设置为激活
+        role: reviewData.role || 'user', // 设置默认角色为用户
+        permissions: reviewData.permissions || '',
+        data_permissions: reviewData.data_permissions || '',
+        application_type: reviewData.application_type,
+        token: null, // 初始 token 为空
+      };
+
+      try {
+        const newUserId = await user.add(userData);
+        console.log(`New user created with ID: ${newUserId}`);
+      } catch (error) {
+        console.error('Failed to create user:', error);
+        throw new Error('Failed to create user');
+      }
+    }
+
     return result.affectedRows;
   },
 };

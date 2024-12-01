@@ -1,5 +1,6 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/user-information.css?inline';
+import api from '@/apis/api';
 
 class UserInformation extends LitElement {
   static styles = css`
@@ -11,7 +12,7 @@ class UserInformation extends LitElement {
       mode: { type: String }, // 'view' 或 'edit'
       devices: { type: Array },
       allSelected: { type: Boolean },
-      userData: { type: Object }
+      userData: { type: Object },
     };
   }
 
@@ -20,60 +21,154 @@ class UserInformation extends LitElement {
     this.mode = 'view'; // 默认查看模式
     this.devices = [];
     this.allSelected = false;
-    this.userData = {
-      username: '',
-      password: '',
-      phone: '',
-      userType: '用户',
-      region: '中卫',
-      status: '开放'
-    };
   }
 
-  // 处理全选
+  connectedCallback() {
+    super.connectedCallback();
+    this.fetchDevices();
+  }
+
+  async fetchDevices() {
+    try {
+      const data = await api.devicesApi.query({});
+      if (data && Array.isArray(data)) {
+        this.devices = data;
+        this.initializeDeviceSelection();
+      } else {
+        console.error('获取设备数据失败:', data.message);
+      }
+    } catch (error) {
+      console.error('设备接口调用失败:', error);
+    }
+  }
+
+  initializeDeviceSelection() {
+    // 如果 dataPermissions 包含 "All"，则全选
+    if (this.userData.dataPermissions === 'All') {
+      this.allSelected = true;
+      this.devices.forEach((device) => {
+        device.selected = true;
+      });
+    } else {
+      // 否则根据 dataPermissions 勾选
+      const permissions = this.userData.dataPermissions.split(',');
+      this.devices.forEach((device) => {
+        device.selected = permissions.includes(String(device.id));
+      });
+    }
+    this.requestUpdate(); // 手动触发更新
+  }
+
   handleSelectAll(e) {
-    if (this.mode === 'view') return; // 查看模式下禁用选择
+    if (this.mode === 'view') return;
     this.allSelected = e.target.checked;
-    const checkboxes = this.shadowRoot.querySelectorAll('.device-checkbox');
-    checkboxes.forEach(checkbox => {
-      checkbox.checked = this.allSelected;
-    });
-  }
-
-  // 渲染表单字段
-  renderFormField(label, type, value, fieldName) {
-    const isDisabled = this.mode === 'view';
-    return html`
-      <div class="form-group">
-        <label>${label}:</label>
-        ${type === 'select' 
-          ? html`
-              <select ?disabled=${isDisabled} @change=${e => this.handleInputChange(e, fieldName)}>
-                <option>${value}</option>
-              </select>
-            `
-          : html`
-              <input 
-                type=${type} 
-                .value=${value} 
-                placeholder="******"
-                ?disabled=${isDisabled}
-                @input=${e => this.handleInputChange(e, fieldName)}
-              />
-            `}
-      </div>
-    `;
+    this.devices.forEach((device) => (device.selected = this.allSelected));
+    this.requestUpdate(); // 手动触发更新
   }
 
   handleInputChange(e, fieldName) {
     if (this.mode === 'view') return;
     this.userData = {
       ...this.userData,
-      [fieldName]: e.target.value
+      [fieldName]: e.target.value,
     };
   }
 
+  async handleSubmit() {
+    const selectedDevices = this.devices
+      .filter((device) => device.selected)
+      .map((device) => device.id);
+
+    if (selectedDevices.length === 0) {
+      alert('请至少选择一个设备权限！');
+      return;
+    }
+
+    const updatedData = {
+      ...this.userData,
+      dataPermissions: selectedDevices.includes('All')
+        ? 'All'
+        : selectedDevices.join(','),
+    };
+
+    try {
+      const response = await api.userApi.update(
+        updatedData.userId,
+        updatedData
+      );
+      if (response) {
+        // alert('用户信息更新成功！');
+        this.dispatchEvent(
+          new CustomEvent('update-success', { bubbles: true, composed: true })
+        );
+        this.handleClose();
+      } else {
+        alert('更新失败，请稍后重试！');
+      }
+    } catch (error) {
+      console.error('更新用户信息失败:', error);
+      alert('更新用户信息时出错，请检查网络连接或稍后重试。');
+    }
+  }
+
+  handleClose() {
+    this.remove();
+    this.dispatchEvent(new CustomEvent('close-modal'));
+  }
+
+  renderFormField(label, type, value, fieldName, options = []) {
+    const isDisabled = this.mode === 'view';
+    return html`
+      <div class="form-group">
+        <label>${label}:</label>
+        ${type === 'select'
+          ? html`
+              <select
+                ?disabled=${isDisabled}
+                @change=${(e) => this.handleInputChange(e, fieldName)}
+              >
+                ${options.map(
+                  (option) =>
+                    html`<option
+                      value=${option.value}
+                      ?selected=${value === option.value}
+                    >
+                      ${option.label}
+                    </option>`
+                )}
+              </select>
+            `
+          : html`
+              <input
+                type=${type}
+                .value=${value}
+                placeholder="******"
+                ?disabled=${isDisabled}
+                @input=${(e) => this.handleInputChange(e, fieldName)}
+              />
+            `}
+      </div>
+    `;
+  }
+
   render() {
+    const statusOptions = [
+      { value: 'active', label: '活跃' },
+      { value: 'inactive', label: '非活跃' },
+      { value: 'banned', label: '禁止' },
+    ];
+
+    const regionOptions = [
+      { value: '登封', label: '登封' },
+      { value: '中卫', label: '中卫' },
+    ];
+
+    const userTypeOptions = [
+      { value: '普通用户', label: '普通用户' },
+      { value: '管理员', label: '管理员' },
+      { value: '超级管理员', label: '超级管理员' },
+    ];
+
     return html`
       <div class="container">
         <div class="header">
@@ -83,12 +178,45 @@ class UserInformation extends LitElement {
 
         <div class="section">
           <div class="section-title">注册信息</div>
-          ${this.renderFormField('用户名', 'text', this.userData.username, 'username')}
-          ${this.renderFormField('密码', 'password', this.userData.password, 'password')}
-          ${this.renderFormField('手机号', 'text', this.userData.phone, 'phone')}
-          ${this.renderFormField('用户类型', 'select', this.userData.userType, 'userType')}
-          ${this.renderFormField('所属地区', 'select', this.userData.region, 'region')}
-          ${this.renderFormField('用户状态', 'select', this.userData.status, 'status')}
+          ${this.renderFormField(
+            '用户名',
+            'text',
+            this.userData.username,
+            'username'
+          )}
+          ${this.renderFormField(
+            '密码',
+            'password',
+            this.userData.password,
+            'password'
+          )}
+          ${this.renderFormField(
+            '手机号',
+            'text',
+            this.userData.phone,
+            'phone'
+          )}
+          ${this.renderFormField(
+            '用户类型',
+            'select',
+            this.userData.userType,
+            'userType',
+            userTypeOptions
+          )}
+          ${this.renderFormField(
+            '所属地区',
+            'select',
+            this.userData.region,
+            'region',
+            regionOptions
+          )}
+          ${this.renderFormField(
+            '用户状态',
+            'select',
+            this.userData.status,
+            'status',
+            statusOptions
+          )}
         </div>
 
         <div class="section">
@@ -100,8 +228,8 @@ class UserInformation extends LitElement {
               <thead>
                 <tr>
                   <th>
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       @change="${this.handleSelectAll}"
                       .checked="${this.allSelected}"
                     />
@@ -112,150 +240,36 @@ class UserInformation extends LitElement {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>
-                    <input type="checkbox" class="device-checkbox" />
-                  </td>
-                  <td>101</td>
-                  <td>中卫</td>
-                  <td>自动角反射器</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="device-checkbox" /></td>
-                  <td>102</td>
-                  <td>中卫</td>
-                  <td>自动角反射器</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="device-checkbox" /></td>
-                  <td>102</td>
-                  <td>中卫</td>
-                  <td>自动角反射器</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="device-checkbox" /></td>
-                  <td>102</td>
-                  <td>中卫</td>
-                  <td>自动角反射器</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="device-checkbox" /></td>
-                  <td>102</td>
-                  <td>中卫</td>
-                  <td>自动角反射器</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="device-checkbox" /></td>
-                  <td>102</td>
-                  <td>中卫</td>
-                  <td>自动角反射器</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="device-checkbox" /></td>
-                  <td>102</td>
-                  <td>中卫</td>
-                  <td>自动角反射器</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="device-checkbox" /></td>
-                  <td>102</td>
-                  <td>中卫</td>
-                  <td>自动角反射器</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="device-checkbox" /></td>
-                  <td>102</td>
-                  <td>中卫</td>
-                  <td>自动角反射器</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="device-checkbox" /></td>
-                  <td>102</td>
-                  <td>中卫</td>
-                  <td>自动角反射器</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="device-checkbox" /></td>
-                  <td>102</td>
-                  <td>中卫</td>
-                  <td>自动角反射器</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="device-checkbox" /></td>
-                  <td>102</td>
-                  <td>中卫</td>
-                  <td>自动角反射器</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="device-checkbox" /></td>
-                  <td>102</td>
-                  <td>中卫</td>
-                  <td>自动角反射器</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="device-checkbox" /></td>
-                  <td>102</td>
-                  <td>中卫</td>
-                  <td>自动角反射器</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="device-checkbox" /></td>
-                  <td>102</td>
-                  <td>中卫</td>
-                  <td>自动角反射器</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="device-checkbox" /></td>
-                  <td>102</td>
-                  <td>中卫</td>
-                  <td>自动角反射器</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="device-checkbox" /></td>
-                  <td>102</td>
-                  <td>中卫</td>
-                  <td>自动角反射器</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="device-checkbox" /></td>
-                  <td>103</td>
-                  <td>中卫</td>
-                  <td>自动角反射器</td>
-                </tr>
-                <tr>
-                  <td><input type="checkbox" class="device-checkbox" /></td>
-                  <td>104</td>
-                  <td>中卫</td>
-                  <td>自动角反射器</td>
-                </tr>
+                ${this.devices.map(
+                  (device) => html`
+                    <tr>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="device-checkbox"
+                          .checked="${device.selected}"
+                          @change="${(e) =>
+                            (device.selected = e.target.checked)}"
+                        />
+                      </td>
+                      <td>${device.id}</td>
+                      <td>${device.region}</td>
+                      <td>${device.type}</td>
+                    </tr>
+                  `
+                )}
               </tbody>
             </table>
           </div>
         </div>
 
-        ${this.mode === 'edit' 
-          ? html`<button class="submit-button" @click=${this.handleSubmit}>确定</button>` 
+        ${this.mode === 'edit'
+          ? html`<button class="submit-button" @click=${this.handleSubmit}>
+              确定
+            </button>`
           : ''}
       </div>
     `;
-  }
-
-  handleClose() {
-    this.remove();
-    this.dispatchEvent(new CustomEvent('close-modal'));
-  }
-
-  handleSubmit() {
-    // 处理提交逻辑
-    const selectedDevices = Array.from(this.shadowRoot.querySelectorAll('.device-checkbox:checked'))
-      .map(checkbox => checkbox.closest('tr').querySelector('td:nth-child(2)').textContent);
-    
-    this.dispatchEvent(new CustomEvent('submit', {
-      detail: {
-        userData: this.userData,
-        selectedDevices
-      }
-    }));
   }
 }
 
