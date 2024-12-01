@@ -60,8 +60,8 @@ class FaultDetails extends LitElement {
       (fault) => html`
         <tr class="table-row">
           <td>${fault.taskId}</td>
-          <td>${fault.typeName}</td>
-          <td>${fault.regionName}</td>
+          <td>${fault.deviceType}</td>
+          <td>${fault.region}</td>
           <td>${fault.errorMessage}</td>
         </tr>
       `

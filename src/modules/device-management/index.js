@@ -117,8 +117,7 @@ class DeviceManagement extends LitElement {
     this.isDeviceParticularsOpen = true;
 
     requestAnimationFrame(() => {
-      const particularsElement =
-        this.shadowRoot.querySelector('device-particulars');
+      const particularsElement = this.shadowRoot.querySelector('device-particulars');
       if (particularsElement) {
         particularsElement.setDeviceData(e.detail);
         particularsElement.addEventListener('updateData', () => {

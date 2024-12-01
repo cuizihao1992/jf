@@ -128,7 +128,7 @@ class TaskCreateComponent extends LitElement {
           <td>${device.deviceType}</td>
           <td><button class="power-status">${device.powerStatus}</button></td>
           <td>${device.deviceStatus}</td>
-          <td>${device.lastSyncTime}</td>
+          <td>${device.installTime}</td>
           <td>
             <button
               class="view-button colored-button"

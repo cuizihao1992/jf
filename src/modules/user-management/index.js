@@ -50,7 +50,8 @@ class UserManagement extends LitElement {
             ? html`<user-view
                 mode=${this.userViewMode}
                 @close-modal=${this.closeUserView}
-                @submit=${this.handleUserViewSubmit}
+                @refresh-list=${this.handleRefreshList}
+                @show-message=${this.handleShowMessage}
               ></user-view>`
             : ''}
           ${this.isUserInformationOpen
@@ -89,7 +90,7 @@ class UserManagement extends LitElement {
       case 'auditUser':
         return html`<audit-user-component
           @close-modal=${this.closeTasks}
-          @open-user-view=${this.openUserView}
+          @open-user-view=${this.handleOpenUserView}
         ></audit-user-component>`;
       case 'userPermissions':
         return html`<user-permissions-component
@@ -117,9 +118,17 @@ class UserManagement extends LitElement {
   }
 
   openUserInformation(e) {
-    this.userInformationMode = e.detail.mode;
+    const { mode, userData } = e.detail;
+    this.userInformationMode = mode;
     this.isUserInformationOpen = true;
     this.isUserViewOpen = false;
+    
+    this.updateComplete.then(() => {
+        const userInfo = this.shadowRoot.querySelector('user-information');
+        if (userInfo) {
+            userInfo.setData({ mode, userData });
+        }
+    });
   }
 
   closeUserInformation() {
@@ -127,12 +136,38 @@ class UserManagement extends LitElement {
   }
 
   handleUserInformationSubmit(e) {
-    console.log('User information submitted:', e.detail);
+    const userPermissions = this.shadowRoot.querySelector('user-permissions-component');
+    if (userPermissions) {
+      userPermissions.loadUsers();  // 刷新用户列表
+    }
     this.closeUserInformation();
   }
 
   closeTasks() {
     this.clearAllComponents();
+  }
+
+  handleOpenUserView(event) {
+    const { mode, userData } = event.detail;
+    this.userViewMode = mode;
+    this.isUserViewOpen = true;
+    this.updateComplete.then(() => {
+      const userView = this.shadowRoot.querySelector('user-view');
+      if (userView) {
+        userView.setData({ mode, userData });
+      }
+    });
+  }
+
+  handleRefreshList() {
+    const auditComponent = this.shadowRoot.querySelector('audit-user-component');
+    if (auditComponent) {
+      auditComponent.loadApplications();
+    }
+  }
+
+  handleShowMessage(event) {
+    console.log('Message:', event.detail.message);
   }
 }
 

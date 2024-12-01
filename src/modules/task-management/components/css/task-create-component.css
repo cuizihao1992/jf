@@ -1,5 +1,5 @@
 .container {
-  width: 1090px;
+  width: 1170px;
   height: 590px;
   padding: 15px;
   background-color: rgba(13, 31, 51, 0.9);
@@ -324,7 +324,7 @@ input:hover {
   padding: 10px;
   background-color: rgba(20, 30, 50, 0.8);
   height: 480px;
-  width: 580px;
+  width: 665px;
 }
 
 .device-status h3 {
@@ -454,7 +454,7 @@ input {
   border-radius: 5px;
   padding: 1px;
   background-color: rgba(20, 30, 50, 0.8);
-  width: 580px;
+  width: 660px;
   height: 480px;
   overflow-y: auto;
   position: relative;

@@ -23,7 +23,20 @@ class AuditUserComponent extends LitElement {
 
   async loadApplications() {
     try {
-      this.applications = await api.userReviewApi.query({});
+      const response = await api.userReviewApi.query({});
+      // 确保数据格式正确
+      this.applications = response.map(item => ({
+        username: item.username || '',
+        applicationType: item.type || '注册',  // 添加默认值
+        region: item.region || '',
+        phone: item.phone || '',
+        userType: item.user_type || '用户',
+        registrationTime: item.registration_time || '',
+        reviewStatus: item.status || 'pending',
+        password: item.password || '',
+        country: item.country || '中国'
+      }));
+      this.requestUpdate();
     } catch (error) {
       console.error('Failed to load applications:', error);
     }
@@ -111,12 +124,31 @@ class AuditUserComponent extends LitElement {
   }
 
   onViewClick(event) {
-    const mode = event.target.getAttribute('data-mode'); // 获取 mode 属性
-    this.dispatchEvent(
-      new CustomEvent('open-user-view', {
-        detail: { mode },
-      })
-    );
+    const mode = event.target.getAttribute('data-mode');
+    const row = event.target.closest('tr');
+    if (!row) return;
+    
+    const application = this.applications[row.rowIndex - 1];
+    if (!application) return;
+
+    this.dispatchEvent(new CustomEvent('open-user-view', {
+        detail: {
+            mode,
+            userData: {
+                username: application.username,
+                password: application.password,
+                phone: application.phone,
+                application_date: application.registrationTime,
+                country: application.country,
+                region: application.region,
+                user_type: application.userType,
+                reviewer: '',
+                review_time: '',
+                review_opinion: '',
+                remarks: ''
+            }
+        }
+    }));
   }
 }
 

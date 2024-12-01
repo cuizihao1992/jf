@@ -106,10 +106,11 @@ class DeviceApprove extends LitElement {
     return this.deviceReviews.map(
       (review) => html`
         <tr class="table-row">
+          <td>${review.reviewId}</td>
           <td>${review.deviceId}</td>
           <td>${review.region}</td>
-          <td>${review.userName}</td>
-          <td>${review.approveType}</td>
+          <td>${review.userId}</td>
+          <td>${review.reviewType}</td>
           <td>${review.deviceType}</td>
           <td>${review.reviewStatus}</td>
           <td>${review.createdTime}</td>

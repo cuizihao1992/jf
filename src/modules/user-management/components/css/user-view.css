@@ -176,6 +176,11 @@ h3 {
   background-color: #45a049;
 }
 
+.submit-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
 /* 添加下拉框样式 */
 .review-select {
   flex: 1;

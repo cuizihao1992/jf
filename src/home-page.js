@@ -4,6 +4,7 @@ import mapboxgl from 'mapbox-gl';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import * as turf from '@turf/turf';
 import { showToast } from '@/utils/toast-service';
+import api from '@/apis/api';
 
 // 注册为全局变量
 globalThis.showToast = showToast;
@@ -191,7 +192,7 @@ class HomePage extends LitElement {
           // 飞行到目标位置
           window.mapInstance.flyTo({
             center: [lon, lat],
-            zoom: 17,
+            zoom: 8,
             duration: 1000,
             essential: true,
           });
@@ -496,16 +497,12 @@ class HomePage extends LitElement {
             console.log('点击的设备ID:', deviceId);
             
             try {
-              // 先获取最新的设备数据
-              const { deviceService } = await import('@/api/fetch.js');
-              const data = await deviceService.list({
-                pageNum: 1,
-                pageSize: 100000,
-              });
-
-              if (data.code === 200) {
+              // 使用新的 API 获取设备数据
+              const devices = await api.devicesApi.query({});
+              
+              if (Array.isArray(devices)) {
                 // 更新设备列表
-                this.deviceList = data.rows || [];
+                this.deviceList = devices;
                 
                 // 更新地图显示
                 await this.syncDevicesWithMap();
@@ -545,7 +542,7 @@ class HomePage extends LitElement {
                   // 飞行到设备位置
                   window.mapInstance.flyTo({
                     center: [parseFloat(device.lon), parseFloat(device.lat)],
-                    zoom: 17,
+                    zoom: 15,
                     duration: 1000,
                     essential: true
                   });
@@ -553,7 +550,7 @@ class HomePage extends LitElement {
                   console.warn('未找到对应的设备信息:', deviceId);
                 }
               } else {
-                throw new Error(data.msg || '获取设备列表失败');
+                throw new Error('获取设备列表失败');
               }
             } catch (error) {
               console.error('获取设备数据失败:', error);
@@ -841,7 +838,7 @@ class HomePage extends LitElement {
       console.log('选中的点位数量:', count);
       alert(`选中点位数量: ${count}`);
     } catch (error) {
-      console.error('点位检测失败:', error);
+      console.error('点位检测失:', error);
     }
   }
 
@@ -1306,7 +1303,7 @@ class HomePage extends LitElement {
       if (!bounds.isEmpty()) {
         window.mapInstance.fitBounds(bounds, {
           padding: { top: 50, bottom: 50, left: 50, right: 50 },
-          maxZoom: 15,
+          maxZoom: 8,
           duration: 1000,
         });
       }
@@ -1318,21 +1315,22 @@ class HomePage extends LitElement {
   // 修改设备详情获取和坐标处理
   async getDeviceDetails(deviceId) {
     try {
-      const response = await deviceService.getDeviceDetails(deviceId);
+      // 使用 api.devicesApi.getById() 替代原来的 deviceService.getDeviceDetails()
+      const device = await api.devicesApi.getById(deviceId);
 
-      // 确保经纬度保留完整精度，不要四舍五入或截断
-      const lat = response.lat ? parseFloat(response.lat) : null;
-      const lon = response.lon ? parseFloat(response.lon) : null;
+      // 确保经纬度保留完整精度
+      const lat = device.lat ? parseFloat(device.lat) : null;
+      const lon = device.lon ? parseFloat(device.lon) : null;
 
       console.log(`设备 ${deviceId} 的精确坐标:`, {
-        原始lat: response.lat,
-        原始lon: response.lon,
+        原始lat: device.lat,
+        原始lon: device.lon,
         转换后lat: lat,
         转换后lon: lon,
       });
 
       return {
-        ...response,
+        ...device,
         lat: lat,
         lon: lon,
       };
@@ -1362,7 +1360,7 @@ class HomePage extends LitElement {
     };
   }
 
-  // 添加获取设备数据的方法
+  // 修改获取设备数据的方法
   async fetchAndDisplayDevices() {
     try {
       const token = localStorage.getItem('token');
@@ -1372,21 +1370,15 @@ class HomePage extends LitElement {
         return;
       }
 
-      const { deviceService } = await import('@/api/fetch.js');
       console.log('开始获取设备列表');
       
-      const data = await deviceService.list({
-        pageNum: 1,
-        pageSize: 100000,
-      });
+      // 使用 api.devicesApi.query() 替代原来的 deviceService.list()
+      const devices = await api.devicesApi.query({});
+      
+      console.log('获取到的设备数据:', devices);
 
-      console.log('取到的设备数据:', data);
-
-      if (data.code === 200) {
-        const newDevices = data.rows || [];
-        console.log('新的设备列表:', newDevices);
-
-        this.deviceList = newDevices;
+      if (Array.isArray(devices)) {
+        this.deviceList = devices;
 
         // 如果地图已经初始化，立即更新显示
         if (window.mapInstance) {
@@ -1401,7 +1393,7 @@ class HomePage extends LitElement {
         });
         window.dispatchEvent(event);
       } else {
-        throw new Error(data.msg || '获取设备列表失败');
+        throw new Error('获取设备列表失败');
       }
     } catch (error) {
       console.error('获取设备数据失败:', error);

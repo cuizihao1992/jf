@@ -126,7 +126,7 @@ class DeviceEdit extends LitElement {
         <tr class="table-row">
           <td>${device.id}</td>
           <td>${device.deviceName}</td>
-          <td>${device.lastSyncTime}</td>
+          <td>${device.installTime}</td>
           <td>${device.deviceType}</td>
           <td>${device.region}</td>
           <td>${device.connectionStatus}</td>

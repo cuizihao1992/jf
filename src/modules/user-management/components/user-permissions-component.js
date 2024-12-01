@@ -101,14 +101,14 @@ class UserPermissionsComponent extends LitElement {
       <tr class="table-row">
         <td>${user.username}</td>
         <td>${user.userType}</td>
-        <td>${user.registrationDate}</td>
+        <td>${user.createTime}</td>
         <td>${user.region}</td>
         <td>${user.status}</td>
         <td>
           <a @click="${() => this.openUserInformation(user, 'view')}">查看</a> /
           <a @click="${() => this.openUserInformation(user, 'edit')}">编辑</a> /
           <a @click="${() => this.openConfirmDialog(user)}">
-            ${user.userStatus === '开放' ? '禁用' : '开放'}
+            ${user.status === 'active' ? '禁用' : '开放'}
           </a>
         </td>
       </tr>
@@ -173,9 +173,29 @@ class UserPermissionsComponent extends LitElement {
   }
 
   openUserInformation(user, mode) {
+    const userData = {
+      username: user.username || '',
+      password: user.password || '',
+      nick_name: user.nick_name || '',
+      phone: user.phone || '',
+      email: user.email || '',
+      country: user.country || '中国',
+      region: user.region || '',
+      user_type: user.user_type || '',
+      status: user.status || 'active',
+      role: user.role || 'user',
+      permissions: user.permissions || 'read,write',
+      data_permissions: user.data_permissions || 'all',
+      application_type: user.application_type || '注册',
+      token: user.token || ''
+    };
+
     this.dispatchEvent(
       new CustomEvent('open-user-information', {
-        detail: { user, mode },
+        detail: { 
+          mode,
+          userData  // 传递完整的用户数据
+        }
       })
     );
   }

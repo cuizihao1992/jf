@@ -103,8 +103,8 @@ class DeviceLog extends LitElement {
           <td>${log.timestamp}</td>
           <td>${log.userId}</td>
           <td>${log.eventType}</td>
-          <td>${log.region || '-'}</td>
-          <td>${log.deviceType || '-'}</td>
+          <td>${log.region}</td>
+          <td>${log.deviceType}</td>
           <td>${log.eventDescription}</td>
         </tr>
       `
