@@ -22,7 +22,7 @@ class DeviceControl extends LitElement {
         transition: all 0.3s ease-in-out;
       }
       .posture-adjust-modal.with-query {
-        margin-left: 945px;
+        margin-left: 990px;
       }
       .posture-adjust-modal.without-query {
         left: 20px;
