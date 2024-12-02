@@ -173,11 +173,8 @@ class DeviceQuery extends LitElement {
     const event = new CustomEvent('open-posture-adjust', {
       detail: {
         device: {
-          id: device.id,
-          deviceName: device.deviceName,
-          currentAzimuth: device.currentAzimuth,
-          currentElevation: device.currentElevation,
-          ...device, // 包含所有设备数据
+          ...device,
+          ytsbh: device.id, // 使用 id 作为设备编号
         },
       },
       bubbles: true,
