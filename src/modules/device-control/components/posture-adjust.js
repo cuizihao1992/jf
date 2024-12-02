@@ -50,8 +50,11 @@ class PostureAdjust extends LitElement {
 
   handleDeviceUpdate(e) {
     if (e.detail.device) {
-      console.log('接收到设备数据:', e.detail.device);
-      this.deviceData = e.detail.device;
+      console.log('姿态调整组件接收到设备数据:', e.detail.device);
+      this.deviceData = {
+        ...e.detail.device,
+        ytsbh: e.detail.device.id
+      };
       
       this.horizontalAngle = '0';
       this.pitchAngle = '0';
@@ -100,7 +103,7 @@ class PostureAdjust extends LitElement {
             <label>设备编号：</label>
             <input
               type="text"
-              .value="${this.deviceData?.ytsbh || ''}"
+              .value="${this.deviceData?.id || ''}"
               readonly
             />
           </div>
