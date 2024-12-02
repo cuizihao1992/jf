@@ -1,6 +1,6 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/user-information.css?inline';
-import api from '@/apis/api.js';
+import api from '@/apis/api';
 
 class UserInformation extends LitElement {
   static styles = css`
@@ -42,7 +42,6 @@ class UserInformation extends LitElement {
       devices: { type: Array },
       allSelected: { type: Boolean },
       userData: { type: Object },
-      isSubmitting: { type: Boolean }
     };
   }
 
@@ -51,101 +50,49 @@ class UserInformation extends LitElement {
     this.mode = 'view';
     this.devices = [];
     this.allSelected = false;
-    this.isSubmitting = false;
-    this.userData = {
-      username: '',
-      password: '',
-      nick_name: '',
-      phone: '',
-      email: '',
-      country: '中国',
-      region: '',
-      user_type: '',
-      status: 'active',
-      role: 'user',
-      permissions: 'read,write',
-      data_permissions: 'all',
-      application_type: '注册',
-      token: ''
-    };
   }
 
   connectedCallback() {
     super.connectedCallback();
-    this.loadDevices();
+    this.fetchDevices();
   }
 
-  async loadDevices() {
+  async fetchDevices() {
     try {
-      if (!this.userData.username) {
-        this.devices = [];
-        return;
+      const data = await api.devicesApi.query({});
+      if (data && Array.isArray(data)) {
+        this.devices = data;
+        this.initializeDeviceSelection();
+      } else {
+        console.error('获取设备数据失败:', data.message);
       }
-
-      console.log('Loading devices for user:', this.userData.username);
-      const response = await api.userDeviceApi.query({
-        username: this.userData.username
-      });
-      
-      if (!response) {
-        throw new Error('No response from API');
-      }
-
-      this.devices = Array.isArray(response) ? response : [];
-      console.log('Loaded devices:', this.devices);
-      
-      this.requestUpdate();
     } catch (error) {
-      console.error('Failed to load devices:', error);
-      this.devices = [];
-      this.showMessage('加载设备列表失败: ' + error.message);
+      console.error('设备接口调用失败:', error);
     }
   }
 
-  setData(data) {
-    if (!data || !data.userData) return;
-    
-    this.mode = data.mode;
-    this.userData = {
-      ...this.userData,
-      ...data.userData
-    };
-    this.loadDevices();
-    this.requestUpdate();
+  initializeDeviceSelection() {
+    // 如果 dataPermissions 包含 "All"，则全选
+    if (this.userData.dataPermissions === 'All') {
+      this.allSelected = true;
+      this.devices.forEach((device) => {
+        device.selected = true;
+      });
+    } else {
+      // 否则根据 dataPermissions 勾选
+      const permissions = this.userData.dataPermissions.split(',');
+      this.devices.forEach((device) => {
+        device.selected = permissions.includes(String(device.id));
+      });
+    }
+    this.requestUpdate(); // 手动触发更新
   }
 
-  // 渲染表单字段
-  renderFormField(label, type, value, fieldName) {
-    const isDisabled = this.mode === 'view';
-    const inputClasses = `form-input ${isDisabled ? 'disabled' : ''}`;
-    
-    return html`
-      <div class="form-group">
-        <label>${label}:</label>
-        ${type === 'select' 
-          ? html`
-              <select 
-                class="${inputClasses}"
-                ?disabled=${isDisabled} 
-                .value=${value}
-                @change=${e => this.handleInputChange(e, fieldName)}
-              >
-                <option value="">请选择</option>
-                ${this.getOptionsForField(fieldName)}
-              </select>
-            `
-          : html`
-              <input 
-                class="${inputClasses}"
-                type=${type} 
-                .value=${value || ''} 
-                ?disabled=${isDisabled}
-                @input=${e => this.handleInputChange(e, fieldName)}
-                placeholder="请输入${label}"
-              />
-            `}
-      </div>
-    `;
+  handleSelectAll(e) {
+    if (this.mode === 'view') return;
+    this.allSelected = e.target.checked;
+    this.devices.forEach((device) => (device.selected = this.allSelected));
+    this.requestUpdate(); // 手动触发更新
   }
 
   getOptionsForField(fieldName) {
@@ -180,20 +127,104 @@ class UserInformation extends LitElement {
     
     this.userData = {
       ...this.userData,
-      [fieldName]: e.target.value
+      [fieldName]: e.target.value,
     };
   }
 
-  render() {
-    if (!this.userData || !this.userData.username) {
-      return html`<div class="container">
-        <div class="header">
-          <h1>用户信息</h1>
-          <span class="close-button" @click="${this.handleClose}">×</span>
-        </div>
-        <div>加载中...</div>
-      </div>`;
+  async handleSubmit() {
+    const selectedDevices = this.devices
+      .filter((device) => device.selected)
+      .map((device) => device.id);
+
+    if (selectedDevices.length === 0) {
+      alert('请至少选择一个设备权限！');
+      return;
     }
+
+    const updatedData = {
+      ...this.userData,
+      dataPermissions: selectedDevices.includes('All')
+        ? 'All'
+        : selectedDevices.join(','),
+    };
+
+    try {
+      const response = await api.userApi.update(
+        updatedData.userId,
+        updatedData
+      );
+      if (response) {
+        // alert('用户信息更新成功！');
+        this.dispatchEvent(
+          new CustomEvent('update-success', { bubbles: true, composed: true })
+        );
+        this.handleClose();
+      } else {
+        alert('更新失败，请稍后重试！');
+      }
+    } catch (error) {
+      console.error('更新用户信息失败:', error);
+      alert('更新用户信息时出错，请检查网络连接或稍后重试。');
+    }
+  }
+
+  handleClose() {
+    this.remove();
+    this.dispatchEvent(new CustomEvent('close-modal'));
+  }
+
+  renderFormField(label, type, value, fieldName, options = []) {
+    const isDisabled = this.mode === 'view';
+    return html`
+      <div class="form-group">
+        <label>${label}:</label>
+        ${type === 'select'
+          ? html`
+              <select
+                ?disabled=${isDisabled}
+                @change=${(e) => this.handleInputChange(e, fieldName)}
+              >
+                ${options.map(
+                  (option) =>
+                    html`<option
+                      value=${option.value}
+                      ?selected=${value === option.value}
+                    >
+                      ${option.label}
+                    </option>`
+                )}
+              </select>
+            `
+          : html`
+              <input
+                type=${type}
+                .value=${value}
+                placeholder="******"
+                ?disabled=${isDisabled}
+                @input=${(e) => this.handleInputChange(e, fieldName)}
+              />
+            `}
+      </div>
+    `;
+  }
+
+  render() {
+    const statusOptions = [
+      { value: 'active', label: '活跃' },
+      { value: 'inactive', label: '非活跃' },
+      { value: 'banned', label: '禁止' },
+    ];
+
+    const regionOptions = [
+      { value: '登封', label: '登封' },
+      { value: '中卫', label: '中卫' },
+    ];
+
+    const userTypeOptions = [
+      { value: '普通用户', label: '普通用户' },
+      { value: '管理员', label: '管理员' },
+      { value: '超级管理员', label: '超级管理员' },
+    ];
 
     return html`
       <div class="container">
@@ -203,13 +234,46 @@ class UserInformation extends LitElement {
         </div>
 
         <div class="section">
-          <div class="section-title">用户信息</div>
-          ${this.renderFormField('用户名', 'text', this.userData.username, 'username')}
-          ${this.mode === 'edit' ? this.renderFormField('密码', 'password', this.userData.password, 'password') : ''}
-          ${this.renderFormField('手机号', 'text', this.userData.phone, 'phone')}
-          ${this.renderFormField('用户类型', 'select', this.userData.user_type, 'user_type')}
-          ${this.renderFormField('所属地区', 'select', this.userData.region, 'region')}
-          ${this.renderFormField('状态', 'select', this.userData.status, 'status')}
+          <div class="section-title">注册信息</div>
+          ${this.renderFormField(
+            '用户名',
+            'text',
+            this.userData.username,
+            'username'
+          )}
+          ${this.renderFormField(
+            '密码',
+            'password',
+            this.userData.password,
+            'password'
+          )}
+          ${this.renderFormField(
+            '手机号',
+            'text',
+            this.userData.phone,
+            'phone'
+          )}
+          ${this.renderFormField(
+            '用户类型',
+            'select',
+            this.userData.userType,
+            'userType',
+            userTypeOptions
+          )}
+          ${this.renderFormField(
+            '所属地区',
+            'select',
+            this.userData.region,
+            'region',
+            regionOptions
+          )}
+          ${this.renderFormField(
+            '用户状态',
+            'select',
+            this.userData.status,
+            'status',
+            statusOptions
+          )}
         </div>
 
         <div class="section">
@@ -220,8 +284,8 @@ class UserInformation extends LitElement {
               <thead>
                 <tr>
                   <th>
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       @change="${this.handleSelectAll}"
                       .checked="${this.allSelected}"
                       ?disabled="${this.mode === 'view'}"
@@ -233,151 +297,36 @@ class UserInformation extends LitElement {
                 </tr>
               </thead>
               <tbody>
-                ${this.devices.map(device => html`
-                  <tr>
-                    <td>
-                      <input 
-                        type="checkbox" 
-                        class="device-checkbox"
-                        .checked="${device.selected}"
-                        ?disabled="${this.mode === 'view'}"
-                        @change="${e => this.handleDeviceSelect(e, device)}"
-                      />
-                    </td>
-                    <td>${device.device_id}</td>
-                    <td>${device.region}</td>
-                    <td>${device.device_type}</td>
-                  </tr>
-                `)}
+                ${this.devices.map(
+                  (device) => html`
+                    <tr>
+                      <td>
+                        <input
+                          type="checkbox"
+                          class="device-checkbox"
+                          .checked="${device.selected}"
+                          @change="${(e) =>
+                            (device.selected = e.target.checked)}"
+                        />
+                      </td>
+                      <td>${device.id}</td>
+                      <td>${device.region}</td>
+                      <td>${device.type}</td>
+                    </tr>
+                  `
+                )}
               </tbody>
             </table>
           </div>
         </div>
 
-        ${this.mode === 'edit' 
-          ? html`
-            <div class="button-group">
-              <button 
-                class="submit-button" 
-                @click=${this.handleSubmit}
-                ?disabled=${this.isSubmitting}
-              >
-                ${this.isSubmitting ? '保存中...' : '保存'}
-              </button>
-              <button 
-                class="button cancel-button" 
-                @click=${this.handleClose}
-              >
-                取消
-              </button>
-            </div>
-          ` 
-          : html`
-            <div class="button-group">
-              <button 
-                class="button cancel-button" 
-                @click=${this.handleClose}
-              >
-                关闭
-              </button>
-            </div>
-          `}
+        ${this.mode === 'edit'
+          ? html`<button class="submit-button" @click=${this.handleSubmit}>
+              确定
+            </button>`
+          : ''}
       </div>
     `;
-  }
-
-  handleDeviceSelect(e, device) {
-    device.selected = e.target.checked;
-    this.requestUpdate();
-  }
-
-  async handleSubmit() {
-    try {
-      if (!this.userData.username) {
-        throw new Error('用户名不能为空');
-      }
-
-      this.isSubmitting = true;
-      
-      // 获取选中的设备ID列表
-      const selectedDevices = this.devices
-        .filter(device => device.selected)
-        .map(device => device.device_id);
-
-      // 准备更新数据
-      const updateData = {
-        username: this.userData.username,
-        nick_name: this.userData.nick_name || '',
-        phone: this.userData.phone || '',
-        email: this.userData.email || '',
-        user_type: this.userData.user_type || '',
-        region: this.userData.region || '',
-        status: this.userData.status || 'active',
-        role: this.userData.role || 'user',
-        permissions: this.userData.permissions || '',
-        data_permissions: this.userData.data_permissions || '',
-        devices: selectedDevices
-      };
-
-      // 如果修改了密码，则添加密码字段
-      if (this.userData.password) {
-        updateData.password = this.userData.password;
-      }
-
-      console.log('正在更新用户数据:', updateData);
-      
-      const response = await api.userApi.update(this.userData.username, updateData);
-      
-      if (!response || response.error) {
-        throw new Error(response?.error || '更新失败');
-      }
-
-      // 发送刷新列表事件
-      this.dispatchEvent(new CustomEvent('updateData', {
-        bubbles: true,
-        composed: true
-      }));
-
-      window.showToast({ 
-        message: '用户信息更新成功！', 
-        type: 'success', 
-        duration: 3000 
-      });
-
-      this.handleClose();
-    } catch (error) {
-      console.error('更新失败:', error);
-      window.showToast({ 
-        message: `更新失败: ${error.message}`, 
-        type: 'error', 
-        duration: 3000 
-      });
-    } finally {
-      this.isSubmitting = false;
-      this.requestUpdate();
-    }
-  }
-
-  handleClose() {
-    this.dispatchEvent(new CustomEvent('close-modal'));
-  }
-
-  handleSelectAll(e) {
-    if (this.mode === 'view') return;
-    this.allSelected = e.target.checked;
-    this.devices = this.devices.map(device => ({
-      ...device,
-      selected: this.allSelected
-    }));
-    this.requestUpdate();
-  }
-
-  showMessage(message) {
-    this.dispatchEvent(new CustomEvent('show-message', {
-      detail: { message },
-      bubbles: true,
-      composed: true
-    }));
   }
 }
 

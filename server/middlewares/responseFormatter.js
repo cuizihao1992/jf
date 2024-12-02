@@ -17,9 +17,19 @@ function formatResponse(data) {
 function formatObject(obj) {
   const keysToFormat = [
     'created_time',
+    'create_ime',
     'start_time',
     'end_time',
     'install_time',
+    'send_time',
+    'completion_time',
+    'registration_date',
+    'application_date',
+    'review_time',
+    'lastLogin',
+    'registration_time',
+    'timestamp',
+    'last_login',
   ]; // 需要格式化为日期的字段
 
   // 创建一个新对象，递归处理键值对

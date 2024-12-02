@@ -8,6 +8,16 @@ function createRouter(module) {
   router.use(express.urlencoded({ extended: true })); // 解析 URL 编码请求体
 
   // 查询（支持动态查询条件）
+  if (module.getTree) {
+    router.get('/tree', async (req, res, next) => {
+      try {
+        const result = await module.getTree(req.query); // 查询参数已通过中间件转换
+        res.json(result);
+      } catch (error) {
+        next(error);
+      }
+    });
+  }
   router.get('/', async (req, res, next) => {
     try {
       const result = await module.query(req.query); // 查询参数已通过中间件转换

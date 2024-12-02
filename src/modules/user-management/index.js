@@ -16,6 +16,7 @@ class UserManagement extends LitElement {
     isUserInformationOpen: { type: Boolean },
     userViewMode: { type: String },
     userInformationMode: { type: String },
+    userData: { type: Object },
   };
 
   constructor() {
@@ -26,6 +27,7 @@ class UserManagement extends LitElement {
     this.isUserInformationOpen = false;
     this.userViewMode = 'view';
     this.userInformationMode = 'view';
+    this.userData = {};
   }
 
   render() {
@@ -49,6 +51,7 @@ class UserManagement extends LitElement {
           ${this.isUserViewOpen
             ? html`<user-view
                 mode=${this.userViewMode}
+                .userData=${this.userData}
                 @close-modal=${this.closeUserView}
                 @refresh-list=${this.handleRefreshList}
                 @show-message=${this.handleShowMessage}
@@ -57,6 +60,8 @@ class UserManagement extends LitElement {
           ${this.isUserInformationOpen
             ? html`<user-information
                 mode=${this.userInformationMode}
+                .userData=${this.userData}
+                @update-success=${this.handleUserInformationUpdateSuccess}
                 @close-modal=${this.closeUserInformation}
                 @submit=${this.handleUserInformationSubmit}
               ></user-information>`
@@ -106,6 +111,7 @@ class UserManagement extends LitElement {
     this.userViewMode = e.detail.mode;
     this.isUserViewOpen = true;
     this.isUserInformationOpen = false;
+    this.userData = e.detail.application; // 将用户数据传递到当前组件
   }
 
   closeUserView() {
@@ -122,13 +128,7 @@ class UserManagement extends LitElement {
     this.userInformationMode = mode;
     this.isUserInformationOpen = true;
     this.isUserViewOpen = false;
-    
-    this.updateComplete.then(() => {
-        const userInfo = this.shadowRoot.querySelector('user-information');
-        if (userInfo) {
-            userInfo.setData({ mode, userData });
-        }
-    });
+    this.userData = e.detail.user;
   }
 
   closeUserInformation() {

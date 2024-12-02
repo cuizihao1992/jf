@@ -37,7 +37,7 @@ module.exports = {
       registration_date,
       last_login,
       login_ip,
-      create_time,
+      created_time,
       status,
       role,
       permissions,
@@ -51,7 +51,7 @@ module.exports = {
       (
         username, password, nick_name, avatar, email, phone, country, 
         region, user_type, registration_date, last_login, login_ip, 
-        create_time, status, role, permissions, data_permissions, 
+        created_time, status, role, permissions, data_permissions, 
         application_type, token
       ) 
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -70,7 +70,7 @@ module.exports = {
       registration_date,
       last_login,
       login_ip,
-      create_time,
+      created_time,
       status,
       role,
       permissions,

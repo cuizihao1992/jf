@@ -23,6 +23,19 @@ class UserPermissionsComponent extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     this.loadUsers(); // 加载用户数据
+
+    window.addEventListener(
+      'update-success',
+      this.handleUpdateSuccess.bind(this)
+    );
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener(
+      'update-success',
+      this.handleUpdateSuccess.bind(this)
+    );
   }
 
   async loadUsers() {
@@ -31,6 +44,11 @@ class UserPermissionsComponent extends LitElement {
     } catch (error) {
       console.error('Failed to load user data:', error);
     }
+  }
+
+  handleUpdateSuccess() {
+    console.log('Received update-success event');
+    this.loadUsers(); // 重新加载用户数据
   }
 
   render() {

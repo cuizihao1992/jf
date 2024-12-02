@@ -102,4 +102,60 @@ module.exports = {
     const [result] = await db.query(query, values);
     return result.affectedRows;
   },
+  async getTree() {
+    // 查询设备数据
+    const query = `
+    SELECT 
+      region, 
+      device_type, 
+      connection_status, 
+      device_name
+    FROM 
+      devices
+  `;
+
+    try {
+      const baseQuery = 'SELECT * FROM jf_devices';
+
+      const [rows] = await db.query(baseQuery);
+
+      // 构造树形结构
+      const tree = rows.reduce((acc, row) => {
+        // 按 region 分组
+        let regionNode = acc.find((node) => node.label === row.region);
+        if (!regionNode) {
+          regionNode = { label: row.region, children: [] };
+          acc.push(regionNode);
+        }
+
+        // 按 device_type 分组
+        let typeNode = regionNode.children.find(
+          (node) => node.label === row.device_type
+        );
+        if (!typeNode) {
+          typeNode = { label: row.device_type, children: [] };
+          regionNode.children.push(typeNode);
+        }
+
+        // 按 connection_status 分组
+        let statusNode = typeNode.children.find(
+          (node) => node.label === row.connection_status
+        );
+        if (!statusNode) {
+          statusNode = { label: row.connection_status, children: [] };
+          typeNode.children.push(statusNode);
+        }
+
+        // 添加设备名称
+        statusNode.children.push({ label: row.device_name });
+
+        return acc;
+      }, []);
+
+      return tree;
+    } catch (error) {
+      console.error('获取树状结构失败:', error);
+      throw new Error('无法获取设备数据树状结构');
+    }
+  },
 };

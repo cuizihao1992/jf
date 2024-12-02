@@ -1,6 +1,7 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/user-view.css?inline';
-import api from '@/apis/api.js';
+import { format } from 'date-fns';
+import api from '@/apis/api'; // 假设 api.userReviewApi.update 可用
 
 class UserView extends LitElement {
   static styles = css`
@@ -11,7 +12,6 @@ class UserView extends LitElement {
     return {
       mode: { type: String },
       userData: { type: Object },
-      isSubmitting: { type: Boolean }
     };
   }
 
@@ -19,18 +19,21 @@ class UserView extends LitElement {
     super();
     this.mode = 'view';
     this.userData = {};
-    this.isSubmitting = false;
   }
 
-  // 添加这个方法来接收外部传入的数据
-  setData(data) {
-    console.log('Received data:', data);
-    if (!data || !data.userData) return;
-    
-    this.mode = data.mode;
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.mode === 'review') {
+      this.setCurrentReviewTime();
+    }
+  }
+
+  // 设置当前审核时间为当前时间，格式为 yyyy-MM-dd HH:mm:ss
+  setCurrentReviewTime() {
+    const currentTime = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
     this.userData = {
-        ...data.userData,
-        application_date: this.formatDate(data.userData.application_date)
+      ...this.userData,
+      reviewTime: currentTime,
     };
     this.requestUpdate();
   }
@@ -74,9 +77,16 @@ class UserView extends LitElement {
   }
 
   // 渲染表单字段
-  renderFormField(label, type, value, fieldName, placeholder = '', isReviewField = false) {
+  renderFormField(
+    label,
+    type,
+    value,
+    fieldName,
+    placeholder = '',
+    isReviewField = false
+  ) {
     const isDisabled = !isReviewField || this.mode === 'view';
-    
+
     // 为审核意见字段特殊处理
     if (fieldName === 'reviewOpinion') {
       return html`
@@ -86,10 +96,12 @@ class UserView extends LitElement {
             class="review-select"
             ?disabled=${isDisabled}
             .value=${value}
-            @change=${e => this.handleInputChange(e, fieldName)}
+            @change=${(e) => this.handleInputChange(e, fieldName)}
           >
             <option value="同意" ?selected=${value === '同意'}>同意</option>
-            <option value="不同意" ?selected=${value === '不同意'}>不同意</option>
+            <option value="不同意" ?selected=${value === '不同意'}>
+              不同意
+            </option>
           </select>
         </div>
       `;
@@ -98,13 +110,13 @@ class UserView extends LitElement {
     return html`
       <div class="row">
         <label>${label}: </label>
-        ${type === 'textarea' 
+        ${type === 'textarea'
           ? html`
               <textarea
                 id=${fieldName}
                 ?disabled=${isDisabled}
                 .value=${value || ''}
-                @input=${e => this.handleInputChange(e, fieldName)}
+                @input=${(e) => this.handleInputChange(e, fieldName)}
                 placeholder=${placeholder}
               ></textarea>
             `
@@ -114,7 +126,7 @@ class UserView extends LitElement {
                 class="userInput"
                 ?disabled=${isDisabled}
                 .value=${value || ''}
-                @input=${e => this.handleInputChange(e, fieldName)}
+                @input=${(e) => this.handleInputChange(e, fieldName)}
                 placeholder=${placeholder}
               />
             `}
@@ -123,18 +135,55 @@ class UserView extends LitElement {
   }
 
   handleInputChange(e, fieldName) {
-    if (this.mode === 'view' || 
-        ['username', 'password', 'phone', 'application_date', 'country', 'region', 'user_type'].includes(fieldName)) {
+    if (
+      this.mode === 'view' ||
+      [
+        'username',
+        'password',
+        'phone',
+        'applicationDate',
+        'country',
+        'region',
+        'userType',
+        'applicationType',
+        'registrationTime',
+        'userStatus',
+      ].includes(fieldName)
+    ) {
       return;
     }
-    
+
     this.userData = {
       ...this.userData,
-      [fieldName]: e.target.value
+      [fieldName]: e.target.value,
     };
   }
 
-  // 修改渲染方法，添加数据检查
+  async handleSubmit() {
+    const reviewStatus =
+      this.userData.reviewOpinion === '同意' ? 'approved' : 'rejected';
+    const reviewData = {
+      ...this.userData,
+      reviewer: this.userData.reviewer,
+      reviewStatus: reviewStatus,
+    };
+
+    try {
+      // 调用更新接口
+      await api.userReviewApi.update(reviewData.id, reviewData);
+      this.dispatchEvent(
+        new CustomEvent('submit', {
+          detail: {
+            userData: this.userData,
+            reviewData,
+          },
+        })
+      );
+    } catch (error) {
+      console.error('Error updating review:', error);
+    }
+  }
+
   render() {
     console.log('Current userData:', this.userData);
     
@@ -157,30 +206,95 @@ class UserView extends LitElement {
         <div>
           <div class="user-info">
             <h3>用户信息</h3>
-            ${this.renderFormField('用户名', 'text', this.userData.username || '', 'username')}
-            ${this.renderFormField('密码', 'text', this.userData.password || '', 'password')}
-            ${this.renderFormField('手机号', 'text', this.userData.phone || '', 'phone')}
-            ${this.renderFormField('申请日期', 'text', this.userData.application_date || '', 'applicationDate')}
-            ${this.renderFormField('国家', 'text', this.userData.country || '', 'country')}
-            ${this.renderFormField('所属地区', 'text', this.userData.region || '', 'region')}
-            ${this.renderFormField('用户类型', 'text', this.userData.user_type || '', 'userType')}
+            ${this.renderFormField(
+              '用户名',
+              'text',
+              this.userData.username,
+              'username'
+            )}
+            ${this.renderFormField(
+              '密码',
+              'text',
+              this.userData.password,
+              'password'
+            )}
+            ${this.renderFormField(
+              '手机号',
+              'text',
+              this.userData.phone,
+              'phone'
+            )}
+            ${this.renderFormField(
+              '申请日期',
+              'text',
+              this.userData.applicationDate,
+              'applicationDate'
+            )}
+            ${this.renderFormField(
+              '国家',
+              'text',
+              this.userData.country,
+              'country'
+            )}
+            ${this.renderFormField(
+              '所属地区',
+              'text',
+              this.userData.region,
+              'region'
+            )}
+            ${this.renderFormField(
+              '用户类型',
+              'text',
+              this.userData.userType,
+              'userType'
+            )}
           </div>
-          
+
           <div class="review-info">
-            ${this.renderFormField('审核人', 'text', this.userData.reviewer || '', 'reviewer', '', true)}
-            ${this.renderFormField('审核时间', 'text', this.userData.review_time || '', 'reviewTime', '', true)}
-            ${this.renderFormField('审核意见', 'select', this.userData.review_opinion || '', 'reviewOpinion', '', true)}
-            ${this.renderFormField('备注', 'textarea', this.userData.remarks || '', 'remarks', '', true)}
-            
-            ${this.mode === 'review' 
-              ? html`
-                  <button 
-                    class="submit-button" 
-                    @click=${this.handleSubmit}
-                    ?disabled=${this.isSubmitting}
-                  >
-                    ${this.isSubmitting ? '提交中...' : '确定'}
-                  </button>` 
+            ${this.renderFormField(
+              '审核状态',
+              'text',
+              this.userData.reviewStatus,
+              'reviewStatus',
+              '',
+              true
+            )}
+            ${this.renderFormField(
+              '审核人',
+              'text',
+              this.userData.reviewer,
+              'reviewer',
+              '',
+              true
+            )}
+            ${this.renderFormField(
+              '审核时间',
+              'text',
+              this.userData.reviewTime,
+              'reviewTime',
+              '',
+              true
+            )}
+            ${this.renderFormField(
+              '审核意见',
+              'select',
+              this.userData.reviewOpinion,
+              'reviewOpinion',
+              '',
+              true
+            )}
+            ${this.renderFormField(
+              '备注',
+              'textarea',
+              this.userData.remarks,
+              'remarks',
+              '',
+              true
+            )}
+            ${this.mode === 'review'
+              ? html`<button class="submit-button" @click=${this.handleSubmit}>
+                  确定
+                </button>`
               : ''}
           </div>
         </div>
@@ -191,60 +305,6 @@ class UserView extends LitElement {
   handleClose() {
     this.remove();
     this.dispatchEvent(new CustomEvent('close-modal'));
-  }
-
-  handleSubmit() {
-    this.submitReview();
-  }
-
-  // 修改提交方法，添加更好的错误处理和加载状态
-  async submitReview() {
-    try {
-      if (!this.userData.reviewer || !this.userData.review_opinion) {
-        throw new Error('请填写审核人和审核意见');
-      }
-
-      const reviewData = {
-        username: this.userData.username,
-        reviewer: this.userData.reviewer,
-        review_time: new Date().toISOString(),
-        review_opinion: this.userData.review_opinion,
-        remarks: this.userData.remarks
-      };
-
-      this.isSubmitting = true;
-      this.requestUpdate();
-
-      const response = await api.userReviewApi.review(reviewData);
-      
-      if (!response.success) {
-        throw new Error(response.message || '提交失败');
-      }
-
-      this.dispatchEvent(new CustomEvent('refresh-list', {
-        bubbles: true,
-        composed: true
-      }));
-      
-      this.showMessage('提交成功');
-      this.handleClose();
-    } catch (error) {
-      console.error('提交审核失败:', error);
-      this.showMessage(`提交失败: ${error.message}`);
-    } finally {
-      this.isSubmitting = false;
-      this.requestUpdate();
-    }
-  }
-
-  // 添加消息提示方法
-  showMessage(message) {
-    // 触发一个消息事件，让父组件处理消息显示
-    this.dispatchEvent(new CustomEvent('show-message', {
-      detail: { message },
-      bubbles: true,
-      composed: true
-    }));
   }
 }
 
