@@ -50,7 +50,6 @@ class DeviceList extends LitElement {
   render() {
     return html`
       <div class="header">设备列表</div>
-      <hr />
       <div class="device-category">
         ${this.treeData && this.treeData.length > 0
           ? this.renderTree(this.treeData)
