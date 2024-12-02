@@ -40,9 +40,20 @@ class UserPermissionsComponent extends LitElement {
 
   async loadUsers() {
     try {
-      this.powerUsers = await api.userApi.query({});
+      const response = await api.userApi.query({});
+      if (Array.isArray(response)) {
+        // 确保每个用户对象都有必要的字段
+        this.powerUsers = response.map(user => ({
+          ...user,
+          id: user.id || user.userId, // 确保有 id
+          status: user.status || 'active', // 设置默认状态
+          userType: user.userType || user.user_type || '普通用户', // 处理不同的字段名
+        }));
+      } else {
+        console.error('Invalid response format:', response);
+      }
     } catch (error) {
-      console.error('Failed to load user data:', error);
+      console.error('Failed to load users:', error);
     }
   }
 
@@ -139,12 +150,13 @@ class UserPermissionsComponent extends LitElement {
   }
 
   renderConfirmDialog() {
+    if (!this.selectedUser) return '';
+    
+    const actionText = this.selectedUser.status === 'active' ? '禁用' : '开放';
+    
     return html`
       <div class="confirm-dialog">
-        <p>
-          提示：是否
-          ${this.selectedUser.userStatus === '开放' ? '禁用' : '开放'} 此用户？
-        </p>
+        <p>提示：是否${actionText}此用户？</p>
         <button
           class="dialog-button confirm-button"
           @click="${this.confirmToggleStatus}"
@@ -162,22 +174,48 @@ class UserPermissionsComponent extends LitElement {
   }
 
   async confirmToggleStatus() {
-    if (!this.selectedUser) return;
+    if (!this.selectedUser) {
+      console.warn('No user selected');
+      return;
+    }
+
+    console.log('Updating user status for:', this.selectedUser);
+
+    // 确保有用户ID
+    if (!this.selectedUser.id) {
+      console.error('User ID is missing');
+      return;
+    }
 
     try {
-      // 更新后端用户状态
-      await api.userApi.update(this.selectedUser.id, {
-        userStatus: this.selectedUser.userStatus === '开放' ? '禁用' : '开放',
+      const newStatus = this.selectedUser.status === 'active' ? 'inactive' : 'active';
+      
+      // 打印请求信息
+      console.log('Sending update request:', {
+        userId: this.selectedUser.id,
+        newStatus: newStatus
       });
 
-      // 更新本地状态
-      this.selectedUser.userStatus =
-        this.selectedUser.userStatus === '开放' ? '禁用' : '开放';
+      // 更新后端用户状态
+      const response = await api.userApi.update(this.selectedUser.id, {
+        status: newStatus
+      });
 
-      this.showDialog = false;
-      this.requestUpdate();
+      if (response) {
+        // 更新本地状态
+        this.selectedUser.status = newStatus;
+        
+        // 刷新用户列表
+        await this.loadUsers();
+        
+        // 关闭对话框
+        this.showDialog = false;
+        this.requestUpdate();
+      }
     } catch (error) {
       console.error('Failed to update user status:', error);
+      // 可以添加错误提示
+      alert('更新用户状态失败，请稍后重试');
     }
   }
 
@@ -191,30 +229,38 @@ class UserPermissionsComponent extends LitElement {
   }
 
   openUserInformation(user, mode) {
+    console.log('openUserInformation triggered with user:', user);
+    
+    // 统一数据结构
     const userData = {
-      username: user.username || '',
-      password: user.password || '',
-      nick_name: user.nick_name || '',
-      phone: user.phone || '',
-      email: user.email || '',
-      country: user.country || '中国',
-      region: user.region || '',
-      user_type: user.user_type || '',
-      status: user.status || 'active',
-      role: user.role || 'user',
-      permissions: user.permissions || 'read,write',
-      data_permissions: user.data_permissions || 'all',
-      application_type: user.application_type || '注册',
-      token: user.token || ''
+        id: user.id || '',
+        username: user.username || '',
+        password: user.password || '',
+        phone: user.phone || '',
+        email: user.email || '',
+        country: user.country || '中国',
+        region: user.region || '',
+        userType: user.userType || '',
+        status: user.status || 'active',
+        role: user.role || 'user',
+        permissions: user.permissions || '',
+        dataPermissions: user.dataPermissions || '',
+        applicationType: user.applicationType || '注册',
+        createTime: user.createTime || '',
+        token: user.token || ''
     };
 
+    console.log('Dispatching open-user-information with userData:', userData);
+    
     this.dispatchEvent(
-      new CustomEvent('open-user-information', {
-        detail: { 
-          mode,
-          userData  // 传递完整的用户数据
-        }
-      })
+        new CustomEvent('open-user-information', {
+            detail: { 
+                mode,
+                userData  // 确保使用 userData 作为属性名
+            },
+            bubbles: true,
+            composed: true
+        })
     );
   }
 }

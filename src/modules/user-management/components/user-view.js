@@ -56,23 +56,39 @@ class UserView extends LitElement {
     }
   }
 
+  // 添加属性观察器
+  updated(changedProperties) {
+    if (changedProperties.has('userData')) {
+      console.log('userData updated:', this.userData);
+    }
+  }
+
   // 修改 setUserData 方法
   setUserData(data) {
-    if (!data) return;
+    console.log('user-view setUserData called with:', data);
     
+    if (!data) {
+        console.warn('setUserData received null or undefined data');
+        return;
+    }
+    
+    // 确保至少有基本的数据结构
     this.userData = {
-      username: data.username || '',
-      password: data.password || '',
-      phone: data.phone || '',
-      application_date: data.application_date || '',
-      country: data.country || '',
-      region: data.region || '',
-      user_type: data.user_type || '',
-      reviewer: data.reviewer || '',
-      review_time: data.review_time || '',
-      review_opinion: data.review_opinion || '',
-      remarks: data.remarks || ''
+        username: data.username || '',
+        password: data.password || '',
+        phone: data.phone || '',
+        applicationDate: data.applicationDate || '',
+        country: data.country || '',
+        region: data.region || '',
+        userType: data.userType || '',
+        reviewStatus: data.reviewStatus || '',
+        reviewer: data.reviewer || '',
+        reviewTime: data.reviewTime || '',
+        reviewOpinion: data.reviewOpinion || '同意',
+        remarks: data.remarks || ''
     };
+    
+    console.log('user-view userData set to:', this.userData);
     this.requestUpdate();
   }
 
@@ -184,19 +200,35 @@ class UserView extends LitElement {
     }
   }
 
-  render() {
-    console.log('Current userData:', this.userData);
-    
-    if (!this.userData || Object.keys(this.userData).length === 0) {
-      return html`<div class="container">
-        <div class="header">
-          <h1>用户申请</h1>
-          <span class="close-button" @click="${this.handleClose}">×</span>
-        </div>
-        <div>加载中...</div>
-      </div>`;
+  firstUpdated() {
+    console.log('UserView firstUpdated, userData:', this.userData);
+    // 如果初始数据为空，但mode是review，设置默认值
+    if (this.mode === 'review' && (!this.userData || Object.keys(this.userData).length === 0)) {
+      this.userData = {
+        reviewStatus: '',
+        reviewer: '',
+        reviewTime: '',
+        reviewOpinion: '同意',
+        remarks: ''
+      };
+      this.requestUpdate();
     }
+  }
 
+  render() {
+    console.log('user-view render called, userData:', this.userData);
+    
+    // 修改判断条件
+    if (!this.userData || !this.userData.username) {
+        return html`<div class="container">
+            <div class="header">
+                <h1>用户申请</h1>
+                <span class="close-button" @click="${this.handleClose}">×</span>
+            </div>
+            <div>暂无数据</div>
+        </div>`;
+    }
+    
     return html`
       <div class="container">
         <div class="header">

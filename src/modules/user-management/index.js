@@ -50,7 +50,7 @@ class UserManagement extends LitElement {
         <div style="position:absolute;top:0;left:100%;">
           ${this.isUserViewOpen
             ? html`<user-view
-                mode=${this.userViewMode}
+                .mode=${this.userViewMode}
                 .userData=${this.userData}
                 @close-modal=${this.closeUserView}
                 @refresh-list=${this.handleRefreshList}
@@ -107,13 +107,6 @@ class UserManagement extends LitElement {
     }
   }
 
-  openUserView(e) {
-    this.userViewMode = e.detail.mode;
-    this.isUserViewOpen = true;
-    this.isUserInformationOpen = false;
-    this.userData = e.detail.application; // 将用户数据传递到当前组件
-  }
-
   closeUserView() {
     this.isUserViewOpen = false;
   }
@@ -128,7 +121,7 @@ class UserManagement extends LitElement {
     this.userInformationMode = mode;
     this.isUserInformationOpen = true;
     this.isUserViewOpen = false;
-    this.userData = e.detail.user;
+    this.userData = userData;
   }
 
   closeUserInformation() {
@@ -148,15 +141,18 @@ class UserManagement extends LitElement {
   }
 
   handleOpenUserView(event) {
+    console.log('handleOpenUserView event:', event);
+    console.log('handleOpenUserView event detail:', event.detail);
+    
+    if (!event.detail || !event.detail.userData) {
+        console.warn('No userData in event detail');
+        return;
+    }
+    
     const { mode, userData } = event.detail;
-    this.userViewMode = mode;
+    this.userViewMode = mode || 'view';
+    this.userData = userData;
     this.isUserViewOpen = true;
-    this.updateComplete.then(() => {
-      const userView = this.shadowRoot.querySelector('user-view');
-      if (userView) {
-        userView.setData({ mode, userData });
-      }
-    });
   }
 
   handleRefreshList() {

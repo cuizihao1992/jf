@@ -209,13 +209,17 @@ class AuditUserComponent extends LitElement {
 
   onViewClick(event, application) {
     const mode = event.target.getAttribute('data-mode');
+    console.log('onViewClick triggered with application:', application); // 添加日志
+    
     this.dispatchEvent(
-      new CustomEvent('open-user-view', {
-        detail: {
-          mode,
-          application,
-        },
-      })
+        new CustomEvent('open-user-view', {
+            detail: {
+                mode,
+                userData: application // 改为 userData 而不是 application
+            },
+            bubbles: true,
+            composed: true
+        })
     );
   }
 }
