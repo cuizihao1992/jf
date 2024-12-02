@@ -1,11 +1,13 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/device-query.css?inline';
 import api from '@/apis/api';
+
 class DeviceQuery extends LitElement {
   static properties = {
     showActions: { type: Boolean },
     showDeviceDetails: { type: Boolean },
     devices: { type: Array },
+    currentTime: { type: Number }, // 当前时间戳
   };
 
   constructor() {
@@ -13,7 +15,9 @@ class DeviceQuery extends LitElement {
     this.showActions = false;
     this.showDeviceDetails = false;
     this.devices = [];
+    this.currentTime = Date.now(); // 初始化当前时间戳
     this.fetchDevices();
+    this.startClock();
   }
 
   static styles = css`
@@ -24,8 +28,6 @@ class DeviceQuery extends LitElement {
     try {
       const filters = {};
       const data = await api.devicesApi.query(filters);
-      // const data = await deviceService.list(params);
-      // this.devices = data.rows;
       this.devices = data;
       this.requestUpdate();
     } catch (error) {
@@ -121,7 +123,12 @@ class DeviceQuery extends LitElement {
         <tr class="table-row">
           <td>${device.id}</td>
           <td>${device.deviceName}</td>
-          <td>${device.syncedDeviceTime || '-'}</td>
+          <td>
+            ${this.calculateRealTime(
+              device.syncedDeviceTime,
+              device.lastSyncTime
+            )}
+          </td>
           <td>${device.deviceType}</td>
           <td>${device.region}</td>
           <td>${device.connectionStatus}</td>
@@ -240,6 +247,18 @@ class DeviceQuery extends LitElement {
     } catch (error) {
       console.error('定位设备时出错:', error);
     }
+  }
+  startClock() {
+    setInterval(() => {
+      this.currentTime = Date.now(); // 每秒更新当前时间戳
+    }, 1000);
+  }
+
+  calculateRealTime(syncedDeviceTime, lastSyncTime) {
+    if (!syncedDeviceTime || !lastSyncTime) return '-';
+    const timeDiff = new Date(syncedDeviceTime) - new Date(lastSyncTime);
+    const realTime = timeDiff + this.currentTime;
+    return new Date(realTime).toLocaleTimeString();
   }
 }
 

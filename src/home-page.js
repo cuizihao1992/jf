@@ -4,6 +4,7 @@ import mapboxgl from 'mapbox-gl';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import * as turf from '@turf/turf';
 import { showToast } from '@/utils/toast-service';
+import api from '@/apis/api';
 
 // 注册为全局变量
 globalThis.showToast = showToast;
@@ -482,8 +483,16 @@ class HomePage extends LitElement {
         });
 
         // 移除可能存在的旧事件监听器
-        if (map.listeners && map.listeners['click'] && map.listeners['click']['test-points-layer']) {
-          map.off('click', 'test-points-layer', map.listeners['click']['test-points-layer']);
+        if (
+          map.listeners &&
+          map.listeners['click'] &&
+          map.listeners['click']['test-points-layer']
+        ) {
+          map.off(
+            'click',
+            'test-points-layer',
+            map.listeners['click']['test-points-layer']
+          );
         }
 
         // 添加点击事件监听
@@ -492,68 +501,66 @@ class HomePage extends LitElement {
           if (e.features.length > 0) {
             const feature = e.features[0];
             const deviceId = feature.properties.id;
-            
+
             console.log('点击的设备ID:', deviceId);
-            
+
             try {
               // 先获取最新的设备数据
-              const { deviceService } = await import('@/api/fetch.js');
-              const data = await deviceService.list({
-                pageNum: 1,
-                pageSize: 100000,
-              });
+              // const { deviceService } = await import('@/api/fetch.js');
+              // const data = await deviceService.list({
+              //   pageNum: 1,
+              //   pageSize: 100000,
+              // });
+              debugger;
+              const data = await api.devicesApi.query({});
 
-              if (data.code === 200) {
-                // 更新设备列表
-                this.deviceList = data.rows || [];
-                
-                // 更新地图显示
-                await this.syncDevicesWithMap();
+              // 更新设备列表
+              this.deviceList = data || [];
 
-                // 查找点击的设备信息
-                const device = this.deviceList.find(d => d.id === deviceId);
-                
-                if (device) {
-                  console.log('找到的设备信息:', device);
-                  
-                  // 创建并触发打开设备详情的事件
-                  const modal = document.createElement('device-particulars');
-                  modal.style.position = 'fixed';
-                  modal.style.top = '50%';
-                  modal.style.left = '50%';
-                  modal.style.transform = 'translate(-50%, -50%)';
-                  modal.style.zIndex = '1000';
-                  
-                  // 设置设备数据
-                  modal.setDeviceData({
-                    device: { ...device },
-                    mode: {
-                      isEdit: false,
-                      isReview: false,
-                      isReviewEdit: false
-                    }
-                  });
-                  
-                  // 添加关闭事件监听
-                  modal.addEventListener('close-modal', () => {
-                    modal.remove();
-                  });
-                  
-                  // 添加到文档中
-                  document.body.appendChild(modal);
+              // 更新地图显示
+              await this.syncDevicesWithMap();
 
-                  // 飞行到设备位置
-                  window.mapInstance.flyTo({
-                    center: [parseFloat(device.lon), parseFloat(device.lat)],
-                    zoom: 17,
-                    duration: 1000,
-                    essential: true
-                  });
-                } else {
-                  console.warn('未找到对应的设备信息:', deviceId);
-                }
+              // 查找点击的设备信息
+              const device = this.deviceList.find((d) => d.id === deviceId);
+
+              if (device) {
+                console.log('找到的设备信息:', device);
+
+                // 创建并触发打开设备详情的事件
+                const modal = document.createElement('device-particulars');
+                modal.style.position = 'fixed';
+                modal.style.top = '50%';
+                modal.style.left = '50%';
+                modal.style.transform = 'translate(-50%, -50%)';
+                modal.style.zIndex = '1000';
+
+                // 设置设备数据
+                modal.setDeviceData({
+                  device: { ...device },
+                  mode: {
+                    isEdit: false,
+                    isReview: false,
+                    isReviewEdit: false,
+                  },
+                });
+
+                // 添加关闭事件监听
+                modal.addEventListener('close-modal', () => {
+                  modal.remove();
+                });
+
+                // 添加到文档中
+                document.body.appendChild(modal);
+
+                // 飞行到设备位置
+                window.mapInstance.flyTo({
+                  center: [parseFloat(device.lon), parseFloat(device.lat)],
+                  zoom: 17,
+                  duration: 1000,
+                  essential: true,
+                });
               } else {
-                throw new Error(data.msg || '获取设备列表失败');
+                console.warn('未找到对应的设备信息:', deviceId);
               }
             } catch (error) {
               console.error('获取设备数据失败:', error);
@@ -881,9 +888,7 @@ class HomePage extends LitElement {
       rightBottom = [leftTop[0] + width, leftTop[1] - height];
       leftBottom = [leftTop[0], leftTop[1] - height];
     } else {
-      const rightTopPoint = points.find(
-        (p) => p.properties.position === '右'
-      );
+      const rightTopPoint = points.find((p) => p.properties.position === '右');
       rightTop = rightTopPoint.geometry.coordinates;
       leftTop = [rightTop[0] - width, rightTop[1]];
       leftBottom = [rightTop[0] - width, rightTop[1] - height];
@@ -935,7 +940,7 @@ class HomePage extends LitElement {
       .then(() => {
         console.log('设备详情组件加载成功');
       })
-      .catch(err => {
+      .catch((err) => {
         console.error('加载设备详情组件失败:', err);
       });
 
@@ -1063,7 +1068,9 @@ class HomePage extends LitElement {
               id="device-particulars-modal"
               style="display: none;"
               @close-modal="${() => {
-                const modal = this.shadowRoot.querySelector('#device-particulars-modal');
+                const modal = this.shadowRoot.querySelector(
+                  '#device-particulars-modal'
+                );
                 if (modal) modal.style.display = 'none';
               }}"
             ></device-particulars>
@@ -1258,22 +1265,22 @@ class HomePage extends LitElement {
   async syncDevicesWithMap() {
     try {
       console.log('开始同步设备数据到地图, 设备列表:', this.deviceList);
-      
+
       const features = this.deviceList
-        .filter(device => {
+        .filter((device) => {
           const isValid = this.validateCoordinates(device.lat, device.lon);
           if (!isValid) {
             console.warn('设备坐标无效:', device);
           }
           return isValid;
         })
-        .map(device => this.createFeature(device));
+        .map((device) => this.createFeature(device));
 
       console.log('创建的特征列表:', features);
 
       const featureCollection = {
         type: 'FeatureCollection',
-        features: features
+        features: features,
       };
 
       const source = window.mapInstance.getSource('test-points');
@@ -1349,7 +1356,7 @@ class HomePage extends LitElement {
       type: 'Feature',
       geometry: {
         type: 'Point',
-        coordinates: [parseFloat(device.lon), parseFloat(device.lat)]
+        coordinates: [parseFloat(device.lon), parseFloat(device.lat)],
       },
       properties: {
         id: device.id,
@@ -1357,54 +1364,41 @@ class HomePage extends LitElement {
         type: device.deviceType || '',
         status: device.deviceStatus || '',
         connectionStatus: device.connectionStatus || '',
-        powerStatus: device.powerStatus || ''
-      }
+        powerStatus: device.powerStatus || '',
+      },
     };
   }
 
   // 添加获取设备数据的方法
   async fetchAndDisplayDevices() {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        console.warn('未找到登录令牌');
-        this.stopRealTimeDataUpdate();
-        return;
-      }
-
-      const { deviceService } = await import('@/api/fetch.js');
       console.log('开始获取设备列表');
-      
-      const data = await deviceService.list({
-        pageNum: 1,
-        pageSize: 100000,
-      });
+
+      const data = await api.devicesApi.query({});
 
       console.log('取到的设备数据:', data);
 
-      if (data.code === 200) {
-        const newDevices = data.rows || [];
-        console.log('新的设备列表:', newDevices);
+      const newDevices = data || [];
+      console.log('新的设备列表:', newDevices);
 
-        this.deviceList = newDevices;
+      this.deviceList = newDevices;
 
-        // 如果地图已经初始化，立即更新显示
-        if (window.mapInstance) {
-          await this.syncDevicesWithMap();
-        }
-
-        // 触发设备更新事件
-        const event = new CustomEvent('devices-updated', {
-          detail: {
-            devices: this.deviceList,
-          },
-        });
-        window.dispatchEvent(event);
-      } else {
-        throw new Error(data.msg || '获取设备列表失败');
+      // 如果地图已经初始化，立即更新显示
+      if (window.mapInstance) {
+        await this.syncDevicesWithMap();
       }
+
+      // 触发设备更新事件
+      const event = new CustomEvent('devices-updated', {
+        detail: {
+          devices: this.deviceList,
+        },
+      });
+      window.dispatchEvent(event);
     } catch (error) {
       console.error('获取设备数据失败:', error);
+      this.stopRealTimeDataUpdate();
+
       if (error.message.includes('认证失败')) {
         this.stopRealTimeDataUpdate();
         window.location.href = '/login';

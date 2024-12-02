@@ -6,11 +6,13 @@ class DeviceEdit extends LitElement {
   static styles = css`
     ${unsafeCSS(styles)}
   `;
+
   static get properties() {
     return {
       devices: { type: Array },
       showConfirmation: { type: Boolean },
       currentDevice: { type: Object },
+      currentTime: { type: Number }, // 当前时间戳
     };
   }
 
@@ -19,7 +21,9 @@ class DeviceEdit extends LitElement {
     this.devices = [];
     this.showConfirmation = false;
     this.currentDevice = null;
+    this.currentTime = Date.now(); // 初始化当前时间戳
     this.fetchDevices();
+    this.startClock(); // 启动实时更新时钟
   }
 
   async fetchDevices() {
@@ -30,6 +34,19 @@ class DeviceEdit extends LitElement {
       console.error('获取设备审核数据失败:', error);
       showToast({ message: '获取设备数据失败', type: 'error', duration: 3000 });
     }
+  }
+
+  startClock() {
+    setInterval(() => {
+      this.currentTime = Date.now(); // 每秒更新当前时间戳
+    }, 1000);
+  }
+
+  calculateRealTime(syncedDeviceTime, lastSyncTime) {
+    if (!syncedDeviceTime || !lastSyncTime) return '-';
+    const timeDiff = new Date(syncedDeviceTime) - new Date(lastSyncTime);
+    const realTime = timeDiff + this.currentTime;
+    return new Date(realTime).toLocaleTimeString(); // 返回格式化时间
   }
 
   render() {
@@ -84,7 +101,7 @@ class DeviceEdit extends LitElement {
           <table>
             <thead>
               <tr>
-              <th>设备编号</th>
+                <th>设备编号</th>
                 <th>设备名</th>
                 <th>设备时间</th>
                 <th>设备类型</th>
@@ -126,7 +143,12 @@ class DeviceEdit extends LitElement {
         <tr class="table-row">
           <td>${device.id}</td>
           <td>${device.deviceName}</td>
-          <td>${device.lastSyncTime}</td>
+          <td>
+            ${this.calculateRealTime(
+              device.syncedDeviceTime,
+              device.lastSyncTime
+            )}
+          </td>
           <td>${device.deviceType}</td>
           <td>${device.region}</td>
           <td>${device.connectionStatus}</td>
@@ -135,12 +157,12 @@ class DeviceEdit extends LitElement {
           </td>
           <td>${device.deviceStatus}</td>
           <td>
-            <a @click="${() => this.openDeviceParticulars(device, 'view')}"
-              >查看</a
+            <a @click="${() => this.openDeviceParticulars(device, 'view')}">
+              查看</a
             >
             /
-            <a @click="${() => this.openDeviceParticulars(device, 'edit')}"
-              >编辑</a
+            <a @click="${() => this.openDeviceParticulars(device, 'edit')}">
+              编辑</a
             >
             /
             <a @click="${() => this.openRevokeConfirmation(device)}">删除</a>
@@ -183,12 +205,10 @@ class DeviceEdit extends LitElement {
     this.showConfirmation = true;
     this.currentDevice = device;
   }
-
   async confirmDelete() {
     try {
       await api.devicesApi.delete(this.currentDevice.id);
       this.fetchDevices();
-      // 触发设备更新事件，更新地图上的点位
       window.dispatchEvent(
         new CustomEvent('devices-updated', {
           detail: {
@@ -202,7 +222,6 @@ class DeviceEdit extends LitElement {
     } catch (error) {
       showToast({ message: error.message, type: 'error', duration: 3000 });
       console.error('删除设备失败:', error);
-      alert('删除设备失败，请重试');
     }
   }
 
