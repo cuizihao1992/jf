@@ -1,63 +1,82 @@
 :host {
   display: block;
   font-family: 'Arial', sans-serif;
-  color: white;
+  color: #e1e1e6;
   background: rgba(0, 9, 36, 0.8);
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  width: 250px;
-  left: 50%;
-  border: 1px solid rgba(42, 130, 228, 1);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  width: 280px;
+  border: 1px solid rgba(42, 130, 228, 0.6);
+  backdrop-filter: blur(10px);
 }
 
 .header {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 10px;
-  cursor: pointer;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(42, 130, 228, 0.3);
+  color: #fff;
 }
 
 .device-category {
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
-.device-list {
-  list-style-type: disc;
-  padding-left: 20px;
-  color: #58a6ff;
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  margin: 5px 0;
+/* 树状结构样式 */
+ul {
+  list-style: none;
+  padding-left: 15px;
+  margin: 0;
+}
+
+li {
+  margin: 8px 0;
 }
 
 details {
   margin: 5px 0;
-  padding-left: 15px;
 }
 
 summary {
   cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
 }
 
-.online-list,
-.offline-list {
-  list-style-type: none;
-  padding-left: 20px;
-  margin: 5px 0;
+summary:hover {
+  background: rgba(42, 130, 228, 0.1);
 }
 
+summary::before {
+  content: '▶';
+  font-size: 10px;
+  margin-right: 8px;
+  color: rgba(42, 130, 228, 0.8);
+  transition: transform 0.2s ease;
+}
+
+details[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+/* 在线/离线状态样式 */
 .online-list a,
 .offline-list a {
   color: #58a6ff;
   text-decoration: none;
+  display: block;
+  padding: 4px 8px;
+  margin: 2px 0;
+  border-radius: 4px;
+  transition: all 0.2s ease;
 }
 
 .online-list a:hover,
 .offline-list a:hover {
-  text-decoration: underline;
-}
-
-.device-category details > summary {
-  margin-bottom: 5px;
+  background: rgba(88, 166, 255, 0.1);
 }
