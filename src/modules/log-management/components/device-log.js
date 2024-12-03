@@ -5,6 +5,20 @@ import api from '@/apis/api';
 class DeviceLog extends LitElement {
   static styles = css`
     ${unsafeCSS(styles)}
+    
+    .clear-button {
+      margin-left: 5px;
+      padding: 5px 10px;
+      background-color: #d9534f;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .clear-button:hover {
+      background-color: #c9302c;
+    }
   `;
 
   static get properties() {
@@ -24,16 +38,53 @@ class DeviceLog extends LitElement {
     this.searchCondition = '';
     this.region = '';
     this.deviceType = '';
+    
+    // 添加地区映射对象
+    this.regionToChineseMap = {
+      'zhongwei': '中卫',
+      'songshan': '嵩山'
+    };
+    
+    // 完善日志类型映射
+    this.logTypeMap = {
+      'operation': '操作日志',
+      'system': '系统日志',
+      'error': '错误日志',
+      'warning': '警告日志',
+      'info': '信息日志',
+      'debug': '调试日志',
+      'OPERATION': '操作日志',
+      'SYSTEM': '系统日志',
+      'ERROR': '错误日志',
+      'WARNING': '警告日志',
+      'INFO': '信息日志',
+      'DEBUG': '调试日志'
+    };
+    
     this.fetchDeviceLogs();
   }
 
   async fetchDeviceLogs() {
     try {
-      const params = {
-        [this.searchType]: this.searchCondition,
-        region: this.region,
-        deviceType: this.deviceType
-      };
+      const params = {};
+      if (this.searchCondition) {
+        if (this.searchType === 'logId') {
+          params.logId = this.searchCondition;
+        } else if (this.searchType === 'eventType') {
+          // 如果是按日志类型查询，需要将中文转换为英文
+          const englishType = Object.keys(this.logTypeMap).find(
+            key => this.logTypeMap[key].toLowerCase() === this.searchCondition.toLowerCase()
+          );
+          params.eventType = englishType || this.searchCondition;
+        }
+      }
+      if (this.region) {
+        params.region = this.regionToChineseMap[this.region] || this.region;
+      }
+      if (this.deviceType) {
+        params.deviceType = this.deviceType;
+      }
+      
       Object.keys(params).forEach(key => {
         if (!params[key]) delete params[key];
       });
@@ -55,6 +106,7 @@ class DeviceLog extends LitElement {
 
   handleRegionChange(event) {
     this.region = event.target.value;
+    this.fetchDeviceLogs(); // 直接触发查询
   }
 
   handleDeviceTypeChange(event) {
@@ -106,18 +158,20 @@ class DeviceLog extends LitElement {
               .value="${this.searchCondition}"
               @input="${this.handleSearchConditionChange}"
             />
+            <button class="clear-button" @click="${this.clearSearchCondition}">
+              清除
+            </button>
           </div>
-          <button class="clear-button" @click="${this.clearSearchCondition}">删除</button>
           <button class="query-button" @click="${this.fetchDeviceLogs}">查询</button>
         </div>
         <hr />
         <div class="form-container">
           <div class="form-group">
             <label for="location">所属地区:</label>
-            <select id="location" @change="${this.handleRegionChange}">
+            <select id="location" @change="${this.handleRegionChange}" .value="${this.region}">
               <option value="">全部</option>
-              <option value="中卫">中卫</option>
-              <option value="嵩山">嵩山</option>
+              <option value="zhongwei">中卫</option>
+              <option value="songshan">嵩山</option>
             </select>
           </div>
           <div class="form-group">
@@ -152,19 +206,17 @@ class DeviceLog extends LitElement {
   }
 
   renderRows() {
-    return this.deviceLogs.map(
-      (log) => html`
-        <tr class="table-row">
-          <td>${log.logId}</td>
-          <td>${log.timestamp}</td>
-          <td>${log.userId}</td>
-          <td>${log.eventType}</td>
-          <td>${log.region}</td>
-          <td>${log.deviceType}</td>
-          <td>${log.eventDescription}</td>
-        </tr>
-      `
-    );
+    return this.deviceLogs.map(log => html`
+      <tr>
+        <td>${log.logId}</td>
+        <td>${log.timestamp}</td>
+        <td>${log.userId}</td>
+        <td>${this.logTypeMap[log.eventType] || this.logTypeMap[log.eventType?.toUpperCase()] || log.eventType}</td>
+        <td>${this.regionToChineseMap[log.region] || log.region}</td>
+        <td>${log.deviceType}</td>
+        <td>${log.eventDescription}</td>
+      </tr>
+    `);
   }
 
   closeModal() {

@@ -194,7 +194,6 @@ a {
 
 /* 添加 hr 样式 */
 hr {
-  border: none;
   border-top: 1px solid rgba(42, 130, 228, 0.3);
   margin: 1px 0;
 }

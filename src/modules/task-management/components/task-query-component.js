@@ -27,6 +27,13 @@ class TaskQueryComponent extends LitElement {
     this.deviceType = '自动角反射器';
     this.region = '';
     this.reviewStatus = '';
+    
+    // 添加地区映射对象
+    this.regionToChineseMap = {
+      'zhongwei': '中卫',
+      'songshan': '嵩山'
+    };
+    
     this.fetchTasks();
 
     window.addEventListener('tasks-updated', () => {
@@ -46,7 +53,7 @@ class TaskQueryComponent extends LitElement {
       const params = {
         [this.searchType]: this.searchCondition,
         reviewStatus: this.reviewStatus,
-        region: this.region,
+        region: this.regionToChineseMap[this.region] || this.region,
       };
       Object.keys(params).forEach((key) => {
         if (
@@ -143,8 +150,8 @@ class TaskQueryComponent extends LitElement {
               .value="${this.region}"
             >
               <option value="">全部</option>
-              <option value="中卫">中卫</option>
-              <option value="嵩山">嵩山</option>
+              <option value="zhongwei">中卫</option>
+              <option value="songshan">嵩山</option>
             </select>
           </div>
           <div class="form-group">

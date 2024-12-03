@@ -27,6 +27,13 @@ class TaskReviewComponent extends LitElement {
     this.reviewStatus = ''; // 审批状态初始化为空
     this.currentTask = null; // 初始化当前任务为空
     this.region = ''; // 初始化地区为空
+    
+    // 添加地区映射对象
+    this.regionToChineseMap = {
+      'zhongwei': '中卫',
+      'songshan': '嵩山'
+    };
+    
     this.fetchTasks();
 
     // 监听任务更新事件
@@ -46,7 +53,7 @@ class TaskReviewComponent extends LitElement {
     try {
       const params = {
         [this.searchType]: this.searchCondition,
-        region: this.region,
+        region: this.regionToChineseMap[this.region] || this.region,
       };
 
       // 只在审批状态不为空时添加到查询参数
@@ -145,8 +152,8 @@ class TaskReviewComponent extends LitElement {
             <label for="location">所属地区:</label>
             <select id="location" @change="${this.handleRegionChange}" .value="${this.region}">
               <option value="">全部</option>
-              <option value="中卫">中卫</option>
-              <option value="嵩山">嵩山</option>
+              <option value="zhongwei">中卫</option>
+              <option value="songshan">嵩山</option>
             </select>
           </div>
           <div class="form-group">

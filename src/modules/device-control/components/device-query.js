@@ -24,6 +24,12 @@ class DeviceQuery extends LitElement {
     this.deviceStatus = '';
     this.searchType = 'id';
     this.searchCondition = '';
+    
+    this.regionToChineseMap = {
+      'zhongwei': '中卫',
+      'songshan': '嵩山'
+    };
+    
     this.fetchDevices();
     this.startClock();
   }
@@ -44,7 +50,7 @@ class DeviceQuery extends LitElement {
         }
       }
       if (this.region) {
-        params.region = this.region;
+        params.region = this.regionToChineseMap[this.region] || this.region;
       }
       if (this.deviceStatus) {
         params.deviceStatus = this.deviceStatus;
@@ -139,8 +145,8 @@ class DeviceQuery extends LitElement {
               .value="${this.region}"
             >
               <option value="">全部</option>
-              <option value="中卫">中卫</option>
-              <option value="嵩山">嵩山</option>
+              <option value="zhongwei">中卫</option>
+              <option value="songshan">嵩山</option>
             </select>
           </div>
           <div class="form-group">

@@ -28,6 +28,24 @@ class UserPermissionsComponent extends LitElement {
     this.userType = '';
     this.region = '';
     this.userStatus = '';
+    
+    // 添加地区和用户类型映射对象
+    this.regionToChineseMap = {
+      'zhongwei': '中卫',
+      'songshan': '嵩山'
+    };
+    
+    this.userTypeToChineseMap = {
+      'user': '用户',
+      'admin': '管理员',
+      'superAdmin': '超级管理员'
+    };
+    
+    // 添加用户状态映射
+    this.userStatusMap = {
+      'active': '开放',
+      'inactive': '禁用'
+    };
   }
 
   connectedCallback() {
@@ -54,9 +72,9 @@ class UserPermissionsComponent extends LitElement {
         username: this.searchType === 'username' ? this.searchCondition : undefined,
         phone: this.searchType === 'phone' ? this.searchCondition : undefined,
         userId: this.searchType === 'userId' ? this.searchCondition : undefined,
-        userType: this.userType || undefined,
-        region: this.region || undefined,
-        status: this.userStatus || undefined
+        userType: this.userTypeToChineseMap[this.userType] || this.userType,
+        region: this.regionToChineseMap[this.region] || this.region,
+        status: this.userStatus,  // 使用英文状态值
       };
       
       Object.keys(params).forEach(key => {
@@ -93,19 +111,19 @@ class UserPermissionsComponent extends LitElement {
     this.searchCondition = event.target.value;
   }
 
+  onInputChange(event) {
+    const { id, value } = event.target;
+    const propertyName = id.replace(/-([a-z])/g, g => g[1].toUpperCase());
+    this[propertyName] = value;
+    this.loadUsers();
+  }
+
   onClearClick() {
     this.searchType = 'username';
     this.searchCondition = '';
     this.userType = '';
     this.region = '';
     this.userStatus = '';
-    this.loadUsers();
-  }
-
-  onInputChange(event) {
-    const { id, value } = event.target;
-    const propertyName = id.replace(/-([a-z])/g, g => g[1].toUpperCase());
-    this[propertyName] = value;
     this.loadUsers();
   }
 
@@ -153,8 +171,8 @@ class UserPermissionsComponent extends LitElement {
               @change="${this.onInputChange}"
             >
               <option value="">全部</option>
-              <option value="中卫">中卫</option>
-              <option value="嵩山">嵩山</option>
+              <option value="zhongwei">中卫</option>
+              <option value="songshan">嵩山</option>
             </select>
           </div>
           <div class="form-group">
@@ -165,8 +183,9 @@ class UserPermissionsComponent extends LitElement {
               @change="${this.onInputChange}"
             >
               <option value="">全部</option>
-              <option value="用户">用户</option>
-              <option value="管理员">管理员</option>
+              <option value="user">用户</option>
+              <option value="admin">管理员</option>
+              <option value="superAdmin">超级管理员</option>
             </select>
           </div>
           <div class="form-group">
@@ -182,7 +201,7 @@ class UserPermissionsComponent extends LitElement {
             </select>
           </div>
         </div>
-        <hr />
+        
         <div class="table-container">
           <table>
             <thead>
@@ -207,12 +226,12 @@ class UserPermissionsComponent extends LitElement {
 
   renderRow(user) {
     return html`
-      <tr class="table-row">
+      <tr>
         <td>${user.username}</td>
-        <td>${user.userType}</td>
+        <td>${this.userTypeToChineseMap[user.userType] || user.userType}</td>
         <td>${user.createTime}</td>
-        <td>${user.region}</td>
-        <td>${user.status}</td>
+        <td>${this.regionToChineseMap[user.region] || user.region}</td>
+        <td>${this.userStatusMap[user.status] || user.status}</td>
         <td>
           <a @click="${() => this.openUserInformation(user, 'view')}">查看</a> /
           <a @click="${() => this.openUserInformation(user, 'edit')}">编辑</a> /
