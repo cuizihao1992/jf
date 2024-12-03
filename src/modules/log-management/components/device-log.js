@@ -20,7 +20,7 @@ class DeviceLog extends LitElement {
   constructor() {
     super();
     this.deviceLogs = [];
-    this.searchType = 'deviceId';
+    this.searchType = 'logId';
     this.searchCondition = '';
     this.region = '';
     this.deviceType = '';
@@ -64,7 +64,7 @@ class DeviceLog extends LitElement {
   clearSearchCondition() {
     // 重置所有筛选条件
     this.searchCondition = '';
-    this.searchType = 'deviceId';
+    this.searchType = 'logId';
     this.region = '';
     this.deviceType = '';
     
@@ -75,7 +75,7 @@ class DeviceLog extends LitElement {
     
     if (locationSelect) locationSelect.value = '';
     if (deviceTypeSelect) deviceTypeSelect.value = '';
-    if (searchTypeSelect) searchTypeSelect.value = 'deviceId';
+    if (searchTypeSelect) searchTypeSelect.value = 'logId';
     
     // 刷新数据
     this.fetchDeviceLogs();
@@ -94,7 +94,6 @@ class DeviceLog extends LitElement {
           <div class="form-group">
             <label for="search-type">日志查询方式:</label>
             <select id="search-type" .value="${this.searchType}" @change="${this.handleSearchTypeChange}">
-              <option value="deviceId">设备编号</option>
               <option value="logId">日志编号</option>
               <option value="eventType">日志类型</option>
             </select>
