@@ -15,6 +15,7 @@ class TaskInfoComponent extends LitElement {
       searchCondition: { type: String },
       reviewStatus: { type: String },
       currentTask: { type: Object }, // 保存当前操作的任务
+      region: { type: String }, // 添加地区属性
     };
   }
 
@@ -26,6 +27,7 @@ class TaskInfoComponent extends LitElement {
     this.searchCondition = ''; // 查询条件初始化为空
     this.reviewStatus = ''; // 审批状态初始化为空
     this.currentTask = null; // 初始化当前任务为空
+    this.region = ''; // 初始化地区为空
     this.fetchTasks();
 
     // 监听任务更新事件
@@ -46,6 +48,7 @@ class TaskInfoComponent extends LitElement {
       const params = {
         [this.searchType]: this.searchCondition, // 动态属性查询
         reviewStatus: this.reviewStatus, // 审批状态过滤
+        region: this.region, // 添加地区参数
       };
       Object.keys(params).forEach((key) => {
         if (
@@ -76,8 +79,14 @@ class TaskInfoComponent extends LitElement {
     this.reviewStatus = event.target.value;
   }
 
+  handleRegionChange(event) {
+    this.region = event.target.value;
+    this.fetchTasks();
+  }
+
   clearSearchCondition() {
     this.searchCondition = '';
+    this.fetchTasks();
   }
 
   render() {
@@ -122,8 +131,10 @@ class TaskInfoComponent extends LitElement {
           </div>
           <div class="form-group">
             <label for="location">所属地区:</label>
-            <select id="location">
-              <option>中卫</option>
+            <select id="location" @change="${this.handleRegionChange}" .value="${this.region}">
+              <option value="">全部</option>
+              <option value="中卫">中卫</option>
+              <option value="嵩山">嵩山</option>
             </select>
           </div>
           <div class="form-group">

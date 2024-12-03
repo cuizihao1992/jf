@@ -5,7 +5,6 @@ import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import * as turf from '@turf/turf';
 import { showToast } from '@/utils/toast-service';
 import api from '@/apis/api';
-import api from '@/apis/api';
 
 // 注册为全局变量
 globalThis.showToast = showToast;
