@@ -25,7 +25,7 @@ class TaskQueryComponent extends LitElement {
     this.searchType = 'taskNumber';
     this.searchCondition = '';
     this.deviceType = '自动角反射器';
-    this.region = '中卫';
+    this.region = '';
     this.reviewStatus = '';
     this.fetchTasks();
 
@@ -46,6 +46,7 @@ class TaskQueryComponent extends LitElement {
       const params = {
         [this.searchType]: this.searchCondition,
         reviewStatus: this.reviewStatus,
+        region: this.region,
       };
       Object.keys(params).forEach((key) => {
         if (
@@ -83,14 +84,17 @@ class TaskQueryComponent extends LitElement {
 
   handleRegionChange(event) {
     this.region = event.target.value;
+    this.fetchTasks();
   }
 
   handleTaskStatusChange(event) {
     this.reviewStatus = event.target.value;
+    this.fetchTasks();
   }
 
   clearSearchCondition() {
     this.searchCondition = '';
+    this.fetchTasks();
   }
 
   render() {
@@ -138,7 +142,9 @@ class TaskQueryComponent extends LitElement {
               @change="${this.handleRegionChange}"
               .value="${this.region}"
             >
+              <option value="">全部</option>
               <option value="中卫">中卫</option>
+              <option value="嵩山">嵩山</option>
             </select>
           </div>
           <div class="form-group">

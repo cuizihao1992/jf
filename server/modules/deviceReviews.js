@@ -3,21 +3,30 @@ const db = require('./mysql.js');
 module.exports = {
   // 查询设备审核记录
   async query(filter) {
-    const baseQuery = 'SELECT * FROM jf_device_reviews';
+    const baseQuery = `
+      SELECT 
+        reviews.*, 
+        devices.*
+      FROM jf_device_reviews AS reviews
+      LEFT JOIN jf_devices AS devices ON reviews.device_id = devices.id
+    `;
     const conditions = [];
     const values = [];
 
+    // 根据过滤条件动态生成 WHERE 子句
     Object.keys(filter).forEach((key) => {
       if (filter[key] !== undefined && filter[key] !== null) {
-        conditions.push(`${key} = ?`);
+        conditions.push(`reviews.${key} = ?`);
         values.push(filter[key]);
       }
     });
 
+    // 如果有过滤条件，则添加 WHERE 子句
     const query = conditions.length
       ? `${baseQuery} WHERE ${conditions.join(' AND ')}`
       : baseQuery;
 
+    // 执行查询
     const [rows] = await db.query(query, values);
     return rows;
   },

@@ -1,11 +1,17 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/device-query.css?inline';
 import api from '@/apis/api';
+
 class DeviceQuery extends LitElement {
   static properties = {
     showActions: { type: Boolean },
     showDeviceDetails: { type: Boolean },
     devices: { type: Array },
+    currentTime: { type: Number },
+    region: { type: String },
+    deviceStatus: { type: String },
+    searchType: { type: String },
+    searchCondition: { type: String },
   };
 
   constructor() {
@@ -13,7 +19,13 @@ class DeviceQuery extends LitElement {
     this.showActions = false;
     this.showDeviceDetails = false;
     this.devices = [];
+    this.currentTime = Date.now();
+    this.region = '';
+    this.deviceStatus = '';
+    this.searchType = 'id';
+    this.searchCondition = '';
     this.fetchDevices();
+    this.startClock();
   }
 
   static styles = css`
@@ -22,19 +34,61 @@ class DeviceQuery extends LitElement {
 
   async fetchDevices() {
     try {
-      const filters = {};
-      const data = await api.devicesApi.query(filters);
-      // const data = await deviceService.list(params);
-      // this.devices = data.rows;
-      this.devices = data;
+      const params = {};
+
+      if (this.searchCondition) {
+        if (this.searchType === 'id') {
+          params.id = this.searchCondition;
+        } else if (this.searchType === 'name') {
+          params.deviceName = this.searchCondition;
+        }
+      }
+      if (this.region) {
+        params.region = this.region;
+      }
+      if (this.deviceStatus) {
+        params.deviceStatus = this.deviceStatus;
+      }
+
+      console.log('查询参数:', params);
+
+      const data = await api.devicesApi.query(params);
+      if (Array.isArray(data)) {
+        this.devices = data;
+      } else {
+        console.warn('API返回的数据不是数组格式:', data);
+        this.devices = [];
+      }
       this.requestUpdate();
     } catch (error) {
       console.error('获取设备信息失败:', error);
+      this.devices = [];
+      this.requestUpdate();
     }
   }
 
-  connectedCallback() {
-    super.connectedCallback();
+  handleRegionChange(event) {
+    this.region = event.target.value;
+    console.log('地区变更为:', this.region);
+    this.fetchDevices();
+  }
+
+  handleDeviceStatusChange(event) {
+    this.deviceStatus = event.target.value;
+    console.log('设备状态变更为:', this.deviceStatus);
+    this.fetchDevices();
+  }
+
+  handleSearchTypeChange(event) {
+    this.searchType = event.target.value;
+  }
+
+  handleSearchConditionChange(event) {
+    this.searchCondition = event.target.value;
+  }
+
+  clearSearchCondition() {
+    this.searchCondition = '';
     this.fetchDevices();
   }
 
@@ -49,9 +103,14 @@ class DeviceQuery extends LitElement {
         <hr />
         <div class="form-container">
           <div class="form-group">
-            <label for="search-type">任务查询方式:</label>
-            <select id="search-type" style="background-color: gray;">
-              <option>任务编号</option>
+            <label for="search-type">查询方式:</label>
+            <select
+              id="search-type"
+              @change="${this.handleSearchTypeChange}"
+              .value="${this.searchType}"
+            >
+              <option value="id">设备编号</option>
+              <option value="name">设备名称</option>
             </select>
           </div>
           <div class="form-group">
@@ -59,8 +118,12 @@ class DeviceQuery extends LitElement {
             <input
               type="text"
               id="search-condition"
-              style="background-color: white; "
+              .value="${this.searchCondition}"
+              @input="${this.handleSearchConditionChange}"
             />
+            <button class="clear-button" @click="${this.clearSearchCondition}">
+              清除
+            </button>
           </div>
           <button class="query-button" @click="${this.fetchDevices}">
             查询
@@ -70,23 +133,36 @@ class DeviceQuery extends LitElement {
         <div class="form-container">
           <div class="form-group">
             <label for="location">所属地区:</label>
-            <select id="location" style="background-color: gray;">
-              <option>中卫</option>
+            <select
+              id="location"
+              @change="${this.handleRegionChange}"
+              .value="${this.region}"
+            >
+              <option value="">全部</option>
+              <option value="中卫">中卫</option>
+              <option value="嵩山">嵩山</option>
             </select>
           </div>
           <div class="form-group">
             <label for="device-type">设备类型:</label>
-            <select id="device-type" style="background-color: gray;">
-              <option>自动角反射器</option>
+            <select id="device-type">
+              <option value="自动角反射器">自动角反射器</option>
             </select>
           </div>
           <div class="form-group">
-            <label for="review-status">设备状态:</label>
-            <select id="review-status" style="background-color: gray;">
-              <option>关机</option>
+            <label for="device-status">设备状态:</label>
+            <select
+              id="device-status"
+              @change="${this.handleDeviceStatusChange}"
+              .value="${this.deviceStatus}"
+            >
+              <option value="">全部</option>
+              <option value="online">在线</option>
+              <option value="offline">离线</option>
             </select>
           </div>
         </div>
+
         <div class="table-container">
           <table>
             <thead>
@@ -121,7 +197,12 @@ class DeviceQuery extends LitElement {
         <tr class="table-row">
           <td>${device.id}</td>
           <td>${device.deviceName}</td>
-          <td>${device.installTime}</td>
+          <td>
+            ${this.calculateRealTime(
+              device.syncedDeviceTime,
+              device.lastSyncTime
+            )}
+          </td>
           <td>${device.deviceType}</td>
           <td>${device.region}</td>
           <td>${device.connectionStatus}</td>
@@ -237,6 +318,18 @@ class DeviceQuery extends LitElement {
     } catch (error) {
       console.error('定位设备时出错:', error);
     }
+  }
+  startClock() {
+    setInterval(() => {
+      this.currentTime = Date.now(); // 每秒更新当前时间戳
+    }, 1000);
+  }
+
+  calculateRealTime(syncedDeviceTime, lastSyncTime) {
+    if (!syncedDeviceTime || !lastSyncTime) return '-';
+    const timeDiff = new Date(syncedDeviceTime) - new Date(lastSyncTime);
+    const realTime = timeDiff + this.currentTime;
+    return new Date(realTime).toLocaleTimeString();
   }
 }
 
