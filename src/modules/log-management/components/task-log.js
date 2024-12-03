@@ -6,6 +6,81 @@ class TaskLog extends LitElement {
     ${unsafeCSS(styles)}
   `;
 
+  static get properties() {
+    return {
+      taskLogs: { type: Array },
+      searchType: { type: String },
+      searchCondition: { type: String },
+      region: { type: String },
+      deviceType: { type: String }
+    };
+  }
+
+  constructor() {
+    super();
+    this.taskLogs = [];
+    this.searchType = 'logType'; // 默认查询类型
+    this.searchCondition = '';
+    this.region = '';
+    this.deviceType = '';
+    this.fetchTaskLogs();
+  }
+
+  async fetchTaskLogs() {
+    try {
+      const params = {
+        [this.searchType]: this.searchCondition,
+        region: this.region,
+        deviceType: this.deviceType
+      };
+      // 移除空值参数
+      Object.keys(params).forEach(key => {
+        if (!params[key]) delete params[key];
+      });
+      
+      const data = await api.taskLogsApi.query(params);
+      this.taskLogs = data;
+    } catch (error) {
+      console.error('获取任务日志失败:', error);
+    }
+  }
+
+  handleSearchTypeChange(event) {
+    this.searchType = event.target.value;
+  }
+
+  handleSearchConditionChange(event) {
+    this.searchCondition = event.target.value;
+  }
+
+  handleRegionChange(event) {
+    this.region = event.target.value;
+  }
+
+  handleDeviceTypeChange(event) {
+    this.deviceType = event.target.value;
+  }
+
+  clearSearchCondition() {
+    // 重置所有筛选条件
+    this.searchCondition = '';
+    this.searchType = 'logType';
+    this.region = '';
+    this.deviceType = '';
+    
+    // 重置下拉框选项
+    const locationSelect = this.shadowRoot.querySelector('#location');
+    const deviceTypeSelect = this.shadowRoot.querySelector('#device-type');
+    const searchTypeSelect = this.shadowRoot.querySelector('#search-type');
+    
+    if (locationSelect) locationSelect.value = '';
+    if (deviceTypeSelect) deviceTypeSelect.value = '';
+    if (searchTypeSelect) searchTypeSelect.value = 'logType';
+    
+    // 刷新数据
+    this.fetchTaskLogs();
+  }
+
   render() {
     return html`
       <div class="modal">
@@ -18,8 +93,10 @@ class TaskLog extends LitElement {
         <div class="form-container">
           <div class="form-group">
             <label for="search-type">日志查询方式:</label>
-            <select id="search-type" style="background-color: gray;">
-              <option>日志类型</option>
+            <select id="search-type" .value="${this.searchType}" @change="${this.handleSearchTypeChange}">
+              <option value="logType">日志类型</option>
+              <option value="logId">日志编号</option>
+              <option value="userName">操作用户</option>
             </select>
           </div>
           <div class="form-group">
@@ -27,23 +104,28 @@ class TaskLog extends LitElement {
             <input
               type="text"
               id="search-condition"
-              style="background-color: white; "
+              .value="${this.searchCondition}"
+              @input="${this.handleSearchConditionChange}"
             />
           </div>
-          <button class="query-button">查询</button>
+          <button class="clear-button" @click="${this.clearSearchCondition}">删除</button>
+          <button class="query-button" @click="${this.fetchTaskLogs}">查询</button>
         </div>
         <hr />
         <div class="form-container">
           <div class="form-group">
             <label for="location">所属地区:</label>
-            <select id="location" style="background-color: gray;">
-              <option>中卫</option>
+            <select id="location" @change="${this.handleRegionChange}">
+              <option value="">全部</option>
+              <option value="中卫">中卫</option>
+              <option value="嵩山">嵩山</option>
             </select>
           </div>
           <div class="form-group">
             <label for="device-type">设备类型:</label>
-            <select id="device-type" style="background-color: gray;">
-              <option>自动角反射器</option>
+            <select id="device-type" @change="${this.handleDeviceTypeChange}">
+              <option value="">全部</option>
+              <option value="自动角反射器">自动角反射器</option>
             </select>
           </div>
         </div>
@@ -73,210 +155,7 @@ class TaskLog extends LitElement {
   }
 
   renderRows() {
-    const taskLog = [
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-      {
-        logId: 1,
-        logTime: '2024-9-24 16:21:45',
-        userName: '张三',
-        logType: '自动角反射器',
-        region: '中卫',
-        deviceType: '自动角反射器',
-      },
-    ];
-
-    return taskLog.map(
+    return this.taskLogs.map(
       (taskLog) => html`
       <tr class="table-row">
         <td>${taskLog.logId}</a></td>

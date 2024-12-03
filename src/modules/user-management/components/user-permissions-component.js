@@ -11,13 +11,23 @@ class UserPermissionsComponent extends LitElement {
     showDialog: { type: Boolean },
     selectedUser: { type: Object },
     powerUsers: { type: Array },
+    searchType: { type: String },
+    searchCondition: { type: String },
+    userType: { type: String },
+    region: { type: String },
+    userStatus: { type: String },
   };
 
   constructor() {
     super();
     this.showDialog = false;
     this.selectedUser = null;
-    this.powerUsers = []; // 初始化为空数组
+    this.powerUsers = [];
+    this.searchType = 'username';
+    this.searchCondition = '';
+    this.userType = '';
+    this.region = '';
+    this.userStatus = '';
   }
 
   connectedCallback() {
@@ -40,17 +50,29 @@ class UserPermissionsComponent extends LitElement {
 
   async loadUsers() {
     try {
-      const response = await api.userApi.query({});
+      const params = {
+        username: this.searchType === 'username' ? this.searchCondition : undefined,
+        phone: this.searchType === 'phone' ? this.searchCondition : undefined,
+        userId: this.searchType === 'userId' ? this.searchCondition : undefined,
+        userType: this.userType || undefined,
+        region: this.region || undefined,
+        status: this.userStatus || undefined
+      };
+      
+      Object.keys(params).forEach(key => {
+        if (!params[key]) {
+          delete params[key];
+        }
+      });
+
+      const response = await api.userApi.query(params);
       if (Array.isArray(response)) {
-        // 确保每个用户对象都有必要的字段
         this.powerUsers = response.map(user => ({
           ...user,
-          id: user.id || user.userId, // 确保有 id
-          status: user.status || 'active', // 设置默认状态
-          userType: user.userType || user.user_type || '普通用户', // 处理不同的字段名
+          id: user.id || user.userId,
+          status: user.status || 'active',
+          userType: user.userType || user.user_type || '普通用户',
         }));
-      } else {
-        console.error('Invalid response format:', response);
       }
     } catch (error) {
       console.error('Failed to load users:', error);
@@ -62,47 +84,105 @@ class UserPermissionsComponent extends LitElement {
     this.loadUsers(); // 重新加载用户数据
   }
 
+  handleSearchTypeChange(event) {
+    this.searchType = event.target.value;
+    this.searchCondition = '';
+  }
+
+  handleSearchConditionChange(event) {
+    this.searchCondition = event.target.value;
+  }
+
+  onClearClick() {
+    this.searchType = 'username';
+    this.searchCondition = '';
+    this.userType = '';
+    this.region = '';
+    this.userStatus = '';
+    this.loadUsers();
+  }
+
+  onInputChange(event) {
+    const { id, value } = event.target;
+    const propertyName = id.replace(/-([a-z])/g, g => g[1].toUpperCase());
+    this[propertyName] = value;
+    this.loadUsers();
+  }
+
   render() {
     return html`
       <div class="modal">
         <div class="header">
-          用户权限<button class="close-button" @click="${this.closeModal}">
-            ×
-          </button>
+          用户权限<button class="close-button" @click="${this.closeModal}">×</button>
         </div>
         <hr />
         <div class="form-container">
           <div class="form-group">
-            <label for="search-condition">用户名:</label>
-            <input
-              type="text"
-              id="search-condition"
-              style="background-color: white;"
-            />
+            <label for="search-type">查询类型:</label>
+            <select 
+              id="search-type" 
+              .value="${this.searchType}"
+              @change="${this.handleSearchTypeChange}"
+            >
+              <option value="username">用户名</option>
+              <option value="phone">手机号</option>
+              <option value="userId">用户ID</option>
+            </select>
           </div>
-          <button class="query-button">查询</button>
+          <div class="search-condition-group">
+            <label for="search-condition">查询条件:</label>
+            <div class="input-with-buttons">
+              <input
+                type="text"
+                id="search-condition"
+                .value="${this.searchCondition}"
+                @input="${this.handleSearchConditionChange}"
+              />
+              <button class="clear-button" @click="${this.onClearClick}">清除</button>
+              <button class="query-button" @click="${this.loadUsers}">查询</button>
+            </div>
+          </div>
         </div>
         <hr />
         <div class="form-container">
           <div class="form-group">
             <label for="region">所属地区:</label>
-            <select id="region" style="background-color: gray;">
-              <option>中卫</option>
+            <select
+              id="region"
+              .value="${this.region}"
+              @change="${this.onInputChange}"
+            >
+              <option value="">全部</option>
+              <option value="中卫">中卫</option>
+              <option value="嵩山">嵩山</option>
             </select>
           </div>
           <div class="form-group">
             <label for="user-type">用户类型:</label>
-            <select id="user-type" style="background-color: gray;">
-              <option>管理员</option>
+            <select
+              id="userType"
+              .value="${this.userType}"
+              @change="${this.onInputChange}"
+            >
+              <option value="">全部</option>
+              <option value="用户">用户</option>
+              <option value="管理员">管理员</option>
             </select>
           </div>
           <div class="form-group">
             <label for="user-status">用户状态:</label>
-            <select id="user-status" style="background-color: gray;">
-              <option>开放</option>
+            <select
+              id="userStatus"
+              .value="${this.userStatus}"
+              @change="${this.onInputChange}"
+            >
+              <option value="">全部</option>
+              <option value="active">开放</option>
+              <option value="inactive">禁用</option>
             </select>
           </div>
         </div>
+        <hr />
         <div class="table-container">
           <table>
             <thead>

@@ -124,3 +124,17 @@ a {
   cursor: pointer;
   text-decoration: none;
 }
+
+.clear-button {
+  padding: 8px 15px;
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.clear-button:hover {
+  background-color: #c9302c;
+}
