@@ -36,7 +36,7 @@ async function login(req, res) {
     token, // 可选，存储当前的 JWT
   });
 
-  res.json({ message: 'Login successful', token });
+  res.json({ message: 'Login successful', token, user });
 }
 async function logout(req, res) {
   const authHeader = req.headers.authorization;

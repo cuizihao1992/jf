@@ -108,6 +108,7 @@ class DeviceApprove extends LitElement {
         <tr class="table-row">
           <td>${review.reviewId}</td>
           <td>${review.deviceId}</td>
+          <td>${review.deviceName}</td>
           <td>${review.region}</td>
           <td>${review.userId}</td>
           <td>${review.reviewType}</td>

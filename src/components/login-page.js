@@ -2,6 +2,7 @@ import { LitElement, html, css, unsafeCSS } from 'lit';
 import api from '@/apis/api';
 import styles from './login-page.css?inline';
 import Cookies from 'js-cookie';
+import { setUserInfo } from '@/global';
 
 class LoginPage extends LitElement {
   static styles = css`
@@ -194,10 +195,10 @@ class LoginPage extends LitElement {
         this.showError('请填写完整的登录信息');
         return;
       }
-      debugger;
       const res = await api.loginApi.login({ username, password });
       const message = res.message;
       console.log(message);
+      setUserInfo(res.user);
       Cookies.set('token', `${res.token}`);
       localStorage.setItem('token', `Bearer ${res.token}`);
       window.dispatchEvent(new CustomEvent('login-success'));

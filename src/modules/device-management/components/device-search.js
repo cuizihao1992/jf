@@ -6,16 +6,20 @@ class DeviceSearch extends LitElement {
   static styles = css`
     ${unsafeCSS(styles)}
   `;
+
   static get properties() {
     return {
       devices: { type: Array },
+      currentTime: { type: Number }, // 当前时间戳
     };
   }
 
   constructor() {
     super();
     this.devices = [];
-    this.fetchDevices(); // 初始化时获取设备审核数据
+    this.currentTime = Date.now(); // 初始化当前时间戳
+    this.fetchDevices();
+    this.startClock(); // 启动实时更新时钟
   }
 
   async fetchDevices() {
@@ -26,6 +30,19 @@ class DeviceSearch extends LitElement {
       showToast({ message: '获取设备数据失败', type: 'error', duration: 3000 });
       console.error('获取设备审核数据失败:', error);
     }
+  }
+
+  startClock() {
+    setInterval(() => {
+      this.currentTime = Date.now(); // 每秒更新当前时间戳
+    }, 1000);
+  }
+
+  calculateRealTime(syncedDeviceTime, lastSyncTime) {
+    if (!syncedDeviceTime || !lastSyncTime) return '-';
+    const timeDiff = new Date(syncedDeviceTime) - new Date(lastSyncTime);
+    const realTime = timeDiff + this.currentTime;
+    return new Date(realTime).toLocaleTimeString(); // 返回格式化时间
   }
 
   render() {
@@ -106,7 +123,12 @@ class DeviceSearch extends LitElement {
         <tr class="table-row">
           <td>${device.id}</td>
           <td>${device.deviceName}</td>
-          <td>${device.installTime}</td>
+          <td>
+            ${this.calculateRealTime(
+              device.syncedDeviceTime,
+              device.lastSyncTime
+            )}
+          </td>
           <td>${device.deviceType}</td>
           <td>${device.region}</td>
           <td>${device.connectionStatus}</td>
@@ -123,9 +145,11 @@ class DeviceSearch extends LitElement {
       `
     );
   }
+
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
+
   openDeviceParticulars(device) {
     this.dispatchEvent(
       new CustomEvent('open-device-particulars', {
@@ -140,31 +164,36 @@ class DeviceSearch extends LitElement {
       })
     );
   }
+
   locateDevice(device) {
     try {
-      // 确保经纬度值是有效的数值
       const lat = parseFloat(device.lat);
       const lon = parseFloat(device.lon);
 
-      // 验证坐标是否在有效范围内
-      if (isNaN(lat) || isNaN(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+      if (
+        isNaN(lat) ||
+        isNaN(lon) ||
+        lat < -90 ||
+        lat > 90 ||
+        lon < -180 ||
+        lon > 180
+      ) {
         console.error('设备坐标无效:', {
           设备ID: device.id,
           设备名称: device.deviceName,
           纬度: lat,
-          经度: lon
+          经度: lon,
         });
         return;
       }
 
-      // 发送定位事件
       const locationEvent = new CustomEvent('locate-device', {
         detail: {
           deviceId: device.id,
           deviceName: device.deviceName,
           lat: lat,
-          lon: lon
-        }
+          lon: lon,
+        },
       });
 
       window.dispatchEvent(locationEvent);
