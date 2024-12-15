@@ -192,7 +192,7 @@ class HomePage extends LitElement {
           // 飞行到目标位置
           window.mapInstance.flyTo({
             center: [lon, lat],
-            zoom: 17,
+            zoom: 8,
             duration: 1000,
             essential: true,
           });
@@ -308,7 +308,7 @@ class HomePage extends LitElement {
 
     map.addControl(this.draw);
 
-    // 添加选中点数据源
+    // 添选中点数据源
     map.addSource('selected-points', {
       type: 'geojson',
       data: {
@@ -438,7 +438,7 @@ class HomePage extends LitElement {
   initMapLayers(map) {
     try {
       // 定义 SVG 图标
-      const svgIcon = `<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="40" height="40"><path d="M512 512m-512 0a512 512 0 1 0 1024 0 512 512 0 1 0-1024 0Z" fill="#4CB4C4"></path><path d="M517.376 63.616l-0.128 1.6-38.72 507.328-358.912 179.2z" fill="#FFFFFF"></path><path d="M119.616 764.736a13.056 13.056 0 0 1-11.328-19.584L506.048 57.088a13.12 13.12 0 0 1 24.384 7.552l-10.496 0.448 0.64 0.384 9.728 0.768-38.72 507.264a13.12 13.12 0 0 1-7.232 10.752L125.44 763.392a13.376 13.376 0 0 1-5.824 1.344zM499.968 119.936l-347.2 600.576 313.28-156.352 33.92-444.224z" fill="#FFFFFF"></path><path d="M911.616 764.736H119.616a13.056 13.056 0 1 1 0-26.112h769.472L507.072 71.808a13.12 13.12 0 0 1 22.72-12.992l393.28 686.4a13.056 13.056 0 0 1-11.456 19.52z" fill="#FFFFFF"></path><path d="M911.616 764.8a13.632 13.632 0 0 1-4.992-1.024l-433.088-179.2a13.056 13.056 0 0 1 9.984-24.128l433.088 179.136a13.184 13.184 0 0 1 7.104 17.152 13.184 13.184 0 0 1-12.096 8.064z" fill="#FFFFFF"></path></svg>`;
+      const svgIcon = `<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="40" height="40"><path d="M512 512m-512 0a512 512 0 1 0 1024 0 512 512 0 1 0-1024 0Z" fill="#4CB4C4"></path><path d="M517.376 63.616l-0.128 1.6-38.72 507.328-358.912 179.2z" fill="#FFFFFF"></path><path d="M119.616 764.736a13.056 13.056 0 0 1-11.328-19.584L506.048 57.088a13.12 13.12 0 0 1 24.384 7.552l-10.496 0.448 0.64 0.384 9.728 0.768-38.72 507.264a13.12 13.12 0 0 1-7.232 10.752L125.44 763.392a13.376 13.376 0 0 1-5.824 1.344z" fill="#FFFFFF"></path><path d="M499.968 119.936l-347.2 600.576 313.28-156.352 33.92-444.224z" fill="#FFFFFF"></path><path d="M911.616 764.736H119.616a13.056 13.056 0 1 1 0-26.112h769.472L507.072 71.808a13.12 13.12 0 0 1 22.72-12.992l393.28 686.4a13.056 13.056 0 0 1-11.456 19.52z" fill="#FFFFFF"></path><path d="M911.616 764.8a13.632 13.632 0 0 1-4.992-1.024l-433.088-179.2a13.056 13.056 0 0 1 9.984-24.128l433.088 179.136a13.184 13.184 0 0 1 7.104 17.152 13.184 13.184 0 0 1-12.096 8.064z" fill="#FFFFFF"></path></svg>`;
 
       // 将 SVG 转换为 Base64
       const svgBase64 = btoa(svgIcon);
@@ -455,11 +455,11 @@ class HomePage extends LitElement {
           type: 'geojson',
           data: {
             type: 'FeatureCollection',
-            features: [],
-          },
+            features: []
+          }
         });
 
-        // 修改图层配置
+        // 添加图层
         map.addLayer({
           id: 'test-points-layer',
           type: 'symbol',
@@ -470,16 +470,18 @@ class HomePage extends LitElement {
             'icon-allow-overlap': true,
             'icon-ignore-placement': true,
             'text-field': ['get', 'name'],
-            'text-font': ['Open Sans Regular'],
+            'text-font': ['Arial Unicode MS Bold'],
             'text-offset': [0, 1.5],
             'text-anchor': 'top',
-            'text-size': 12,
+            'text-size': 14,
+            'text-allow-overlap': true,
+            'text-ignore-placement': true
           },
           paint: {
             'text-color': '#ffffff',
             'text-halo-color': '#000000',
-            'text-halo-width': 1,
-          },
+            'text-halo-width': 2
+          }
         });
 
         // 移除可能存在的旧事件监听器
@@ -496,7 +498,7 @@ class HomePage extends LitElement {
         }
 
         // 添加点击事件监听
-        const clickHandler = async (e) => {
+        map.on('click', 'test-points-layer', async (e) => {
           console.log('点击事件触发');
           if (e.features.length > 0) {
             const feature = e.features[0];
@@ -569,19 +571,7 @@ class HomePage extends LitElement {
               }
             }
           }
-        };
-
-        // 保存事件监听器引用
-        if (!map.listeners) {
-          map.listeners = {};
-        }
-        if (!map.listeners['click']) {
-          map.listeners['click'] = {};
-        }
-        map.listeners['click']['test-points-layer'] = clickHandler;
-
-        // 绑定点击事件
-        map.on('click', 'test-points-layer', clickHandler);
+        });
 
         // 添加鼠标悬停效果
         map.on('mouseenter', 'test-points-layer', () => {
@@ -591,9 +581,13 @@ class HomePage extends LitElement {
         map.on('mouseleave', 'test-points-layer', () => {
           map.getCanvas().style.cursor = '';
         });
+
+        // 如果已有设备数据，立即显示
+        if (this.deviceList && this.deviceList.length > 0) {
+          this.syncDevicesWithMap();
+        }
       };
 
-      // 设置图片源
       img.src = svgUrl;
     } catch (err) {
       console.error('初始化图层失败:', err);
@@ -790,10 +784,10 @@ class HomePage extends LitElement {
         // 修改动画效果的范围和颜色
         let time = 0;
         const animate = () => {
-          // 计算动态半径 - 增大范围
+          // 计动态半径 - 增大范围
           const haloRadius = 35 + Math.sin(time * 0.05) * 7; // 外圈呼吸效果
           const glowRadius = 25 + Math.sin(time * 0.1) * 5; // 中圈呼吸效果
-          const coreRadius = 15 + Math.sin(time * 0.15) * 2; // 内圈呼吸效果
+          const coreRadius = 15 + Math.sin(time * 0.15) * 2; // 内圈呼���效果
 
           // 计算动态透明度
           const haloOpacity = 0.15 + Math.sin(time * 0.03) * 0.05;
@@ -848,7 +842,7 @@ class HomePage extends LitElement {
       console.log('选中的点位数量:', count);
       alert(`选中点位数量: ${count}`);
     } catch (error) {
-      console.error('点位检测失败:', error);
+      console.error('点位检测失:', error);
     }
   }
 
@@ -867,7 +861,7 @@ class HomePage extends LitElement {
     const positions = points.map((p) => p.properties.position);
     const isDiagonal =
       (positions.includes('左上') && positions.includes('右下')) ||
-      (positions.includes('右') && positions.includes('左下'));
+        (positions.includes('右') && positions.includes('左下'));
 
     if (!isDiagonal) {
       console.warn('需要选择对角点才能进行拟合');
@@ -1286,12 +1280,12 @@ class HomePage extends LitElement {
       const source = window.mapInstance.getSource('test-points');
       if (source) {
         source.setData(featureCollection);
-        console.log('已更新地图数据源');
+        console.log('已更新地图数据源，特征数量:', features.length);
       } else {
-        console.error('未找到地图数据源');
+        console.error('未找到地图数据源 test-points');
       }
     } catch (error) {
-      console.error('同步设备数据到地图失败:', error);
+      console.error('同步设备据到地图失:', error);
     }
   }
 
@@ -1313,7 +1307,7 @@ class HomePage extends LitElement {
       if (!bounds.isEmpty()) {
         window.mapInstance.fitBounds(bounds, {
           padding: { top: 50, bottom: 50, left: 50, right: 50 },
-          maxZoom: 15,
+          maxZoom: 8,
           duration: 1000,
         });
       }
@@ -1325,21 +1319,22 @@ class HomePage extends LitElement {
   // 修改设备详情获取和坐标处理
   async getDeviceDetails(deviceId) {
     try {
-      const response = await deviceService.getDeviceDetails(deviceId);
+      // 使用 api.devicesApi.getById() 替代原来的 deviceService.getDeviceDetails()
+      const device = await api.devicesApi.getById(deviceId);
 
-      // 确保经纬度保留完整精度，不要四舍五入或截断
-      const lat = response.lat ? parseFloat(response.lat) : null;
-      const lon = response.lon ? parseFloat(response.lon) : null;
+      // 确保经纬度保留完整精度
+      const lat = device.lat ? parseFloat(device.lat) : null;
+      const lon = device.lon ? parseFloat(device.lon) : null;
 
       console.log(`设备 ${deviceId} 的精确坐标:`, {
-        原始lat: response.lat,
-        原始lon: response.lon,
+        原始lat: device.lat,
+        原始lon: device.lon,
         转换后lat: lat,
         转换后lon: lon,
       });
 
       return {
-        ...response,
+        ...device,
         lat: lat,
         lon: lon,
       };
@@ -1369,7 +1364,7 @@ class HomePage extends LitElement {
     };
   }
 
-  // 添加获取设备数据的方法
+  // 修改获取设备数据的方法
   async fetchAndDisplayDevices() {
     try {
       console.log('开始获取设备列表');

@@ -336,7 +336,7 @@ class TaskDetails extends LitElement {
           <input
             type="text"
             id="reviewer"
-            .value="${''}"
+            .value="${this.taskData?.reviewer || ''}"
             ?disabled="${!isReviewEdit}"
             @input="${(e) => this.handleInputChange(e, 'reviewer')}"
           />
@@ -344,21 +344,21 @@ class TaskDetails extends LitElement {
         <div class="row">
           <label for="review-time">审核时间:</label>
           <input
-            type="text"
+            type="datetime-local"
             id="review-time"
-            .value="${''}"
+            .value="${this.taskData?.review_time || ''}"
             ?disabled="${!isReviewEdit}"
             @input="${(e) => this.handleInputChange(e, 'reviewTime')}"
           />
         </div>
         <div class="row">
-          <label for="review-opinion">审核意见:</label>
+          <label for="review-comments">审核意见:</label>
           <input
             type="text"
-            id="review-opinion"
-            .value="${''}"
+            id="review-comments"
+            .value="${this.taskData?.review_comments || ''}"
             ?disabled="${!isReviewEdit}"
-            @input="${(e) => this.handleInputChange(e, 'reviewOpinion')}"
+            @input="${(e) => this.handleInputChange(e, 'reviewComments')}"
           />
         </div>
         <div class="row">

@@ -1,6 +1,6 @@
 // api.js
 import { getToken } from '../components/auth';
-const baseUrl = 'http://fk3510tn3811.vicp.fun/jf-prod-api/system';
+const baseUrl = 'http://localhost:3000';
 
 class ApiService {
   constructor(resource) {

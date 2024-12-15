@@ -5,11 +5,40 @@ import api from '@/apis/api';
 class UserInformation extends LitElement {
   static styles = css`
     ${unsafeCSS(styles)}
+    
+    .form-input {
+      background-color: rgba(20, 30, 50, 0.8);
+      border: 1px solid rgb(45, 92, 136);
+      border-radius: 3px;
+      color: white;
+      padding: 5px 8px;
+      width: 200px;
+    }
+
+    .form-input.disabled {
+      background-color: rgba(20, 30, 50, 0.5);
+      cursor: not-allowed;
+    }
+
+    .submit-button {
+      background-color: #2d5c88;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .submit-button:disabled {
+      background-color: #1a3550;
+      cursor: not-allowed;
+    }
   `;
 
   static get properties() {
     return {
-      mode: { type: String }, // 'view' 或 'edit'
+      mode: { type: String },
       devices: { type: Array },
       allSelected: { type: Boolean },
       userData: { type: Object },
@@ -18,7 +47,7 @@ class UserInformation extends LitElement {
 
   constructor() {
     super();
-    this.mode = 'view'; // 默认查看模式
+    this.mode = 'view';
     this.devices = [];
     this.allSelected = false;
   }
@@ -66,8 +95,36 @@ class UserInformation extends LitElement {
     this.requestUpdate(); // 手动触发更新
   }
 
+  getOptionsForField(fieldName) {
+    const options = {
+      user_type: [
+        { value: 'user', label: '普通用户' },
+        { value: 'admin', label: '管理员' }
+      ],
+      status: [
+        { value: 'active', label: '激活' },
+        { value: 'inactive', label: '未激活' }
+      ],
+      role: [
+        { value: 'user', label: '普通用户' },
+        { value: 'admin', label: '管理员' }
+      ],
+      region: [
+        { value: 'zhongwei', label: '中卫' },
+        { value: 'other', label: '其他地区' }
+      ]
+    };
+
+    return options[fieldName]?.map(option => html`
+      <option value=${option.value} ?selected=${this.userData[fieldName] === option.value}>
+        ${option.label}
+      </option>
+    `) || [];
+  }
+
   handleInputChange(e, fieldName) {
     if (this.mode === 'view') return;
+    
     this.userData = {
       ...this.userData,
       [fieldName]: e.target.value,
@@ -220,9 +277,8 @@ class UserInformation extends LitElement {
         </div>
 
         <div class="section">
-          <div class="section-title">用户权限</div>
+          <div class="section-title">设备权限</div>
           <h4>用户所属地区的设备使用权限：</h4>
-
           <div class="table-container">
             <table class="device-table">
               <thead>
@@ -232,6 +288,7 @@ class UserInformation extends LitElement {
                       type="checkbox"
                       @change="${this.handleSelectAll}"
                       .checked="${this.allSelected}"
+                      ?disabled="${this.mode === 'view'}"
                     />
                   </th>
                   <th>设备编号</th>

@@ -35,6 +35,61 @@ class UserView extends LitElement {
       ...this.userData,
       reviewTime: currentTime,
     };
+    this.requestUpdate();
+  }
+
+  // 添加日期格式化方法
+  formatDate(dateStr) {
+    if (!dateStr) return '';
+    try {
+        const date = new Date(dateStr);
+        return date.toLocaleString('zh-CN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+    } catch (e) {
+        return dateStr;
+    }
+  }
+
+  // 添加属性观察器
+  updated(changedProperties) {
+    if (changedProperties.has('userData')) {
+      console.log('userData updated:', this.userData);
+    }
+  }
+
+  // 修改 setUserData 方法
+  setUserData(data) {
+    console.log('user-view setUserData called with:', data);
+    
+    if (!data) {
+        console.warn('setUserData received null or undefined data');
+        return;
+    }
+    
+    // 确保至少有基本的数据结构
+    this.userData = {
+        username: data.username || '',
+        password: data.password || '',
+        phone: data.phone || '',
+        applicationDate: data.applicationDate || '',
+        country: data.country || '',
+        region: data.region || '',
+        userType: data.userType || '',
+        reviewStatus: data.reviewStatus || '',
+        reviewer: data.reviewer || '',
+        reviewTime: data.reviewTime || '',
+        reviewOpinion: data.reviewOpinion || '同意',
+        remarks: data.remarks || ''
+    };
+    
+    console.log('user-view userData set to:', this.userData);
+    this.requestUpdate();
   }
 
   // 渲染表单字段
@@ -145,7 +200,35 @@ class UserView extends LitElement {
     }
   }
 
+  firstUpdated() {
+    console.log('UserView firstUpdated, userData:', this.userData);
+    // 如果初始数据为空，但mode是review，设置默认值
+    if (this.mode === 'review' && (!this.userData || Object.keys(this.userData).length === 0)) {
+      this.userData = {
+        reviewStatus: '',
+        reviewer: '',
+        reviewTime: '',
+        reviewOpinion: '同意',
+        remarks: ''
+      };
+      this.requestUpdate();
+    }
+  }
+
   render() {
+    console.log('user-view render called, userData:', this.userData);
+    
+    // 修改判断条件
+    if (!this.userData || !this.userData.username) {
+        return html`<div class="container">
+            <div class="header">
+                <h1>用户申请</h1>
+                <span class="close-button" @click="${this.handleClose}">×</span>
+            </div>
+            <div>暂无数据</div>
+        </div>`;
+    }
+    
     return html`
       <div class="container">
         <div class="header">

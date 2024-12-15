@@ -27,7 +27,7 @@ class StatusMission extends LitElement {
         this.tasks = response.map((task) => ({
           name: task.taskName,
           code: task.taskNumber,
-          status: task.taskStatus,
+          status: task.taskstatus,
           startTime: task.startTime,
           endTime: task.endTime,
         }));

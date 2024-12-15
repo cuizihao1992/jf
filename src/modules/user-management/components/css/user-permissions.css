@@ -24,6 +24,7 @@
   flex-wrap: wrap;
   align-items: center;
   margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .form-group {
@@ -46,14 +47,30 @@
   border-radius: 5px;
 }
 
+.query-button,
+.clear-button {
+  margin-left: 10px;
+  min-width: 60px;
+  padding: 4px 15px;
+  height: 28px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .query-button {
-  padding: 8px 15px;
   background-color: #58a6ff;
   color: white;
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-left: 10px;
+}
+
+.clear-button {
+  background-color: #d9534f;
+  color: white;
+  border: none;
 }
 
 table {
@@ -136,4 +153,47 @@ a {
 .table-container {
   max-height: 475px;
   overflow-y: auto;
+}
+
+.search-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.search-condition-group {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.input-with-buttons {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+#search-condition {
+  padding: 5px;
+  background-color: #1b2a41;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.form-group select {
+  padding: 4px 8px;
+  background-color: rgba(27, 42, 65, 0.5);
+  color: white;
+  border: 1px solid rgba(42, 130, 228, 0.5);
+  border-radius: 4px;
+  height: 28px;
+  min-width: 120px;
+}
+
+/* 添加 hr 样式 */
+hr {
+  border-top: 1px solid rgba(42, 130, 228, 0.3);
+  margin: 1px 0;
 }

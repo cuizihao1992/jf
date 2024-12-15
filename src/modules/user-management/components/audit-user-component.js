@@ -9,21 +9,47 @@ class AuditUserComponent extends LitElement {
 
   static properties = {
     applications: { type: Array },
-    filteredApplications: { type: Array }, // 过滤后的数据
-    approvalType: { type: String },
+    filteredApplications: { type: Array },
     userType: { type: String },
     region: { type: String },
     reviewStatus: { type: String },
+    searchType: { type: String },
+    searchCondition: { type: String },
   };
 
   constructor() {
     super();
     this.applications = [];
-    this.filteredApplications = []; // 初始化为空数组
-    this.approvalType = '';
+    this.filteredApplications = [];
     this.userType = '';
     this.region = '';
     this.reviewStatus = '';
+    this.searchType = 'username';
+    this.searchCondition = '';
+    
+    this.regionToChineseMap = {
+      'zhongwei': '中卫',
+      'songshan': '嵩山'
+    };
+    
+    this.userTypeToChineseMap = {
+      'user': '用户',
+      'admin': '管理员',
+      'superAdmin': '超级管理员'
+    };
+    
+    this.reviewStatusMap = {
+      'submitted': '已提交',
+      'approved': '已通过',
+      'rejected': '已拒绝',
+      'pending': '待审核'
+    };
+    
+    this.applicationTypeMap = {
+      'register': '注册',
+      'modify': '修改',
+      'delete': '删除'
+    };
   }
 
   connectedCallback() {
@@ -33,53 +59,70 @@ class AuditUserComponent extends LitElement {
 
   async loadApplications() {
     try {
-      this.applications = await api.userReviewApi.query({});
-      this.filteredApplications = [...this.applications]; // 初始化过滤列表
+      const params = {
+        username: this.searchType === 'username' ? this.searchCondition : undefined,
+        phone: this.searchType === 'phone' ? this.searchCondition : undefined,
+        userId: this.searchType === 'userId' ? this.searchCondition : undefined,
+        userType: this.userTypeToChineseMap[this.userType] || this.userType,
+        region: this.regionToChineseMap[this.region] || this.region,
+        reviewStatus: this.reviewStatus
+      };
+      
+      Object.keys(params).forEach(key => {
+        if (params[key] === '' || params[key] === null || params[key] === undefined) {
+          delete params[key];
+        }
+      });
+
+      const response = await api.userReviewApi.query(params);
+      this.applications = response;
+      this.filteredApplications = [...this.applications];
     } catch (error) {
       console.error('Failed to load applications:', error);
     }
   }
 
-  // 查询按钮点击事件
-  onQueryClick() {
-    this.filteredApplications = this.applications.filter((application) => {
-      return (
-        (!this.approvalType ||
-          application.applicationType === this.approvalType) &&
-        (!this.userType || application.userType === this.userType) &&
-        (!this.region || application.region === this.region) &&
-        (!this.reviewStatus || application.reviewStatus === this.reviewStatus)
-      );
-    });
+  handleSearchTypeChange(event) {
+    this.searchType = event.target.value;
+    this.searchCondition = '';
   }
 
-  // 清除按钮点击事件
+  handleSearchConditionChange(event) {
+    this.searchCondition = event.target.value;
+  }
+
+  onInputChange(event) {
+    const { id, value } = event.target;
+    const propertyName = id.replace(/-([a-z])/g, g => g[1].toUpperCase());
+    this[propertyName] = value;
+    this.loadApplications();
+  }
+
   onClearClick() {
-    this.approvalType = '';
+    this.searchType = 'username';
+    this.searchCondition = '';
     this.userType = '';
     this.region = '';
     this.reviewStatus = '';
-    this.filteredApplications = [...this.applications]; // 重置过滤列表
+    this.loadApplications();
   }
 
-  // 审核状态英文转中文
   getReviewStatusInChinese(status) {
     const statusMap = {
-      submitted: '已提交',
-      approved: '已通过',
-      rejected: '已拒绝',
-      pending: '待审核',
+      SUBMITTED: '已提交',
+      APPROVED: '已通过',
+      REJECTED: '已拒绝',
+      PENDING: '待审核',
     };
     return statusMap[status] || status;
   }
 
-  // 显示中文状态值
   getReviewStatusOptions() {
     return [
-      { value: 'submitted', label: '已提交' },
-      { value: 'approved', label: '已通过' },
-      { value: 'rejected', label: '已拒绝' },
-      { value: 'pending', label: '待审核' },
+      { value: 'SUBMITTED', label: '已提交' },
+      { value: 'APPROVED', label: '已通过' },
+      { value: 'REJECTED', label: '已拒绝' },
+      { value: 'PENDING', label: '待审核' },
     ];
   }
 
@@ -93,60 +136,75 @@ class AuditUserComponent extends LitElement {
         </div>
         <hr />
         <div class="form-container">
-          <div class="form-group">
-            <label for="approval-type">审批类型:</label>
-            <select
-              id="approval-type"
-              .value="${this.approvalType}"
-              @change="${this.onInputChange}"
-            >
-              <option value="">全部</option>
-              <option value="用户注册">用户注册</option>
-            </select>
+          <div class="search-section">
+            <div class="form-group">
+              <label for="search-type">查询类型:</label>
+              <select 
+                id="search-type" 
+                .value="${this.searchType}"
+                @change="${this.handleSearchTypeChange}"
+              >
+                <option value="username">用户名</option>
+                <option value="phone">手机号</option>
+                <option value="user_id">用户ID</option>
+              </select>
+            </div>
+            <div class="search-condition-group">
+              <label for="search-condition">查询条件:</label>
+              <div class="input-with-buttons">
+                <input
+                  type="text"
+                  id="search-condition"
+                  .value="${this.searchCondition}"
+                  @input="${this.handleSearchConditionChange}"
+                />
+                <button class="clear-button" @click="${this.onClearClick}">清除</button>
+                <button class="query-button" @click="${this.loadApplications}">查询</button>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="user-type">用户类型:</label>
-            <select
-              id="user-type"
-              .value="${this.userType}"
-              @change="${this.onInputChange}"
-            >
-              <option value="">全部</option>
-              <option value="用户">用户</option>
-            </select>
+          <hr />
+          <div class="filter-section">
+            <div class="form-group">
+              <label for="user-type">用户类型:</label>
+              <select
+                id="user-type"
+                .value="${this.userType}"
+                @change="${this.onInputChange}"
+              >
+                <option value="">全部</option>
+                <option value="user">用户</option>
+                <option value="admin">管理员</option>
+                <option value="superAdmin">超级管理员</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="region">所属地区:</label>
+              <select
+                id="region"
+                .value="${this.region}"
+                @change="${this.onInputChange}"
+              >
+                <option value="">全部</option>
+                <option value="zhongwei">中卫</option>
+                <option value="songshan">嵩山</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="review-status">审核状态:</label>
+              <select
+                id="review-status"
+                .value="${this.reviewStatus}"
+                @change="${this.onInputChange}"
+              >
+                <option value="">全部</option>
+                <option value="submitted">已提交</option>
+                <option value="approved">已通过</option>
+                <option value="rejected">已拒绝</option>
+                <option value="pending">待审核</option>
+              </select>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="region">所属地区:</label>
-            <select
-              id="region"
-              .value="${this.region}"
-              @change="${this.onInputChange}"
-            >
-              <option value="">全部</option>
-              <option value="中卫">中卫</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="review-status">审核状态:</label>
-            <select
-              id="review-status"
-              .value="${this.reviewStatus}"
-              @change="${this.onInputChange}"
-            >
-              <option value="">全部</option>
-              ${this.getReviewStatusOptions().map(
-                (option) => html`
-                  <option value="${option.value}">${option.label}</option>
-                `
-              )}
-            </select>
-          </div>
-          <button class="query-button" @click="${this.onQueryClick}">
-            查询
-          </button>
-          <button class="clear-button" @click="${this.onClearClick}">
-            清除
-          </button>
         </div>
 
         <div class="table-container">
@@ -168,13 +226,13 @@ class AuditUserComponent extends LitElement {
                 (application) => html`
                   <tr class="table-row">
                     <td>${application.username}</td>
-                    <td>${application.applicationType}</td>
-                    <td>${application.region}</td>
+                    <td>${this.applicationTypeMap[application.applicationType] || application.applicationType}</td>
+                    <td>${this.regionToChineseMap[application.region] || application.region}</td>
                     <td>${application.phone}</td>
-                    <td>${application.userType}</td>
+                    <td>${this.userTypeToChineseMap[application.userType] || application.userType}</td>
                     <td>${application.applicationDate}</td>
                     <td>
-                      ${this.getReviewStatusInChinese(application.reviewStatus)}
+                      ${this.reviewStatusMap[application.reviewStatus] || application.reviewStatus}
                     </td>
                     <td>
                       <a
@@ -202,21 +260,32 @@ class AuditUserComponent extends LitElement {
     this.dispatchEvent(new CustomEvent('close-modal'));
   }
 
-  onInputChange(event) {
-    const { id, value } = event.target;
-    this[id] = value; // 更新对应绑定的属性
-  }
-
   onViewClick(event, application) {
     const mode = event.target.getAttribute('data-mode');
+    console.log('onViewClick triggered with application:', application);
+    
     this.dispatchEvent(
-      new CustomEvent('open-user-view', {
-        detail: {
-          mode,
-          application,
-        },
-      })
+        new CustomEvent('open-user-view', {
+            detail: {
+                mode,
+                userData: application
+            },
+            bubbles: true,
+            composed: true
+        })
     );
+  }
+
+  getRegionLabel(region) {
+    const regionMap = {
+      'ZHONGWEI': '中卫',
+      'SONGSHAN': '嵩山'
+    };
+    return regionMap[region] || region;
+  }
+
+  getUserTypeLabel(userType) {
+    return userType;
   }
 }
 

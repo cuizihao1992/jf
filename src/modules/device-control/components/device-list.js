@@ -27,19 +27,22 @@ class DeviceList extends LitElement {
     }
   }
 
-  renderTree(nodes) {
+  renderTree(nodes, level = 0) {
     return html`
       <ul>
-        ${nodes.map(
-          (node) => html`
-            <li>
-              <details>
-                <summary>${node.label}</summary>
-                ${node.children ? this.renderTree(node.children) : ''}
-              </details>
-            </li>
-          `
-        )}
+        ${nodes.map(node => html`
+          <li>
+            ${level === 3 
+              ? html`<a href="#">${node.label}</a>`
+              : html`
+                  <details>
+                    <summary>${node.label}</summary>
+                    ${node.children ? this.renderTree(node.children, level + 1) : ''}
+                  </details>
+                `
+            }
+          </li>
+        `)}
       </ul>
     `;
   }
@@ -47,7 +50,6 @@ class DeviceList extends LitElement {
   render() {
     return html`
       <div class="header">设备列表</div>
-      <hr />
       <div class="device-category">
         ${this.treeData && this.treeData.length > 0
           ? this.renderTree(this.treeData)

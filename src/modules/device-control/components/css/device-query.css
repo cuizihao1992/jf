@@ -3,7 +3,7 @@
   background: rgba(0, 9, 36, 0.8);
   color: white;
   border-radius: 10px;
-  width: 900px;
+  width: 945px;
   height: 700px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   opacity: 1;
@@ -141,4 +141,17 @@ a {
 
 td:last-child {
   min-width: 150px;
+}
+.clear-button {
+  margin-left: 5px;
+  padding: 5px 10px;
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.clear-button:hover {
+  background-color: #c9302c;
 }

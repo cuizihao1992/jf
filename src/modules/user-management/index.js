@@ -50,10 +50,11 @@ class UserManagement extends LitElement {
         <div style="position:absolute;top:0;left:100%;">
           ${this.isUserViewOpen
             ? html`<user-view
-                mode=${this.userViewMode}
+                .mode=${this.userViewMode}
                 .userData=${this.userData}
                 @close-modal=${this.closeUserView}
-                @submit=${this.handleUserViewSubmit}
+                @refresh-list=${this.handleRefreshList}
+                @show-message=${this.handleShowMessage}
               ></user-view>`
             : ''}
           ${this.isUserInformationOpen
@@ -94,7 +95,7 @@ class UserManagement extends LitElement {
       case 'auditUser':
         return html`<audit-user-component
           @close-modal=${this.closeTasks}
-          @open-user-view=${this.openUserView}
+          @open-user-view=${this.handleOpenUserView}
         ></audit-user-component>`;
       case 'userPermissions':
         return html`<user-permissions-component
@@ -104,13 +105,6 @@ class UserManagement extends LitElement {
       default:
         return '';
     }
-  }
-
-  openUserView(e) {
-    this.userViewMode = e.detail.mode;
-    this.isUserViewOpen = true;
-    this.isUserInformationOpen = false;
-    this.userData = e.detail.application; // 将用户数据传递到当前组件
   }
 
   closeUserView() {
@@ -123,10 +117,11 @@ class UserManagement extends LitElement {
   }
 
   openUserInformation(e) {
-    this.userInformationMode = e.detail.mode;
+    const { mode, userData } = e.detail;
+    this.userInformationMode = mode;
     this.isUserInformationOpen = true;
     this.isUserViewOpen = false;
-    this.userData = e.detail.user;
+    this.userData = userData;
   }
 
   closeUserInformation() {
@@ -134,12 +129,41 @@ class UserManagement extends LitElement {
   }
 
   handleUserInformationSubmit(e) {
-    console.log('User information submitted:', e.detail);
+    const userPermissions = this.shadowRoot.querySelector('user-permissions-component');
+    if (userPermissions) {
+      userPermissions.loadUsers();  // 刷新用户列表
+    }
     this.closeUserInformation();
   }
 
   closeTasks() {
     this.clearAllComponents();
+  }
+
+  handleOpenUserView(event) {
+    console.log('handleOpenUserView event:', event);
+    console.log('handleOpenUserView event detail:', event.detail);
+    
+    if (!event.detail || !event.detail.userData) {
+        console.warn('No userData in event detail');
+        return;
+    }
+    
+    const { mode, userData } = event.detail;
+    this.userViewMode = mode || 'view';
+    this.userData = userData;
+    this.isUserViewOpen = true;
+  }
+
+  handleRefreshList() {
+    const auditComponent = this.shadowRoot.querySelector('audit-user-component');
+    if (auditComponent) {
+      auditComponent.loadApplications();
+    }
+  }
+
+  handleShowMessage(event) {
+    console.log('Message:', event.detail.message);
   }
 }
 

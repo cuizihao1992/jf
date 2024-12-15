@@ -37,5 +37,6 @@
   },
   "[vue]": {
     "editor.formatOnSave": true
-  }
+  },
+  "Codegeex.RepoIndex": true
 }

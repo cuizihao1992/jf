@@ -287,8 +287,8 @@ class DeviceAdd extends LitElement {
             <label>设备编号:</label>
             <input
               type="text"
-              .value="${this.deviceid}"
-              @input="${(e) => (this.deviceid = e.target.value)}"
+              .value="${this.ytsbh}"
+              @input="${(e) => (this.ytsbh = e.target.value)}"
             />
           </div>
           <div>

@@ -1,6 +1,7 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/task-query-component.css?inline';
 import api from '@/apis/api.js';
+import { showError } from '@/utils/notification.js';
 
 class TaskQueryComponent extends LitElement {
   static styles = css`
@@ -14,7 +15,7 @@ class TaskQueryComponent extends LitElement {
       searchCondition: { type: String },
       deviceType: { type: String },
       region: { type: String },
-      taskStatus: { type: String },
+      reviewStatus: { type: String },
     };
   }
 
@@ -24,18 +25,35 @@ class TaskQueryComponent extends LitElement {
     this.searchType = 'taskNumber';
     this.searchCondition = '';
     this.deviceType = '自动角反射器';
-    this.region = '中卫';
-    this.taskStatus = '未完成';
+    this.region = '';
+    this.reviewStatus = '';
+    
+    // 添加地区映射对象
+    this.regionToChineseMap = {
+      'zhongwei': '中卫',
+      'songshan': '嵩山'
+    };
+    
     this.fetchTasks();
+
+    window.addEventListener('tasks-updated', () => {
+      this.fetchTasks();
+    });
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('tasks-updated', () => {
+      this.fetchTasks();
+    });
   }
 
   async fetchTasks() {
     try {
       const params = {
         [this.searchType]: this.searchCondition,
-        deviceType: this.deviceType,
-        region: this.region,
-        taskStatus: this.taskStatus,
+        reviewStatus: this.reviewStatus,
+        region: this.regionToChineseMap[this.region] || this.region,
       };
       Object.keys(params).forEach((key) => {
         if (
@@ -47,9 +65,15 @@ class TaskQueryComponent extends LitElement {
         }
       });
       const data = await api.tasksWithDevicesApi.query(params);
-      this.tasks = data;
+      if (Array.isArray(data)) {
+        this.tasks = data;
+      } else {
+        console.warn('API返回的数据不是数组格式:', data);
+        this.tasks = [];
+      }
     } catch (error) {
-      console.error('获取任务列表失败:', error);
+      showError('获取任务列表失败');
+      console.error('具体错误:', error);
     }
   }
 
@@ -67,14 +91,17 @@ class TaskQueryComponent extends LitElement {
 
   handleRegionChange(event) {
     this.region = event.target.value;
+    this.fetchTasks();
   }
 
   handleTaskStatusChange(event) {
-    this.taskStatus = event.target.value;
+    this.reviewStatus = event.target.value;
+    this.fetchTasks();
   }
 
   clearSearchCondition() {
     this.searchCondition = '';
+    this.fetchTasks();
   }
 
   render() {
@@ -122,7 +149,9 @@ class TaskQueryComponent extends LitElement {
               @change="${this.handleRegionChange}"
               .value="${this.region}"
             >
-              <option value="中卫">中卫</option>
+              <option value="">全部</option>
+              <option value="zhongwei">中卫</option>
+              <option value="songshan">嵩山</option>
             </select>
           </div>
           <div class="form-group">
@@ -136,14 +165,16 @@ class TaskQueryComponent extends LitElement {
             </select>
           </div>
           <div class="form-group">
-            <label for="task-status">任务状态:</label>
+            <label for="task-status">审批状态:</label>
             <select
               id="task-status"
               @change="${this.handleTaskStatusChange}"
-              .value="${this.taskStatus}"
+              .value="${this.reviewStatus}"
             >
-              <option value="未完成">未完成</option>
-              <option value="已完成">已完成</option>
+              <option value="">全部</option>
+              <option value="approved">已批准</option>
+              <option value="pending">待审批</option>
+              <option value="rejected">已拒绝</option>
             </select>
           </div>
         </div>
@@ -157,7 +188,7 @@ class TaskQueryComponent extends LitElement {
                 <th>提交用户名</th>
                 <th>设备类型</th>
                 <th>所属地区</th>
-                <th>任务状态</th>
+                <th>审批状态</th>
                 <th>设备开启时间</th>
                 <th>设备关闭时间</th>
                 <th>任务详情</th>
@@ -181,11 +212,11 @@ class TaskQueryComponent extends LitElement {
           <td>${task.taskName}</td>
           <td>${task.taskNumber}</td>
           <td>${task.userId}</td>
-          <td>${task.deviceType}</td>
-          <td>${task.region}</td>
-          <td>${task.taskStatus}</td>
-          <td>${task.startTime}</td>
-          <td>${task.endTime}</td>
+          <td>${task.deviceType || '未知'}</td>
+          <td>${task.region || '未知'}</td>
+          <td>${task.reviewStatus || '未知'}</td>
+          <td>${task.startTime || '-'}</td>
+          <td>${task.endTime || '-'}</td>
           <td>
             <a @click="${() => this.openTaskDetails(task, false)}">查看</a>
           </td>

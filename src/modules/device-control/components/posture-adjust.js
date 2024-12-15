@@ -50,8 +50,15 @@ class PostureAdjust extends LitElement {
 
   handleDeviceUpdate(e) {
     if (e.detail.device) {
-      console.log('接收到设备数据:', e.detail.device);
-      this.deviceData = e.detail.device;
+      console.log('姿态调整组件接收到设备数据:', e.detail.device);
+      this.deviceData = {
+        ...e.detail.device,
+        ytsbh: e.detail.device.id
+      };
+      
+      this.horizontalAngle = '0';
+      this.pitchAngle = '0';
+      
       this.requestUpdate();
     }
   }
@@ -96,7 +103,7 @@ class PostureAdjust extends LitElement {
             <label>设备编号：</label>
             <input
               type="text"
-              .value="${this.deviceData?.ytsbh || ''}"
+              .value="${this.deviceData?.id || ''}"
               readonly
             />
           </div>
@@ -288,9 +295,12 @@ class PostureAdjust extends LitElement {
   openParameterConfig() {
     window.currentDeviceData = this.deviceData;
     
-    console.log('打开参数配置，当前设备安装姿态:', {
-      方位角: this.deviceData?.currentAzimuth,
-      俯仰角: this.deviceData?.currentElevation
+    console.log('打开参数配置:', {
+      设备ID: this.deviceData?.id,
+      安装方位角: this.deviceData?.currentAzimuth,
+      安装俯仰角: this.deviceData?.currentElevation,
+      当前调整方位角: this.horizontalAngle,
+      当前调整俯仰角: this.pitchAngle
     });
     
     this.dispatchEvent(new CustomEvent('open-parameter-config'));
@@ -313,7 +323,14 @@ class PostureAdjust extends LitElement {
   }
 
   updateAngles(azimuth, elevation) {
-    console.log('接收到计算的角度差值:', { azimuth, elevation });
+    console.log('接收到计算的角度差值:', { 
+      设备ID: this.deviceData?.id,
+      原方位角: this.deviceData?.currentAzimuth,
+      原俯仰角: this.deviceData?.currentElevation,
+      计算后方位角: azimuth,
+      计算后俯仰角: elevation 
+    });
+    
     this.horizontalAngle = azimuth;
     this.pitchAngle = elevation;
     this.requestUpdate();
