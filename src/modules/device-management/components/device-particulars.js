@@ -26,13 +26,12 @@ class DeviceParticulars extends LitElement {
     this.isReview = false;
     this.isReviewEdit = false;
     this.data = {
-      reviewer: '',
-      reviewTime: '',
-      reviewOpinion: '',
+      reviewer: '当前审核人', // 假设自动获取审核人
+      reviewTime: new Date().toISOString().slice(0, 16), // 默认当前时间
+      reviewOpinion: 'approved', // 默认选择"同意"
       notes: '',
     };
   }
-  
 
   setDeviceData(detail) {
     if (detail) {
@@ -66,7 +65,11 @@ class DeviceParticulars extends LitElement {
     try {
       console.log('保存设备数据:', this.selectedDevice);
       await api.devicesApi.update(this.selectedDevice.id, this.selectedDevice);
-      showToast({ message: '保存设备数据', type: 'success', duration: 3000 });
+      showToast({
+        message: '保存设备数据成功',
+        type: 'success',
+        duration: 3000,
+      });
       this.dispatchEvent(
         new CustomEvent('updateData', {
           detail: this.selectedDevice,
@@ -80,15 +83,29 @@ class DeviceParticulars extends LitElement {
     }
   }
 
-  submitReview() {
-    console.log('提交审核数据:', {
-      device: this.selectedDevice,
-      review: this.data,
-    });
-    // 这里添加提交审核的逻辑
-    this.closeModal();
+  async submitReview() {
+    try {
+      console.log('提交审核数据:', {
+        device: this.selectedDevice,
+        review: this.data,
+      });
+      await api.deviceReviewsApi.update(this.selectedDevice.reviewId, {
+        deviceId: this.selectedDevice.deviceId,
+        reviewer: this.data.reviewer,
+        reviewTime: this.data.reviewTime,
+        reviewStatus: this.data.reviewOpinion, // 提交的审核意见
+        reviewComments: this.data.notes,
+      });
+      showToast({ message: '审核提交成功', type: 'success', duration: 3000 });
+      this.dispatchEvent(
+        new CustomEvent('reviewSubmitted', { bubbles: true, composed: true })
+      );
+      this.closeModal();
+    } catch (error) {
+      console.error('提交审核失败:', error);
+      showToast({ message: '审核提交失败', type: 'error', duration: 3000 });
+    }
   }
-  
 
   render() {
     return html`
@@ -108,7 +125,9 @@ class DeviceParticulars extends LitElement {
     return html`
       <div class="task-info">
         <h2>设备信息</h2>
-        <hr style="width: 325px; height:0px; border:none; border-top:1px solid #58a6ff; margin: -11px 0 10px 0;" />
+        <hr
+          style="width: 325px; height:0px; border:none; border-top:1px solid #58a6ff; margin: -11px 0 10px 0;"
+        />
         <div class="row">
           <label for="device-name">设备名:</label>
           <input
@@ -119,7 +138,7 @@ class DeviceParticulars extends LitElement {
             @input="${(e) => this.handleInputChange(e, 'deviceName')}"
           />
         </div>
-         <div class="row">
+        <div class="row">
           <label for="device-name">设备编号:</label>
           <input
             type="text"
@@ -139,7 +158,7 @@ class DeviceParticulars extends LitElement {
             @input="${(e) => this.handleInputChange(e, 'region')}"
           />
         </div>
-        <div class="row-start-time">
+        <div class="row">
           <label for="device-type">设备类型:</label>
           <input
             type="text"
@@ -149,9 +168,11 @@ class DeviceParticulars extends LitElement {
             @input="${(e) => this.handleInputChange(e, 'deviceType')}"
           />
         </div>
-        
+
         <h2>安装信息</h2>
-        <hr style="width: 325px; height:0px; border:none; border-top:1px solid #58a6ff; margin: -11px 0 10px 0;" />
+        <hr
+          style="width: 325px; height:0px; border:none; border-top:1px solid #58a6ff; margin: -11px 0 10px 0;"
+        />
         <div class="row-location">
           <label for="cpj">偏磁角度:</label>
           <input
@@ -214,8 +235,7 @@ class DeviceParticulars extends LitElement {
             type="text"
             id="reviewer"
             .value="${this.data.reviewer}"
-            ?disabled="${!this.isReviewEdit}"
-            @input="${(e) => this.handleReviewInputChange(e, 'reviewer')}"
+            disabled
           />
         </div>
         <div class="row">
@@ -230,13 +250,15 @@ class DeviceParticulars extends LitElement {
         </div>
         <div class="row">
           <label for="review-opinion">审核意见:</label>
-          <input
-            type="text"
+          <select
             id="review-opinion"
             .value="${this.data.reviewOpinion}"
             ?disabled="${!this.isReviewEdit}"
-            @input="${(e) => this.handleReviewInputChange(e, 'reviewOpinion')}"
-          />
+            @change="${(e) => this.handleReviewInputChange(e, 'reviewOpinion')}"
+          >
+            <option value="approved">同意</option>
+            <option value="rejected">拒绝</option>
+          </select>
         </div>
         <div class="row">
           <label for="notes">备注:</label>
@@ -268,7 +290,6 @@ class DeviceParticulars extends LitElement {
       </div>
     `;
   }
-  
 
   closeModal() {
     this.dispatchEvent(new CustomEvent('close-modal'));

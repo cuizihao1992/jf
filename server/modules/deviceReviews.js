@@ -87,8 +87,8 @@ module.exports = {
     }
 
     const res = await updateReviewStatus(
-      reviewData.deviceId,
-      reviewData.reviewStatus
+      reviewData.device_id,
+      reviewData.review_status
     );
     const query = `UPDATE jf_device_reviews SET ${fields.join(', ')} WHERE review_id = ?`;
     values.push(reviewId);

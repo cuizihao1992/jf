@@ -76,13 +76,14 @@ module.exports = {
       user_id,
     } = deviceData;
 
-    const query = `
+    // 插入设备记录
+    const deviceQuery = `
       INSERT INTO jf_devices 
       (device_name, device_type, region, ytsbh, gkmkh, cpj, lat, lon, connection_status, power_status, device_status, current_azimuth, current_elevation, power_voltage, power_level, install_time, last_sync_time, synced_device_time, user_id, review_status) 
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')
     `;
 
-    const [result] = await db.query(query, [
+    const [deviceResult] = await db.query(deviceQuery, [
       device_name,
       device_type,
       region,
@@ -104,7 +105,18 @@ module.exports = {
       user_id,
     ]);
 
-    return result.insertId;
+    const deviceId = deviceResult.insertId;
+
+    // 插入审核记录
+    const reviewQuery = `
+      INSERT INTO jf_device_reviews 
+      (device_id, review_status, review_type, user_id) 
+      VALUES (?, 'pending', 'add_device', ?)
+    `;
+
+    await db.query(reviewQuery, [deviceId, user_id]);
+
+    return deviceId;
   },
 
   async delete(deviceId) {
