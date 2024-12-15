@@ -28,23 +28,23 @@ class UserPermissionsComponent extends LitElement {
     this.userType = '';
     this.region = '';
     this.userStatus = '';
-    
+
     // 添加地区和用户类型映射对象
     this.regionToChineseMap = {
-      'zhongwei': '中卫',
-      'songshan': '嵩山'
+      zhongwei: '中卫',
+      songshan: '嵩山',
     };
-    
+
     this.userTypeToChineseMap = {
-      'user': '用户',
-      'admin': '管理员',
-      'superAdmin': '超级管理员'
+      user: '用户',
+      admin: '管理员',
+      superAdmin: '超级管理员',
     };
-    
+
     // 添加用户状态映射
     this.userStatusMap = {
-      'active': '开放',
-      'inactive': '禁用'
+      active: '开放',
+      inactive: '禁用',
     };
   }
 
@@ -69,15 +69,16 @@ class UserPermissionsComponent extends LitElement {
   async loadUsers() {
     try {
       const params = {
-        username: this.searchType === 'username' ? this.searchCondition : undefined,
+        username:
+          this.searchType === 'username' ? this.searchCondition : undefined,
         phone: this.searchType === 'phone' ? this.searchCondition : undefined,
         userId: this.searchType === 'userId' ? this.searchCondition : undefined,
         userType: this.userTypeToChineseMap[this.userType] || this.userType,
         region: this.regionToChineseMap[this.region] || this.region,
-        status: this.userStatus,  // 使用英文状态值
+        status: this.userStatus, // 使用英文状态值
       };
-      
-      Object.keys(params).forEach(key => {
+
+      Object.keys(params).forEach((key) => {
         if (!params[key]) {
           delete params[key];
         }
@@ -85,9 +86,9 @@ class UserPermissionsComponent extends LitElement {
 
       const response = await api.userApi.query(params);
       if (Array.isArray(response)) {
-        this.powerUsers = response.map(user => ({
+        this.powerUsers = response.map((user) => ({
           ...user,
-          id: user.id || user.userId,
+          // id: user.id || user.userId,
           status: user.status || 'active',
           userType: user.userType || user.user_type || '普通用户',
         }));
@@ -113,7 +114,7 @@ class UserPermissionsComponent extends LitElement {
 
   onInputChange(event) {
     const { id, value } = event.target;
-    const propertyName = id.replace(/-([a-z])/g, g => g[1].toUpperCase());
+    const propertyName = id.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
     this[propertyName] = value;
     this.loadUsers();
   }
@@ -131,14 +132,16 @@ class UserPermissionsComponent extends LitElement {
     return html`
       <div class="modal">
         <div class="header">
-          用户权限<button class="close-button" @click="${this.closeModal}">×</button>
+          用户权限<button class="close-button" @click="${this.closeModal}">
+            ×
+          </button>
         </div>
         <hr />
         <div class="form-container">
           <div class="form-group">
             <label for="search-type">查询类型:</label>
-            <select 
-              id="search-type" 
+            <select
+              id="search-type"
               .value="${this.searchType}"
               @change="${this.handleSearchTypeChange}"
             >
@@ -156,8 +159,12 @@ class UserPermissionsComponent extends LitElement {
                 .value="${this.searchCondition}"
                 @input="${this.handleSearchConditionChange}"
               />
-              <button class="clear-button" @click="${this.onClearClick}">清除</button>
-              <button class="query-button" @click="${this.loadUsers}">查询</button>
+              <button class="clear-button" @click="${this.onClearClick}">
+                清除
+              </button>
+              <button class="query-button" @click="${this.loadUsers}">
+                查询
+              </button>
             </div>
           </div>
         </div>
@@ -201,7 +208,7 @@ class UserPermissionsComponent extends LitElement {
             </select>
           </div>
         </div>
-        
+
         <div class="table-container">
           <table>
             <thead>
@@ -250,9 +257,9 @@ class UserPermissionsComponent extends LitElement {
 
   renderConfirmDialog() {
     if (!this.selectedUser) return '';
-    
+
     const actionText = this.selectedUser.status === 'active' ? '禁用' : '开放';
-    
+
     return html`
       <div class="confirm-dialog">
         <p>提示：是否${actionText}此用户？</p>
@@ -287,26 +294,27 @@ class UserPermissionsComponent extends LitElement {
     }
 
     try {
-      const newStatus = this.selectedUser.status === 'active' ? 'inactive' : 'active';
-      
+      const newStatus =
+        this.selectedUser.status === 'active' ? 'inactive' : 'active';
+
       // 打印请求信息
       console.log('Sending update request:', {
         userId: this.selectedUser.id,
-        newStatus: newStatus
+        newStatus: newStatus,
       });
 
       // 更新后端用户状态
       const response = await api.userApi.update(this.selectedUser.id, {
-        status: newStatus
+        status: newStatus,
       });
 
       if (response) {
         // 更新本地状态
         this.selectedUser.status = newStatus;
-        
+
         // 刷新用户列表
         await this.loadUsers();
-        
+
         // 关闭对话框
         this.showDialog = false;
         this.requestUpdate();
@@ -329,37 +337,38 @@ class UserPermissionsComponent extends LitElement {
 
   openUserInformation(user, mode) {
     console.log('openUserInformation triggered with user:', user);
-    
+
     // 统一数据结构
-    const userData = {
-        id: user.id || '',
-        username: user.username || '',
-        password: user.password || '',
-        phone: user.phone || '',
-        email: user.email || '',
-        country: user.country || '中国',
-        region: user.region || '',
-        userType: user.userType || '',
-        status: user.status || 'active',
-        role: user.role || 'user',
-        permissions: user.permissions || '',
-        dataPermissions: user.dataPermissions || '',
-        applicationType: user.applicationType || '注册',
-        createTime: user.createTime || '',
-        token: user.token || ''
+    let userData = {
+      id: user.id || '',
+      username: user.username || '',
+      password: user.password || '',
+      phone: user.phone || '',
+      email: user.email || '',
+      country: user.country || '中国',
+      region: user.region || '',
+      userType: user.userType || '',
+      status: user.status || 'active',
+      role: user.role || 'user',
+      permissions: user.permissions || '',
+      dataPermissions: user.dataPermissions || '',
+      applicationType: user.applicationType || '注册',
+      createTime: user.createTime || '',
+      token: user.token || '',
     };
+    userData = { ...user };
 
     console.log('Dispatching open-user-information with userData:', userData);
-    
+
     this.dispatchEvent(
-        new CustomEvent('open-user-information', {
-            detail: { 
-                mode,
-                userData  // 确保使用 userData 作为属性名
-            },
-            bubbles: true,
-            composed: true
-        })
+      new CustomEvent('open-user-information', {
+        detail: {
+          mode,
+          userData, // 确保使用 userData 作为属性名
+        },
+        bubbles: true,
+        composed: true,
+      })
     );
   }
 }

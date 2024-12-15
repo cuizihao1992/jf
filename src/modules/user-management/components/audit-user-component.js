@@ -26,29 +26,29 @@ class AuditUserComponent extends LitElement {
     this.reviewStatus = '';
     this.searchType = 'username';
     this.searchCondition = '';
-    
+
     this.regionToChineseMap = {
-      'zhongwei': '中卫',
-      'songshan': '嵩山'
+      zhongwei: '中卫',
+      songshan: '嵩山',
     };
-    
+
     this.userTypeToChineseMap = {
-      'user': '用户',
-      'admin': '管理员',
-      'superAdmin': '超级管理员'
+      user: '用户',
+      admin: '管理员',
+      superAdmin: '超级管理员',
     };
-    
+
     this.reviewStatusMap = {
-      'submitted': '已提交',
-      'approved': '已通过',
-      'rejected': '已拒绝',
-      'pending': '待审核'
+      submitted: '已提交',
+      approved: '已通过',
+      rejected: '已拒绝',
+      pending: '待审核',
     };
-    
+
     this.applicationTypeMap = {
-      'register': '注册',
-      'modify': '修改',
-      'delete': '删除'
+      register: '注册',
+      modify: '修改',
+      delete: '删除',
     };
   }
 
@@ -60,16 +60,21 @@ class AuditUserComponent extends LitElement {
   async loadApplications() {
     try {
       const params = {
-        username: this.searchType === 'username' ? this.searchCondition : undefined,
+        username:
+          this.searchType === 'username' ? this.searchCondition : undefined,
         phone: this.searchType === 'phone' ? this.searchCondition : undefined,
         userId: this.searchType === 'userId' ? this.searchCondition : undefined,
         userType: this.userTypeToChineseMap[this.userType] || this.userType,
         region: this.regionToChineseMap[this.region] || this.region,
-        reviewStatus: this.reviewStatus
+        reviewStatus: this.reviewStatus,
       };
-      
-      Object.keys(params).forEach(key => {
-        if (params[key] === '' || params[key] === null || params[key] === undefined) {
+
+      Object.keys(params).forEach((key) => {
+        if (
+          params[key] === '' ||
+          params[key] === null ||
+          params[key] === undefined
+        ) {
           delete params[key];
         }
       });
@@ -93,7 +98,7 @@ class AuditUserComponent extends LitElement {
 
   onInputChange(event) {
     const { id, value } = event.target;
-    const propertyName = id.replace(/-([a-z])/g, g => g[1].toUpperCase());
+    const propertyName = id.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
     this[propertyName] = value;
     this.loadApplications();
   }
@@ -139,8 +144,8 @@ class AuditUserComponent extends LitElement {
           <div class="search-section">
             <div class="form-group">
               <label for="search-type">查询类型:</label>
-              <select 
-                id="search-type" 
+              <select
+                id="search-type"
                 .value="${this.searchType}"
                 @change="${this.handleSearchTypeChange}"
               >
@@ -158,8 +163,12 @@ class AuditUserComponent extends LitElement {
                   .value="${this.searchCondition}"
                   @input="${this.handleSearchConditionChange}"
                 />
-                <button class="clear-button" @click="${this.onClearClick}">清除</button>
-                <button class="query-button" @click="${this.loadApplications}">查询</button>
+                <button class="clear-button" @click="${this.onClearClick}">
+                  清除
+                </button>
+                <button class="query-button" @click="${this.loadApplications}">
+                  查询
+                </button>
               </div>
             </div>
           </div>
@@ -226,13 +235,23 @@ class AuditUserComponent extends LitElement {
                 (application) => html`
                   <tr class="table-row">
                     <td>${application.username}</td>
-                    <td>${this.applicationTypeMap[application.applicationType] || application.applicationType}</td>
-                    <td>${this.regionToChineseMap[application.region] || application.region}</td>
+                    <td>
+                      ${this.applicationTypeMap[application.applicationType] ||
+                      application.applicationType}
+                    </td>
+                    <td>
+                      ${this.regionToChineseMap[application.region] ||
+                      application.region}
+                    </td>
                     <td>${application.phone}</td>
-                    <td>${this.userTypeToChineseMap[application.userType] || application.userType}</td>
+                    <td>
+                      ${this.userTypeToChineseMap[application.userType] ||
+                      application.userType}
+                    </td>
                     <td>${application.applicationDate}</td>
                     <td>
-                      ${this.reviewStatusMap[application.reviewStatus] || application.reviewStatus}
+                      ${this.reviewStatusMap[application.reviewStatus] ||
+                      application.reviewStatus}
                     </td>
                     <td>
                       <a
@@ -261,25 +280,26 @@ class AuditUserComponent extends LitElement {
   }
 
   onViewClick(event, application) {
+    debugger;
     const mode = event.target.getAttribute('data-mode');
     console.log('onViewClick triggered with application:', application);
-    
+
     this.dispatchEvent(
-        new CustomEvent('open-user-view', {
-            detail: {
-                mode,
-                userData: application
-            },
-            bubbles: true,
-            composed: true
-        })
+      new CustomEvent('open-user-view', {
+        detail: {
+          mode,
+          userData: application,
+        },
+        bubbles: true,
+        composed: true,
+      })
     );
   }
 
   getRegionLabel(region) {
     const regionMap = {
-      'ZHONGWEI': '中卫',
-      'SONGSHAN': '嵩山'
+      ZHONGWEI: '中卫',
+      SONGSHAN: '嵩山',
     };
     return regionMap[region] || region;
   }

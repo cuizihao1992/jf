@@ -5,7 +5,7 @@ import api from '@/apis/api';
 class UserInformation extends LitElement {
   static styles = css`
     ${unsafeCSS(styles)}
-    
+
     .form-input {
       background-color: rgba(20, 30, 50, 0.8);
       border: 1px solid rgb(45, 92, 136);
@@ -59,7 +59,7 @@ class UserInformation extends LitElement {
 
   async fetchDevices() {
     try {
-      const data = await api.devicesApi.query({});
+      const data = await api.devicesAllApi.query({});
       if (data && Array.isArray(data)) {
         this.devices = data;
         this.initializeDeviceSelection();
@@ -72,8 +72,8 @@ class UserInformation extends LitElement {
   }
 
   initializeDeviceSelection() {
-    // 如果 dataPermissions 包含 "All"，则全选
-    if (this.userData.dataPermissions === 'All') {
+    // 如果 dataPermissions 包含 "ALL"，则全选
+    if (this.userData.dataPermissions === 'ALL') {
       this.allSelected = true;
       this.devices.forEach((device) => {
         device.selected = true;
@@ -99,32 +99,39 @@ class UserInformation extends LitElement {
     const options = {
       user_type: [
         { value: 'user', label: '普通用户' },
-        { value: 'admin', label: '管理员' }
+        { value: 'admin', label: '管理员' },
       ],
       status: [
         { value: 'active', label: '激活' },
-        { value: 'inactive', label: '未激活' }
+        { value: 'inactive', label: '未激活' },
       ],
       role: [
         { value: 'user', label: '普通用户' },
-        { value: 'admin', label: '管理员' }
+        { value: 'admin', label: '管理员' },
       ],
       region: [
         { value: 'zhongwei', label: '中卫' },
-        { value: 'other', label: '其他地区' }
-      ]
+        { value: 'other', label: '其他地区' },
+      ],
     };
 
-    return options[fieldName]?.map(option => html`
-      <option value=${option.value} ?selected=${this.userData[fieldName] === option.value}>
-        ${option.label}
-      </option>
-    `) || [];
+    return (
+      options[fieldName]?.map(
+        (option) => html`
+          <option
+            value=${option.value}
+            ?selected=${this.userData[fieldName] === option.value}
+          >
+            ${option.label}
+          </option>
+        `
+      ) || []
+    );
   }
 
   handleInputChange(e, fieldName) {
     if (this.mode === 'view') return;
-    
+
     this.userData = {
       ...this.userData,
       [fieldName]: e.target.value,

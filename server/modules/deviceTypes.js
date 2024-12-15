@@ -5,6 +5,7 @@ module.exports = {
     const baseQuery = 'SELECT * FROM jf_device_types';
     const conditions = [];
     const values = [];
+    delete filter.userInfo; // 移除用户信息，避免误用
 
     Object.keys(filter).forEach((key) => {
       if (filter[key] !== undefined && filter[key] !== null) {

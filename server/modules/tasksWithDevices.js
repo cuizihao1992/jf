@@ -8,6 +8,7 @@ module.exports = {
    * @returns {Promise<Array>} - 包含任务及其设备任务的数组
    */
   async query(filter) {
+    delete filter.userInfo; // 移除用户信息，避免误用
     const taskList = await tasks.query(filter); // 获取任务列表
 
     for (const task of taskList) {

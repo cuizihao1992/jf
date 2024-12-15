@@ -129,9 +129,11 @@ class UserManagement extends LitElement {
   }
 
   handleUserInformationSubmit(e) {
-    const userPermissions = this.shadowRoot.querySelector('user-permissions-component');
+    const userPermissions = this.shadowRoot.querySelector(
+      'user-permissions-component'
+    );
     if (userPermissions) {
-      userPermissions.loadUsers();  // 刷新用户列表
+      userPermissions.loadUsers(); // 刷新用户列表
     }
     this.closeUserInformation();
   }
@@ -143,12 +145,12 @@ class UserManagement extends LitElement {
   handleOpenUserView(event) {
     console.log('handleOpenUserView event:', event);
     console.log('handleOpenUserView event detail:', event.detail);
-    
+
     if (!event.detail || !event.detail.userData) {
-        console.warn('No userData in event detail');
-        return;
+      console.warn('No userData in event detail');
+      return;
     }
-    
+
     const { mode, userData } = event.detail;
     this.userViewMode = mode || 'view';
     this.userData = userData;
@@ -156,7 +158,9 @@ class UserManagement extends LitElement {
   }
 
   handleRefreshList() {
-    const auditComponent = this.shadowRoot.querySelector('audit-user-component');
+    const auditComponent = this.shadowRoot.querySelector(
+      'audit-user-component'
+    );
     if (auditComponent) {
       auditComponent.loadApplications();
     }

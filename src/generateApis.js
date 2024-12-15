@@ -15,7 +15,8 @@ const modules = {
   // '/task-errors': 'taskErrors',
   // '/user-review': 'userReview',
   // '/user': 'user',
-  '/tasks-with-devices': 'tasksWithDevices',
+  // '/tasks-with-devices': 'tasksWithDevices',
+  '/devices-all': 'devicesAll',
 };
 
 // API 模板

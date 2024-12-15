@@ -3,6 +3,7 @@ module.exports = {
   '/device-tasks': require('./deviceTasks.js'),
   '/device-types': require('./deviceTypes'),
   '/devices': require('./devices'),
+  '/devices-all': require('./devicesAll'),
   '/regions': require('./regions'),
   '/scheduled-tasks': require('./scheduledTasks'),
   '/device-reviews': require('./deviceReviews.js'),

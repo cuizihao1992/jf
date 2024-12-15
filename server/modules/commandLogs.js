@@ -9,6 +9,7 @@ module.exports = {
       FROM 
         jf_command_logs
     `;
+    delete filter.userInfo; // 移除用户信息，避免误用
 
     const conditions = [];
     const values = [];

@@ -18,6 +18,7 @@ module.exports = {
 
     const conditions = [];
     const values = [];
+    delete filter.userInfo; // 移除用户信息，避免误用
 
     // 遍历 filter 对象，生成查询条件
     Object.keys(filter).forEach((key) => {

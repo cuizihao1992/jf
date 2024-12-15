@@ -11,7 +11,8 @@ function createRouter(module) {
   if (module.getTree) {
     router.get('/tree', async (req, res, next) => {
       try {
-        const result = await module.getTree(req.query); // 查询参数已通过中间件转换
+        const queryFilter = { ...req.query, userInfo: req.user };
+        const result = await module.getTree(queryFilter); // 查询参数已通过中间件转换
         res.json(result);
       } catch (error) {
         next(error);
@@ -20,7 +21,8 @@ function createRouter(module) {
   }
   router.get('/', async (req, res, next) => {
     try {
-      const result = await module.query(req.query); // 查询参数已通过中间件转换
+      const queryFilter = { ...req.query, userInfo: req.user };
+      const result = await module.query(queryFilter); // 查询参数已通过中间件转换
       res.json(result);
     } catch (error) {
       next(error);

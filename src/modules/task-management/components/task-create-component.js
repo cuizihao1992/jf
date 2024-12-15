@@ -506,7 +506,6 @@ class TaskCreateComponent extends LitElement {
       return;
     }
     const userInfo = getUserInfo();
-    debugger;
     // 构建提交参数
     const param = {
       userId: userInfo?.username,

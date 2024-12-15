@@ -18,7 +18,6 @@ const server = http.createServer(app);
 
 const wss = new WebSocket.Server({ server });
 const PORT = 3000;
-const isVerify = false; // 是否启用验证中间件
 
 // 中间件
 app.use(express.json());
@@ -32,6 +31,8 @@ app.use(responseFormatter);
 app.use('/auth', authRouter);
 
 // 动态注册模块路由
+const isVerify = true; // 是否启用验证中间件
+
 registerRoutes(
   app,
   modules,

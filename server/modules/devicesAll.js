@@ -1,43 +1,12 @@
 const db = require('./mysql.js');
-const userQuery = require('./user.js');
 
 module.exports = {
   async query(filter) {
     const baseQuery = 'SELECT * FROM jf_devices';
     const conditions = [];
     const values = [];
-    // 添加审核状态过滤条件
-    conditions.push('review_status = ?');
-    values.push('approved');
-
-    // 提取用户信息
-    const userInfo = filter.userInfo;
     delete filter.userInfo; // 移除用户信息，避免误用
 
-    let permittedIds = [];
-    // 动态添加用户权限过滤条件
-    if (userInfo && userInfo.userId) {
-      const userData = await userQuery.query({
-        user_id: userInfo.userId,
-      });
-      if (userData.length > 0) {
-        // 假设权限存储为字符串，如 "1,2,3"
-        const permissions = userData[0].data_permissions;
-        if (permissions === 'ALL') {
-          // ALL 表示不限制权限
-          permittedIds = null;
-        } else {
-          // 解析具体权限 ID
-          permittedIds = permissions.split(',').map(Number);
-        }
-      }
-    }
-
-    // 如果有具体权限限制，添加到查询条件
-    if (permittedIds && permittedIds.length > 0) {
-      conditions.push(`id IN (${permittedIds.map(() => '?').join(', ')})`);
-      values.push(...permittedIds);
-    }
     Object.keys(filter).forEach((key) => {
       if (filter[key] !== undefined && filter[key] !== null) {
         conditions.push(`${key} = ?`);
@@ -78,8 +47,8 @@ module.exports = {
 
     const query = `
       INSERT INTO jf_devices 
-      (device_name, device_type, region, ytsbh, gkmkh, cpj, lat, lon, connection_status, power_status, device_status, current_azimuth, current_elevation, power_voltage, power_level, install_time, last_sync_time, synced_device_time, user_id, review_status) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')
+      (device_name, device_type, region, ytsbh, gkmkh, cpj, lat, lon, connection_status, power_status, device_status, current_azimuth, current_elevation, power_voltage, power_level, install_time, last_sync_time, synced_device_time, user_id) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     const [result] = await db.query(query, [
@@ -134,47 +103,22 @@ module.exports = {
     const [result] = await db.query(query, values);
     return result.affectedRows;
   },
-  async getTree(filter) {
+  async getTree() {
+    // 查询设备数据
+    const query = `
+    SELECT 
+      region, 
+      device_type, 
+      connection_status, 
+      device_name
+    FROM 
+      devices
+  `;
+
     try {
       const baseQuery = 'SELECT * FROM jf_devices';
-      const conditions = [];
-      const values = [];
-      conditions.push('review_status = ?');
-      values.push('approved');
-      // 提取用户信息
-      const userInfo = filter.userInfo;
-      delete filter.userInfo; // 移除用户信息，避免误用
 
-      let permittedIds = [];
-      // 动态添加用户权限过滤条件
-      if (userInfo && userInfo.userId) {
-        const userData = await userQuery.query({
-          user_id: userInfo.userId,
-        });
-        if (userData.length > 0) {
-          // 假设权限存储为字符串，如 "1,2,3"
-          const permissions = userData[0].data_permissions;
-          if (permissions === 'ALL') {
-            // ALL 表示不限制权限
-            permittedIds = null;
-          } else {
-            // 解析具体权限 ID
-            permittedIds = permissions.split(',').map(Number);
-          }
-        }
-      }
-
-      // 如果有具体权限限制，添加到查询条件
-      if (permittedIds && permittedIds.length > 0) {
-        conditions.push(`id IN (${permittedIds.map(() => '?').join(', ')})`);
-        values.push(...permittedIds);
-      }
-
-      const query = conditions.length
-        ? `${baseQuery} WHERE ${conditions.join(' AND ')}`
-        : baseQuery;
-
-      const [rows] = await db.query(query, values);
+      const [rows] = await db.query(baseQuery);
 
       // 构造树形结构
       const tree = rows.reduce((acc, row) => {

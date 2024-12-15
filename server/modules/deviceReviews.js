@@ -12,6 +12,7 @@ module.exports = {
     `;
     const conditions = [];
     const values = [];
+    delete filter.userInfo; // 移除用户信息，避免误用
 
     // 根据过滤条件动态生成 WHERE 子句
     Object.keys(filter).forEach((key) => {
@@ -85,6 +86,10 @@ module.exports = {
       throw new Error('No data provided for update');
     }
 
+    const res = await updateReviewStatus(
+      reviewData.deviceId,
+      reviewData.reviewStatus
+    );
     const query = `UPDATE jf_device_reviews SET ${fields.join(', ')} WHERE review_id = ?`;
     values.push(reviewId);
 
@@ -92,3 +97,8 @@ module.exports = {
     return result.affectedRows;
   },
 };
+async function updateReviewStatus(deviceId, status) {
+  const query = `UPDATE jf_devices SET review_status = ? WHERE id = ?`;
+  const [result] = await db.query(query, [status, deviceId]);
+  return result.affectedRows;
+}
