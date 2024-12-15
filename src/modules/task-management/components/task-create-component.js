@@ -1,6 +1,7 @@
 import { LitElement, html, css, unsafeCSS } from 'lit';
 import styles from './css/task-create-component.css?inline';
 import api from '@/apis/api.js';
+import { getUserInfo } from '@/global.js';
 
 class TaskCreateComponent extends LitElement {
   static styles = css`
@@ -182,7 +183,7 @@ class TaskCreateComponent extends LitElement {
     return html`
       <div class="container">
         <div class="header">
-          <h1>新建任务</h1>
+          <h1>新建任务2</h1>
           <span class="close-button" @click="${this.closeModal}">×</span>
         </div>
         <div>
@@ -504,9 +505,11 @@ class TaskCreateComponent extends LitElement {
       alert('请至少选择一个执行设备');
       return;
     }
-
+    const userInfo = getUserInfo();
+    debugger;
     // 构建提交参数
     const param = {
+      userId: userInfo?.username,
       taskName,
       taskNumber,
       region: location,

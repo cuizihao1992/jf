@@ -14,19 +14,70 @@ const {
   syncTime,
 } = require('./utils');
 const { sendTCPCommand } = require('./processData.js');
+const commandLogs = require('./modules/commandLogs');
 
 // Provide static file access
 const app = express();
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/', express.static(path.join(__dirname, '../dist')));
 app.use(express.json());
 
 // Helper function to send command with timeout
 async function sendAndLogCommandWithTimeout(addr, command, timeout = 3000) {
-  const timeoutPromise = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error('Request timed out')), timeout)
-  );
+  const createTime = new Date(); // 当前时间
+  let logId;
 
-  return await Promise.race([sendTCPCommand(addr, command), timeoutPromise]);
+  try {
+    // 插入初始日志记录，状态为 "pending"
+    logId = await commandLogs.add({
+      addr,
+      command: command.toString('hex'),
+      type: 'control', // 可根据业务需要调整
+      value: null,
+      success: null, // 初始状态不设置成功与否
+      result: null,
+      result_value: null,
+      status: 'pending',
+      image: null,
+      send_time: createTime,
+      receive_time: null, // 初始状态没有接收时间
+      create_time: createTime,
+    });
+
+    // 超时逻辑
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Request timed out')), timeout)
+    );
+
+    // 发送命令，返回结果或超时
+    const result = await Promise.race([
+      sendTCPCommand(addr, command),
+      timeoutPromise,
+    ]);
+
+    // 如果成功接收数据，更新状态
+    const receiveTime = new Date(); // 接收时间
+    await commandLogs.update(logId, {
+      success: 'true',
+      result: result,
+      status: 'completed',
+      receive_time: receiveTime,
+    });
+
+    return result; // 返回命令执行结果
+  } catch (error) {
+    // 如果超时或失败，更新状态为失败
+    const receiveTime = new Date(); // 接收时间
+    await commandLogs.update(logId, {
+      success: 'false',
+      result: error.message,
+      status: 'failed',
+      receive_time: receiveTime,
+    });
+
+    throw error; // 重新抛出错误以供上层捕获
+  }
 }
 
 // API endpoints with timeout

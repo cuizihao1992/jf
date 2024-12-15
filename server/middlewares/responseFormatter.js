@@ -32,6 +32,8 @@ function formatObject(obj) {
     'last_login',
     'last_sync_time',
     'synced_device_time',
+    'receive_time',
+    'create_time',
   ]; // 需要格式化为日期的字段
 
   // 创建一个新对象，递归处理键值对

@@ -12,4 +12,5 @@ module.exports = {
   '/user-review': require('./userReview'),
   '/user': require('./user'),
   '/tasks-with-devices': require('./tasksWithDevices'),
+  '/command-logs': require('./commandLogs'),
 };
