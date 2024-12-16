@@ -10,3 +10,4 @@ client/dist/
 
 # 忽略所有 .log 文件
 *.log
+/.idea
